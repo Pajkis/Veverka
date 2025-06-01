@@ -1,0 +1,47 @@
+Static tiles:
+- Bush: make walk through for veverka but not for nut
+- Snake: Kills veverka when moves to hex next to her
+- Enemy veverka: eats nut when it is left (unattended?) next to it - could be get rid of fake nut?
+- Teleport: moves veverka from one place to another
+	1) From one edge of screen to another
+		- might be used for both, nut and veverka
+	 	- one time use / multiple time use
+	2) Falling between branches (one way teleport)
+	3) Holes in tree (connects two places)
+		- might be used for both, nut and veverka
+		- one time use / multiple time use
+- rotation tile (4 tiles rotating)
+- jumping tile (for nuts)
+
+
+
+Traps: 
+- visible/invisible traps triggering when veverka steps on some tile
+- traps might be key elements to finish some levels
+Block trap - creates or moves a wall
+Push trap - pushes objects in some area in a way
+
+Goals:
+- Stone Goal: become "wall" after nut is put in
+- Explosive Goal: explodes if "exploding nut is moved in" 
+- Layout changing goal
+- trap trigger goal
+
+Pushable tiles:
+- fake nut - for enemy veverka or triggering traps
+- explosive nut
+- stone nut
+- combine more nuts (move them into each other) to get better nut
+
+Veverka:
+make multiple veverkas moving all together, when wrong key is pressed one of them might die or get trapped
+- this mode will lead to cooperation of veverkas, veverkas will trigger traps to clear way for other veverkas
+
+game 
+- make starting step count - each step count goes down, if nut is moved to goal, get some amount of points (based on nut color/type)
+- best step count score for each level
+- add difficulty	- easy - not die when move count goes to 0
+					- medium - get reasonable amount of step count
+					- Hard  - get critical amount of step count
+					- deadmatch hard	- get critical amount of step count, three lifes, start always at level 1 and cant save game
+										- each 10th level will be checkpoint

@@ -1,0 +1,61 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+/// <summary>
+/// Pause Menu handling class
+/// </summary>
+public class PauseMenu : IntEventInvoker
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*
+
+        // Add invokers for events
+        if (!unityEvents.ContainsKey(EventEnum.LevelStartEvent))
+        {
+            unityEvents.Add(EventEnum.LevelStartEvent, new LevelStartEvent());            
+        }
+        EventManager.AddInvoker(EventEnum.LevelStartEvent, this);
+        
+        if (!unityEvents.ContainsKey(EventEnum.ResetGridEvent))
+        {
+            unityEvents.Add(EventEnum.ResetGridEvent, new UnityEvent<int>());
+        }
+        EventManager.AddInvoker(EventEnum.ResetGridEvent, this);
+    }
+
+    /// <summary>
+    /// handles on click resume button event
+    /// </summary>
+    public void HandleResumeButtonOnClickEvent()
+    {
+        Time.timeScale = 1;
+        Destroy(gameObject);    
+    }
+
+    /// <summary>
+    /// Handles on click level restart button event
+    /// </summary>
+    public void HandleRestartButtonOnClickEvent()
+    {
+        Time.timeScale = 1;
+        unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        unityEvents[EventEnum.LevelStartEvent].Invoke(LevelUtils.SelectedLevel);
+        Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Handles on click quit button event
+    /// </summary>
+    public void HandleQuitButtonOnClickEvent()
+    {
+        Time.timeScale = 1;
+        unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        Destroy(gameObject);
+        MenuManager.GoToMenu(MenuEnum.MainMenu);    
+    }
+
+}

@@ -1,0 +1,46 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+/// <summary>
+/// tile object basic abstract class
+/// </summary>
+public abstract class TileObject : IntEventInvoker
+{
+    #region fields
+    protected TileType tileType;
+    protected Vector2Int gridPosition;
+    #endregion
+
+    #region propeties
+    /// <summary>
+    /// Get grid position of the object
+    /// </summary>
+    public virtual Vector2Int GridPosition 
+    { 
+        get { return gridPosition; }  // public virtual Vector2Int GridPosition => gridPosition;
+        //set { gridPosition = value; } 
+    }
+
+    /// <summary>
+    /// Get object tile type
+    /// </summary>
+    public virtual TileType PosTileType
+    {
+        get {return tileType;}
+    }
+    #endregion
+
+    #region Initialiazation
+    /// <summary>
+    /// Initialize tile type on grid position
+    /// </summary>
+    /// <param name="tileType"></param>
+    /// <param name="gridPosition"></param>
+    public virtual void Init(TileType tileType, Vector2Int gridPosition)
+    {
+
+        this.tileType = tileType;
+        this.gridPosition = gridPosition;
+    }
+    #endregion
+}
