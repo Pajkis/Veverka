@@ -52,8 +52,9 @@ public class MovableTile : TileObject
         if (!isMoving)
         {          
             OnMoveStart();
+            float moveDuration = duration / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
             Vector2Int targetPosition = GridUtils.GetAdjacentPosition(gridPosition, direction, moveDistance);
-            StartCoroutine(MoveRoutine(targetPosition , duration));           
+            StartCoroutine(MoveRoutine(targetPosition , moveDuration));           
         }
     }
 

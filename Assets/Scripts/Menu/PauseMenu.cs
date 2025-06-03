@@ -48,6 +48,14 @@ public class PauseMenu : IntEventInvoker
     }
 
     /// <summary>
+    /// Handles game settings menu on click event
+    /// </summary>
+    public void HandleGameSettingsButtonOnClickEvent()
+    {
+        MenuManager.GoToMenu(MenuEnum.SettingsMenu);
+    }
+
+    /// <summary>
     /// Handles on click quit button event
     /// </summary>
     public void HandleQuitButtonOnClickEvent()

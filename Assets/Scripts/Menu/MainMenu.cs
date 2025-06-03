@@ -31,6 +31,9 @@ public class MainMenu : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Handles game settings menu on click event
+    /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
        MenuManager.GoToMenu(MenuEnum.SettingsMenu);

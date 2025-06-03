@@ -15,7 +15,6 @@ public class GameSettings: MonoBehaviour
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
     #endregion
 
-
     #region propeties
 
     /// <summary>
@@ -28,7 +27,6 @@ public class GameSettings: MonoBehaviour
     #endregion
 
     #region Init methods
-
     void Awake()
     {
         // Init singleton
