@@ -42,6 +42,15 @@ public static class MenuManager
 
                 Object.Instantiate(Resources.Load("LevelFinishedMenu"));
                 break;
+
+            case MenuEnum.HighScoreMenu:
+
+                break;
+
+            case MenuEnum.SettingsMenu:
+
+                Object.Instantiate(Resources.Load("SettingsMenu"));
+                break;
         }
     }
 

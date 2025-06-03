@@ -56,9 +56,10 @@ public class GameSettings: MonoBehaviour
         foreach (GameSettingsEnum key in Enum.GetValues(typeof(GameSettingsEnum)))
         {
             Debug.Log($"Settings property {key}: value {gameSettings[key]}");
-        }
+        }                  
     }
     #endregion
+
 
     #region methods
     /// <summary>
