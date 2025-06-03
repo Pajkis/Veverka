@@ -605,6 +605,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 3438409125668876638}
     m_Modifications:
     - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: MaxValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: maxValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: settingType
       value: 2
       objectReference: {fileID: 0}
@@ -689,12 +697,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2733778948151960867, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_Name
       value: MusicVolume
+      objectReference: {fileID: 0}
+    - target: {fileID: 4052735909073209109, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4052735909073209109, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_AnchorMax.y
@@ -722,6 +742,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3438409125668876638}
     m_Modifications:
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: MaxValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: maxValue
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: settingType
       value: 3
@@ -807,12 +835,24 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 525530485759484388, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2733778948151960867, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_Name
       value: EffectVolume
+      objectReference: {fileID: 0}
+    - target: {fileID: 4052735909073209109, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4052735909073209109, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: m_AnchorMax.y
@@ -840,6 +880,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3438409125668876638}
     m_Modifications:
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: MaxValue
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: MinValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: maxValue
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
+      propertyPath: minValue
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 67588744818655, guid: 75078e5d02e96ec4fa0cf9bfbfe6a739, type: 3}
       propertyPath: settingType
       value: 1

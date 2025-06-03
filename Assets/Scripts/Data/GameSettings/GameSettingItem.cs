@@ -13,8 +13,8 @@ public class GameSettingItem : MonoBehaviour
     #region fields
 
     [SerializeField] private GameSettingsEnum settingType;
-    [SerializeField] private int MinValue;
-    [SerializeField] private int MaxValue;
+    [SerializeField] private int minValue;
+    [SerializeField] private int maxValue;
 
     private Slider slider;
     private TextMeshProUGUI nameLabel;
@@ -27,11 +27,16 @@ public class GameSettingItem : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        //get objects
+        //get slider object
         slider = GetComponentInChildren<Slider>();
-        var textsComponents = GetComponentsInChildren<TextMeshProUGUI>();
+        if (slider == null)
+        {
+            Debug.LogError($"Slider not found in {gameObject.name}!");
+            return;
+        }
 
         // get textMesh components
+        var textsComponents = GetComponentsInChildren<TextMeshProUGUI>();
         foreach (var component in textsComponents)
         {
             if (component != null)
@@ -44,14 +49,22 @@ public class GameSettingItem : MonoBehaviour
                 else if (component.name.ToLower().Contains("value"))
                 {
                     valueLabel = component;
-                }            
+                }
+            }
+            else
+            {
+                Debug.LogError($"TextMesh object {component} not found in {gameObject.name}!");
+                return;
             }
         }
 
         // Set initial value from GameSettings
         if (GameSettings.Instance != null)
-        {
+        {            
             float value = GameSettings.Instance.Get(settingType);
+            value = Mathf.Clamp(value, minValue, maxValue);
+            slider.minValue = minValue;
+            slider.maxValue = maxValue;
             slider.value = value;
             valueLabel.text = Mathf.RoundToInt(value).ToString();
             nameLabel.text = SplitCamelCase(settingType.ToString());
@@ -59,7 +72,6 @@ public class GameSettingItem : MonoBehaviour
 
         // Add listener for changes
         slider.onValueChanged.AddListener(OnSliderChanged);
-
     }
 
     /// <summary>
