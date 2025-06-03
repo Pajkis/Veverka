@@ -18,7 +18,7 @@ public class GameGrid : IntEventInvoker
 
     #endregion
 
-    #region fields
+    #region Serialized fields
 
     // Prefabs
     [SerializeField] private GameObject veverkaPrefab;
@@ -26,9 +26,12 @@ public class GameGrid : IntEventInvoker
     [SerializeField] private GameObject emptyPrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject goalPrefab;
-    [SerializeField] public Transform gridRoot; // the object on which tiles will be build - this will adjust the screen to left bottom
+    //Adjust screen for each level size
+    [SerializeField] private Transform gridRoot;
+    #endregion
 
 
+    #region fields
     // grid variables
     private int gridHeight = 10;
     private int gridWidth = 10;
@@ -36,7 +39,6 @@ public class GameGrid : IntEventInvoker
     private TileType[,] grid;
     private Dictionary<Vector2Int, TileObject> pushables = new();
     private Dictionary<Vector2Int, TileObject> goals = new();  
-
     #endregion
 
     #region Properties
