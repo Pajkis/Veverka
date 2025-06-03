@@ -1,4 +1,0 @@
-repository "Veverka 2025-05-01_10-04-26/Veverka@15669466327060@cloud"
-  path "/"
-    br "/main"
-    co "/main"
