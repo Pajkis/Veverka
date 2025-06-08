@@ -799,7 +799,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 405905180}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: HandleQuitButtonOnClickEvent
+        m_MethodName: HandleQuitGameButtonOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

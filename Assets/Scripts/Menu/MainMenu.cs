@@ -42,7 +42,7 @@ public class MainMenu : MonoBehaviour
     /// <summary>
     /// Handles the on click event from the quit button
     /// </summary>
-    public void HandleQuitButtonOnClickEvent() 
+    public void HandleQuitGameButtonOnClickEvent() 
     { 
         Application.Quit(); 
     }
