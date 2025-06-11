@@ -83,8 +83,19 @@ public class GameSettingItem : MonoBehaviour
         if (GameSettings.Instance != null)
         {
             GameSettings.Instance.Set(settingType, Mathf.RoundToInt(value));
-            valueLabel.text = Mathf.RoundToInt(value).ToString();
+            
             //  OnSettingChanged?.Invoke(newValue); 
+            // change volume in audio manager
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.UpdateVolume(settingType, Mathf.RoundToInt(value));
+            }
+        }
+
+        // change text in settings menu
+        if (valueLabel != null)
+        {
+            valueLabel.text = Mathf.RoundToInt(value).ToString();
         }
     }
 

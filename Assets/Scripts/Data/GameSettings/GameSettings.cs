@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using UnityEngine;
 
 public class GameSettings: MonoBehaviour

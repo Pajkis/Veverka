@@ -28,6 +28,7 @@ public static class GameSettingsUtils
         Init(GameSettingsEnum.AnimationSpeed, 1);
         Init(GameSettingsEnum.MusicVolume, 5);
         Init(GameSettingsEnum.EffectVolume, 5);
+        Init(GameSettingsEnum.UiVolume, 5);
 
         PlayerPrefs.Save();
 

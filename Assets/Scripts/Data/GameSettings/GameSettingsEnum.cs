@@ -10,5 +10,6 @@ public enum GameSettingsEnum
     ActivePlayer,
     AnimationSpeed,
     MusicVolume,
-    EffectVolume
+    EffectVolume,
+    UiVolume
 }

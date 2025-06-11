@@ -19,6 +19,7 @@ public class GameInit : MonoBehaviour
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
+        AudioManager.Instance.Initialize();
 
         //Game start Delay
         StartCoroutine(GameStartDelayCoroutine());       
