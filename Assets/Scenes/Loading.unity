@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 862168025}
   - component: {fileID: 862168024}
   - component: {fileID: 862168026}
+  - component: {fileID: 862168027}
   m_Layer: 0
   m_Name: GameInit
   m_TagString: Untagged
@@ -339,6 +340,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfb02b362f79fdf47ab424175ce52038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &862168027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862168023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 993c801f96e79e4419466308ba3173e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  veverkaMove: {fileID: 8300000, guid: 6b8e36a8cdb18f746a558af7626f663e, type: 3}
+  nutMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
+  goalReached: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  levelFinished: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  veverkaRotate: {fileID: 8300000, guid: 33e5e92ef8518474186b9d8253f8818e, type: 3}
+  buttonClick: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
+  sliderMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
+  menuBackground: {fileID: 8300000, guid: cebbeb55a93154e42b21ff5981bc5ca1, type: 3}
+  gameBackground: {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
 --- !u!1001 &6223680541039381044
 PrefabInstance:
   m_ObjectHideFlags: 0

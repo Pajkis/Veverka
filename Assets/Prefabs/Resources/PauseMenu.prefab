@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2602974811371010049}
   m_Layer: 5
   m_Name: ButtonRestart
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 8898466273979195799}
   m_Layer: 5
   m_Name: ButtonSettings
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 3693592094494156581}
   m_Layer: 5
   m_Name: ButtonResume
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -623,6 +623,7 @@ GameObject:
   - component: {fileID: 8759600381699467982}
   - component: {fileID: 7131106050040021032}
   - component: {fileID: 7204721748076937770}
+  - component: {fileID: 6935047262844824697}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: PauseMenu
@@ -730,6 +731,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d81320759deb7f44dadb9f03e53e3610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6935047262844824697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonTag: UIButton
 --- !u!1 &3685020349828261418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1146,7 +1160,7 @@ GameObject:
   - component: {fileID: 2993826160953629467}
   m_Layer: 5
   m_Name: ButtonQuit
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

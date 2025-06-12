@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 1401173584172709114}
   m_Layer: 5
   m_Name: ButtonQuit
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 8285113693397975630}
   m_Layer: 5
   m_Name: ButtonNextLevel
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -354,6 +354,7 @@ GameObject:
   - component: {fileID: 613191006525710481}
   - component: {fileID: 6322966800964139329}
   - component: {fileID: -7478137304725229104}
+  - component: {fileID: 763656222236711846}
   m_Layer: 5
   m_Name: LevelFinishedMenu
   m_TagString: Untagged
@@ -459,6 +460,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02571d8b951d127428d7ec3c1ecca41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &763656222236711846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2626405333016797077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonTag: UIButton
 --- !u!1 &5444027806386424418
 GameObject:
   m_ObjectHideFlags: 0

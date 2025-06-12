@@ -130,6 +130,10 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    public void PlayUIClickSound()
+    {
+        PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
+    }
     /// <summary>
     /// Update volume value from game settings
     /// </summary>
