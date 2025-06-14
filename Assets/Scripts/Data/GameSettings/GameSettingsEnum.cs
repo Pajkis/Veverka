@@ -11,5 +11,5 @@ public enum GameSettingsEnum
     AnimationSpeed,
     MusicVolume,
     EffectVolume,
-    UiVolume
+    MenuVolume
 }

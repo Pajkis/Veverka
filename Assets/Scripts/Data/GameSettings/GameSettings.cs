@@ -69,8 +69,7 @@ public class GameSettings: MonoBehaviour
         gameSettings[key] = value;
         GameSettingsUtils.Set(key, value); // persist
         PlayerPrefs.Save();      
-
-        /// use switch to clamp or add logic for setting each parameters!
     }
+
     #endregion
 }

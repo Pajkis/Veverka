@@ -39,7 +39,7 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Volume")]
     private float volumeEffects = 0;
     private float volumeMusic = 0;
-    private float volumeUI = 0;
+    private float volumeMenu = 0;
 
     // audio sources and channels
     private Dictionary<SoundChannel, AudioSource> sources = new();
@@ -95,11 +95,11 @@ public class AudioManager : MonoBehaviour
 
         volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / 10f;
         volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / 10f;
-        volumeUI = GameSettings.Instance.Get(GameSettingsEnum.UiVolume) / 10f;
+        volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / 10f;
 
         sources[SoundChannel.SoundEffect].volume = volumeEffects;
         sources[SoundChannel.SoundMusic].volume = volumeMusic;
-        sources[SoundChannel.SoundUI].volume = volumeUI;
+        sources[SoundChannel.SoundUI].volume = volumeMenu;
 
         // other init settings
         sources[SoundChannel.SoundMusic].loop = true;
@@ -146,7 +146,7 @@ public class AudioManager : MonoBehaviour
         {
             GameSettingsEnum.EffectVolume => SoundChannel.SoundEffect,
             GameSettingsEnum.MusicVolume => SoundChannel.SoundMusic,
-            GameSettingsEnum.UiVolume => SoundChannel.SoundUI,
+            GameSettingsEnum.MenuVolume => SoundChannel.SoundUI,
             _ => SoundChannel.NoSound
         };
                 

@@ -9,7 +9,7 @@ public class SettingsMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        Debug.Log("Back button clicked");
+        //Debug.Log("Back button clicked");
         Destroy(gameObject);
     }
 
