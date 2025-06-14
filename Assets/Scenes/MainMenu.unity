@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 165860740}
   - component: {fileID: 165860739}
   - component: {fileID: 165860738}
-  - component: {fileID: 165860741}
   m_Layer: 5
   m_Name: ButtonPlayers
   m_TagString: UIButton
@@ -256,19 +255,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 165860736}
   m_CullTransparentMesh: 1
---- !u!114 &165860741
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 165860736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonTag: UIButton
 --- !u!1 &193971446
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +740,6 @@ GameObject:
   - component: {fileID: 749104178}
   - component: {fileID: 749104177}
   - component: {fileID: 749104176}
-  - component: {fileID: 749104179}
   m_Layer: 5
   m_Name: ButtonExit
   m_TagString: UIButton
@@ -876,19 +861,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749104174}
   m_CullTransparentMesh: 1
---- !u!114 &749104179
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749104174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonTag: UIButton
 --- !u!1 &887100632
 GameObject:
   m_ObjectHideFlags: 0
@@ -901,7 +873,6 @@ GameObject:
   - component: {fileID: 887100636}
   - component: {fileID: 887100635}
   - component: {fileID: 887100634}
-  - component: {fileID: 887100637}
   m_Layer: 5
   m_Name: ButtonStart
   m_TagString: UIButton
@@ -1022,19 +993,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 887100632}
   m_CullTransparentMesh: 1
---- !u!114 &887100637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887100632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonTag: UIButton
 --- !u!1 &1260966370
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,7 +1139,6 @@ GameObject:
   - component: {fileID: 1654916502}
   - component: {fileID: 1654916501}
   - component: {fileID: 1654916500}
-  - component: {fileID: 1654916503}
   m_Layer: 5
   m_Name: ButtonHighScores
   m_TagString: UIButton
@@ -1303,19 +1260,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654916498}
   m_CullTransparentMesh: 1
---- !u!114 &1654916503
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1654916498}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonTag: UIButton
 --- !u!1 &1796153402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1328,7 +1272,6 @@ GameObject:
   - component: {fileID: 1796153406}
   - component: {fileID: 1796153405}
   - component: {fileID: 1796153404}
-  - component: {fileID: 1796153407}
   m_Layer: 5
   m_Name: ButtonSettings
   m_TagString: UIButton
@@ -1450,19 +1393,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1796153402}
   m_CullTransparentMesh: 1
---- !u!114 &1796153407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1796153402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonTag: UIButton
 --- !u!1 &1809411010
 GameObject:
   m_ObjectHideFlags: 0
