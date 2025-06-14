@@ -35,7 +35,6 @@ public static class GameSettingsUtils
         return settings;
     }
 
-
     /// <summary>
     /// Set integer game settings properties
     /// </summary>

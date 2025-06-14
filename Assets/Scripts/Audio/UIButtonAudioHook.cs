@@ -7,30 +7,31 @@ using UnityEngine.UI;
 /// </summary>
 public class UIButtonAudioHook : MonoBehaviour
 {
-    [SerializeField] private string buttonTag = "UIButton";
-
     // hook all butons with tag
     void Start()
     {
-        GameObject[] buttons = GameObject.FindGameObjectsWithTag(buttonTag);
+        Button[] buttons = GetComponentsInChildren<Button>(includeInactive: true);
 
-        foreach (GameObject btnObj in buttons)
+        foreach (Button button in buttons)
         {
-            Button button = btnObj.GetComponent<Button>();
-            if (button != null)
-            {
-                button.onClick.AddListener(() =>
-                {
-                    AudioManager.Instance?.PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
-                });
-            }
+            // Prevent double-click listeners
+            button.onClick.RemoveAllListeners();
 
+            // Add click sound
+            button.onClick.AddListener(() =>
+            {
+                AudioManager.Instance?.PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
+            });
+            
             // Add hover sound via EventTrigger
-            AddHoverSound(btnObj);
+            AddHoverSound(button.gameObject);
         }       
     }
 
-
+    /// <summary>
+    /// Add hover sound eventtrigger 
+    /// </summary>
+    /// <param name="buttonObj">target button on current screen</param>
     void AddHoverSound(GameObject buttonObj)
     {
         EventTrigger trigger = buttonObj.GetComponent<EventTrigger>();
@@ -39,15 +40,26 @@ public class UIButtonAudioHook : MonoBehaviour
             trigger = buttonObj.AddComponent<EventTrigger>();
         }
 
-        EventTrigger.Entry entry = new EventTrigger.Entry
+        // Check if a hover sound entry already exists
+        foreach (var entry in trigger.triggers)
+        {
+            if (entry.eventID == EventTriggerType.PointerEnter)
+            {
+                // Already added
+                return;
+            }
+        }
+
+        // add hover entry
+        EventTrigger.Entry entryHover = new EventTrigger.Entry
         {
             eventID = EventTriggerType.PointerEnter
         };
-        entry.callback.AddListener((data) =>
+        entryHover.callback.AddListener((data) =>
         {
             AudioManager.Instance?.PlaySound(SoundChannel.SoundUI, UiEnum.ButtonHover);
         });
 
-        trigger.triggers.Add(entry);
+        trigger.triggers.Add(entryHover);
     }
 }
