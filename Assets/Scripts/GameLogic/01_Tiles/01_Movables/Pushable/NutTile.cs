@@ -9,7 +9,7 @@ using UnityEngine.Events;
 /// </summary>
 public class NutTile : PushableTile
 {
-
+    #region init methods
     /// <summary>
     /// Initialize tile type on grid position
     /// </summary>
@@ -28,6 +28,18 @@ public class NutTile : PushableTile
         this.gridPosition = gridPosition;
     }
 
+    #endregion
+
+    #region methods
+    /// <summary>
+    /// On Move start action
+    /// </summary>
+    protected override void OnMoveStart()
+    {
+        AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.NutMove);
+        base.OnMoveStart();
+    }
+
     /// <summary>
     /// On move complete method
     /// </summary>
@@ -36,6 +48,7 @@ public class NutTile : PushableTile
     {
         GameGrid.Instance.Pushables.Remove(gridPosition);
 
+        //update dictionary
         if (!GameGrid.Instance.IsGoalAt(targetPosition))
         {
             GameGrid.Instance.Pushables[targetPosition] = this;
@@ -43,15 +56,18 @@ public class NutTile : PushableTile
         }
         else
         {
-
+            // destroy goal nad nut
             GameGrid.Instance.RemoveTileObject(GameGrid.Instance.Goals, targetPosition);
             Destroy(gameObject);
             GameGrid.Instance.SetTileType(targetPosition, TileType.Empty);
-            unityEvents[EventEnum.NutInGoalEvent]?.Invoke(1);
+
+            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);
+            unityEvents[EventEnum.NutInGoalEvent]?.Invoke(1);            
         }
 
         gridPosition = targetPosition;
         isMoving = false;
     }
+    #endregion
 }
-   
+

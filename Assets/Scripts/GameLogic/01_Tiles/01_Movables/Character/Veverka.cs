@@ -98,8 +98,8 @@ public class Veverka : MovableTile, IRotable
                 if (pushableObject.CanBePushed(inputDirection))
                 {
                     pushableObject.Move(inputDirection);
-                    Move(inputDirection);
-                }
+                    Move(inputDirection);                
+                                    }
                 else
                 {
                     // Optionally animate failed push
@@ -115,9 +115,18 @@ public class Veverka : MovableTile, IRotable
         // rotate to input arrow direction
         else
         {          
-            facingDirection = Rotate(inputDirection); 
+            facingDirection = Rotate(inputDirection);
+            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaRotate);
         }
     }
-    
+
+    /// <summary>
+    /// On Move start action
+    /// </summary>
+    protected override void OnMoveStart()
+    {
+        AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
+    }
+
     #endregion
 }

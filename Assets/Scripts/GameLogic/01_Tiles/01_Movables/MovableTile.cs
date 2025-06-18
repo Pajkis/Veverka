@@ -54,6 +54,7 @@ public class MovableTile : TileObject
             OnMoveStart();
             float moveDuration = duration / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
             Vector2Int targetPosition = GridUtils.GetAdjacentPosition(gridPosition, direction, moveDistance);
+            
             StartCoroutine(MoveRoutine(targetPosition , moveDuration));           
         }
     }
@@ -85,14 +86,13 @@ public class MovableTile : TileObject
 
         OnMoveComplete(targetPosition);
     }
-    #endregion
-
+ 
     /// <summary>
     /// On Move start action
     /// </summary>
     protected virtual void OnMoveStart()
-    { 
-    
+    {
+      
     }
 
     /// <summary>
@@ -105,5 +105,5 @@ public class MovableTile : TileObject
         isMoving = false;
     }
 
-
+    #endregion
 }

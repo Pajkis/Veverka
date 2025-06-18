@@ -40,7 +40,7 @@ public class GamePlay :  IntEventInvoker
     /// </summary>
     /// <param name="goalCount"></param>
     void SetLevelGoalCount(int goalCount)
-    { 
+    {       
         levelGoalCount = goalCount;
         Debug.Log($"Left goals: {levelGoalCount}");
     }
@@ -49,7 +49,7 @@ public class GamePlay :  IntEventInvoker
     /// Update goal count, check for level complete condition
     /// </summary>
     void UpdateGoalCount(int goalReduction)
-    {
+    {        
         levelGoalCount -= goalReduction;
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 

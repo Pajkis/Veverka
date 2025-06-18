@@ -28,7 +28,7 @@ public class PushableTile: MovableTile
     /// </summary>
     protected override void OnMoveStart()
     {
-        // Clear old grid tile, remove from dictionary
+        // Clear old grid tile, remove from dictionary       
         GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);        
     }
 
