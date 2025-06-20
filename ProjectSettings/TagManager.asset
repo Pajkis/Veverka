@@ -8,6 +8,8 @@ TagManager:
   - Nut
   - Liskacek
   - PauseMenu
+  - UIButton
+  - UISlider
   layers:
   - Default
   - TransparentFX

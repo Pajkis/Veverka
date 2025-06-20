@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 165860738}
   m_Layer: 5
   m_Name: ButtonPlayers
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,7 +207,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 405905180}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: HandleQuitButtonOnClickEvent
+        m_MethodName: HandlePlayerButtonOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -267,7 +267,7 @@ GameObject:
   - component: {fileID: 193971449}
   - component: {fileID: 193971448}
   m_Layer: 5
-  m_Name: CurrentPlayer
+  m_Name: LabelCurrentPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -538,6 +538,7 @@ GameObject:
   - component: {fileID: 405905177}
   - component: {fileID: 405905176}
   - component: {fileID: 405905180}
+  - component: {fileID: 405905181}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -621,9 +622,9 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2079229376}
+  - {fileID: 193971447}
   - {fileID: 887100633}
   - {fileID: 749104175}
-  - {fileID: 193971447}
   - {fileID: 165860737}
   - {fileID: 1796153403}
   - {fileID: 1654916499}
@@ -646,6 +647,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67a08fab36481f4b96c4ed63966d37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &405905181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405905175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonTag: UIButton
 --- !u!1 &559265877
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,7 +742,7 @@ GameObject:
   - component: {fileID: 749104176}
   m_Layer: 5
   m_Name: ButtonExit
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -799,7 +813,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 405905180}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: HandleQuitButtonOnClickEvent
+        m_MethodName: HandleQuitGameButtonOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -861,7 +875,7 @@ GameObject:
   - component: {fileID: 887100634}
   m_Layer: 5
   m_Name: ButtonStart
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1127,7 +1141,7 @@ GameObject:
   - component: {fileID: 1654916500}
   m_Layer: 5
   m_Name: ButtonHighScores
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1196,9 +1210,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 405905180}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: HandleHighScoreButtonOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1260,7 +1274,7 @@ GameObject:
   - component: {fileID: 1796153404}
   m_Layer: 5
   m_Name: ButtonSettings
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1329,9 +1343,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 405905180}
         m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: 
+        m_MethodName: HandleGameSettingsButtonOnClickEvent
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

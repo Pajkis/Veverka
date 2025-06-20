@@ -48,14 +48,23 @@ public class PauseMenu : IntEventInvoker
     }
 
     /// <summary>
+    /// Handles game settings menu on click event
+    /// </summary>
+    public void HandleGameSettingsButtonOnClickEvent()
+    {
+        MenuManager.GoToMenu(MenuEnum.SettingsMenu);
+    }
+
+    /// <summary>
     /// Handles on click quit button event
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
         unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);              
+        MenuManager.GoToMenu(MenuEnum.MainMenu);
         Destroy(gameObject);
-        MenuManager.GoToMenu(MenuEnum.MainMenu);    
     }
 
 }

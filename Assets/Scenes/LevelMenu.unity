@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 59454647}
   m_Layer: 5
   m_Name: ButtonLevel8
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 65257862}
   m_Layer: 5
   m_Name: ButtonLevel4
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 438416756}
   m_Layer: 5
   m_Name: ButtonLevel7
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -669,7 +669,7 @@ GameObject:
   - component: {fileID: 476496951}
   m_Layer: 5
   m_Name: ButtonLevel10
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -802,7 +802,7 @@ GameObject:
   - component: {fileID: 598753326}
   m_Layer: 5
   m_Name: ButtonLevel9
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1205,7 +1205,7 @@ GameObject:
   - component: {fileID: 807631904}
   m_Layer: 5
   m_Name: ButtonLevel1
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1338,7 +1338,7 @@ GameObject:
   - component: {fileID: 838008575}
   m_Layer: 5
   m_Name: ButtonBack
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1809,7 +1809,7 @@ GameObject:
   - component: {fileID: 1295432628}
   m_Layer: 5
   m_Name: ButtonLevel2
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2346,7 +2346,7 @@ GameObject:
   - component: {fileID: 1501343286}
   m_Layer: 5
   m_Name: ButtonLevel6
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2943,7 +2943,7 @@ GameObject:
   - component: {fileID: 2031435086}
   m_Layer: 5
   m_Name: ButtonLevel3
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3075,6 +3075,7 @@ GameObject:
   - component: {fileID: 2082483735}
   - component: {fileID: 2082483734}
   - component: {fileID: 2082483738}
+  - component: {fileID: 2082483739}
   m_Layer: 5
   m_Name: LevelMenu
   m_TagString: Untagged
@@ -3188,6 +3189,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b7d55ab858321d4cb9e3f0977f34757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2082483739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2082483733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonTag: UIButton
 --- !u!1 &2088394075
 GameObject:
   m_ObjectHideFlags: 0
@@ -3202,7 +3216,7 @@ GameObject:
   - component: {fileID: 2088394077}
   m_Layer: 5
   m_Name: ButtonLevel5
-  m_TagString: Untagged
+  m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

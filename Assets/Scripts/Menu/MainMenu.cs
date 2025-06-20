@@ -32,9 +32,17 @@ public class MainMenu : MonoBehaviour
     }
 
     /// <summary>
+    /// Handles game settings menu on click event
+    /// </summary>
+    public void HandleGameSettingsButtonOnClickEvent()
+    {
+       MenuManager.GoToMenu(MenuEnum.SettingsMenu);
+    }
+
+    /// <summary>
     /// Handles the on click event from the quit button
     /// </summary>
-    public void HandleQuitButtonOnClickEvent() 
+    public void HandleQuitGameButtonOnClickEvent() 
     { 
         Application.Quit(); 
     }

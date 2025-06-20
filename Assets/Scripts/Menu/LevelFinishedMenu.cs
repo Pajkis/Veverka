@@ -65,6 +65,7 @@ public class LevelFinishedMenu : IntEventInvoker
     {
         Time.timeScale = 1;
         unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
         MenuManager.GoToMenu(MenuEnum.MainMenu);
         Destroy(gameObject);
     }
