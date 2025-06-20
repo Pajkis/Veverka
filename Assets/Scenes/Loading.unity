@@ -360,8 +360,13 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
   buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
   sliderMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
-  menuBackground: {fileID: 8300000, guid: cebbeb55a93154e42b21ff5981bc5ca1, type: 3}
-  gameBackground: {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
+  menuSongs:
+  - {fileID: 8300000, guid: 65eaff83ff1ecba47816d91dbf36845d, type: 3}
+  - {fileID: 8300000, guid: cebbeb55a93154e42b21ff5981bc5ca1, type: 3}
+  - {fileID: 8300000, guid: 2d1569c8913185b47a411d34786ad7fd, type: 3}
+  gameSongs:
+  - {fileID: 8300000, guid: c5afbdb8f2ae12e4986c0e4b402a2399, type: 3}
+  - {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
 --- !u!1001 &6223680541039381044
 PrefabInstance:
   m_ObjectHideFlags: 0

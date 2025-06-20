@@ -24,6 +24,7 @@ public class LevelMenu : IntEventInvoker
     /// <param name="levelNumber"></param>
     public void HandleLevelButtonOnClickEvent(int levelNumber)
     {
+        AudioManager.Instance.PlayRandomMusic(MusicEnum.Game);
         unityEvents[EventEnum.LevelStartEvent].Invoke(levelNumber);
     }
 

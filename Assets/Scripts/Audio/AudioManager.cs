@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -24,16 +26,17 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip buttonHover;
     [SerializeField] private AudioClip sliderMove;
 
-    [Header("Music")]
-    [SerializeField] private AudioClip menuBackground;
-    [SerializeField] private AudioClip gameBackground;
+    [Header("Music")]  
+    [SerializeField] private List<AudioClip> menuSongs;
+    [SerializeField] private List<AudioClip> gameSongs;
+   
     #endregion
 
     #region fields
 
     [Header("Audio Sources")]
     private AudioSource effectsSource;
-    private AudioSource musicSource;
+    private AudioSource backgroundMusicSource;
     private AudioSource uiSource;
 
     [Header("Audio Volume")]
@@ -42,7 +45,9 @@ public class AudioManager : MonoBehaviour
     private float volumeMenu = 0;
 
     // audio sources and channels
-    private Dictionary<SoundChannel, AudioSource> sources = new();
+    private Dictionary<SoundChannel, AudioSource> sources = new(); // Sfx and menu sounds
+    private Dictionary<MusicEnum, List<AudioClip>> musicPlaylists; // background music soundds
+    private MusicEnum currentMusicType;
     private Dictionary<Enum, AudioClip> clips = new();
     #endregion
 
@@ -65,18 +70,30 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Update rutine
+    /// </summary>
+     void Update()
+    {
+        // play next song after it ends
+        if (!backgroundMusicSource.isPlaying)
+        {
+            PlayRandomMusic(currentMusicType);
+        }
+    }
+
+    /// <summary>
     /// Init volume of sounds, play background music
     /// </summary>
     public void Initialize()
     {
         // Add separate audio sources
         effectsSource = gameObject.AddComponent<AudioSource>();
-        musicSource = gameObject.AddComponent<AudioSource>();
+        backgroundMusicSource = gameObject.AddComponent<AudioSource>();
         uiSource = gameObject.AddComponent<AudioSource>();
 
         // map audio sources
         sources[SoundChannel.SoundEffect] = effectsSource;
-        sources[SoundChannel.SoundMusic] = musicSource;
+        sources[SoundChannel.SoundMusic] = backgroundMusicSource;
         sources[SoundChannel.SoundUI] = uiSource;
 
         // Map clips
@@ -90,9 +107,14 @@ public class AudioManager : MonoBehaviour
         clips[UiEnum.ButtonHover] = buttonHover;
         clips[UiEnum.Slider] = sliderMove;
 
-        clips[MusicEnum.Menu] = menuBackground;
-        clips[MusicEnum.Game] = gameBackground;
+        //Map music
+        musicPlaylists = new Dictionary<MusicEnum, List<AudioClip>>
+        {
+          { MusicEnum.Menu, menuSongs },
+          { MusicEnum.Game, gameSongs }
+        };
 
+        // load volume
         volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / 10f;
         volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / 10f;
         volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / 10f;
@@ -102,10 +124,11 @@ public class AudioManager : MonoBehaviour
         sources[SoundChannel.SoundUI].volume = volumeMenu;
 
         // other init settings
-        sources[SoundChannel.SoundMusic].loop = true;
+        // sources[SoundChannel.SoundMusic].loop = true;
 
-        // play sound
-        PlaySound(SoundChannel.SoundMusic, MusicEnum.Menu);
+        // play background sound
+        currentMusicType = MusicEnum.Menu;
+        PlayRandomMusic(MusicEnum.Menu);
 
     }
 
@@ -130,6 +153,47 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// play random background music
+    /// </summary>
+    /// <param name="musicType"></param>
+    public void PlayRandomMusic(MusicEnum musicType)
+    {
+        if (!musicPlaylists.TryGetValue(musicType, out List<AudioClip> playlist) || playlist == null || playlist.Count == 0)
+            return;
+
+        if (backgroundMusicSource == null)
+            return;
+
+        AudioClip oldClip = backgroundMusicSource.clip;
+        AudioClip newclip = null;
+        
+        // only one song in playlist
+        if (playlist.Count == 1)
+        { 
+            newclip = playlist[0];
+        }
+        // play random song
+        else
+        {
+            int attempts = 0;
+            do 
+            { 
+             newclip = playlist[UnityEngine.Random.Range(0, playlist.Count)];
+             attempts++;
+            }
+            while (attempts <= 10 && newclip == oldClip);            
+        }
+        
+        backgroundMusicSource.clip = newclip;
+        currentMusicType = musicType;
+        backgroundMusicSource.Play();
+    }
+
+
+    /// <summary>
+    /// Play Ui click sound event handle
+    /// </summary>
     public void PlayUIClickSound()
     {
         PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
