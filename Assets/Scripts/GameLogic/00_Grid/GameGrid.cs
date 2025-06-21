@@ -4,6 +4,7 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 
 /// <summary>
@@ -325,7 +326,38 @@ public class GameGrid : IntEventInvoker
     {
         return pushables.GetValueOrDefault(position);
     }
-    
+
+
+    /// <summary>
+    /// Remove pushable in dictionary on pasiton
+    /// </summary>
+    /// <param name="position">position to remove pushable</param>    
+    public void RemovePushableAt(Vector2Int position)
+    {
+        if (!IsInGrid(position))
+        {
+            Debug.LogError("Remove tile is outside the grid");
+            return;
+        }
+        pushables.Remove(position);
+    }
+
+    /// <summary>
+    /// Sets Pushable in dictionary on position
+    /// </summary>
+    /// <param name="position"> position to add pushable</param>
+    /// <param name="tileObject">pushable tile object</param>
+    public void SetPushableAt(Vector2Int position, PushableTile tileObject)
+    { 
+       if (!IsInGrid(position))
+         {
+            Debug.LogError("Set tile is outside the grid");
+            return;
+         }   
+       pushables[position] = tileObject;
+    }
+
+
     /// <summary>
     /// Get positon log of movable objects position
     /// </summary>
