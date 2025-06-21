@@ -46,12 +46,12 @@ public class NutTile : PushableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        GameGrid.Instance.Pushables.Remove(gridPosition);
+        GameGrid.Instance.RemovePushableAt(gridPosition);      
 
         //update dictionary
         if (!GameGrid.Instance.IsGoalAt(targetPosition))
         {
-            GameGrid.Instance.Pushables[targetPosition] = this;
+            GameGrid.Instance.SetPushableAt(targetPosition, this);
             GameGrid.Instance.SetTileType(targetPosition, tileType);
         }
         else
