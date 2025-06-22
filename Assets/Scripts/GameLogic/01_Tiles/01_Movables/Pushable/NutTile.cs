@@ -56,10 +56,17 @@ public class NutTile : PushableTile
         }
         else
         {
-            // destroy goal nad nut
+            // nut enters goal event raise
+            pushableInGoalEvent.Raise(new PushableInGoalPayload
+            {
+                Position = targetPosition,
+                PushableTileType = this
+            });
+
             GameGrid.Instance.RemoveTileObject(GameGrid.Instance.Goals, targetPosition);
-            Destroy(gameObject);
             GameGrid.Instance.SetTileType(targetPosition, TileType.Empty);
+            Destroy(gameObject);
+           
 
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);
             unityEvents[EventEnum.NutInGoalEvent]?.Invoke(1);            

@@ -4,5 +4,14 @@ using UnityEngine;
 
 public class GoalTile : StaticTile
 {
-    
+
+
+    protected void OnEnable()
+    {
+     //   PushableInGoalEvent
+    }
+
+
+
+
 }
