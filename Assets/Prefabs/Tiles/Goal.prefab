@@ -97,3 +97,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11afa5beaf86d724a87584b065aaa33a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}

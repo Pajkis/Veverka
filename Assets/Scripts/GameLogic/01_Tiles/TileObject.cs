@@ -38,7 +38,6 @@ public abstract class TileObject : IntEventInvoker
     /// <param name="gridPosition"></param>
     public virtual void Init(TileType tileType, Vector2Int gridPosition)
     {
-
         this.tileType = tileType;
         this.gridPosition = gridPosition;
     }

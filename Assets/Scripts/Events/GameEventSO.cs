@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Scriptable object game events
+/// Scriptable object game events with payload
 /// </summary>
 /// <typeparam name="T">event parameters</typeparam>
 public class GameEventSO<T> : ScriptableObject

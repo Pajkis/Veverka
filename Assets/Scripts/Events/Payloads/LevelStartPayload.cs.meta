@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: 1e3eac35c10bfa549a556ebd56eba4bc
+guid: 306c1d7652ff96c408e93070f0553e5b
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

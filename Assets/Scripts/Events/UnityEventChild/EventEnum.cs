@@ -11,6 +11,5 @@ public enum EventEnum
  LevelRestartEvent,
  LevelFinishedEvent,
  LevelGoalCountSetEvent,
- NutInGoalEvent,
- ResetGridEvent
+  ResetGridEvent
 }
