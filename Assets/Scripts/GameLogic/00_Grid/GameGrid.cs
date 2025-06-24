@@ -19,6 +19,11 @@ public class GameGrid : IntEventInvoker
 
     #endregion
 
+    #region events
+    [SerializeField]
+    private LevelInitEvent levelInitEvent;
+    #endregion
+
     #region Serialized fields
 
     // Prefabs
@@ -81,14 +86,7 @@ public class GameGrid : IntEventInvoker
         else
         {
             Destroy(gameObject);
-        }
-               
-        // Add invokers for events
-        if (!unityEvents.ContainsKey(EventEnum.LevelGoalCountSetEvent))
-        {
-            unityEvents.Add(EventEnum.LevelGoalCountSetEvent, new UnityEvent<int>());
-        }
-        EventManager.AddInvoker(EventEnum.LevelGoalCountSetEvent, this);
+        }       
 
         // Add listners for events
         EventManager.AddListener(EventEnum.ResetGridEvent, HandleResetGrid);
@@ -111,10 +109,11 @@ public class GameGrid : IntEventInvoker
         // Spawn objects based on tile types
         BuildLevelFromGrid();
 
-        if (unityEvents.ContainsKey(EventEnum.LevelGoalCountSetEvent))
+        //raise event
+        levelInitEvent.Raise(new LevelInitPayload
         {
-            unityEvents[EventEnum.LevelGoalCountSetEvent]?.Invoke(Goals.Count);
-        }
+            GoalCount = Goals.Count
+        });
         Debug.Log($"Goal Count in GameGrid: {Goals.Count}");
 
         OffsetGridToBottomLeft();

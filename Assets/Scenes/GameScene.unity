@@ -344,6 +344,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
+  levelInitEvent: {fileID: 11400000, guid: c57de046fb3b7a546b5a1e24544bfb2d, type: 2}
 --- !u!4 &988765905
 Transform:
   m_ObjectHideFlags: 0
@@ -502,6 +503,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb29111b26f85fc41b03774cf1607f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelInitEvent: {fileID: 11400000, guid: c57de046fb3b7a546b5a1e24544bfb2d, type: 2}
   veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
   liskacekPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}

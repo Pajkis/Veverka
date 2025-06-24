@@ -12,6 +12,9 @@ public class GamePlay :  IntEventInvoker
     [SerializeField]
     private PushableInGoalEvent pushableInGoalEvent;
 
+    [SerializeField]
+    private LevelInitEvent levelInitEvent;
+
     int levelGoalCount = 0;
     #endregion
 
@@ -20,9 +23,9 @@ public class GamePlay :  IntEventInvoker
     /// </summary>
     void Awake()
     {      
-        // add listeners
-        EventManager.AddListener(EventEnum.LevelGoalCountSetEvent, SetLevelGoalCount);
+        // add listeners     
         pushableInGoalEvent.AddListener(UpdateGoalCount);
+        levelInitEvent.AddListener(SetLevelGoalCount);
     }
 
     // Update is called once per frame
@@ -50,9 +53,9 @@ public class GamePlay :  IntEventInvoker
     /// Set level goal count for current level
     /// </summary>
     /// <param name="goalCount"></param>
-    void SetLevelGoalCount(int goalCount)
+    void SetLevelGoalCount(LevelInitPayload payload)
     {       
-        levelGoalCount = goalCount;
+        levelGoalCount = payload.GoalCount;
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 

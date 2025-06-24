@@ -9,6 +9,5 @@ public enum EventEnum
 { 
  LevelRestartEvent,
  LevelFinishedEvent,
- LevelGoalCountSetEvent,
   ResetGridEvent
 }
