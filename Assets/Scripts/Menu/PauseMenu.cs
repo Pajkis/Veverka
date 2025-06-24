@@ -8,18 +8,21 @@ using UnityEngine.Events;
 /// </summary>
 public class PauseMenu : IntEventInvoker
 {
+    #region fields
+    [SerializeField]
+    private LevelStartEvent levelStartEvent;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
+    #endregion
+
+    #region methods
+
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*
-
-        // Add invokers for events
-        if (!unityEvents.ContainsKey(EventEnum.LevelStartEvent))
-        {
-            unityEvents.Add(EventEnum.LevelStartEvent, new LevelStartEvent());            
-        }
-        EventManager.AddInvoker(EventEnum.LevelStartEvent, this);
-        
+                
         if (!unityEvents.ContainsKey(EventEnum.ResetGridEvent))
         {
             unityEvents.Add(EventEnum.ResetGridEvent, new UnityEvent<int>());
@@ -43,7 +46,12 @@ public class PauseMenu : IntEventInvoker
     {
         Time.timeScale = 1;
         unityEvents[EventEnum.ResetGridEvent].Invoke(0);
-        unityEvents[EventEnum.LevelStartEvent].Invoke(LevelUtils.SelectedLevel);
+       
+        //Raise level start event
+        levelStartEvent.Raise(new LevelStartPayload
+        {
+            levelNumber = levelDatabase.CurrentLevelIndex,
+        });
         Destroy(gameObject);
     }
 
@@ -66,5 +74,5 @@ public class PauseMenu : IntEventInvoker
         MenuManager.GoToMenu(MenuEnum.MainMenu);
         Destroy(gameObject);
     }
-
+    #endregion
 }

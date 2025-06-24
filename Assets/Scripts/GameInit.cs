@@ -10,8 +10,7 @@ public class GameInit : MonoBehaviour
     void Awake()
     {
         EventManager.InitEvents();
-        LevelUtils.Initialize();
-        
+            
         DontDestroyOnLoad(gameObject);
     }
 

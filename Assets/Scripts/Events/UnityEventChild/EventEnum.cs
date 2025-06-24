@@ -7,7 +7,6 @@ using UnityEngine;
 /// </summary>
 public enum EventEnum
 { 
- LevelStartEvent,
  LevelRestartEvent,
  LevelFinishedEvent,
  LevelGoalCountSetEvent,

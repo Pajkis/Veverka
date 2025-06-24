@@ -10,19 +10,22 @@ using UnityEngine.UI;
 /// </summary>
 public class LevelFinishedMenu : IntEventInvoker
 {
+    #region fields
     GameObject gridRoot;
     GameObject buttonNextLevel;
 
+    [SerializeField]
+    protected LevelStartEvent levelStartEvent;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
+    #endregion
+
+    #region methods
+
     // Start is called before the first frame update
     void Start()
-    {
-        // add invokers
-        if (!unityEvents.ContainsKey(EventEnum.LevelStartEvent))
-        {
-            unityEvents.Add(EventEnum.LevelStartEvent, new LevelStartEvent());            
-        }
-        EventManager.AddInvoker(EventEnum.LevelStartEvent, this);
-
+    {  
         // Add invokers for events
         if (!unityEvents.ContainsKey(EventEnum.ResetGridEvent))
         {
@@ -33,7 +36,7 @@ public class LevelFinishedMenu : IntEventInvoker
         // hide button on max level finished
         buttonNextLevel = GameObject.Find("ButtonNextLevel");
         
-        if (LevelUtils.SelectedLevel == 10)
+        if (levelDatabase.CurrentLevelIndex == 10)
         {
             buttonNextLevel.SetActive(false);
         }
@@ -47,14 +50,18 @@ public class LevelFinishedMenu : IntEventInvoker
 
     /// <summary>
     /// Handle next level button on click event
-    /// </summary>
-    /// <param name="nextLevel"></param>
-    public void HandleNextLevelButtonOnClickEvent(int nextLevel)
+    /// </summary>  
+    public void HandleNextLevelButtonOnClickEvent()
     {
         Time.timeScale = 1;        
         unityEvents[EventEnum.ResetGridEvent].Invoke(0);
-        nextLevel = LevelUtils.SelectedLevel + 1;
-        unityEvents[EventEnum.LevelStartEvent].Invoke(nextLevel);
+
+        //Raise event
+        levelDatabase.CurrentLevelIndex++;
+        levelStartEvent.Raise(new LevelStartPayload 
+        {
+          levelNumber = levelDatabase.CurrentLevelIndex,
+        });
         Destroy(gameObject);
     }
 
@@ -69,4 +76,6 @@ public class LevelFinishedMenu : IntEventInvoker
         MenuManager.GoToMenu(MenuEnum.MainMenu);
         Destroy(gameObject);
     }
+
+    #endregion
 }

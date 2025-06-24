@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 104517ee3d8f4fe46a4c55537211de20, type: 3}
-  m_Name: PushableInGoalEvent
+  m_Script: {fileID: 11500000, guid: 5b7aeddc9c17a7b428d11b652daa70a2, type: 3}
+  m_Name: LevelDatabase
   m_EditorClassIdentifier: 
-  onEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  CurrentLevelIndex: 0
