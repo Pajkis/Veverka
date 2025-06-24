@@ -15,7 +15,7 @@ public class LevelFinishedMenu : IntEventInvoker
     GameObject buttonNextLevel;
 
     [SerializeField]
-    protected LevelStartEvent levelStartEvent;
+    private LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -58,7 +58,7 @@ public class LevelFinishedMenu : IntEventInvoker
 
         //Raise event
         levelDatabase.CurrentLevelIndex++;
-        levelStartEvent.Raise(new LevelStartPayload 
+        levelSelectEvent.Raise(new LevelSelectPayload 
         {
           levelNumber = levelDatabase.CurrentLevelIndex,
         });

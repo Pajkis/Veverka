@@ -4,7 +4,7 @@ using UnityEngine;
 /// Level start event payload structure
 /// </summary>
 [System.Serializable]
-public struct LevelStartPayload
+public struct LevelSelectPayload
 {
    public int levelNumber;   
 }

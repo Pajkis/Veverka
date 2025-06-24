@@ -10,7 +10,7 @@ public class LevelMenu : MonoBehaviour
 
     #region fields
     [SerializeField]
-    protected LevelStartEvent levelStartEvent;
+    protected LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -26,7 +26,7 @@ public class LevelMenu : MonoBehaviour
 
         //Raise level start event
         levelDatabase.CurrentLevelIndex = levelNumber;
-        levelStartEvent.Raise(new LevelStartPayload
+        levelSelectEvent.Raise(new LevelSelectPayload
         {            
             levelNumber = levelDatabase.CurrentLevelIndex,
         });

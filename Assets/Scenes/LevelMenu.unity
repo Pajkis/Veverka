@@ -1824,7 +1824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33a5d20b3fc7aa74d8a16d5679e0634f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelStartEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
+  levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
 --- !u!224 &1155491506
 RectTransform:
@@ -3239,7 +3239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b7d55ab858321d4cb9e3f0977f34757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelStartEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
+  levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
 --- !u!114 &2082483739
 MonoBehaviour:

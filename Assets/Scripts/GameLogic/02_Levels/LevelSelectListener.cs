@@ -4,11 +4,11 @@ using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class LevelStartListener : MonoBehaviour
+public class LevelSelectListener : MonoBehaviour
 {
     #region fields
     [SerializeField]
-    private LevelStartEvent levelStartEvent;
+    private LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -21,7 +21,7 @@ public class LevelStartListener : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        levelStartEvent.AddListener(LevelStart);
+        levelSelectEvent.AddListener(LevelSelect);
     }
 
     /// <summary>
@@ -29,14 +29,14 @@ public class LevelStartListener : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-       levelStartEvent.RemoveListener(LevelStart);
+       levelSelectEvent.RemoveListener(LevelSelect);
     }
 
     /// <summary>
     /// level start event execute
     /// </summary>
     /// <param name="payload"></param>
-    private void LevelStart(LevelStartPayload payload)
+    private void LevelSelect(LevelSelectPayload payload)
     {
         levelDatabase.CurrentLevelIndex = payload.levelNumber;
         SceneManager.LoadScene("LevelLoading");

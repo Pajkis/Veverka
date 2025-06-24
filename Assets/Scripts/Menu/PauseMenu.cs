@@ -10,7 +10,7 @@ public class PauseMenu : IntEventInvoker
 {
     #region fields
     [SerializeField]
-    private LevelStartEvent levelStartEvent;
+    private LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -48,7 +48,7 @@ public class PauseMenu : IntEventInvoker
         unityEvents[EventEnum.ResetGridEvent].Invoke(0);
        
         //Raise level start event
-        levelStartEvent.Raise(new LevelStartPayload
+        levelSelectEvent.Raise(new LevelSelectPayload
         {
             levelNumber = levelDatabase.CurrentLevelIndex,
         });
