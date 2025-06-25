@@ -25,8 +25,9 @@ public class LevelMenu : MonoBehaviour
         //Raise level start event
         levelDatabase.CurrentLevelIndex = levelNumber;
         levelSelectEvent.Raise(new LevelSelectPayload
-        {            
+        {
             levelNumber = levelDatabase.CurrentLevelIndex,
+            resetRequested = false
         });
 
     }
