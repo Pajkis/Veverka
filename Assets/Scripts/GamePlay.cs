@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+
 /// <summary>
 /// Game play class
 /// handles game play lost/win logic and events 
 /// </summary>
-public class GamePlay :  IntEventInvoker
+public class GamePlay :  MonoBehaviour
 {
     #region fields
     [SerializeField]

@@ -1,11 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-
 
 /// <summary>
 /// Defining Game grid and basic grid functions

@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
 /// tile object basic abstract class
 /// </summary>
-public abstract class TileObject : IntEventInvoker
+public abstract class TileObject : MonoBehaviour
 {
     #region fields
     protected TileType tileType;

@@ -1,9 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UI;
 
 /// <summary>
 /// Level finished pop out menu handle class
