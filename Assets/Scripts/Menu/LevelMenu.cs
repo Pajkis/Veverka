@@ -1,22 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Select level menu handling class
 /// </summary>
-public class LevelMenu : IntEventInvoker
+public class LevelMenu : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        if(!unityEvents.ContainsKey(EventEnum.LevelStartEvent))
-        {
-           unityEvents.Add(EventEnum.LevelStartEvent, new LevelStartEvent());
-           EventManager.AddInvoker(EventEnum.LevelStartEvent, this);
-        }        
-        
-    }
+
+    #region fields
+    [SerializeField]
+    private LevelSelectEvent levelSelectEvent;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
+    #endregion
 
     /// <summary>
     /// Handle on click level button on click event
@@ -25,7 +21,14 @@ public class LevelMenu : IntEventInvoker
     public void HandleLevelButtonOnClickEvent(int levelNumber)
     {
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Game);
-        unityEvents[EventEnum.LevelStartEvent].Invoke(levelNumber);
+
+        //Raise level start event
+        levelDatabase.CurrentLevelIndex = levelNumber;
+        levelSelectEvent.Raise(new LevelSelectPayload
+        {            
+            levelNumber = levelDatabase.CurrentLevelIndex,
+        });
+
     }
 
     /// <summary>

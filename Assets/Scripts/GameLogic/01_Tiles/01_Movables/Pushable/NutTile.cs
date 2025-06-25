@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 /// <summary>
@@ -8,28 +5,7 @@ using UnityEngine.Events;
 /// 
 /// </summary>
 public class NutTile : PushableTile
-{
-    #region init methods
-    /// <summary>
-    /// Initialize tile type on grid position
-    /// </summary>
-    /// <param name="tileType"></param>
-    /// <param name="gridPosition"></param>
-    public override void Init(TileType tileType, Vector2Int gridPosition)
-    {
-        // Add invokers for events
-        if (!unityEvents.ContainsKey(EventEnum.NutInGoalEvent))
-        {
-            unityEvents.Add(EventEnum.NutInGoalEvent, new UnityEvent<int>());
-        }
-        EventManager.AddInvoker(EventEnum.NutInGoalEvent, this);
-
-        this.tileType = tileType;
-        this.gridPosition = gridPosition;
-    }
-
-    #endregion
-
+{   
     #region methods
     /// <summary>
     /// On Move start action
@@ -56,13 +32,18 @@ public class NutTile : PushableTile
         }
         else
         {
-            // destroy goal nad nut
-            GameGrid.Instance.RemoveTileObject(GameGrid.Instance.Goals, targetPosition);
-            Destroy(gameObject);
+            // nut enters goal event raise
+            pushableInGoalEvent.Raise(new PushableInGoalPayload
+            {
+                Position = targetPosition,
+                PushableTileType = this,
+                goalReduction = 1,
+            });
+           
             GameGrid.Instance.SetTileType(targetPosition, TileType.Empty);
+            Destroy(gameObject);           
 
-            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);
-            unityEvents[EventEnum.NutInGoalEvent]?.Invoke(1);            
+            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
         }
 
         gridPosition = targetPosition;

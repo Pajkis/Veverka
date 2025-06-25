@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using System.IO;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Level utilities class
@@ -9,33 +8,10 @@ using UnityEngine.SceneManagement;
 public static class LevelUtils
 {
     /// <summary>
-    /// selected Level
-    /// </summary>
-    public static int SelectedLevel { get; private set; }
-
-    /// <summary>
     /// loaded/validated grid for building the level
     /// </summary>
     public static TileType[,] CachedGrid { get; private set; }
-
-    /// <summary>
-    /// initialize of level - add listener for events
-    /// </summary>
-    public static void Initialize()
-    {
-        EventManager.AddListener(EventEnum.LevelStartEvent, HandleStartLevelEvent);
-    }
-
-    /// <summary>
-    /// handle start level event - get selected level
-    /// </summary>
-    /// <param name="levelNumber"></param>
-    static void HandleStartLevelEvent(int levelNumber)
-    {
-        SelectedLevel = levelNumber;
-        SceneManager.LoadScene("LevelLoading");
-    }
-
+        
     /// <summary>
     /// Loads data from file into array
     /// </summary>

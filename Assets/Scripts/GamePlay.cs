@@ -1,14 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+
 /// <summary>
 /// Game play class
 /// handles game play lost/win logic and events 
 /// </summary>
-public class GamePlay :  IntEventInvoker
+public class GamePlay :  MonoBehaviour
 {
     #region fields
+    [SerializeField]
+    private PushableInGoalEvent pushableInGoalEvent;
+
+    [SerializeField]
+    private LevelInitEvent levelInitEvent;
+
     int levelGoalCount = 0;
     #endregion
 
@@ -17,9 +21,9 @@ public class GamePlay :  IntEventInvoker
     /// </summary>
     void Awake()
     {      
-        // add listeners
-        EventManager.AddListener(EventEnum.LevelGoalCountSetEvent, SetLevelGoalCount);
-        EventManager.AddListener(EventEnum.NutInGoalEvent, UpdateGoalCount);
+        // add listeners     
+        pushableInGoalEvent.AddListener(UpdateGoalCount);
+        levelInitEvent.AddListener(SetLevelGoalCount);
     }
 
     // Update is called once per frame
@@ -36,21 +40,29 @@ public class GamePlay :  IntEventInvoker
     }
 
     /// <summary>
+    /// OnDisable method - called when object deactivate or before destroy
+    /// </summary>
+    private void OnDisable()
+    {
+        pushableInGoalEvent.RemoveListener(UpdateGoalCount);
+    }
+
+    /// <summary>
     /// Set level goal count for current level
     /// </summary>
     /// <param name="goalCount"></param>
-    void SetLevelGoalCount(int goalCount)
+    void SetLevelGoalCount(LevelInitPayload payload)
     {       
-        levelGoalCount = goalCount;
+        levelGoalCount = payload.GoalCount;
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 
     /// <summary>
     /// Update goal count, check for level complete condition
     /// </summary>
-    void UpdateGoalCount(int goalReduction)
+    void UpdateGoalCount(PushableInGoalPayload payload)
     {        
-        levelGoalCount -= goalReduction;
+        levelGoalCount -= payload.goalReduction;
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {

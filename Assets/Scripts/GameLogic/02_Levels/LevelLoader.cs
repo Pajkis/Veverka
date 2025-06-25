@@ -7,6 +7,13 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class LevelLoader: MonoBehaviour
 {
+
+    #region fields
+    [SerializeField]
+    private LevelDatabase levelDatabase;
+    #endregion
+
+
     #region Methods       
     void Start()
     {       
@@ -26,7 +33,7 @@ public class LevelLoader: MonoBehaviour
 
 
         // selected level to grid   
-        string levelName = ((LevelEnum)LevelUtils.SelectedLevel).ToString();
+        string levelName = ((LevelEnum)levelDatabase.CurrentLevelIndex).ToString();
         TileType[,] grid = LevelUtils.LoadGridFromCsv(levelName);
 
         if (grid != null)

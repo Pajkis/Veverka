@@ -1,21 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.UI;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
-
 
 /// <summary>
 /// Defining Game grid and basic grid functions
 /// </summary>
-public class GameGrid : IntEventInvoker
+public class GameGrid : MonoBehaviour
 {
     #region global vars
 
     // global grid - Singleton 
     public static GameGrid Instance { get; private set; }
+
+    #endregion
+
+    #region events
+    [SerializeField]
+    private LevelInitEvent levelInitEvent;
+
+    [SerializeField]
+    private LevelSelectEvent levelSelectEvent;
+
+    [SerializeField]
+    private ResetGridEvent resetGridEvent;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
 
     #endregion
 
@@ -82,16 +91,10 @@ public class GameGrid : IntEventInvoker
         {
             Destroy(gameObject);
         }
-               
-        // Add invokers for events
-        if (!unityEvents.ContainsKey(EventEnum.LevelGoalCountSetEvent))
-        {
-            unityEvents.Add(EventEnum.LevelGoalCountSetEvent, new UnityEvent<int>());
-        }
-        EventManager.AddInvoker(EventEnum.LevelGoalCountSetEvent, this);
 
-        // Add listners for events
-        EventManager.AddListener(EventEnum.ResetGridEvent, HandleResetGrid);
+        // add listeners for events
+        levelSelectEvent.AddListener(OnLevelSelected);
+        resetGridEvent.AddListener(ResetGrid);
     }
 
     #endregion
@@ -111,19 +114,18 @@ public class GameGrid : IntEventInvoker
         // Spawn objects based on tile types
         BuildLevelFromGrid();
 
-        if (unityEvents.ContainsKey(EventEnum.LevelGoalCountSetEvent))
+        //raise event
+        levelInitEvent.Raise(new LevelInitPayload
         {
-            unityEvents[EventEnum.LevelGoalCountSetEvent]?.Invoke(Goals.Count);
-        }
+            GoalCount = Goals.Count
+        });
         Debug.Log($"Goal Count in GameGrid: {Goals.Count}");
 
         OffsetGridToBottomLeft();
 
         return true;
     }
-
-   
-
+    
     /// <summary>
     /// Build a level from a grid
     /// </summary>
@@ -231,11 +233,29 @@ public class GameGrid : IntEventInvoker
         gridRoot.position = offset;
     }
 
+    private void OnLevelSelected(LevelSelectPayload payload)
+    {
+        if (payload.resetRequested)
+        {
+            ResetGrid();
+
+            // raise again for other listeners
+            levelSelectEvent.Raise(new LevelSelectPayload
+            {
+                levelNumber = payload.levelNumber,
+                resetRequested = false
+            });
+            return;
+        }
+
+        // běžná logika – např. GenerateGrid()
+    }
+
     /// <summary>
     /// Reset grid layout 
     /// </summary>
     /// <param name="noInt">no integer input necessary</param>
-    void HandleResetGrid(int noInt = 0)
+    void ResetGrid()
     {
         //Destroy old grid
         foreach (Transform child in gridRoot.transform)

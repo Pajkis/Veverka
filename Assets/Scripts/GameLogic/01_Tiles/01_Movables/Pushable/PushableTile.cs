@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class PushableTile: MovableTile
+public class PushableTile : MovableTile
 {
+
+    #region fields
+    [SerializeField] 
+    protected PushableInGoalEvent pushableInGoalEvent;
+    #endregion
+
 
     #region pushable methods
     /// <summary>
@@ -38,8 +44,8 @@ public class PushableTile: MovableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        GameGrid.Instance.Pushables.Remove(gridPosition);
-        GameGrid.Instance.Pushables[targetPosition] = this;
+        GameGrid.Instance.RemovePushableAt(gridPosition);
+        GameGrid.Instance.SetPushableAt(targetPosition, this);
         GameGrid.Instance.SetTileType(targetPosition, tileType);
        
         gridPosition = targetPosition;
