@@ -8,6 +8,5 @@ using UnityEngine;
 public enum EventEnum
 { 
  LevelRestartEvent,
- LevelFinishedEvent,
-  ResetGridEvent
+ LevelFinishedEvent,  
 }

@@ -6,5 +6,6 @@ using UnityEngine;
 [System.Serializable]
 public struct LevelSelectPayload
 {
-   public int levelNumber;   
+    public int levelNumber;
+    public bool resetRequested;
 }

@@ -10,7 +10,7 @@ public class LevelMenu : MonoBehaviour
 
     #region fields
     [SerializeField]
-    protected LevelSelectEvent levelSelectEvent;
+    private LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;

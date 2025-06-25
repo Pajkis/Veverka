@@ -6,11 +6,14 @@ using UnityEngine.Events;
 /// <summary>
 /// Pause Menu handling class
 /// </summary>
-public class PauseMenu : IntEventInvoker
+public class PauseMenu : MonoBehaviour
 {
     #region fields
     [SerializeField]
     private LevelSelectEvent levelSelectEvent;
+
+    [SerializeField]
+    private ResetGridEvent resetGridEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -21,13 +24,7 @@ public class PauseMenu : IntEventInvoker
     // Start is called before the first frame update
     void Start()
     {
-        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*
-                
-        if (!unityEvents.ContainsKey(EventEnum.ResetGridEvent))
-        {
-            unityEvents.Add(EventEnum.ResetGridEvent, new UnityEvent<int>());
-        }
-        EventManager.AddInvoker(EventEnum.ResetGridEvent, this);
+        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*         
     }
 
     /// <summary>
@@ -44,13 +41,13 @@ public class PauseMenu : IntEventInvoker
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        Time.timeScale = 1;
-        unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        Time.timeScale = 1;       
        
         //Raise level start event
         levelSelectEvent.Raise(new LevelSelectPayload
         {
             levelNumber = levelDatabase.CurrentLevelIndex,
+            resetRequested = true,
         });
         Destroy(gameObject);
     }
@@ -69,7 +66,10 @@ public class PauseMenu : IntEventInvoker
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        unityEvents[EventEnum.ResetGridEvent].Invoke(0);
+        
+        // raise event to reset grid
+        resetGridEvent.Raise();
+
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);              
         MenuManager.GoToMenu(MenuEnum.MainMenu);
         Destroy(gameObject);
