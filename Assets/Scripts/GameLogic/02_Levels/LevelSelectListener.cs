@@ -35,8 +35,11 @@ public class LevelSelectListener : MonoBehaviour
     /// <param name="payload"></param>
     private void LevelSelect(LevelSelectPayload payload)
     {
-        levelDatabase.CurrentLevelIndex = payload.levelNumber;
-        SceneManager.LoadScene("LevelLoading");
+        if(!payload.resetRequested)
+        { 
+           levelDatabase.CurrentLevelIndex = payload.levelNumber;
+           SceneManager.LoadScene("LevelLoading");
+        }
     }
     #endregion
 }
