@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-#region Static GameUtils methods
 
 public static class GridUtils
 {
@@ -36,6 +32,3 @@ public static class GridUtils
         return new Vector3(gridPosistion.x * tileSize, gridPosistion.y * tileSize, 0);           
     }
 }
-#endregion
-
-

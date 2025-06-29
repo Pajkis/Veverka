@@ -29,7 +29,7 @@ public class GoalTile : StaticTile
     {
         if (GameGrid.Instance.Goals.TryGetValue(payload.Position, out var goal) && gridPosition == payload.Position)
         { 
-            GameGrid.Instance.Goals.Remove(payload.Position);          
+            GameGrid.Instance.RemoveGoalAt(payload.Position);          
             Destroy(gameObject);
         }
     }

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting.AssemblyQualifiedNameParser;
 using UnityEngine;
 
 /// <summary>
@@ -65,6 +62,4 @@ public static class TileTypeExtensions
             default: return TileType.ErrorTile; 
         }   
     }
-        
-
 }
