@@ -48,7 +48,7 @@ public class GameGrid : MonoBehaviour
     private float tileSize = 1f;
     private TileType[,] grid;
     private Dictionary<Vector2Int, TileObject> pushables = new();
-    private Dictionary<Vector2Int, TileObject> goals = new();  
+    private Dictionary<Vector2Int, TileObject> goals = new();
     #endregion
 
     #region Properties
@@ -66,20 +66,25 @@ public class GameGrid : MonoBehaviour
     /// <summary>
     /// get movables position and objects
     /// </summary>
-    public Dictionary<Vector2Int, TileObject> Pushables => pushables;
+    public Dictionary<Vector2Int, TileObject> Pushables
+    {
+        get { return pushables; }
+    }
 
     /// <summary>
     /// get goals position and objects
     /// </summary>
-    public Dictionary<Vector2Int, TileObject> Goals => goals;
-    
-    #endregion
+    public Dictionary<Vector2Int, TileObject> Goals
+    {
+        get { return goals; }
+    }
+#endregion
 
-    #region Awake
-    /// <summary>
-    /// Generates grid
-    /// </summary>
-    void Awake()
+#region Awake
+/// <summary>
+/// Generates grid
+/// </summary>
+void Awake()
     {
         // singleton routine
         if (Instance == null)
@@ -117,9 +122,9 @@ public class GameGrid : MonoBehaviour
         //raise event
         levelInitEvent.Raise(new LevelInitPayload
         {
-            GoalCount = Goals.Count
+            GoalCount = goals.Count
         });
-        Debug.Log($"Goal Count in GameGrid: {Goals.Count}");
+        Debug.Log($"Goal Count in GameGrid: {goals.Count}");
 
         OffsetGridToBottomLeft();
 
@@ -327,6 +332,20 @@ public class GameGrid : MonoBehaviour
     }
 
     /// <summary>
+    /// Remove pushable in dictionary on pasiton
+    /// </summary>
+    /// <param name="position">position to remove pushable</param>    
+    public void RemoveGoalAt(Vector2Int position)
+    {
+        if (!IsInGrid(position))
+        {
+            Debug.LogError("Remove tile is outside the grid");
+            return;
+        }
+        goals.Remove(position);
+    }
+
+    /// <summary>
     /// Check whether position is in game grid
     /// </summary>
     /// <param name="pos">tile position to check (x,y)</param>
@@ -384,26 +403,6 @@ public class GameGrid : MonoBehaviour
     public void LogMovablePositions()
     {       
        Debug.Log("Pushable object count: " + pushables.Count);     
-    }
-
-    /// <summary>
-    /// Removes and destroys a tile object from a dictionary, if it exists.
-    /// </summary>
-    /// <param name="tileObject">Dictionary to remove from</param>
-    /// <param name="position">Grid position of the object</param>
-    public void RemoveTileObject(Dictionary<Vector2Int, TileObject> tileObject, Vector2Int position)
-    {
-        if (tileObject.TryGetValue(position, out TileObject obj))
-        {
-           Debug.Log($"Object {obj} removed at position {position}");
-           tileObject.Remove(position); // remove from dictionary
-           Destroy(obj.gameObject);     // destroy object
-           
-        }
-        else
-        {
-           Debug.LogWarning($"No object found at position {position} in dictionary!");
-        }
     }
 
     #endregion
