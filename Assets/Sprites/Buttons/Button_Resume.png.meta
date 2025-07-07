@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: bd3c4fbbb4c676e49a0f10cc9679a5e8
+guid: dc886fc692587754bac7a24ba59a2009
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Button_StartGame_0
+      name: Button_Resume_0
       rect:
         serializedVersion: 2
         x: 42
-        y: 565
-        width: 944
-        height: 432
+        y: 599
+        width: 931
+        height: 402
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e54ff71a7b384094aabbf64c45c6e588
-      internalID: 1970562175
+      spriteID: 6f7ea733d417d854da926b78d09f1832
+      internalID: -1027010433
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Button_StartGame_1
+      name: Button_Resume_1
       rect:
         serializedVersion: 2
-        x: 48
-        y: 42
-        width: 931
-        height: 435
+        x: 71
+        y: 120
+        width: 893
+        height: 391
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,8 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 25a0e53dd42af4e47b803b69f60db0dd
-      internalID: 1164736755
+      spriteID: 7d1972988c65eb74b9440941551e4ebe
+      internalID: 1651493881
       vertices: []
       indices: 
       edges: []
@@ -162,8 +162,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Button_StartGame_0: 1970562175
-      Button_StartGame_1: 1164736755
+      Button_Resume_0: -1027010433
+      Button_Resume_1: 1651493881
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
