@@ -36,6 +36,7 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private GameObject emptyPrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject goalPrefab;
+    [SerializeField] private GameObject backgroundPrefab;
     //Adjust screen for each level size
     [SerializeField] private Transform gridRoot;
     #endregion
