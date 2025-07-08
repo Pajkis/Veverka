@@ -13,6 +13,7 @@ MonoImporter:
   - emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   - wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   - goalPrefab: {fileID: 7474811582496385836, guid: 2e49a39d5bbfab640a268bb3905414ed, type: 3}
+  - backgroundPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
   - gridRoot: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}

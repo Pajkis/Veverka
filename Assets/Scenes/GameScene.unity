@@ -440,8 +440,8 @@ Canvas:
   m_GameObject: {fileID: 1013319274}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -512,6 +512,7 @@ MonoBehaviour:
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   goalPrefab: {fileID: 7474811582496385836, guid: 2e49a39d5bbfab640a268bb3905414ed, type: 3}
+  backgroundPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
   gridRoot: {fileID: 665933219}
 --- !u!4 &1400763604
 Transform:
@@ -617,6 +618,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2967377327909424876, guid: 29537027f65572247ab45001bbea2f1b, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: bece90a4e0f368d409e4f33b256d2cf0, type: 3}
     - target: {fileID: 4141495606207085828, guid: 29537027f65572247ab45001bbea2f1b, type: 3}
       propertyPath: m_Name
       value: BackgroundImage
@@ -638,5 +643,5 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 988765905}
   - {fileID: 247018408}
-  - {fileID: 1013319278}
   - {fileID: 1400763604}
+  - {fileID: 1013319278}

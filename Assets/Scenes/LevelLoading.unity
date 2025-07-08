@@ -243,6 +243,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1581751956966254716, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1583062718}
+    - target: {fileID: 1581751956966254716, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Name
       value: LoadBackground
