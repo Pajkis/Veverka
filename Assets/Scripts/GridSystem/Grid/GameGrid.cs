@@ -28,14 +28,14 @@ public class GameGrid : MonoBehaviour
 
     #endregion
 
-    #region Serialized fields
-
+    #region tile objects
     // Prefabs
     [SerializeField] private GameObject veverkaPrefab;
     [SerializeField] private GameObject liskacekPrefab;
     [SerializeField] private GameObject emptyPrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject goalPrefab;
+    [SerializeField] private GameObject backgroundPrefab;
     //Adjust screen for each level size
     [SerializeField] private Transform gridRoot;
     #endregion
@@ -143,17 +143,25 @@ void Awake()
                 Vector2Int tilePos = new(x, y);
                 Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
                 TileType tileType =  GetTileType(tilePos);
-               
+
+                // create background for each tile
+                var background =  Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                background.transform.SetParent(gridRoot, false);
+                background.transform.localPosition = worldTilePos;
+
+                // insert specific tiles
                 switch (tileType)
                 { 
-                case TileType.Empty:    
-                        var tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
+                case TileType.Empty:
+
+                        //var tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        //tile.transform.SetParent(gridRoot, false);
+                        //tile.transform.localPosition = worldTilePos;
+                        SetTileType(tilePos, TileType.Empty);
                         break;
 
                 case TileType.Wall:
-                        tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                         tile.transform.SetParent(gridRoot, false);
                         tile.transform.localPosition = worldTilePos;
                         SetTileType(tilePos, TileType.Wall);
@@ -161,9 +169,9 @@ void Awake()
 
                 case TileType.Veverka:
                         // Generate empty tile under veverka
-                        tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
+                        //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        //tile.transform.SetParent(gridRoot, false);
+                        //tile.transform.localPosition = worldTilePos;
                         SetTileType(tilePos, TileType.Empty); //veverka will have no tile for now
 
                         // generete veverka
@@ -175,9 +183,9 @@ void Awake()
 
                 case TileType.Nut:
                         //generate free tile under nut
-                        tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition= worldTilePos;
+                        //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        //tile.transform.SetParent(gridRoot, false);
+                        //tile.transform.localPosition= worldTilePos;
 
                         // generate nut
                         NutTile nutTile = Instantiate(liskacekPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
@@ -189,9 +197,9 @@ void Awake()
 
                 case TileType.Goal:
                         // generate empty prefab under goal
-                        tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
+                        //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        //tile.transform.SetParent(gridRoot, false);
+                        //tile.transform.localPosition = worldTilePos;
                         
                         // generate goal 
                         GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
