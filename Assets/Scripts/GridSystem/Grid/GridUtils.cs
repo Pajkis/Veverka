@@ -9,7 +9,7 @@ public static class GridUtils
     /// <param name="direction">In which direction is the position checked</param>
     /// <param name="distance">Amount tiles in the direction</param>
     /// <returns>position of adjacent tile</returns>
-    public static Vector2Int GetAdjacentPosition(Vector2Int currentPosition, Direction direction, int distance = 1)
+    public static Vector2Int GetPositionInDir(Vector2Int currentPosition, Direction direction, int distance = 1)
     {
         if (distance < 1)  distance = 1;
 

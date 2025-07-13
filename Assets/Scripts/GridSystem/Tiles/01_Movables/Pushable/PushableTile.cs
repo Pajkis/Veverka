@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 public class PushableTile : MovableTile
 {
@@ -20,7 +21,7 @@ public class PushableTile : MovableTile
     /// <returns></returns>
     public bool CanBePushed(Direction direction)
     {
-        Vector2Int targetPosition = GridUtils.GetAdjacentPosition(gridPosition, direction);
+        Vector2Int targetPosition = GridUtils.GetPositionInDir(gridPosition, direction);
         if (!GameGrid.Instance.IsInGrid(targetPosition)) return false;
 
         return GameGrid.Instance.IsWalkableAt(targetPosition);
