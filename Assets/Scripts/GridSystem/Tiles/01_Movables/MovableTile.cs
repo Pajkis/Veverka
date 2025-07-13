@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Veverka.Movement.SmoothMover;
 
 /// <summary>
 /// Movable object setup and control
@@ -8,17 +9,13 @@ using UnityEngine;
 public class MovableTile : TileObject
 {
     #region Fields
-    protected bool isMoving = false;
     [SerializeField] protected int moveDistance = 1; // 1 tile
     [SerializeField] protected float moveDuration = 0.3f;
+
+    protected SmoothMover smoothMover;
     #endregion
 
     #region Propeties
-    /// <summary>
-    /// get property isMoving state
-    /// </summary>
-    public bool IsMoving => isMoving;
-
     /// <summary>
     /// Move duration property
     /// </summary>
@@ -38,55 +35,35 @@ public class MovableTile : TileObject
     }
     #endregion
 
-
     #region Methods
     /// <summary>
-    /// Move coroutine execution
+    /// Initialize tile type on grid position, init smooth mover
     /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="moveDistance"></param>
-    /// <param name="duration"></param>
-    /// <returns></returns>
-    public virtual void Move(Direction direction, int moveDistance = 1, float duration = 0.15f)
+    /// <param name="tileType"></param>
+    /// <param name="gridPosition"></param>
+    public override void Init(TileType tileType, Vector2Int gridPosition)
     {
-        if (!isMoving)
-        {          
-            OnMoveStart();
-            float moveDuration = duration / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
-            Vector2Int targetPosition = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
-            
-            StartCoroutine(MoveRoutine(targetPosition , moveDuration));           
-        }
+        smoothMover = GetComponent<SmoothMover>();
+        base.Init(tileType, gridPosition);      
     }
 
     /// <summary>
-    /// Move routine execution
+    /// Move of a object over a distance in set direction
     /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="targetPosition"></param>
-    /// <param name="duration"></param>
-    /// <returns></returns>
-    protected virtual IEnumerator MoveRoutine(Vector2Int targetPosition, float duration)
+    /// <param name="direction">direction of movemebt</param>
+    /// <param name="distance">distance of movement in tiles</param>
+    /// <param name="duration">duration of movement</param>
+    public virtual void Move(Direction direction, int distance, float duration = 0.15f)
     {
-        isMoving = true;
-                
-        // Animate from world position A to B
-        Vector3 startPos = transform.localPosition;
-        Vector3 targetPos = GridUtils.GridToWorld(targetPosition);
+        if (smoothMover.IsMoving) return;
+        Vector3 currentPosition = transform.localPosition;
+        Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
+        Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
+        float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
 
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            transform.localPosition = Vector3.Lerp(startPos, targetPos, t);
-            yield return null;
-        }
-        transform.localPosition = targetPos;
-
-        OnMoveComplete(targetPosition);
+        smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
- 
+     
     /// <summary>
     /// On Move start action
     /// </summary>
@@ -101,8 +78,7 @@ public class MovableTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        gridPosition = targetPosition;
-        isMoving = false;
+        gridPosition = targetPosition;        
     }
 
     #endregion

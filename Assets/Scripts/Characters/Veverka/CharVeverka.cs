@@ -49,7 +49,7 @@ namespace Veverka.Characters.Veverka
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
-                        pushableObject.Move(inputDirection);
+                        pushableObject.Move(inputDirection, moveDistance);
                         Move(inputDirection, moveDistance);                
                     }
                     else

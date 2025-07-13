@@ -49,10 +49,14 @@ public abstract class CharacterControl : MonoBehaviour
         Rotate(facingDirection);
     }
 
-
+    /// <summary>
+    /// Move of a character over a distance in set direction
+    /// </summary>
+    /// <param name="direction">direction of movemebt</param>
+    /// <param name="distance">distance of movement in tiles</param>
+    /// <param name="duration">duration of movement</param>
     protected virtual void Move(Direction direction, int distance, float duration = 0.15f)
     {
-
         if (smoothMover.IsMoving) return;
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);

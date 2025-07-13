@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 using Veverka.GridSystem.GameGrid;
 
@@ -49,8 +46,7 @@ public class PushableTile : MovableTile
         GameGrid.Instance.SetPushableAt(targetPosition, this);
         GameGrid.Instance.SetTileType(targetPosition, tileType);
        
-        gridPosition = targetPosition;
-        isMoving = false;
+        gridPosition = targetPosition;       
     }
 
     #endregion

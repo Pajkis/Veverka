@@ -48,8 +48,7 @@ public class NutTile : PushableTile
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
         }
 
-        gridPosition = targetPosition;
-        isMoving = false;
+        gridPosition = targetPosition;       
     }
     #endregion
 }
