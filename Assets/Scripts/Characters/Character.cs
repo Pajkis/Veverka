@@ -4,7 +4,7 @@ using Veverka.Movement.SmoothMover;
 /// <summary>
 /// Character Control anstract class 
 /// </summary>
-public abstract class CharacterControl : MonoBehaviour
+public abstract class Character: MonoBehaviour
 {
     #region Fields
     protected TileType tileType;
@@ -47,6 +47,7 @@ public abstract class CharacterControl : MonoBehaviour
 
         smoothMover = GetComponent<SmoothMover>();
         Rotate(facingDirection);
+        Debug.Log($"[Veverka INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
     }
 
     /// <summary>
@@ -58,7 +59,7 @@ public abstract class CharacterControl : MonoBehaviour
     protected virtual void Move(Direction direction, int distance, float duration = 0.15f)
     {
         if (smoothMover.IsMoving) return;
-        Vector3 currentPosition = transform.localPosition;
+        Vector3 currentPosition = transform.position;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) ;
@@ -80,7 +81,8 @@ public abstract class CharacterControl : MonoBehaviour
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     { 
-      this.gridPosition = targetPosition;   
+      this.gridPosition = targetPosition;
+      Debug.Log($"[Veverka Move Complete] Now at grid pos: {gridPosition}");
     }
 
     /// <summary>

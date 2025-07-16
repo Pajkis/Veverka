@@ -15,7 +15,7 @@ namespace Veverka.CameraSystem
 
         [Header("Tile Settings")]
         [SerializeField] private float tileSize = 1f;
-
+        
         private float camHeight;
         private float camWidth;
 
@@ -23,6 +23,8 @@ namespace Veverka.CameraSystem
         private Vector2 maxBounds;
 
         private bool initialized = false;
+
+        private CameraMode mode;
 
         /// <summary>
         /// Initialize Camera and centers it on set target
@@ -37,40 +39,42 @@ namespace Veverka.CameraSystem
             camHeight = 2f * cam.orthographicSize;
             camWidth = camHeight * cam.aspect;
 
-            Vector2 gridSizeInWorld = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
-            Vector2 halfCam = new Vector2(camWidth, camHeight) / 2f;
+            Vector2 levelSize = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
 
             Vector3 gridOrigin = GameGrid.Instance.transform.position;
 
-            minBounds = gridOrigin + (Vector3)halfCam;
-            maxBounds = gridOrigin + (Vector3)(gridSizeInWorld - halfCam);
+            minBounds = gridOrigin + new Vector3(camWidth / 2f, camHeight / 2f);
+            maxBounds = gridOrigin + (Vector3)(levelSize - new Vector2(camWidth / 2f, camHeight / 2f));
 
-            initialized = true;
+            // Rozhodni režim podle velikosti gridu vs. kamery
+            if (levelSize.x <= camWidth && levelSize.y <= camHeight)
+            {
+                mode = CameraMode.StaticCenter;
+                // Umísti kameru doprost?ed gridu
+                Vector3 center = gridOrigin + (Vector3)(levelSize / 2f);
+                transform.position = center + offset;
+            }
+            else
+            {
+                mode = CameraMode.FollowWithClamp;
+                initialized = true;
+            }
         }
-
-
 
         /// <summary>
         /// Late update is called every frame if Behaviour is enabled
         /// </summary>
         private void LateUpdate()
         {
-            if (!initialized)
-            {               
-                if (!initialized) return;
-            }
-
-            if (target == null) return;
-
-            //Vector3 desired = target.position + offset;
-            //Vector3 clamped = ClampToBounds(desired);
-            //transform.position = Vector3.Lerp(transform.position, clamped, smoothSpeed);
-
+            if (mode == CameraMode.StaticCenter) return;
+            if (!initialized || target == null) return;
+            
             Vector3 desired = target.position + offset;
-            transform.position = Vector3.Lerp(transform.position, desired, smoothSpeed);
+            Vector3 clamped = ClampToBounds(desired);
+           transform.position = Vector3.Lerp(transform.position, clamped, smoothSpeed);
+            
+          //  transform.position = Vector3.Lerp(transform.position, desired, smoothSpeed);
         }
-
-              
 
         /// <summary>
         /// Clamp bounds to the size of grid
@@ -79,9 +83,21 @@ namespace Veverka.CameraSystem
         /// <returns></returns>
         private Vector3 ClampToBounds(Vector3 targetPos)
         {
-            float clampedX = Mathf.Clamp(targetPos.x, minBounds.x, maxBounds.x);
-            float clampedY = Mathf.Clamp(targetPos.y, minBounds.y, maxBounds.y);
-            return new Vector3(clampedX, clampedY, targetPos.z);
+            Vector2Int gridSize = GameGrid.Instance.GridSize;
+
+            float halfWidth = camWidth / 2f;
+            float halfHeight = camHeight / 2f;
+
+            float minX = tileSize * halfWidth;
+            float maxX = tileSize * (gridSize.x - halfWidth);
+
+            float minY = tileSize * halfHeight;
+            float maxY = tileSize * (gridSize.y - halfHeight);
+
+            float clampedX = Mathf.Clamp(targetPos.x, minX, maxX);
+            float clampedY = Mathf.Clamp(targetPos.y, minY, maxY);
+
+            return new Vector3(clampedX, clampedY, targetPos.z);         
         }
     }
 }

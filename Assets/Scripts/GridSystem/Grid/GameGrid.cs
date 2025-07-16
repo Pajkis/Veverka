@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Veverka.CameraSystem;
 using Veverka.Characters.Veverka;
 
@@ -47,9 +46,8 @@ namespace Veverka.GridSystem.GameGrid
 
 
         #region fields
-        // grid variables
-        private int gridHeight = 10;
-        private int gridWidth = 10;
+        // grid variables       
+        private Vector2Int gridSize; 
         private float tileSize = 1f;
         private Vector3 gridStartCenterPosition;
         private Transform gridStartCenterTarget;
@@ -58,22 +56,15 @@ namespace Veverka.GridSystem.GameGrid
         private Dictionary<Vector2Int, TileObject> goals = new();
         #endregion
 
-        #region Properties
+        #region Properties      
+
         /// <summary>
-        /// grid height
+        /// size of a grid
         /// </summary>
-        public int GridHeight
+        public Vector2Int GridSize
         { 
-         get { return gridHeight; }
-        }
-        
-        /// <summary>
-        /// grid width
-        /// </summary>
-        public int GridWidth
-        { 
-            get { return gridWidth; } 
-        }
+            get { return gridSize; } 
+        }    
 
         // tile size 
         public float TileSize
@@ -135,12 +126,12 @@ namespace Veverka.GridSystem.GameGrid
         {
             //get new grid size
             this.grid = grid;
-            this.gridWidth = grid.GetLength(0);
-            this.gridHeight = grid.GetLength(1);
-
+            this.gridSize.x = grid.GetLength(0);
+            this.gridSize.y = grid.GetLength(1);
+            
             // Spawn objects based on tile types
             BuildLevelFromGrid();
-
+                     
             //raise event
             levelInitEvent.Raise(new LevelInitPayload
             {
@@ -149,7 +140,11 @@ namespace Veverka.GridSystem.GameGrid
             Debug.Log($"Goal Count in GameGrid: {goals.Count}");
 
             //    OffsetGridToBottomLeft();
-            
+
+            //find camera and assign to veverka
+            CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();
+            camFollow.Init(gridStartCenterTarget, new Vector2Int(gridSize.x, gridSize.y));
+
             return true;
         }
     
@@ -157,10 +152,12 @@ namespace Veverka.GridSystem.GameGrid
         /// Build a level from a grid
         /// </summary>
         void BuildLevelFromGrid()
-        {      
-            for (int x = 0; x < gridWidth; x++)
+        {    
+            // for cycle over grid width
+            for (int x = 0; x < gridSize.x; x++)
             {
-                for (int y = 0; y < gridHeight; y++)
+                // for cycle over grid height
+                for (int y = 0; y < gridSize.y; y++)
                 {
                     Vector2Int tilePos = new(x, y);
                     Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
@@ -190,16 +187,7 @@ namespace Veverka.GridSystem.GameGrid
                             break;
 
                     case TileType.Veverka:
-                            // Generate empty tile under veverka
-                            //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            //tile.transform.SetParent(gridRoot, false);
-                            //tile.transform.localPosition = worldTilePos;
-                            
-
-                            //Center grid according veverka
-                            gridStartCenterPosition = worldTilePos;
-                           // CenterGrid(gridStartCenterPosition);
-
+                                         
                             SetTileType(tilePos, TileType.Empty);
 
                             // generete veverka
@@ -207,12 +195,11 @@ namespace Veverka.GridSystem.GameGrid
                             veverka.transform.SetParent(gridRoot, false);
                             veverka.transform.localPosition = worldTilePos;
                             veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
-                            
-                            
-                            //find camera and assign to veverka
-                            CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();
-                            camFollow.Init(veverka.transform, new Vector2Int(gridWidth, gridHeight));
-                            break;
+
+                            //Center grid according veverka 
+                            gridStartCenterPosition = worldTilePos;
+                            gridStartCenterTarget = veverka.transform;
+                            break;                           
 
                     case TileType.Nut:
                             //generate free tile under nut
@@ -255,24 +242,24 @@ namespace Veverka.GridSystem.GameGrid
         {
             int gridWidth;
             int gridHeight;
-
+           
             // Grid widht based on number of tiles
-            if ((this.gridWidth % 2) == 0)
+            if ((this.gridSize.x % 2) == 0)
             {
-                gridWidth = this.gridWidth / 2;
+                gridWidth = this.gridSize.x / 2;
             }
             else
             {
-                gridWidth = (this.gridWidth - 1) / 2;
+                gridWidth = (this.gridSize.x - 1) / 2;
             }
             // Grid height based on number of tiles
-            if ((this.gridHeight % 2) == 0)
+            if ((this.gridSize.y % 2) == 0)
             {
-                gridHeight = this.gridHeight / 2;
+                gridHeight = this.gridSize.y / 2;
             }
             else
             {
-                gridHeight = (this.gridHeight - 1) / 2;
+                gridHeight = (this.gridSize.y - 1) / 2;
             }
 
             Vector3 offset = -GridUtils.GridToWorld(new Vector2Int(gridWidth, gridHeight));
@@ -287,7 +274,6 @@ namespace Veverka.GridSystem.GameGrid
         {
            gridRoot.position = -position;
         }
-
 
         private void OnLevelSelected(LevelSelectPayload payload)
         {
@@ -399,12 +385,21 @@ namespace Veverka.GridSystem.GameGrid
         /// <summary>
         /// Check whether position is in game grid
         /// </summary>
-        /// <param name="pos">tile position to check (x,y)</param>
+        /// <param name="position">tile position to check (x,y)</param>
         /// <returns></returns>
         public bool IsInGrid(Vector2Int position)
-        { 
-            return position.x >= 0 && position.x < gridWidth 
-                && position.y >= 0 && position.y < gridHeight;
+        {
+            if (position.x >= 0 && position.x < gridSize.x
+                && position.y >= 0 && position.y < gridSize.y)
+            {
+                return true;
+            }
+            else
+            {
+                Debug.Log($"Tries to move out of border: {position[0]},{position[1]} ");
+                return false;
+            }
+                 
         }
         
         /// <summary>

@@ -25,10 +25,13 @@ public static class GridUtils
     /// <summary>
     /// Converts a grid position to a world space position.
     /// </summary>
-    /// <param name="gridPosistion">Tile grid position (x, y)</param>
+    /// <param name="gridPosition">Tile grid position (x, y)</param>
     /// <returns>World space position (Vector3)</returns>
-    public static Vector3 GridToWorld(Vector2Int gridPosistion, float tileSize = 1f)
+    public static Vector3 GridToWorld(Vector2Int gridPosition, float tileSize = 1f)
     {
-        return new Vector3(gridPosistion.x * tileSize, gridPosistion.y * tileSize, 0);           
+        float halfTile = tileSize / 2f;
+        return new Vector3(gridPosition.x * tileSize + halfTile,
+                           gridPosition.y * tileSize + halfTile,
+                           0);
     }
 }

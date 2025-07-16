@@ -43,7 +43,7 @@ public class LevelLoader: MonoBehaviour
             if (!success)
             {
                 //level data not valid
-                Debug.Log("Invalid level configuration!");
+                Debug.LogWarning("Invalid level configuration!");
                 SceneManager.LoadScene("LevelMenu");                
                 yield break;
             }

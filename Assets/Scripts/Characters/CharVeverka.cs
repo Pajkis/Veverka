@@ -7,7 +7,7 @@ using Veverka.GridSystem.GameGrid;
 /// 
 namespace Veverka.Characters.Veverka
  { 
-    public class CharVeverka : CharacterControl
+    public class CharVeverka : Character
     {
         #region methods
         // Update is called once per frame
@@ -33,6 +33,7 @@ namespace Veverka.Characters.Veverka
             if (inputDirection == facingDirection)
             {
                 Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection);
+                Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
                 if (!GameGrid.Instance.IsInGrid(targetPos)) return;
 
                 // I should not get only I movable, but also Ipushable
