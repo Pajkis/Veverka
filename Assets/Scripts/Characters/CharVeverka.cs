@@ -9,6 +9,29 @@ namespace Veverka.Characters.Veverka
  { 
     public class CharVeverka : Character
     {
+
+        #region fields
+        [SerializeField] DirectionEvent onArrowPressed;
+        #endregion
+
+        #region event handling
+        /// <summary>
+        /// on enable - add listeners
+        /// </summary>
+        private void OnEnable()
+        {
+           onArrowPressed.AddListener(HandleInput);
+        }
+        
+        /// <summary>
+        /// on disable - remove listeners
+        /// </summary>
+        private void OnDisable() 
+        {
+         onArrowPressed.RemoveListener(HandleInput);
+        }        
+        #endregion
+
         #region methods
         // Update is called once per frame
         void Update()

@@ -240,6 +240,8 @@ namespace Veverka.GridSystem.GameGrid
                     levelNumber = payload.levelNumber,
                     resetRequested = false
                 });
+
+                Debug.Log($"Grid reseted and starting new level {levelDatabase.CurrentLevelIndex}");
                 return;
             }
         }
