@@ -1,5 +1,5 @@
-using UnityEngine;
-using Veverka.GridSystem.GameGrid; 
+ï»¿using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 namespace Veverka.CameraSystem
 {
@@ -11,16 +11,18 @@ namespace Veverka.CameraSystem
         [Header("Follow Settings")]
         [SerializeField] private Transform target;
         [SerializeField] private float smoothSpeed = 0.15f;
-        [SerializeField] private Vector3 offset = new Vector3(0, 0, -10f);
-
+        // adjust camera follow of character when it crosses over half the screen
+        [SerializeField] private Vector3 FollowOffset = new Vector3(2.6666f, 0, -10f);
+        // offset to switch center of the scene in the center of the left screen window
+        [SerializeField] private Vector3 ScreenToPlayScreenOffset = new Vector3(2.1666f, -0.5f, -10f);
+                
         [Header("Tile Settings")]
         [SerializeField] private float tileSize = 1f;
-        
-        private float camHeight;
-        private float camWidth;
+        [SerializeField] private Vector2Int maxStaticTileSize = new Vector2Int(15, 11);
+  
 
-        private Vector2 minBounds;
-        private Vector2 maxBounds;
+        [SerializeField] private Vector2 minBounds;
+        [SerializeField] private Vector2 maxBounds;
 
         private bool initialized = false;
 
@@ -35,24 +37,21 @@ namespace Veverka.CameraSystem
         {
             this.target = target;
 
-            Camera cam = Camera.main;
-            camHeight = 2f * cam.orthographicSize;
-            camWidth = camHeight * cam.aspect;
-
-            Vector2 levelSize = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
-
             Vector3 gridOrigin = GameGrid.Instance.transform.position;
 
-            minBounds = gridOrigin + new Vector3(camWidth / 2f, camHeight / 2f);
-            maxBounds = gridOrigin + (Vector3)(levelSize - new Vector2(camWidth / 2f, camHeight / 2f));
+            Vector2 levelSize = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
+            Vector2 visibleSize = new Vector2(maxStaticTileSize.x * tileSize, maxStaticTileSize.y * tileSize);
+            Vector2 halfVisibleSize = visibleSize / 2f;
 
-            // Rozhodni režim podle velikosti gridu vs. kamery
-            if (levelSize.x <= camWidth && levelSize.y <= camHeight)
+            minBounds = gridOrigin + (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
+            maxBounds = gridOrigin + (Vector3)levelSize - (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
+
+            // Camera mode setup
+            if (gridSize.x <= maxStaticTileSize.x && gridSize.y <= maxStaticTileSize.y)
             {
                 mode = CameraMode.StaticCenter;
-                // Umísti kameru doprost?ed gridu
                 Vector3 center = gridOrigin + (Vector3)(levelSize / 2f);
-                transform.position = center + offset;
+                transform.position = center + ScreenToPlayScreenOffset;
             }
             else
             {
@@ -69,11 +68,9 @@ namespace Veverka.CameraSystem
             if (mode == CameraMode.StaticCenter) return;
             if (!initialized || target == null) return;
             
-            Vector3 desired = target.position + offset;
+            Vector3 desired = target.position + FollowOffset;
             Vector3 clamped = ClampToBounds(desired);
            transform.position = Vector3.Lerp(transform.position, clamped, smoothSpeed);
-            
-          //  transform.position = Vector3.Lerp(transform.position, desired, smoothSpeed);
         }
 
         /// <summary>
@@ -83,20 +80,10 @@ namespace Veverka.CameraSystem
         /// <returns></returns>
         private Vector3 ClampToBounds(Vector3 targetPos)
         {
-            Vector2Int gridSize = GameGrid.Instance.GridSize;
-
-            float halfWidth = camWidth / 2f;
-            float halfHeight = camHeight / 2f;
-
-            float minX = tileSize * halfWidth;
-            float maxX = tileSize * (gridSize.x - halfWidth);
-
-            float minY = tileSize * halfHeight;
-            float maxY = tileSize * (gridSize.y - halfHeight);
-
-            float clampedX = Mathf.Clamp(targetPos.x, minX, maxX);
-            float clampedY = Mathf.Clamp(targetPos.y, minY, maxY);
-
+          
+            float clampedX = Mathf.Clamp(targetPos.x, minBounds.x, maxBounds.x);
+            float clampedY = Mathf.Clamp(targetPos.y, minBounds.y, maxBounds.y);
+           
             return new Vector3(clampedX, clampedY, targetPos.z);         
         }
     }

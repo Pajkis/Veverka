@@ -44,7 +44,7 @@ public class LevelLoader: MonoBehaviour
             {
                 //level data not valid
                 Debug.LogWarning("Invalid level configuration!");
-                SceneManager.LoadScene("LevelMenu");                
+                SceneManager.LoadScene("11_LevelMenu");                
                 yield break;
             }
             else
@@ -55,13 +55,13 @@ public class LevelLoader: MonoBehaviour
                     yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
                 //enter game scene
-                SceneManager.LoadScene("GameScene");
+                SceneManager.LoadScene("30_GamePlay");
             }
         }
         // Grid is not loaded properly
         else
         {
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("11_LevelMenu");
             yield break;
         }
     }

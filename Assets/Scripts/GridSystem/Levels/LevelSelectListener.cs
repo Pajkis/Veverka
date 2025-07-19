@@ -38,7 +38,7 @@ public class LevelSelectListener : MonoBehaviour
         if(!payload.resetRequested)
         { 
            levelDatabase.CurrentLevelIndex = payload.levelNumber;
-           SceneManager.LoadScene("LevelLoading");
+           SceneManager.LoadScene("20_LevelLoad");
         }
     }
     #endregion

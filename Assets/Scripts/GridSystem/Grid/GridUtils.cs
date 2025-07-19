@@ -29,9 +29,10 @@ public static class GridUtils
     /// <returns>World space position (Vector3)</returns>
     public static Vector3 GridToWorld(Vector2Int gridPosition, float tileSize = 1f)
     {
-        float halfTile = tileSize / 2f;
-        return new Vector3(gridPosition.x * tileSize + halfTile,
-                           gridPosition.y * tileSize + halfTile,
+        float offset = 0f;
+        //float halfTile = tileSize / 2f;
+        return new Vector3(gridPosition.x * tileSize + offset,
+                           gridPosition.y * tileSize + offset,
                            0);
     }
 }

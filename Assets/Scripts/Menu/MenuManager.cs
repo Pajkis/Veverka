@@ -20,7 +20,7 @@ public static class MenuManager
             case MenuEnum.MainMenu:
 
                 // Go to main menu scene
-                SceneManager.LoadScene("MainMenu");
+                SceneManager.LoadScene("10_MainMenu");
                 break;
 
             case MenuEnum.PlayerMenu:
@@ -30,7 +30,7 @@ public static class MenuManager
             case MenuEnum.LevelMenu:
 
                 // Go to level menu scene
-                SceneManager.LoadScene("LevelMenu");
+                SceneManager.LoadScene("11_LevelMenu");
                 break;
 
             case MenuEnum.PauseMenu:

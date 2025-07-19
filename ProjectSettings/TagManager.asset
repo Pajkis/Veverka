@@ -56,3 +56,6 @@ TagManager:
   - name: MovableTiles
     uniqueID: 1847477145
     locked: 0
+  - name: Frame
+    uniqueID: 3306920313
+    locked: 0

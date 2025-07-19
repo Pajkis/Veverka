@@ -48,12 +48,11 @@ namespace Veverka.GridSystem.GameGrid
         #region fields
         // grid variables       
         private Vector2Int gridSize; 
-        private float tileSize = 1f;
-        private Vector3 gridStartCenterPosition;
+        private float tileSize = 1f;     
         private Transform gridStartCenterTarget;
         private TileType[,] grid;
         private Dictionary<Vector2Int, TileObject> pushables = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();
+        private Dictionary<Vector2Int, TileObject> goals = new();        
         #endregion
 
         #region Properties      
@@ -110,6 +109,10 @@ namespace Veverka.GridSystem.GameGrid
                 Destroy(gameObject);
             }
 
+            //Set grid root position
+         //   Vector2Int gridPosOffset = new(1, 1);
+           // gridRoot.position = new Vector3(gridPosOffset.x, gridPosOffset.y, 0);
+
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
             resetGridEvent.AddListener(ResetGrid);
@@ -158,7 +161,7 @@ namespace Veverka.GridSystem.GameGrid
             {
                 // for cycle over grid height
                 for (int y = 0; y < gridSize.y; y++)
-                {
+                {                    
                     Vector2Int tilePos = new(x, y);
                     Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
                     TileType tileType =  GetTileType(tilePos);
@@ -172,10 +175,7 @@ namespace Veverka.GridSystem.GameGrid
                     switch (tileType)
                     { 
                     case TileType.Empty:
-
-                            //var tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            //tile.transform.SetParent(gridRoot, false);
-                            //tile.transform.localPosition = worldTilePos;
+                            
                             SetTileType(tilePos, TileType.Empty);
                             break;
 
@@ -196,16 +196,11 @@ namespace Veverka.GridSystem.GameGrid
                             veverka.transform.localPosition = worldTilePos;
                             veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
 
-                            //Center grid according veverka 
-                            gridStartCenterPosition = worldTilePos;
+                            //Center grid according veverka                          
                             gridStartCenterTarget = veverka.transform;
                             break;                           
 
                     case TileType.Nut:
-                            //generate free tile under nut
-                            //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            //tile.transform.SetParent(gridRoot, false);
-                            //tile.transform.localPosition= worldTilePos;
 
                             // generate nut
                             NutTile nutTile = Instantiate(liskacekPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
@@ -213,13 +208,10 @@ namespace Veverka.GridSystem.GameGrid
                             nutTile.transform.localPosition = worldTilePos;
                             nutTile.Init(tileType, tilePos);
                             pushables.Add(tilePos, nutTile);
+                            SetTileType(tilePos, TileType.Nut);
                             break;
 
-                    case TileType.Goal:
-                            // generate empty prefab under goal
-                            //tile = Instantiate(emptyPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            //tile.transform.SetParent(gridRoot, false);
-                            //tile.transform.localPosition = worldTilePos;
+                    case TileType.Goal:            
                         
                             // generate goal 
                             GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
@@ -227,6 +219,7 @@ namespace Veverka.GridSystem.GameGrid
                             goalTile.transform.localPosition = worldTilePos;
                             goalTile.Init(tileType, tilePos);
                             goals.Add(tilePos, goalTile);
+                            SetTileType(tilePos, TileType.Goal);
                             break;
 
                     default: break;
@@ -234,47 +227,7 @@ namespace Veverka.GridSystem.GameGrid
                 }
             }
         }
-
-        /// <summary>
-        /// Set grid to appear in bottom left corner
-        /// </summary>
-       void OffsetGridToBottomLeft()
-        {
-            int gridWidth;
-            int gridHeight;
-           
-            // Grid widht based on number of tiles
-            if ((this.gridSize.x % 2) == 0)
-            {
-                gridWidth = this.gridSize.x / 2;
-            }
-            else
-            {
-                gridWidth = (this.gridSize.x - 1) / 2;
-            }
-            // Grid height based on number of tiles
-            if ((this.gridSize.y % 2) == 0)
-            {
-                gridHeight = this.gridSize.y / 2;
-            }
-            else
-            {
-                gridHeight = (this.gridSize.y - 1) / 2;
-            }
-
-            Vector3 offset = -GridUtils.GridToWorld(new Vector2Int(gridWidth, gridHeight));
-            gridRoot.position = offset;
-        }
-
-        /// <summary>
-        /// Center grid to set position
-        /// </summary>
-        /// <param name="position"></param>
-        void CenterGrid(Vector3 position)
-        {
-           gridRoot.position = -position;
-        }
-
+              
         private void OnLevelSelected(LevelSelectPayload payload)
         {
             if (payload.resetRequested)
@@ -289,15 +242,13 @@ namespace Veverka.GridSystem.GameGrid
                 });
                 return;
             }
-
-            // běžná logika – např. GenerateGrid()
         }
 
         /// <summary>
         /// Reset grid layout 
         /// </summary>
         /// <param name="noInt">no integer input necessary</param>
-        void ResetGrid()
+        private void ResetGrid()
         {
             //Destroy old grid
             foreach (Transform child in gridRoot.transform)
@@ -319,7 +270,7 @@ namespace Veverka.GridSystem.GameGrid
         /// <returns></returns>
         public TileType GetTileType(Vector2Int position)
         {
-            return grid[position.x, position.y];    
+            return grid[position.x, position.y];
         }
 
         /// <summary>
@@ -329,8 +280,8 @@ namespace Veverka.GridSystem.GameGrid
         /// <param name="tileType">tile type to be set </param>
         public void SetTileType(Vector2Int position, TileType tileType)
         {
-            grid[position.x, position.y] = tileType;        }
-
+            grid[position.x, position.y] = tileType;
+        }
 
         /// <summary>
         /// Checks whether tile at position is obstacle
@@ -441,7 +392,6 @@ namespace Veverka.GridSystem.GameGrid
              }   
            pushables[position] = tileObject;
         }
-
 
         /// <summary>
         /// Get positon log of movable objects position
