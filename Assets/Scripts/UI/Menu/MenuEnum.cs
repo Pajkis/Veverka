@@ -12,5 +12,6 @@ public enum MenuEnum
     PlayerMenu,
     LevelFinishedMenu,
     SettingsMenu,
-    HighScoreMenu
+    HighScoreMenu,
+    InGameMenu
 }

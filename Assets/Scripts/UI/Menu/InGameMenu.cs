@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InGameButtonHandler : MonoBehaviour
+public class InGameMenu : MonoBehaviour
 {
 
     #region fields
@@ -16,15 +16,12 @@ public class InGameButtonHandler : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {        
-
         //Raise level start event
         levelSelectEvent.Raise(new LevelSelectPayload
         {
             levelNumber = levelDatabase.CurrentLevelIndex,
             resetRequested = true,
-        });
-
-        Debug.Log($"raising restart event: level {levelDatabase.CurrentLevelIndex}");
+        });      
     }
 
     /// <summary>
