@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 644071523746891623}
   - component: {fileID: 3809879422071789965}
   - component: {fileID: -8430511730895366070}
+  - component: {fileID: 959817345349971074}
   m_Layer: 0
   m_Name: Liskacek
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 5049554270686572608}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5, y: -5, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -84,7 +85,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!114 &-8430511730895366070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,3 +101,15 @@ MonoBehaviour:
   moveDistance: 1
   moveDuration: 0.3
   pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
+--- !u!114 &959817345349971074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049554270686572608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec77049675e2743469ca32a1fc96a003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

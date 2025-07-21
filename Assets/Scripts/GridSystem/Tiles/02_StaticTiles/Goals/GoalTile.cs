@@ -1,4 +1,5 @@
 using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 public class GoalTile : StaticTile
 {

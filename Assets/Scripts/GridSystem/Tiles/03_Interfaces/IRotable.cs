@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public interface IRotable
 {
-   public Direction FacingDirection { get; set; }
+   public Direction FacingDirection { get; }
 
    public Direction Rotate(Direction direction);       
 

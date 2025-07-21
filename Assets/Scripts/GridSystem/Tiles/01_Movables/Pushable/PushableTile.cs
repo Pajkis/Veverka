@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 public class PushableTile : MovableTile
 {
@@ -20,7 +18,7 @@ public class PushableTile : MovableTile
     /// <returns></returns>
     public bool CanBePushed(Direction direction)
     {
-        Vector2Int targetPosition = GridUtils.GetAdjacentPosition(gridPosition, direction);
+        Vector2Int targetPosition = GridUtils.GetPositionInDir(gridPosition, direction);
         if (!GameGrid.Instance.IsInGrid(targetPosition)) return false;
 
         return GameGrid.Instance.IsWalkableAt(targetPosition);
@@ -48,8 +46,7 @@ public class PushableTile : MovableTile
         GameGrid.Instance.SetPushableAt(targetPosition, this);
         GameGrid.Instance.SetTileType(targetPosition, tileType);
        
-        gridPosition = targetPosition;
-        isMoving = false;
+        gridPosition = targetPosition;       
     }
 
     #endregion

@@ -34,14 +34,21 @@ public static class LevelUtils
 
             TileType[,] levelGrid = new TileType[width, height];
 
-            Debug.Log("Size of layout is (height, width): " + height + ", " + width);
+            Debug.Log("Size of layout is (width, height): " + width + ", " + height);
             // put data into grid
             for (int y = 0; y < height; y++)
             {
-                string[] row = lines[y].Split(",");
+                string[] row = lines[height - 1 - y].Split(",");
                 for (int x = 0; x < width; x++)
                 {
-                    levelGrid[x, height - 1 - y] = TileTypeExtensions.ParseTileType(row[x].Trim());
+                    levelGrid[x, y] = TileTypeExtensions.ParseTileType(row[x].Trim());
+                    
+                    //Catch error types
+                    if (levelGrid[x, y] == TileType.ErrorTile)
+                    {
+                        Debug.LogWarning($"error tile on position[x,y]: {x}, {y}");
+                    }
+
                 }
             }
 
@@ -66,6 +73,8 @@ public static class LevelUtils
         int veverkaCount = 0;
         int nutCount = 0;
         int goalCount = 0;
+        int errorTileCount = 0;
+        bool valid = true;
 
         for (int x = 0; x < grid.GetLength(0); x++)
         {
@@ -76,6 +85,7 @@ public static class LevelUtils
                     case TileType.Veverka: veverkaCount++; break;
                     case TileType.Nut: nutCount++; break;
                     case TileType.Goal: goalCount++; break;
+                    case TileType.ErrorTile: errorTileCount++; break;
                 }
             }
         }
@@ -83,35 +93,42 @@ public static class LevelUtils
         // check veverka count
         if (veverkaCount != 1)
         {
-            Debug.Log($"Expected 1 veverka but found {veverkaCount}");
-            return false;
+            Debug.LogWarning($"Expected 1 veverka but found {veverkaCount}");
+            valid = false;
         }
 
         // check nuts amount more than zero        
         if (nutCount < 1)
         {
-            Debug.Log($"Expected at least 1 nut but found {nutCount}");
-            return false;
+            Debug.LogWarning($"Expected at least 1 nut but found {nutCount}");
+            valid =  false;
         }
 
         // check goal amount more than zero        
         if (goalCount < 1)
         {
-            Debug.Log($"Expected at least 1 goal but found {goalCount}");
-            return false;
+            Debug.LogWarning($"Expected at least 1 goal but found {goalCount}");
+            valid =  false;
         }
 
         // check same amount of nut and goals
         if (nutCount != goalCount)
         {
-            Debug.Log($"The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
-            return false;
+            Debug.LogWarning($"The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
+            valid =  false;
+        }
+
+        // Check for invalid tiles
+        if (errorTileCount > 0)
+        {
+            Debug.LogWarning($"invalid tiles in input CSV file: Count {errorTileCount}");
+            valid = false;
         }
 
         //Set up grid
         CachedGrid = null;
         CachedGrid = grid;
-        return true;
+        return valid;
     }
 }
 

@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
+using Veverka.GridSystem.GameGrid;
+
 /// <summary>
 /// Class for the nut Tile
 /// 
@@ -46,8 +48,7 @@ public class NutTile : PushableTile
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
         }
 
-        gridPosition = targetPosition;
-        isMoving = false;
+        gridPosition = targetPosition;       
     }
     #endregion
 }
