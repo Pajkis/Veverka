@@ -8,9 +8,11 @@ namespace Veverka.CameraSystem
     /// </summary>
     public class CameraFollow : MonoBehaviour
     {
+        #region fields
         [Header("Follow Settings")]
         [SerializeField] private Transform target;
-        [SerializeField] private float smoothSpeed = 0.15f;
+        // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
+        [SerializeField] private float smoothMoveTime = 0.3f; 
         // adjust camera follow of character when it crosses over half the screen
         [SerializeField] private Vector3 FollowOffset = new Vector3(2.6666f, 0, -10f);
         // offset to switch center of the scene in the center of the left screen window
@@ -20,7 +22,6 @@ namespace Veverka.CameraSystem
         [SerializeField] private float tileSize = 1f;
         [SerializeField] private Vector2Int maxStaticTileSize = new Vector2Int(15, 11);
   
-
         [SerializeField] private Vector2 minBounds;
         [SerializeField] private Vector2 maxBounds;
 
@@ -28,6 +29,9 @@ namespace Veverka.CameraSystem
 
         private CameraMode mode;
 
+        #endregion
+
+        #region methods
         /// <summary>
         /// Initialize Camera and centers it on set target
         /// </summary>
@@ -70,7 +74,7 @@ namespace Veverka.CameraSystem
             
             Vector3 desired = target.position + FollowOffset;
             Vector3 clamped = ClampToBounds(desired);
-           transform.position = Vector3.Lerp(transform.position, clamped, smoothSpeed);
+            transform.position = Vector3.Lerp(transform.position, clamped, smoothMoveTime);
         }
 
         /// <summary>
@@ -86,5 +90,7 @@ namespace Veverka.CameraSystem
            
             return new Vector3(clampedX, clampedY, targetPos.z);         
         }
+
+        #endregion
     }
 }

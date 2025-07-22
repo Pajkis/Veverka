@@ -45,6 +45,7 @@ public class GamePlay :  MonoBehaviour
     private void OnDisable()
     {
         pushableInGoalEvent.RemoveListener(UpdateGoalCount);
+        levelInitEvent.RemoveListener(SetLevelGoalCount);
     }
 
     /// <summary>
