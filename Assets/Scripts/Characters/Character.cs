@@ -1,3 +1,4 @@
+﻿using TMPro;
 using UnityEngine;
 using Veverka.Movement.SmoothMover;
 
@@ -14,6 +15,7 @@ public abstract class Character: MonoBehaviour
 
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
+    protected CharacterMovedPayload payload = new();
 
     protected SmoothMover smoothMover;
 
@@ -51,6 +53,29 @@ public abstract class Character: MonoBehaviour
     }
 
     /// <summary>
+    /// Undo move of character, set direction
+    /// </summary>
+    /// <param name="from"> current position</param>
+    /// <param name="to">previous position</param>
+    /// <param name="direction">direction of movement</param>
+    /// <param name="duration"> duration of movement</param>
+    public void UndoMove(Vector2Int from, Vector2Int to, Direction direction, float duration = 0.15f)
+    {
+        if (smoothMover.IsMoving) return;
+
+        Vector3 fromWorld = GridUtils.GridToWorld(from);
+        Vector3 toWorld = GridUtils.GridToWorld(to);
+
+        Rotate(direction);
+        smoothMover.Move(fromWorld, toWorld, duration,
+            onStart: null, onComplete: null);
+
+        Debug.Log($"Undo character: {to} → {from}");
+        gridPosition = to;
+    }
+
+
+    /// <summary>
     /// Move of a character over a distance in set direction
     /// </summary>
     /// <param name="direction">direction of movemebt</param>
@@ -64,6 +89,15 @@ public abstract class Character: MonoBehaviour
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) ;
 
+        // fill character moved payload for events - calling events in children classes 
+        payload = new CharacterMovedPayload
+        {
+            character = this,
+            from = targetPosVec2Int,
+            to = gridPosition,
+            direction = direction,
+        };
+        
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
 

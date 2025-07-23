@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Veverka.GridSystem.GameGrid;
 
 /// <summary>
@@ -12,6 +12,7 @@ namespace Veverka.Characters.Veverka
 
         #region fields
         [SerializeField] DirectionEvent onArrowPressed;
+        [SerializeField] CharacterMovedEvent veverkaMoved;
         #endregion
 
         #region event handling
@@ -20,7 +21,7 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         private void OnEnable()
         {
-           onArrowPressed.AddListener(HandleInput);
+           onArrowPressed.AddListener(HandleInput);          
         }
         
         /// <summary>
@@ -95,6 +96,13 @@ namespace Veverka.Characters.Veverka
             }
         }
 
+        protected override void Move(Direction direction, int distance, float duration = 0.15F)
+        {
+            base.Move(direction, distance, duration);
+            Debug.Log($"Undo registered: {payload.from} → {payload.to}");
+            veverkaMoved.Raise(payload);
+        }
+
         /// <summary>
         /// On Move start action
         /// </summary>
@@ -102,7 +110,7 @@ namespace Veverka.Characters.Veverka
         {
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
         }
-
+               
         #endregion
     }
 

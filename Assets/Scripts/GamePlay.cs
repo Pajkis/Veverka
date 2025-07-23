@@ -7,28 +7,48 @@ using UnityEngine;
 public class GamePlay :  MonoBehaviour
 {
     #region fields
+    int levelGoalCount = 0;
+
+    [Header("Events")]
     [SerializeField]
     private PushableInGoalEvent pushableInGoalEvent;
 
     [SerializeField]
     private LevelInitEvent levelInitEvent;
 
-    int levelGoalCount = 0;
+    [SerializeField]  
+    private CharacterMovedEvent characterMoved;
+
+    [Header("turn undo logic")]    
+    private UndoManager undoManager;
     #endregion
 
     /// <summary>
     /// Awake is called at object creation
     /// </summary>
     void Awake()
-    {      
+    {
+        undoManager = new UndoManager();
+    }
+
+    private void OnEnable()
+    {
         // add listeners     
         pushableInGoalEvent.AddListener(UpdateGoalCount);
         levelInitEvent.AddListener(SetLevelGoalCount);
+        characterMoved.AddListener(OnCharacterMoved);
     }
-
-    // Update is called once per frame
-    void Update()
+        // Update is called once per frame
+        void Update()
     {
+
+        // undo last turn
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            undoManager.Undo();
+        }
+
+
         // open pause menu
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -71,5 +91,23 @@ public class GamePlay :  MonoBehaviour
             MenuManager.GoToMenu(MenuEnum.LevelFinishedMenu);
         }
     }
-    
+
+    /// <summary>
+    /// On character moved method - counts number of moves and add each move into turn record
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCharacterMoved(CharacterMovedPayload payload)
+    {
+        var action = new UndoCharacterAction(payload.character, payload.from, payload.to, payload.direction);
+        var turn = new TurnRecord();
+        turn.AddAction(action);
+
+        undoManager.RegisterTurn(turn);
+    }
+    /// <summary>
+    /// Undo move for character
+    /// </summary>
+    public void Undo() => undoManager.Undo();
+
+
 }
