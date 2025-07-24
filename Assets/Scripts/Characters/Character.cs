@@ -51,6 +51,7 @@ public abstract class Character: MonoBehaviour
         Rotate(facingDirection);
         Debug.Log($"[Veverka INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
     }
+  
 
     /// <summary>
     /// Undo move of character, set direction

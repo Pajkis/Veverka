@@ -13,6 +13,8 @@ namespace Veverka.Characters.Veverka
         #region fields
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
+
+        protected string UndoId;
         #endregion
 
         #region event handling
@@ -67,25 +69,25 @@ namespace Veverka.Characters.Veverka
                 {
                     pushableObject = targetObject as PushableTile;
                 }
-           
-                // check for pushable objects
+
                 if (pushableObject != null)
-                {                          
+                {                   
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
                         pushableObject.Move(inputDirection, moveDistance);
-                        Move(inputDirection, moveDistance);                
+                        Move(inputDirection, moveDistance);
                     }
                     else
                     {
                         // Optionally animate failed push
                     }
                 }
+                // move character to empty tile
                 else if (GameGrid.Instance.IsWalkableAt(targetPos))
                 {
                     Move(inputDirection, moveDistance);
-                }              
+                }
             }
 
             // rotate to input arrow direction
@@ -96,11 +98,22 @@ namespace Veverka.Characters.Veverka
             }
         }
 
+
+        /// <summary>
+        /// Move update in character movement 
+        /// Add expect source to registrer, that object is going to move and this action will be registered via TurnBuilder into SingleTurnRecord
+        /// Raise event that character is moving to count moves e.g.
+        /// </summary>
+        /// <param name="direction">direction of movement</param>
+        /// <param name="distance">number of tiles to move</param>
+        /// <param name="duration">duration of movement</param>
         protected override void Move(Direction direction, int distance, float duration = 0.15F)
         {
-            base.Move(direction, distance, duration);
-            Debug.Log($"Undo registered: {payload.from} → {payload.to}");
-            veverkaMoved.Raise(payload);
+            UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
+           
+            // inform turn builder, that this component is going to register a action into turn record
+            TurnBuilder.Instance.ExpectSource(UndoId);
+            base.Move(direction, distance, duration);    
         }
 
         /// <summary>
@@ -110,7 +123,23 @@ namespace Veverka.Characters.Veverka
         {
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
         }
-               
+
+
+        protected override void OnMoveComplete(Vector2Int targetPosition)
+        {
+            base.OnMoveComplete(targetPosition);
+            // register movement as action into turn record 
+            TurnBuilder.Instance.AddAction(
+             new UndoCharacterAction(this, payload.from, payload.to, payload.direction)
+               );
+
+            // inform turn builder, tht this component has registered an action into turn record
+            TurnBuilder.Instance.NotifySourceComplete(UndoId);
+            Debug.Log($"[Veverka move Complete] Added + Notified {UndoId}");
+
+            // raise event, that character made a turn -> turn count
+            veverkaMoved.Raise(payload);
+        }
         #endregion
     }
 

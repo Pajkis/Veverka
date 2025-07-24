@@ -7,15 +7,23 @@ using UnityEngine;
 public class UndoManager
 {
     // stack of turn records
-    private Stack<TurnRecord> history = new();
+    private Stack<SingleTurnRecord> history = new();
 
     /// <summary>
     /// Register one turn in turn record
     /// </summary>
     /// <param name="turn"></param>
-    public void RegisterTurn(TurnRecord turn)
+    public void RegisterTurn(SingleTurnRecord turn)
     {
-        history.Push(turn);
+        if (turn != null && turn.ActionCount > 0)
+        {
+            Debug.Log($"[UndoManager] Registered turn with {turn.ActionCount} actions");
+            history.Push(turn);
+        }
+        else 
+        {
+            Debug.Log("[UndoManager] Ignored empty or null turn");
+        }
     }
 
     /// <summary>
@@ -23,10 +31,13 @@ public class UndoManager
     /// </summary>
     public void Undo()
     {
-        if (history.Count > 0)
+        if (history.Count == 0)
         {
-            TurnRecord turn = history.Pop();
-            turn.Undo();
+            Debug.Log("[UndoManager] Nothing to undo.");
+            return;
         }
+
+        var turn = history.Pop();
+        turn.Undo();
     }
 }

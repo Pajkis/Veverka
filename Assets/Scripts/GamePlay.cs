@@ -8,6 +8,7 @@ public class GamePlay :  MonoBehaviour
 {
     #region fields
     int levelGoalCount = 0;
+    int turnCount = 0;
 
     [Header("Events")]
     [SerializeField]
@@ -19,8 +20,8 @@ public class GamePlay :  MonoBehaviour
     [SerializeField]  
     private CharacterMovedEvent characterMoved;
 
-    [Header("turn undo logic")]    
-    private UndoManager undoManager;
+    [Header("turn undo logic")]
+    private UndoManager undoManager = new();
     #endregion
 
     /// <summary>
@@ -29,17 +30,20 @@ public class GamePlay :  MonoBehaviour
     void Awake()
     {
         undoManager = new UndoManager();
+        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
+        Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
     }
 
     private void OnEnable()
     {
         // add listeners     
         pushableInGoalEvent.AddListener(UpdateGoalCount);
-        levelInitEvent.AddListener(SetLevelGoalCount);
+        levelInitEvent.AddListener(LevelInit);
         characterMoved.AddListener(OnCharacterMoved);
     }
-        // Update is called once per frame
-        void Update()
+
+    // Update is called once per frame
+    void Update()
     {
 
         // undo last turn
@@ -47,7 +51,6 @@ public class GamePlay :  MonoBehaviour
         {
             undoManager.Undo();
         }
-
 
         // open pause menu
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -65,15 +68,17 @@ public class GamePlay :  MonoBehaviour
     private void OnDisable()
     {
         pushableInGoalEvent.RemoveListener(UpdateGoalCount);
-        levelInitEvent.RemoveListener(SetLevelGoalCount);
+        levelInitEvent.RemoveListener(LevelInit);
+        characterMoved.AddListener(OnCharacterMoved);
     }
 
     /// <summary>
     /// Set level goal count for current level
     /// </summary>
     /// <param name="goalCount"></param>
-    void SetLevelGoalCount(LevelInitPayload payload)
-    {       
+    void LevelInit(LevelInitPayload payload)
+    {
+        turnCount = 0;
         levelGoalCount = payload.GoalCount;
         Debug.Log($"Left goals: {levelGoalCount}");
     }
@@ -98,12 +103,9 @@ public class GamePlay :  MonoBehaviour
     /// <param name="payload"></param>
     private void OnCharacterMoved(CharacterMovedPayload payload)
     {
-        var action = new UndoCharacterAction(payload.character, payload.from, payload.to, payload.direction);
-        var turn = new TurnRecord();
-        turn.AddAction(action);
-
-        undoManager.RegisterTurn(turn);
+        turnCount++;
     }
+
     /// <summary>
     /// Undo move for character
     /// </summary>

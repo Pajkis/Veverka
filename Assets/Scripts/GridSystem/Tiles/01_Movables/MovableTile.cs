@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Veverka.Movement.SmoothMover;
 
 /// <summary>
@@ -45,6 +43,28 @@ public class MovableTile : TileObject
     {
         smoothMover = GetComponent<SmoothMover>();
         base.Init(tileType, gridPosition);      
+    }
+
+    /// <summary>
+    /// Undo move of movable tile, set direction
+    /// </summary>
+    /// <param name="from"> previous position</param>
+    /// <param name="to">current position</param>
+    /// <param name="direction">direction of movement</param>
+    /// <param name="duration"> duration of movement</param>
+    public void UndoMove(Vector2Int from, Vector2Int to, Direction direction, float duration = 0.15f)
+    {
+        if (smoothMover.IsMoving) return;
+
+        Vector3 fromWorld = GridUtils.GridToWorld(from);
+        Vector3 toWorld = GridUtils.GridToWorld(to);
+
+        //Rotate(direction);
+        smoothMover.Move(fromWorld, toWorld, duration,
+            onStart: null, onComplete: null);
+
+        Debug.Log($"Undo movable tile: {to} → {from}");
+        gridPosition = to;
     }
 
     /// <summary>

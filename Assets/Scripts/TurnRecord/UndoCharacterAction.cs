@@ -7,8 +7,8 @@ using Veverka.Characters.Veverka;
 public class UndoCharacterAction : IUndoableAction
 {
     private Character character;
-    private Vector2Int from;
-    private Vector2Int to;
+    private Vector2Int current;
+    private Vector2Int previous;
     private float duration;
     private Direction direction;
 
@@ -20,11 +20,11 @@ public class UndoCharacterAction : IUndoableAction
     /// <param name="to">previous position</param>
     /// <param name="direction">direction of movement</param>
     /// <param name="duration">duration of movement in seconds</param>
-    public UndoCharacterAction(Character character, Vector2Int from, Vector2Int to, Direction direction, float duration = 0.15f)
+    public UndoCharacterAction(Character character, Vector2Int current, Vector2Int previous, Direction direction, float duration = 0.15f)
     {
         this.character = character;
-        this.from = from;
-        this.to = to;
+        this.current = current;
+        this.previous = previous;
         this.duration = duration;
         this.direction = direction;
     }
@@ -34,6 +34,6 @@ public class UndoCharacterAction : IUndoableAction
     /// </summary>
     public void Undo()
     {
-        character.UndoMove(from, to, direction, duration);
+        character.UndoMove(current, previous, direction, duration);
     }
 }
