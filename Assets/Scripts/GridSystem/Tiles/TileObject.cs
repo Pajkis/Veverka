@@ -7,6 +7,8 @@ public abstract class TileObject : MonoBehaviour
     #region fields
     protected TileType tileType;
     protected Vector2Int gridPosition;
+
+    protected string UndoId;
     #endregion
 
     #region propeties
@@ -39,5 +41,10 @@ public abstract class TileObject : MonoBehaviour
         this.tileType = tileType;
         this.gridPosition = gridPosition;
     }
+
+    /// <summary>
+    /// Undo action of an object 
+    /// </summary>
+    public virtual void UndoAction() { }
     #endregion
 }

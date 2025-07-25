@@ -28,6 +28,23 @@ public class PushableTile : MovableTile
     #region Methods   
 
     /// <summary>
+    /// Executes base undo actions and updates game grid
+    /// </summary>
+    /// <param name="current"></param>
+    /// <param name="previous"></param>
+    /// <param name="duration"></param>
+    public override void UndoAction(Vector2Int current, Vector2Int previous, float duration = 0.15f)
+    { 
+        base.UndoAction(current, previous, duration);
+
+        GameGrid.Instance.RemovePushableAt(current);
+        GameGrid.Instance.SetTileType(current, TileType.Empty);
+        GameGrid.Instance.SetPushableAt(previous, this);
+        GameGrid.Instance.SetTileType(previous, tileType);
+    }
+
+
+    /// <summary>
     /// On Move start action
     /// </summary>
     protected override void OnMoveStart()
@@ -43,10 +60,13 @@ public class PushableTile : MovableTile
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
         GameGrid.Instance.RemovePushableAt(gridPosition);
+        GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);
         GameGrid.Instance.SetPushableAt(targetPosition, this);
         GameGrid.Instance.SetTileType(targetPosition, tileType);
-       
-        gridPosition = targetPosition;       
+
+        gridPosition = targetPosition;
+        //Complete turn record
+        TurnRecordAddandComplete();
     }
 
     #endregion

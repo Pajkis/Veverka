@@ -8,8 +8,9 @@ public class MovableTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1; // 1 tile
-    [SerializeField] protected float moveDuration = 0.3f;
+    [SerializeField] protected float moveDuration = 0.15f;
 
+    protected MovableMovedPayload payload = new();
     protected SmoothMover smoothMover;
     #endregion
 
@@ -46,25 +47,24 @@ public class MovableTile : TileObject
     }
 
     /// <summary>
-    /// Undo move of movable tile, set direction
+    /// Undo move of movable tile
     /// </summary>
-    /// <param name="from"> previous position</param>
-    /// <param name="to">current position</param>
-    /// <param name="direction">direction of movement</param>
+    /// <param name="previous"> previous position</param>
+    /// <param name="current">current position</param>  
     /// <param name="duration"> duration of movement</param>
-    public void UndoMove(Vector2Int from, Vector2Int to, Direction direction, float duration = 0.15f)
-    {
+    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration = 0.15f)
+    {        
         if (smoothMover.IsMoving) return;
 
-        Vector3 fromWorld = GridUtils.GridToWorld(from);
-        Vector3 toWorld = GridUtils.GridToWorld(to);
+        Vector3 fromWorld = GridUtils.GridToWorld(current);
+        Vector3 toWorld = GridUtils.GridToWorld(previous);
 
         //Rotate(direction);
         smoothMover.Move(fromWorld, toWorld, duration,
             onStart: null, onComplete: null);
 
-        Debug.Log($"Undo movable tile: {to} → {from}");
-        gridPosition = to;
+        Debug.Log($"Undo movable tile:  {previous} → {current}");
+        gridPosition = previous;
     }
 
     /// <summary>
@@ -76,11 +76,26 @@ public class MovableTile : TileObject
     public virtual void Move(Direction direction, int distance, float duration = 0.15f)
     {
         if (smoothMover.IsMoving) return;
+
+        //Register turn record
+        TurnRecordExpectSource();
+
+        // calculate movement positions
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
 
+        // fill character moved payload for events - calling events in children classes 
+        payload = new MovableMovedPayload
+        {
+            movable = this,
+            current = targetPosVec2Int,
+            previous = gridPosition,
+         //   direction = direction,
+        };
+
+        // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
      
@@ -98,7 +113,36 @@ public class MovableTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        gridPosition = targetPosition;        
+        gridPosition = targetPosition;
+        //Complete turn record
+        TurnRecordAddandComplete();
+    }
+
+
+    /// <summary>
+    /// inform TurnBuilder, that this source will provide data for this turn record
+    /// </summary>
+    protected void TurnRecordExpectSource()
+    {
+        // UndoID for turn history record
+        UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
+        // inform turn builder, that this component is going to register a action into turn record
+        TurnBuilder.Instance.ExpectSource(UndoId);
+    }
+
+    /// <summary>
+    /// add action into the turn record and complete source for turn builder
+    /// </summary>   
+    protected void TurnRecordAddandComplete()
+    {
+        // register movement as action into turn record 
+        TurnBuilder.Instance.AddAction(
+         new UndoMovableAction(this, payload.current, payload.previous)
+           );
+
+        // inform turn builder, tht this component has registered an action into turn record
+        TurnBuilder.Instance.NotifySourceComplete(UndoId);
+        Debug.Log($"[{this.GetType().Name} move Complete] Added + Notified {UndoId}");
     }
 
     #endregion

@@ -40,4 +40,13 @@ public class UndoManager
         var turn = history.Pop();
         turn.Undo();
     }
+
+    /// <summary>
+    /// Clear history in stack
+    /// </summary>
+    public void ClearHistory()
+    { 
+        history.Clear();
+        Debug.Log("[UndoManager] turn history cleared");
+    }
 }

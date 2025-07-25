@@ -95,6 +95,11 @@ public class GamePlay :  MonoBehaviour
             Debug.Log("Level completed");
             MenuManager.GoToMenu(MenuEnum.LevelFinishedMenu);
         }
+
+        // reset history recording
+        TurnBuilder.Instance.CancelTurn();     
+        undoManager.ClearHistory();
+
     }
 
     /// <summary>

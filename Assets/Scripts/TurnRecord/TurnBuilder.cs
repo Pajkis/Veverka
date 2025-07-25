@@ -17,7 +17,7 @@ public class TurnBuilder
     private List<IUndoableAction> actions = new();
     private HashSet<string> expectedSources = new();
     private HashSet<string> completedSources = new();
-
+    private bool isActive = true;
     // Callback to be set by GamePlay or UndoManager
     private Action<SingleTurnRecord> onTurnFinalized;
 
@@ -27,6 +27,20 @@ public class TurnBuilder
     public void SetFinalizeCallback(Action<SingleTurnRecord> callback)
     {
         onTurnFinalized = callback;
+        isActive = true;
+        Debug.Log($"[TurnBuilder] recording is Active");
+
+    }
+    /// <summary>
+    /// Start new turn - reset all actions and sources, sets active
+    /// </summary>
+    public void StartNewTurn()
+    {
+        isActive = true;
+        actions.Clear();
+        expectedSources.Clear();
+        completedSources.Clear();
+        Debug.Log("[TurnBuilder] start turn");
     }
 
     /// <summary>
@@ -34,6 +48,7 @@ public class TurnBuilder
     /// </summary>
     public void AddAction(IUndoableAction action)
     {
+        if (!isActive) return;
         actions.Add(action);
     }
 
@@ -42,6 +57,7 @@ public class TurnBuilder
     /// </summary>
     public void ExpectSource(string sourceId)
     {
+        if (!isActive) return;
         expectedSources.Add(sourceId);
     }
 
@@ -50,6 +66,7 @@ public class TurnBuilder
     /// </summary>
     public void NotifySourceComplete(string sourceId)
     {
+        if (!isActive) return;
         completedSources.Add(sourceId);
         TryFinalizeTurn();
     }
@@ -80,12 +97,14 @@ public class TurnBuilder
     }
 
     /// <summary>
-    /// Clear everything without saving turn (e.g. in case of level reset).
+    /// Clear everything without saving turn, disables add actions and sources
     /// </summary>
     public void CancelTurn()
     {
+        isActive = false;
         actions.Clear();
         expectedSources.Clear();
         completedSources.Clear();
+        Debug.Log("[TurnBuilder] Turn cancelled");
     }
 }

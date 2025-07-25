@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +9,6 @@ public class UndoMovableAction : IUndoableAction
     private Vector2Int from;
     private Vector2Int to;
     private float duration;
-    private Direction direction;
 
     /// <summary>
     /// move movable tile action from current to previous position - constructor
@@ -21,13 +18,12 @@ public class UndoMovableAction : IUndoableAction
     /// <param name="to">previous position</param>
     /// <param name="direction">direction of movement</param>
     /// <param name="duration">duration of movement in seconds</param>
-    public UndoMovableAction(MovableTile movableTile, Vector2Int from, Vector2Int to, float duration, Direction direction)
+    public UndoMovableAction(MovableTile movableTile, Vector2Int from, Vector2Int to, float duration = 0.15f)
     {
         this.movableTile = movableTile;
         this.from = from;
         this.to = to;
-        this.duration = duration;
-        this.direction = direction;
+        this.duration = duration;   
     }
 
     /// <summary>
@@ -35,6 +31,6 @@ public class UndoMovableAction : IUndoableAction
     /// </summary>
     public void Undo()
     {
-        movableTile.UndoMove(from, to, direction, duration);
+        movableTile.UndoAction(from, to, duration);
     }
 }
