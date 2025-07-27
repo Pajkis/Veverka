@@ -109,10 +109,6 @@ namespace Veverka.GridSystem.GameGrid
                 Destroy(gameObject);
             }
 
-            //Set grid root position
-         //   Vector2Int gridPosOffset = new(1, 1);
-           // gridRoot.position = new Vector3(gridPosOffset.x, gridPosOffset.y, 0);
-
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
             resetGridEvent.AddListener(ResetGrid);
@@ -140,9 +136,7 @@ namespace Veverka.GridSystem.GameGrid
             {
                 GoalCount = goals.Count
             });
-            Debug.Log($"Goal Count in GameGrid: {goals.Count}");
-
-            //    OffsetGridToBottomLeft();
+            Debug.Log($"Goal Count in GameGrid: {goals.Count}");           
 
             //find camera and assign to veverka
             CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();

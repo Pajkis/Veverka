@@ -24,9 +24,11 @@ public class NutTile : PushableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        GameGrid.Instance.RemovePushableAt(gridPosition);      
+        // Remove pushable at grid position and set it to Empty tile
+        GameGrid.Instance.RemovePushableAt(gridPosition);
+        GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);
 
-        //update dictionary
+        // The nut does not reach goal
         if (!GameGrid.Instance.IsGoalAt(targetPosition))
         {
             GameGrid.Instance.SetPushableAt(targetPosition, this);
@@ -42,13 +44,17 @@ public class NutTile : PushableTile
                 goalReduction = 1,
             });
            
+            // replace goal with empty tile
             GameGrid.Instance.SetTileType(targetPosition, TileType.Empty);
             Destroy(gameObject);           
 
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
         }
 
-        gridPosition = targetPosition;       
+        gridPosition = targetPosition;
+
+        //Complete turn record
+        TurnRecordAddandComplete();
     }
     #endregion
 }

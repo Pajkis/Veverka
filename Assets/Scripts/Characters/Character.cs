@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Veverka.Movement.SmoothMover;
 
 /// <summary>
@@ -14,9 +14,11 @@ public abstract class Character: MonoBehaviour
 
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
+    protected CharacterMovedPayload payload = new();
 
     protected SmoothMover smoothMover;
 
+    protected string UndoId;
     #endregion
 
     #region properties
@@ -49,6 +51,30 @@ public abstract class Character: MonoBehaviour
         Rotate(facingDirection);
         Debug.Log($"[Veverka INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
     }
+  
+
+    /// <summary>
+    /// Undo move of character, set direction
+    /// </summary>
+    /// <param name="from"> current position</param>
+    /// <param name="to">previous position</param>
+    /// <param name="direction">direction of movement</param>
+    /// <param name="duration"> duration of movement</param>
+    public void UndoMove(Vector2Int current, Vector2Int previous, Direction direction, float duration = 0.15f)
+    {
+        if (smoothMover.IsMoving) return;
+
+        Vector3 fromWorld = GridUtils.GridToWorld(current);
+        Vector3 toWorld = GridUtils.GridToWorld(previous);
+
+        Rotate(direction);
+        smoothMover.Move(fromWorld, toWorld, duration,
+            onStart: null, onComplete: null);
+
+        Debug.Log($"Undo character: {previous} → {current}");
+        gridPosition = previous;
+    }
+
 
     /// <summary>
     /// Move of a character over a distance in set direction
@@ -58,12 +84,32 @@ public abstract class Character: MonoBehaviour
     /// <param name="duration">duration of movement</param>
     protected virtual void Move(Direction direction, int distance, float duration = 0.15f)
     {
+        //do not execute move when already moving
         if (smoothMover.IsMoving) return;
+
+        // Start new turn
+        TurnBuilder.Instance.StartNewTurn();
+        // UndoID for turn history record
+        UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
+        // inform turn builder, that this component is going to register a action into turn record
+        TurnBuilder.Instance.ExpectSource(UndoId);
+
+        // decide position to move
         Vector3 currentPosition = transform.position;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) ;
 
+        // fill character moved payload for events - calling events in children classes 
+        payload = new CharacterMovedPayload
+        {
+            character = this,
+            current = targetPosVec2Int,
+            previous = gridPosition,
+            direction = direction,
+        };
+
+        // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
 
@@ -81,8 +127,18 @@ public abstract class Character: MonoBehaviour
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     { 
-      this.gridPosition = targetPosition;
-      Debug.Log($"[Veverka Move Complete] Now at grid pos: {gridPosition}");
+        this.gridPosition = targetPosition;
+         Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
+       
+        // register movement as action into turn record 
+        TurnBuilder.Instance.AddAction(
+         new UndoCharacterAction(this, payload.current, payload.previous, payload.direction)
+           );
+
+        // inform turn builder, tht this component has registered an action into turn record
+        TurnBuilder.Instance.NotifySourceComplete(UndoId);
+        Debug.Log($"[{this.GetType().Name} move Complete] Added + Notified {UndoId}");
+
     }
 
     /// <summary>
