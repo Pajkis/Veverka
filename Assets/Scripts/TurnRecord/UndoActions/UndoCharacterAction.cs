@@ -1,5 +1,4 @@
 using UnityEngine;
-using Veverka.Characters.Veverka;
 
 /// <summary>
 /// undo move character action 
@@ -16,8 +15,8 @@ public class UndoCharacterAction : IUndoableAction
     /// move character action from current to previous position - constructor
     /// </summary>
     /// <param name="character"> character class or its child</param>
-    /// <param name="from">current position</param>
-    /// <param name="to">previous position</param>
+    /// <param name="current">current position</param>
+    /// <param name="previous">previous position</param>
     /// <param name="direction">direction of movement</param>
     /// <param name="duration">duration of movement in seconds</param>
     public UndoCharacterAction(Character character, Vector2Int current, Vector2Int previous, Direction direction, float duration = 0.15f)

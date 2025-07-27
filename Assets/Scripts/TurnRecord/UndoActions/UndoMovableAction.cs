@@ -6,23 +6,22 @@ using UnityEngine;
 public class UndoMovableAction : IUndoableAction
 {
     private MovableTile movableTile;
-    private Vector2Int from;
-    private Vector2Int to;
+    private Vector2Int current;
+    private Vector2Int previous;
     private float duration;
 
     /// <summary>
     /// move movable tile action from current to previous position - constructor
     /// </summary>
     /// <param name="movableTile"> movable tile class or its child</param>
-    /// <param name="from">current position</param>
-    /// <param name="to">previous position</param>
-    /// <param name="direction">direction of movement</param>
+    /// <param name="current">current position</param>
+    /// <param name="previous">previous position</param>
     /// <param name="duration">duration of movement in seconds</param>
-    public UndoMovableAction(MovableTile movableTile, Vector2Int from, Vector2Int to, float duration = 0.15f)
+    public UndoMovableAction(MovableTile movableTile, Vector2Int current, Vector2Int previous, float duration = 0.15f)
     {
         this.movableTile = movableTile;
-        this.from = from;
-        this.to = to;
+        this.current = current;
+        this.previous = previous;
         this.duration = duration;   
     }
 
@@ -31,6 +30,6 @@ public class UndoMovableAction : IUndoableAction
     /// </summary>
     public void Undo()
     {
-        movableTile.UndoAction(from, to, duration);
+        movableTile.UndoAction(current, previous, duration);
     }
 }
