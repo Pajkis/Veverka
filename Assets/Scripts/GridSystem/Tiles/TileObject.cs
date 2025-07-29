@@ -11,6 +11,11 @@ public abstract class TileObject : MonoBehaviour
     protected string UndoId;
     #endregion
 
+    #region events
+    [SerializeField]
+    protected TileObjectAtEvent tileObjectAt;
+    #endregion
+
     #region propeties
     /// <summary>
     /// Get grid position of the object

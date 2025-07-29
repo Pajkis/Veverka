@@ -88,7 +88,7 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void UpdateGoalCount(PushableInGoalPayload payload)
     {        
-        levelGoalCount -= payload.goalReduction;
+        levelGoalCount -= payload.GoalReduction;
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {

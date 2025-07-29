@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Veverka.CameraSystem;
 using Veverka.Characters.Veverka;
@@ -30,6 +31,9 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField]
         private LevelDatabase levelDatabase;
 
+        [SerializeField]
+        private TileObjectAtEvent tileObjectAtEvent;
+
         #endregion
 
         #region tile objects
@@ -47,6 +51,7 @@ namespace Veverka.GridSystem.GameGrid
 
         #region fields
         // grid variables       
+        readonly Vector2Int maxScreenGridSize = new(15, 11);
         private Vector2Int gridSize; 
         private float tileSize = 1f;     
         private Transform gridStartCenterTarget;
@@ -90,15 +95,15 @@ namespace Veverka.GridSystem.GameGrid
         {
             get { return goals; }
         }
-    #endregion
+        #endregion
 
-    #region Awake
-    /// <summary>
-    /// Generates grid
-    /// </summary>
-    void Awake()
+        #region Awake
+        /// <summary>
+        /// init singleton and events
+        /// </summary>
+        void Awake()
         {
-            // singleton routine
+        // singleton routine
             if (Instance == null)
             {
                 Instance = this;
@@ -112,6 +117,18 @@ namespace Veverka.GridSystem.GameGrid
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
             resetGridEvent.AddListener(ResetGrid);
+            tileObjectAtEvent.AddListener(TileObjectAt);
+         }
+
+        /// <summary>
+        /// On object disable
+        /// </summary>
+        private void OnDisable()
+        {
+            // remove listeners for events
+            levelSelectEvent.RemoveListener(OnLevelSelected);
+            resetGridEvent.RemoveListener(ResetGrid);
+            tileObjectAtEvent.RemoveListener(TileObjectAt);
         }
 
         #endregion
@@ -127,10 +144,16 @@ namespace Veverka.GridSystem.GameGrid
             this.grid = grid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
-            
-            // Spawn objects based on tile types
+
+            // Spawn objects based on tile types            
             BuildLevelFromGrid();
-                     
+
+            // add surround walls if gridize is smaller than screensize
+            if (gridSize.x < maxScreenGridSize.x || gridSize.y < maxScreenGridSize.y)
+            {
+                BuildSurroundings();
+            }
+
             //raise event
             levelInitEvent.Raise(new LevelInitPayload
             {
@@ -150,12 +173,14 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         void BuildLevelFromGrid()
         {    
+
             // for cycle over grid width
             for (int x = 0; x < gridSize.x; x++)
             {
                 // for cycle over grid height
                 for (int y = 0; y < gridSize.y; y++)
-                {                    
+                {   
+                    //Prepare tile from the grid
                     Vector2Int tilePos = new(x, y);
                     Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
                     TileType tileType =  GetTileType(tilePos);
@@ -221,9 +246,40 @@ namespace Veverka.GridSystem.GameGrid
                 }
             }
         }
-              
+
+        /// <summary>
+        /// Build surround environment for grids smaller than screen
+        /// </summary>
+        void BuildSurroundings()
+        {           
+            int OffsetX = (maxScreenGridSize.x - gridSize.x) / 2;
+            int OffsetY = (maxScreenGridSize.y - gridSize.y) / 2;
+
+            for (int x = 0; x < maxScreenGridSize.x; x++)
+            {
+                for (int y = 0; y < maxScreenGridSize.y; y++)
+                {
+                    Vector2Int tilePos = new(x - OffsetX, y - OffsetY);
+                    
+                    if (!IsInGrid(tilePos))
+                    {
+                        Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
+                        var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        tile.transform.SetParent(gridRoot, false);
+                        tile.transform.localPosition = worldTilePos;
+
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reset grid and raise again to load selected level
+        /// </summary>
+        /// <param name="payload"> level select payload</param>
         private void OnLevelSelected(LevelSelectPayload payload)
         {
+            // Executes only when reset is requested
             if (payload.resetRequested)
             {
                 ResetGrid();
@@ -259,6 +315,61 @@ namespace Veverka.GridSystem.GameGrid
         #endregion
 
         #region tile handling
+
+        /// <summary>
+        /// tile object at action - set, remove, replace etc.
+        /// </summary>
+        /// <param name="payload">tile object data - position, type to change etc.</param>
+        private void TileObjectAt(TileObjectAtPayload payload)
+        {
+            switch (payload.GridObjectAction)
+            { 
+                case GridObjectActionType.SetObject:
+
+                    if (payload.IsPushable)
+                    {
+                        SetPushableAt(payload.GridPosition, payload.TileObject as PushableTile);                        
+                    }
+                    else
+                    { 
+                        // TBD
+                    }
+                    
+                    // set tile type
+                    SetTileType(payload.GridPosition, payload.TileType);
+                    break;
+
+                case GridObjectActionType.RemoveObject:
+
+                    if (payload.IsPushable)
+                    {
+                        RemovePushableAt(payload.GridPosition);                      
+                    }
+                    else
+                    {
+                        // TBD
+                    }
+
+                    break;
+
+                case GridObjectActionType.ReplaceObject:
+
+                    if (payload.IsPushable)
+                    {
+                        RemovePushableAt(payload.GridPosition);
+                    }
+                    else
+                    {
+                        // TBD
+                    }
+
+                    // set tile type
+                    SetTileType(payload.GridPosition, payload.TileType);
+                    break;                       
+            }
+                
+        }
+
         /// <summary>
         /// get tile type on input position
         /// </summary>
@@ -311,7 +422,7 @@ namespace Veverka.GridSystem.GameGrid
 
         public bool IsGoalAt(Vector2Int position)
         {
-          //  Debug.Log($"isGoalat reached at position: {position}");
+            //  Debug.Log($"isGoalat reached at position: {position}");
             return TileTypeExtensions.IsGoal(grid[position.x, position.y]);
         }
 
@@ -381,12 +492,12 @@ namespace Veverka.GridSystem.GameGrid
         /// <param name="tileObject">pushable tile object</param>
         public void SetPushableAt(Vector2Int position, PushableTile tileObject)
         { 
-           if (!IsInGrid(position))
-             {
+            if (!IsInGrid(position))
+                {
                 Debug.LogError("Set tile is outside the grid");
                 return;
-             }   
-           pushables[position] = tileObject;
+                }   
+            pushables[position] = tileObject;
         }
 
         /// <summary>
@@ -394,7 +505,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         public void LogMovablePositions()
         {       
-           Debug.Log("Pushable object count: " + pushables.Count);     
+            Debug.Log("Pushable object count: " + pushables.Count);     
         }
 
         #endregion
