@@ -74,8 +74,8 @@ SpriteRenderer:
   m_SortingLayerID: 1154779117
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b1a8fa832e8266b4d958c53ddaa379bc, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 34a8ca0a90ba077418f44214e3304d4c, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -97,4 +97,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11afa5beaf86d724a87584b065aaa33a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileObjectAt: {fileID: 11400000, guid: c52337cbdd1355c4d89705fa31bc805b, type: 2}
   pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
