@@ -63,12 +63,13 @@ public class PauseMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        
+
         // raise event to reset grid
         resetGridEvent.Raise();
 
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);              
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
+        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
+        MenuManager.GoToMenu(MenuEnum.MainMenu);       
+       
         Destroy(gameObject);
     }
     #endregion
