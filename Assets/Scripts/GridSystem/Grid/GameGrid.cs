@@ -145,6 +145,8 @@ namespace Veverka.GridSystem.GameGrid
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
 
+            Debug.Log($"Size GameGrid: {gridSize.x}, {gridSize.y}");
+
             // Spawn objects based on tile types            
             BuildLevelFromGrid();
 
@@ -453,8 +455,7 @@ namespace Veverka.GridSystem.GameGrid
                 return true;
             }
             else
-            {
-                Debug.Log($"Tries to move out of border: {position[0]},{position[1]} ");
+            {              
                 return false;
             }
                  
