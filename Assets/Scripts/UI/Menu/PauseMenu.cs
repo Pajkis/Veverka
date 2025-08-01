@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Pause Menu handling class
@@ -6,9 +7,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     #region fields
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
-
+   
     [SerializeField]
     private ResetGridEvent resetGridEvent;
 
@@ -38,15 +37,9 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        Time.timeScale = 1;       
-       
-        //Raise level start event
-        levelSelectEvent.Raise(new LevelSelectPayload
-        {
-            levelNumber = levelDatabase.CurrentLevelIndex,
-            resetRequested = true,
-        });
-        Destroy(gameObject);
+        Time.timeScale = 1;
+        SceneManager.LoadScene("20_LevelLoad");       
+       // Destroy(gameObject);
     }
 
     /// <summary>

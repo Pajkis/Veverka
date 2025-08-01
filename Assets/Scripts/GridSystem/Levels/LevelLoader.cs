@@ -9,15 +9,51 @@ public class LevelLoader: MonoBehaviour
 {
 
     #region fields
+
+    [SerializeField]
+    private LevelSelectEvent levelSelectEvent;
+
     [SerializeField]
     private LevelDatabase levelDatabase;
     #endregion
 
 
     #region Methods       
-    void Start()
-    {       
-        StartCoroutine(LoadLevelCoroutine());
+
+    /// <summary>
+    /// Start is called before update
+    /// </summary>
+    private void Start()
+    {
+        // add listener
+        levelSelectEvent.AddListener(LoadLevel);
+
+        // invoke level reset 
+        levelSelectEvent.Raise(new LevelSelectPayload
+        {
+            levelNumber = levelDatabase.CurrentLevelIndex,
+            resetRequested = true
+        });
+    }
+
+    /// <summary>
+    /// remove events on disable
+    /// </summary>
+    private void OnDisable()
+    {
+        levelSelectEvent.RemoveListener(LoadLevel);
+    }
+
+    /// <summary>
+    /// load level after reset
+    /// </summary>
+    /// <param name="payload"></param>
+    private void LoadLevel(LevelSelectPayload payload)
+    {
+        if (!payload.resetRequested)
+        {
+            StartCoroutine(LoadLevelCoroutine());
+        }
     }
 
     /// <summary>

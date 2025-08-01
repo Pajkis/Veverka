@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Select level menu handling class
@@ -6,9 +7,7 @@ using UnityEngine;
 public class LevelMenu : MonoBehaviour
 {
 
-    #region fields
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    #region fields  
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -22,13 +21,9 @@ public class LevelMenu : MonoBehaviour
     {
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Game);
 
-        //Raise level start event
+        // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        levelSelectEvent.Raise(new LevelSelectPayload
-        {
-            levelNumber = levelDatabase.CurrentLevelIndex,
-            resetRequested = false
-        });
+        SceneManager.LoadScene("20_LevelLoad");     
 
     }
 

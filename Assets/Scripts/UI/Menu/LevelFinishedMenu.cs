@@ -1,16 +1,13 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Level finished pop out menu handle class
 /// </summary>
 public class LevelFinishedMenu : MonoBehaviour
 {
-    #region fields
-    GameObject gridRoot;
-    GameObject buttonNextLevel;
-
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    #region fields   
+    GameObject buttonNextLevel;   
 
     [SerializeField]
     private ResetGridEvent resetGridEvent;
@@ -47,14 +44,10 @@ public class LevelFinishedMenu : MonoBehaviour
     {
         Time.timeScale = 1; 
         
-        //level select event raise event
+        //Set next level
         levelDatabase.CurrentLevelIndex++;
-        levelSelectEvent.Raise(new LevelSelectPayload 
-        {
-          levelNumber = levelDatabase.CurrentLevelIndex,
-          resetRequested = true,
-        });
-        Destroy(gameObject);
+        SceneManager.LoadScene("20_LevelLoad");     
+       // Destroy(gameObject);
     }
 
     /// <summary>

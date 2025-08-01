@@ -1,11 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class InGameMenu : MonoBehaviour
 {
 
     #region fields
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -15,13 +15,8 @@ public class InGameMenu : MonoBehaviour
     /// Handles on click level restart button event
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
-    {        
-        //Raise level start event
-        levelSelectEvent.Raise(new LevelSelectPayload
-        {
-            levelNumber = levelDatabase.CurrentLevelIndex,
-            resetRequested = true,
-        });      
+    {
+        SceneManager.LoadScene("20_LevelLoad");      
     }
 
     /// <summary>
