@@ -10,11 +10,18 @@ public class GamePlay :  MonoBehaviour
     int levelGoalCount = 0;
     int turnCount = 0;
 
+    [Header("UI display")]
     [SerializeField]
     private SpriteNumberDisplay goalCountDisplay;
 
     [SerializeField]
     private SpriteNumberDisplay turnCountDisplay;
+
+    [SerializeField]
+    private SpriteNumberDisplay levelDisplay;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
 
     [Header("Events")]
     [SerializeField]
@@ -46,6 +53,8 @@ public class GamePlay :  MonoBehaviour
         pushableInGoalEvent.AddListener(UpdateGoalCount);
         levelInitEvent.AddListener(LevelInit);
         characterMoved.AddListener(OnCharacterMoved);
+
+        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
     }
 
     // Update is called once per frame
