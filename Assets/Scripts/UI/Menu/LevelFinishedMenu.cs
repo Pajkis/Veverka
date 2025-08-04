@@ -46,8 +46,8 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        SceneManager.LoadScene("20_LevelLoad");     
-       // Destroy(gameObject);
+        MenuManager.GoToMenu(MenuEnum.LoadLevel);
+        // Destroy(gameObject);
     }
 
     /// <summary>
@@ -56,13 +56,10 @@ public class LevelFinishedMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        
-        // raise event to reset grid
-        resetGridEvent.Raise();
-                
+                        
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
-        Destroy(gameObject);
+        MenuManager.GoToMenu(MenuEnum.UnloadLevel);
+      //  Destroy(gameObject);
     }
 
     #endregion

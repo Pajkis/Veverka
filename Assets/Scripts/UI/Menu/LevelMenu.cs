@@ -23,7 +23,7 @@ public class LevelMenu : MonoBehaviour
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        SceneManager.LoadScene("20_LevelLoad");     
+        MenuManager.GoToMenu(MenuEnum.LoadLevel);
 
     }
 

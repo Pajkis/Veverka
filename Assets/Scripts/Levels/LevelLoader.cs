@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Load data from levelX csv file and validates then
@@ -80,7 +79,8 @@ public class LevelLoader: MonoBehaviour
             {
                 //level data not valid
                 Debug.LogWarning("Invalid level configuration!");
-                SceneManager.LoadScene("11_LevelMenu");                
+                MenuManager.GoToMenu(MenuEnum.LevelMenu);
+                        
                 yield break;
             }
             else
@@ -90,14 +90,14 @@ public class LevelLoader: MonoBehaviour
                 if (timeElapsed < minLoadingTime)
                     yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-                //enter game scene
-                SceneManager.LoadScene("30_GamePlay");
+                //enter game scene              
+                MenuManager.GoToMenu(MenuEnum.GamePlay);
             }
         }
         // Grid is not loaded properly
         else
         {
-            SceneManager.LoadScene("11_LevelMenu");
+            MenuManager.GoToMenu(MenuEnum.LevelMenu);
             yield break;
         }
     }

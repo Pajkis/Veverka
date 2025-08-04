@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class InGameMenu : MonoBehaviour
 {        
@@ -8,7 +7,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        SceneManager.LoadScene("20_LevelLoad");      
+        MenuManager.GoToMenu(MenuEnum.LoadLevel);
     }
 
     /// <summary>

@@ -49,6 +49,20 @@ public static class MenuManager
 
                 Object.Instantiate(Resources.Load("SettingsMenu"));
                 break;
+
+            case MenuEnum.LoadLevel:
+
+                SceneManager.LoadScene("20_LevelLoad");
+                break;
+
+            case MenuEnum.UnloadLevel:
+                SceneManager.LoadScene("21_LevelUnload");
+                break;
+
+            case MenuEnum.GamePlay:
+                SceneManager.LoadScene("30_GamePlay");
+                break;
+
         }
     }
 

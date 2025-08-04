@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Pause Menu handling class
@@ -38,7 +37,7 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        SceneManager.LoadScene("20_LevelLoad");       
+        MenuManager.GoToMenu(MenuEnum.LevelMenu);          
        // Destroy(gameObject);
     }
 
@@ -56,14 +55,11 @@ public class PauseMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
-
-        // raise event to reset grid
-        resetGridEvent.Raise();
-
+        
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        MenuManager.GoToMenu(MenuEnum.MainMenu);       
+        MenuManager.GoToMenu(MenuEnum.UnloadLevel);       
        
-        Destroy(gameObject);
+      //  Destroy(gameObject);
     }
     #endregion
 }
