@@ -2,15 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class InGameMenu : MonoBehaviour
-{
-
-    #region fields
-    
-
-    [SerializeField]
-    private LevelDatabase levelDatabase;
-    #endregion
-
+{        
     /// <summary>
     /// Handles on click level restart button event
     /// </summary>

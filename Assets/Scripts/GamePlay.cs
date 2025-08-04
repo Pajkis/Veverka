@@ -10,6 +10,12 @@ public class GamePlay :  MonoBehaviour
     int levelGoalCount = 0;
     int turnCount = 0;
 
+    [SerializeField]
+    private SpriteNumberDisplay goalCountDisplay;
+
+    [SerializeField]
+    private SpriteNumberDisplay turnCountDisplay;
+
     [Header("Events")]
     [SerializeField]
     private PushableInGoalEvent pushableInGoalEvent;
@@ -22,7 +28,7 @@ public class GamePlay :  MonoBehaviour
 
     [Header("turn undo logic")]
     private UndoManager undoManager = new();
-    #endregion
+    #endregion   
 
     /// <summary>
     /// Awake is called at object creation
@@ -31,7 +37,7 @@ public class GamePlay :  MonoBehaviour
     {
         undoManager = new UndoManager();
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
-        Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
+       // Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
     }
 
     private void OnEnable()
@@ -49,7 +55,7 @@ public class GamePlay :  MonoBehaviour
         // undo last turn
         if (Input.GetKeyDown(KeyCode.B))
         {
-            undoManager.Undo();
+            Undo();
         }
 
         // open pause menu
@@ -79,7 +85,9 @@ public class GamePlay :  MonoBehaviour
     void LevelInit(LevelInitPayload payload)
     {
         turnCount = 0;
+        turnCountDisplay.SetNumber(turnCount);
         levelGoalCount = payload.GoalCount;
+        goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 
@@ -89,6 +97,7 @@ public class GamePlay :  MonoBehaviour
     void UpdateGoalCount(PushableInGoalPayload payload)
     {        
         levelGoalCount -= payload.GoalReduction;
+        goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {
@@ -109,12 +118,23 @@ public class GamePlay :  MonoBehaviour
     private void OnCharacterMoved(CharacterMovedPayload payload)
     {
         turnCount++;
+        turnCountDisplay.SetNumber(turnCount);
     }
 
     /// <summary>
     /// Undo move for character
     /// </summary>
-    public void Undo() => undoManager.Undo();
+    public void Undo()
+    {
+        bool undoDone = undoManager.Undo();
+
+        if (undoDone)
+        {
+            turnCount++;
+            turnCountDisplay.SetNumber(turnCount);
+        }
+    }
+   
 
 
 }
