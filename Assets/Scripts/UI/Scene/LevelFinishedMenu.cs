@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Level finished pop out menu handle class
@@ -46,7 +45,7 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        MenuManager.GoToMenu(MenuEnum.LoadLevel);
+        SceneManager.GoToMenu(SceneType.LoadLevel);
         // Destroy(gameObject);
     }
 
@@ -58,7 +57,7 @@ public class LevelFinishedMenu : MonoBehaviour
         Time.timeScale = 1;
                         
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        MenuManager.GoToMenu(MenuEnum.UnloadLevel);
+        SceneManager.GoToMenu(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }
 

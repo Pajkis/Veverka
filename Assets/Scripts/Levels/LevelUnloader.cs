@@ -1,4 +1,3 @@
-
 using System.Collections;
 using UnityEngine;
 
@@ -31,7 +30,7 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        MenuManager.GoToMenu(MenuEnum.MainMenu);      
+        SceneManager.GoToMenu(SceneType.MainMenu);      
      }
 
 

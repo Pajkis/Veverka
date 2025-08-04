@@ -79,7 +79,7 @@ public class LevelLoader: MonoBehaviour
             {
                 //level data not valid
                 Debug.LogWarning("Invalid level configuration!");
-                MenuManager.GoToMenu(MenuEnum.LevelMenu);
+                SceneManager.GoToMenu(SceneType.LevelMenu);
                         
                 yield break;
             }
@@ -91,13 +91,13 @@ public class LevelLoader: MonoBehaviour
                     yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
                 //enter game scene              
-                MenuManager.GoToMenu(MenuEnum.GamePlay);
+                SceneManager.GoToMenu(SceneType.GamePlay);
             }
         }
         // Grid is not loaded properly
         else
         {
-            MenuManager.GoToMenu(MenuEnum.LevelMenu);
+            SceneManager.GoToMenu(SceneType.LevelMenu);
             yield break;
         }
     }

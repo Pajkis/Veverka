@@ -7,7 +7,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        MenuManager.GoToMenu(MenuEnum.LoadLevel);
+        SceneManager.GoToMenu(SceneType.LoadLevel);
     }
 
     /// <summary>
@@ -15,7 +15,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandlePauseButtonOnClickEvent()
     {
-        MenuManager.GoToMenu(MenuEnum.PauseMenu);
+        SceneManager.GoToMenu(SceneType.PauseMenu);
     }
 
     /// <summary>

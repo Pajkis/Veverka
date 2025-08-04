@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Select level menu handling class
@@ -23,7 +22,7 @@ public class LevelMenu : MonoBehaviour
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        MenuManager.GoToMenu(MenuEnum.LoadLevel);
+        SceneManager.GoToMenu(SceneType.LoadLevel);
 
     }
 
@@ -32,7 +31,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void HandleBackButtonOnCLickEvent()
     {
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
+        SceneManager.GoToMenu(SceneType.MainMenu);
     }
 
 
