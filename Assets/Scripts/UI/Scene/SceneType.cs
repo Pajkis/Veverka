@@ -12,5 +12,6 @@ public enum SceneType
     HighScoreMenu,
     GamePlay,
     LoadLevel,
-    UnloadLevel
+    UnloadLevel,
+    GameHelp,
 }

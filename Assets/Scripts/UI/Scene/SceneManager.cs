@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +15,6 @@ public static class SceneManager
         switch (sceneName)
         {
             case SceneType.MainMenu:
-
                 // Go to main menu scene
                 UnityEngine.SceneManagement.SceneManager.LoadScene("10_MainMenu");
                 break;
@@ -63,6 +61,9 @@ public static class SceneManager
                 UnityEngine.SceneManagement.SceneManager.LoadScene("30_GamePlay");
                 break;
 
+            case SceneType.GameHelp:
+                Object.Instantiate(Resources.Load("GameHelp"));
+                break;
         }
     }
 

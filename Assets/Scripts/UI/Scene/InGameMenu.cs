@@ -22,7 +22,7 @@ public class InGameMenu : MonoBehaviour
     /// Handle help button on click event
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
-    { 
-        
+    {
+        SceneManager.GoToMenu(SceneType.GameHelp);
     }
 }
