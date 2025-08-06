@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
@@ -18,7 +17,7 @@ public static class GameSettingsUtils
         void Init(GameSettingsEnum key, int defaultValue)
         {
             if (!PlayerPrefs.HasKey(key.ToString()))
-                PlayerPrefs.SetFloat(key.ToString(), defaultValue);
+                PlayerPrefs.SetInt(key.ToString(), defaultValue);
 
             settings[key] = PlayerPrefs.GetInt(key.ToString());
         }
