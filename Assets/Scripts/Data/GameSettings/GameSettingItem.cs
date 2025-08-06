@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using System.Reflection.Emit;
 
 /// <summary>
 /// Game setting slider
@@ -82,9 +79,8 @@ public class GameSettingItem : MonoBehaviour
     {
         if (GameSettings.Instance != null)
         {
-            GameSettings.Instance.Set(settingType, Mathf.RoundToInt(value));
+            GameSettings.Instance.Set(settingType, Mathf.RoundToInt(value));            
             
-            //  OnSettingChanged?.Invoke(newValue); 
             // change volume in audio manager
             if (AudioManager.Instance != null)
             {

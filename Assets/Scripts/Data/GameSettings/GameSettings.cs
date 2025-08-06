@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,7 +20,15 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     /// <param name="key">GameSettings enum name</param>
     /// <returns>value of settings property</returns>
-    public int Get(GameSettingsEnum key) => gameSettings[key];
+    public int Get(GameSettingsEnum key)
+    {
+        if (!gameSettings.ContainsKey(key))
+        {
+            Debug.LogError($"[GameSettings] Missing key {key}, returning 1 as fallback.");
+            return 1;
+        }
+        return gameSettings[key];
+    }  
 
     #endregion
 
@@ -40,7 +47,6 @@ public class GameSettings: MonoBehaviour
         }
     }
 
-
     /// <summary>
     /// InitGame Settings
     /// </summary>
@@ -53,10 +59,16 @@ public class GameSettings: MonoBehaviour
         foreach (GameSettingsEnum key in Enum.GetValues(typeof(GameSettingsEnum)))
         {
             Debug.Log($"Settings property {key}: value {gameSettings[key]}");
-        }                  
+        }
+
+        // Validation of animation speed
+        if (gameSettings[GameSettingsEnum.AnimationSpeed] <= 0)
+        {
+            Debug.LogWarning("AnimationSpeed <= 0! Resetting to default (1).");
+            gameSettings[GameSettingsEnum.AnimationSpeed] = 1;
+        }
     }
     #endregion
-
 
     #region methods
     /// <summary>
