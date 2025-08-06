@@ -45,7 +45,7 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        SceneManager.GoToMenu(SceneType.LoadLevel);
+        SceneManager.GoToScene(SceneType.LoadLevel);
         // Destroy(gameObject);
     }
 
@@ -57,7 +57,7 @@ public class LevelFinishedMenu : MonoBehaviour
         Time.timeScale = 1;
                         
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        SceneManager.GoToMenu(SceneType.UnloadLevel);
+        SceneManager.GoToScene(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }
 

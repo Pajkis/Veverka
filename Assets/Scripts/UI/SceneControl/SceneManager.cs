@@ -10,7 +10,7 @@ public static class SceneManager
     /// Go to menu navigation
     /// </summary>
     /// <param name="sceneName">name of the menu enum</param>
-    public static void GoToMenu(SceneType sceneName)
+    public static void GoToScene(SceneType sceneName)
     {
         switch (sceneName)
         {

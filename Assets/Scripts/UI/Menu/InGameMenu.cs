@@ -7,7 +7,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        SceneManager.GoToMenu(SceneType.LoadLevel);
+        SceneManager.GoToScene(SceneType.LoadLevel);
     }
 
     /// <summary>
@@ -15,7 +15,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandlePauseButtonOnClickEvent()
     {
-        SceneManager.GoToMenu(SceneType.PauseMenu);
+        SceneManager.GoToScene(SceneType.PauseMenu);
     }
 
     /// <summary>
@@ -23,6 +23,6 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
     {
-        SceneManager.GoToMenu(SceneType.GameHelp);
+        SceneManager.GoToScene(SceneType.GameHelp);
     }
 }

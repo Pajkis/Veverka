@@ -30,7 +30,7 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        SceneManager.GoToMenu(SceneType.MainMenu);      
+        SceneManager.GoToScene(SceneType.MainMenu);      
      }
 
 

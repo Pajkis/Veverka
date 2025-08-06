@@ -72,7 +72,7 @@ public class GamePlay :  MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                SceneManager.GoToMenu(SceneType.PauseMenu);
+                SceneManager.GoToScene(SceneType.PauseMenu);
             }
         }
     }
@@ -84,7 +84,7 @@ public class GamePlay :  MonoBehaviour
     {
         pushableInGoalEvent.RemoveListener(UpdateGoalCount);
         levelInitEvent.RemoveListener(LevelInit);
-        characterMoved.AddListener(OnCharacterMoved);
+        characterMoved.RemoveListener(OnCharacterMoved);
     }
 
     /// <summary>
@@ -111,7 +111,7 @@ public class GamePlay :  MonoBehaviour
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            SceneManager.GoToMenu(SceneType.LevelFinishedMenu);
+            SceneManager.GoToScene(SceneType.LevelFinishedMenu);
         }
 
         // reset history recording
