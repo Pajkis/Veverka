@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class MainMenu : MonoBehaviour
     {
         // play cool sound
         // go to level menu
-        MenuManager.GoToMenu(MenuEnum.LevelMenu);
+        SceneManager.GoToScene(SceneType.LevelMenu);
     }
 
     /// <summary>
@@ -36,7 +37,7 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-       MenuManager.GoToMenu(MenuEnum.SettingsMenu);
+       SceneManager.GoToScene(SceneType.SettingsMenu);
     }
 
     /// <summary>

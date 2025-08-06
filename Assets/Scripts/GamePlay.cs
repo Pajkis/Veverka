@@ -10,6 +10,19 @@ public class GamePlay :  MonoBehaviour
     int levelGoalCount = 0;
     int turnCount = 0;
 
+    [Header("UI display")]
+    [SerializeField]
+    private SpriteNumberDisplay goalCountDisplay;
+
+    [SerializeField]
+    private SpriteNumberDisplay turnCountDisplay;
+
+    [SerializeField]
+    private SpriteNumberDisplay levelDisplay;
+
+    [SerializeField]
+    private LevelDatabase levelDatabase;
+
     [Header("Events")]
     [SerializeField]
     private PushableInGoalEvent pushableInGoalEvent;
@@ -22,7 +35,7 @@ public class GamePlay :  MonoBehaviour
 
     [Header("turn undo logic")]
     private UndoManager undoManager = new();
-    #endregion
+    #endregion   
 
     /// <summary>
     /// Awake is called at object creation
@@ -31,7 +44,7 @@ public class GamePlay :  MonoBehaviour
     {
         undoManager = new UndoManager();
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
-        Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
+       // Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
     }
 
     private void OnEnable()
@@ -40,6 +53,8 @@ public class GamePlay :  MonoBehaviour
         pushableInGoalEvent.AddListener(UpdateGoalCount);
         levelInitEvent.AddListener(LevelInit);
         characterMoved.AddListener(OnCharacterMoved);
+
+        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
     }
 
     // Update is called once per frame
@@ -49,7 +64,7 @@ public class GamePlay :  MonoBehaviour
         // undo last turn
         if (Input.GetKeyDown(KeyCode.B))
         {
-            undoManager.Undo();
+            Undo();
         }
 
         // open pause menu
@@ -57,7 +72,7 @@ public class GamePlay :  MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                MenuManager.GoToMenu(MenuEnum.PauseMenu);
+                SceneManager.GoToScene(SceneType.PauseMenu);
             }
         }
     }
@@ -69,7 +84,7 @@ public class GamePlay :  MonoBehaviour
     {
         pushableInGoalEvent.RemoveListener(UpdateGoalCount);
         levelInitEvent.RemoveListener(LevelInit);
-        characterMoved.AddListener(OnCharacterMoved);
+        characterMoved.RemoveListener(OnCharacterMoved);
     }
 
     /// <summary>
@@ -79,7 +94,9 @@ public class GamePlay :  MonoBehaviour
     void LevelInit(LevelInitPayload payload)
     {
         turnCount = 0;
+        turnCountDisplay.SetNumber(turnCount);
         levelGoalCount = payload.GoalCount;
+        goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 
@@ -88,12 +105,13 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void UpdateGoalCount(PushableInGoalPayload payload)
     {        
-        levelGoalCount -= payload.goalReduction;
+        levelGoalCount -= payload.GoalReduction;
+        goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            MenuManager.GoToMenu(MenuEnum.LevelFinishedMenu);
+            SceneManager.GoToScene(SceneType.LevelFinishedMenu);
         }
 
         // reset history recording
@@ -109,12 +127,23 @@ public class GamePlay :  MonoBehaviour
     private void OnCharacterMoved(CharacterMovedPayload payload)
     {
         turnCount++;
+        turnCountDisplay.SetNumber(turnCount);
     }
 
     /// <summary>
     /// Undo move for character
     /// </summary>
-    public void Undo() => undoManager.Undo();
+    public void Undo()
+    {
+        bool undoDone = undoManager.Undo();
+
+        if (undoDone)
+        {
+            turnCount++;
+            turnCountDisplay.SetNumber(turnCount);
+        }
+    }
+   
 
 
 }

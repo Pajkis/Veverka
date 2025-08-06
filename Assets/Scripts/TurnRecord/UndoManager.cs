@@ -29,16 +29,17 @@ public class UndoManager
     /// <summary>
     /// undo one turn from turn record
     /// </summary>
-    public void Undo()
+    public bool Undo()
     {
         if (history.Count == 0)
         {
             Debug.Log("[UndoManager] Nothing to undo.");
-            return;
+            return false;
         }
 
         var turn = history.Pop();
         turn.Undo();
+        return true;
     }
 
     /// <summary>

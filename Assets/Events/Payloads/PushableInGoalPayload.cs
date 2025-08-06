@@ -8,5 +8,5 @@ public struct PushableInGoalPayload
 {
     public Vector2Int Position;
     public PushableTile PushableTileType;
-    public int goalReduction;
+    public int GoalReduction;
 }

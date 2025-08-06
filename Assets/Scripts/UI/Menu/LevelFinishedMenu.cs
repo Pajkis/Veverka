@@ -5,12 +5,8 @@ using UnityEngine;
 /// </summary>
 public class LevelFinishedMenu : MonoBehaviour
 {
-    #region fields
-    GameObject gridRoot;
-    GameObject buttonNextLevel;
-
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    #region fields   
+    GameObject buttonNextLevel;   
 
     [SerializeField]
     private ResetGridEvent resetGridEvent;
@@ -47,14 +43,10 @@ public class LevelFinishedMenu : MonoBehaviour
     {
         Time.timeScale = 1; 
         
-        //level select event raise event
+        //Set next level
         levelDatabase.CurrentLevelIndex++;
-        levelSelectEvent.Raise(new LevelSelectPayload 
-        {
-          levelNumber = levelDatabase.CurrentLevelIndex,
-          resetRequested = true,
-        });
-        Destroy(gameObject);
+        SceneManager.GoToScene(SceneType.LoadLevel);
+        // Destroy(gameObject);
     }
 
     /// <summary>
@@ -63,13 +55,10 @@ public class LevelFinishedMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        
-        // raise event to reset grid
-        resetGridEvent.Raise();
-                
+                        
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
-        Destroy(gameObject);
+        SceneManager.GoToScene(SceneType.UnloadLevel);
+      //  Destroy(gameObject);
     }
 
     #endregion

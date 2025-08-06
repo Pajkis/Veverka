@@ -6,9 +6,7 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     #region fields
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
-
+   
     [SerializeField]
     private ResetGridEvent resetGridEvent;
 
@@ -38,15 +36,9 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        Time.timeScale = 1;       
-       
-        //Raise level start event
-        levelSelectEvent.Raise(new LevelSelectPayload
-        {
-            levelNumber = levelDatabase.CurrentLevelIndex,
-            resetRequested = true,
-        });
-        Destroy(gameObject);
+        Time.timeScale = 1;
+        SceneManager.GoToScene(SceneType.LoadLevel);          
+       // Destroy(gameObject);
     }
 
     /// <summary>
@@ -54,7 +46,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        MenuManager.GoToMenu(MenuEnum.SettingsMenu);
+        SceneManager.GoToScene(SceneType.SettingsMenu);
     }
 
     /// <summary>
@@ -64,12 +56,10 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         
-        // raise event to reset grid
-        resetGridEvent.Raise();
-
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);              
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
-        Destroy(gameObject);
+        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
+        SceneManager.GoToScene(SceneType.UnloadLevel);       
+       
+      //  Destroy(gameObject);
     }
     #endregion
 }

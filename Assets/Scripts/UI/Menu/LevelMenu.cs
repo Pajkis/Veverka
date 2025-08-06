@@ -6,9 +6,7 @@ using UnityEngine;
 public class LevelMenu : MonoBehaviour
 {
 
-    #region fields
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    #region fields  
 
     [SerializeField]
     private LevelDatabase levelDatabase;
@@ -22,13 +20,9 @@ public class LevelMenu : MonoBehaviour
     {
         AudioManager.Instance.PlayRandomMusic(MusicEnum.Game);
 
-        //Raise level start event
+        // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        levelSelectEvent.Raise(new LevelSelectPayload
-        {
-            levelNumber = levelDatabase.CurrentLevelIndex,
-            resetRequested = false
-        });
+        SceneManager.GoToScene(SceneType.LoadLevel);
 
     }
 
@@ -37,7 +31,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void HandleBackButtonOnCLickEvent()
     {
-        MenuManager.GoToMenu(MenuEnum.MainMenu);
+        SceneManager.GoToScene(SceneType.MainMenu);
     }
 
 

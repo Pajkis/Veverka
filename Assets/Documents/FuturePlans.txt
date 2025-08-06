@@ -23,6 +23,8 @@ Push trap - pushes objects in some area in a way
 
 Goals:
 - Stone Goal: become "wall" after nut is put in
+- Sokoban Goal: Nut can be put on the goal but it does not disappear and nut can be moved again out of the goal.
+- obstacle/water goal: when nut is moved in the obstacle is removed and can be moved on
 - Explosive Goal: explodes if "exploding nut is moved in" 
 - Layout changing goal
 - trap trigger goal

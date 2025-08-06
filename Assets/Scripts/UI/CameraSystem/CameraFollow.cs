@@ -21,9 +21,11 @@ namespace Veverka.CameraSystem
         [Header("Tile Settings")]
         [SerializeField] private float tileSize = 1f;
         [SerializeField] private Vector2Int maxStaticTileSize = new Vector2Int(15, 11);
-  
+
+        [Header("Camera bounds")]
         [SerializeField] private Vector2 minBounds;
         [SerializeField] private Vector2 maxBounds;
+        [SerializeField] private float evenTilesOffset = 0.5f;
 
         private bool initialized = false;
 
@@ -55,6 +57,18 @@ namespace Veverka.CameraSystem
             {
                 mode = CameraMode.StaticCenter;
                 Vector3 center = gridOrigin + (Vector3)(levelSize / 2f);
+              
+                // adjust to even tile numbered grid
+                if ((gridSize.x % 2) == 0)
+                {
+                    center += new Vector3(evenTilesOffset, 0, 0);
+                }
+
+                if ((gridSize.y % 2) == 0)
+                {
+                    center += new Vector3(0, evenTilesOffset, 0);
+                }
+
                 transform.position = center + ScreenToPlayScreenOffset;
             }
             else
