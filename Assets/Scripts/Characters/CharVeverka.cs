@@ -34,9 +34,11 @@ namespace Veverka.Characters.Veverka
         #endregion
 
         #region methods
-        // Update is called once per frame
+        /// <summary>
+        /// Polls arrow key input and forwards it to the handler.
+        /// </summary>
         void Update()
-        {    
+        {
             if (Input.GetKeyDown(KeyCode.UpArrow)) HandleInput(Direction.Up);
             if (Input.GetKeyDown(KeyCode.DownArrow)) HandleInput(Direction.Down);
             if (Input.GetKeyDown(KeyCode.LeftArrow)) HandleInput(Direction.Left);
@@ -116,7 +118,9 @@ namespace Veverka.Characters.Veverka
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
         }
 
-
+        /// <summary>
+        /// Called after the character finishes moving; raises the movement event.
+        /// </summary>
         protected override void OnMoveComplete(Vector2Int targetPosition)
         {
             base.OnMoveComplete(targetPosition);
