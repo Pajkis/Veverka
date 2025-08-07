@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
 
     #region Init methods
     /// <summary>
-    /// Awake is called before start
+    /// Creates the singleton instance and persists it across scenes.
     /// </summary>
     void Awake()
     {
@@ -66,9 +66,9 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Update rutine
+    /// Checks if the current background track finished and starts a new one.
     /// </summary>
-     void Update()
+    void Update()
     {
         // play next song after it ends
         if (!backgroundMusicSource.isPlaying)

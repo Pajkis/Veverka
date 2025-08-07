@@ -33,6 +33,9 @@ public class GameSettings: MonoBehaviour
     #endregion
 
     #region Init methods
+    /// <summary>
+    /// Establishes the singleton instance and keeps it alive across scenes.
+    /// </summary>
     void Awake()
     {
         // Init singleton
