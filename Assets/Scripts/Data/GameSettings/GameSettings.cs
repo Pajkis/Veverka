@@ -13,7 +13,7 @@ public class GameSettings: MonoBehaviour
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
     #endregion
 
-    #region propeties
+    #region properties
 
     /// <summary>
     /// Get a value
