@@ -15,10 +15,17 @@ public static class GridUtils
 
         switch (direction)
         {
-            case Direction.Up: return currentPosition + Vector2Int.up * distance; 
-            case Direction.Down: return currentPosition + Vector2Int.down * distance; 
-            case Direction.Left: return currentPosition + Vector2Int.left * distance;
-            default: return currentPosition + Vector2Int.right * distance;
+            case Direction.Up:
+                return currentPosition + Vector2Int.up * distance;
+            case Direction.Down:
+                return currentPosition + Vector2Int.down * distance;
+            case Direction.Left:
+                return currentPosition + Vector2Int.left * distance;
+            case Direction.Right:
+                return currentPosition + Vector2Int.right * distance;
+            default:
+                Debug.LogWarning($"Unknown direction {direction}, returning current position");
+                return currentPosition;
         }
     }
 
