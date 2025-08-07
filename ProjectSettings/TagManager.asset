@@ -8,6 +8,8 @@ TagManager:
   - Nut
   - Liskacek
   - PauseMenu
+  - UIButton
+  - UISlider
   layers:
   - Default
   - TransparentFX
@@ -44,4 +46,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1458667267
+    locked: 0
+  - name: StaticTiles
+    uniqueID: 1154779117
+    locked: 0
+  - name: MovableTiles
+    uniqueID: 1847477145
+    locked: 0
+  - name: UI_Frame
+    uniqueID: 3306920313
+    locked: 0
+  - name: UI_Buttons
+    uniqueID: 541054781
     locked: 0

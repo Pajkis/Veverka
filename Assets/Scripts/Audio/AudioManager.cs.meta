@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 993c801f96e79e4419466308ba3173e4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - veverkaMove: {fileID: 8300000, guid: 6b8e36a8cdb18f746a558af7626f663e, type: 3}
+  - nutMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
+  - goalReached: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  - levelFinished: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  - veverkaRotate: {fileID: 8300000, guid: 33e5e92ef8518474186b9d8253f8818e, type: 3}
+  - buttonClick: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  - buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
+  - sliderMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
+  - menuBackground: {fileID: 8300000, guid: cebbeb55a93154e42b21ff5981bc5ca1, type: 3}
+  - gameBackground: {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

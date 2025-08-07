@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TileObject">
+    <Position X="10" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAACAAAAAAAAABAAAAAAAAAAAACAAAAAIA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\TileObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MovableTile">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAIIAAAgAAAAAAAAAAAAAAAAAAAABKAAAECAA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\01_Movables\MovableTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PushableTile">
+    <Position X="15" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAAIAAAAgAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\01_Movables\Pushable\PushableTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NutTile">
+    <Position X="17" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\01_Movables\Pushable\NutTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StaticTile">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\02_StaticTiles\StaticTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GoalTile">
+    <Position X="7.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAIAAAAEAAACAA=</HashCode>
+      <FileName>Assets\Scripts\GridSystem\Tiles\02_StaticTiles\Goals\GoalTile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

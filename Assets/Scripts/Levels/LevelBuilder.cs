@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Veverka.GridSystem.GameGrid;
 
 /// <summary>
 /// Builds the level from grid
