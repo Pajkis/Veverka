@@ -27,7 +27,7 @@ public class NutTile : PushableTile
        // GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);
         tileObjectAt.Raise(new TileObjectAtPayload
         {
-            GridPosition = gridPosition,
+            GridPosition = GridPosition,
             TileType = TileType.Empty,
             GridObjectAction = GridObjectActionType.ReplaceObject,
             TileObject = this,
@@ -43,7 +43,7 @@ public class NutTile : PushableTile
             tileObjectAt.Raise(new TileObjectAtPayload
             {
                 GridPosition = targetPosition,
-                TileType = tileType,
+                TileType = PosTileType,
                 GridObjectAction = GridObjectActionType.SetObject,
                 TileObject = this,
                 IsPushable = true,
@@ -74,7 +74,7 @@ public class NutTile : PushableTile
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
         }
 
-        gridPosition = targetPosition;
+        GridPosition = targetPosition;
 
         //Complete turn record
         TurnRecordAddandComplete();
