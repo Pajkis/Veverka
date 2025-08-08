@@ -35,20 +35,9 @@ namespace Veverka.Characters.Veverka
 
         #region methods
         /// <summary>
-        /// Polls arrow key input and forwards it to the handler.
-        /// </summary>
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) HandleInput(Direction.Up);
-            if (Input.GetKeyDown(KeyCode.DownArrow)) HandleInput(Direction.Down);
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) HandleInput(Direction.Left);
-            if (Input.GetKeyDown(KeyCode.RightArrow)) HandleInput(Direction.Right);
-        }
-
-        /// <summary>
-        /// Handles input from keyboard
+        /// Handles input from arrow direction events
         ///     - direction of object and input arrow are same -> tries to move in that direction
-        ///     - direction of object and input arrow does not match -> rotates to input arrow direction 
+        ///     - direction of object and input arrow does not match -> rotates to input arrow direction
         /// </summary>
         /// <param name="direction"></param>
         void HandleInput(Direction inputDirection)
