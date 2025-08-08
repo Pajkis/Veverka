@@ -56,7 +56,9 @@ namespace Veverka.GridSystem.GameGrid
         private Transform gridStartCenterTarget;
         private TileType[,] grid;
         private Dictionary<Vector2Int, TileObject> pushables = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();        
+        private Dictionary<Vector2Int, TileObject> goals = new();
+        // pool for surrounding wall tiles to avoid repeated instantiation
+        private readonly List<GameObject> surroundingWalls = new();
         #endregion
 
         #region Properties      
@@ -149,11 +151,8 @@ namespace Veverka.GridSystem.GameGrid
             // Spawn objects based on tile types            
             BuildLevelFromGrid();
 
-            // add surround walls if gridize is smaller than screensize
-            if (gridSize.x < maxScreenGridSize.x || gridSize.y < maxScreenGridSize.y)
-            {
-                BuildSurroundings();
-            }
+            // add surrounding walls where grid does not fill the screen
+            BuildSurroundings();
 
             //raise event
             levelInitEvent.Raise(new LevelInitPayload
@@ -252,26 +251,74 @@ namespace Veverka.GridSystem.GameGrid
         /// Build surround environment for grids smaller than screen
         /// </summary>
         void BuildSurroundings()
-        {           
-            int OffsetX = (maxScreenGridSize.x - gridSize.x) / 2;
-            int OffsetY = (maxScreenGridSize.y - gridSize.y) / 2;
+        {
+            int diffX = maxScreenGridSize.x - gridSize.x;
+            int diffY = maxScreenGridSize.y - gridSize.y;
 
-            for (int x = 0; x < maxScreenGridSize.x; x++)
+            if (diffX < 0 || diffY < 0 || (diffX == 0 && diffY == 0))
             {
-                for (int y = 0; y < maxScreenGridSize.y; y++)
-                {
-                    Vector2Int tilePos = new(x - OffsetX, y - OffsetY);
-                    
-                    if (!IsInGrid(tilePos))
-                    {
-                        Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
-                        var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
+                return;
+            }
 
-                    }
+            int offsetX = diffX / 2;
+            int offsetY = diffY / 2;
+
+            int widthWithOffset = gridSize.x + 2 * offsetX;
+            int needed = widthWithOffset * offsetY * 2 + gridSize.y * offsetX * 2;
+
+            for (int i = surroundingWalls.Count; i < needed; i++)
+            {
+                var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                surroundingWalls.Add(wall);
+            }
+
+            int index = 0;
+
+            for (int y = -offsetY; y < 0; y++)
+            {
+                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                {
+                    PositionWall(index++, x, y);
                 }
             }
+
+            for (int y = gridSize.y; y < gridSize.y + offsetY; y++)
+            {
+                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (int x = -offsetX; x < 0; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (int x = gridSize.x; x < gridSize.x + offsetX; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (; index < surroundingWalls.Count; index++)
+            {
+                surroundingWalls[index].SetActive(false);
+            }
+        }
+
+        void PositionWall(int index, int x, int y)
+        {
+            var wall = surroundingWalls[index];
+            wall.SetActive(true);
+            Vector3 worldTilePos = GridUtils.GridToWorld(new Vector2Int(x, y));
+            wall.transform.SetParent(gridRoot, false);
+            wall.transform.localPosition = worldTilePos;
         }
 
         /// <summary>
@@ -303,9 +350,14 @@ namespace Veverka.GridSystem.GameGrid
         /// <param name="noInt">no integer input necessary</param>
         private void ResetGrid()
         {
-            //Destroy old grid
+            //Destroy old grid but keep pooled surrounding walls
             foreach (Transform child in gridRoot.transform)
             {
+                if (surroundingWalls.Contains(child.gameObject))
+                {
+                    child.gameObject.SetActive(false);
+                    continue;
+                }
                 Destroy(child.gameObject);
             }
 
