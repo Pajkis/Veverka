@@ -56,7 +56,8 @@ namespace Veverka.GridSystem.GameGrid
         private Transform gridStartCenterTarget;
         private TileType[,] grid;
         private Dictionary<Vector2Int, TileObject> pushables = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();        
+        private Dictionary<Vector2Int, TileObject> goals = new();
+        private readonly List<GameObject> backgroundPool = new();
         #endregion
 
         #region Properties      
@@ -168,34 +169,47 @@ namespace Veverka.GridSystem.GameGrid
 
             return true;
         }
-    
+
+        private void EnsureBackgroundPool(int requiredCount)
+        {
+            for (int i = backgroundPool.Count; i < requiredCount; i++)
+            {
+                var background = Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                background.SetActive(false);
+                backgroundPool.Add(background);
+            }
+        }
+
         /// <summary>
         /// Build a level from a grid
         /// </summary>
         void BuildLevelFromGrid()
-        {    
+        {
+            EnsureBackgroundPool(gridSize.x * gridSize.y);
+
+            int bgIndex = 0;
 
             // for cycle over grid width
             for (int x = 0; x < gridSize.x; x++)
             {
                 // for cycle over grid height
                 for (int y = 0; y < gridSize.y; y++)
-                {   
+                {
                     //Prepare tile from the grid
                     Vector2Int tilePos = new(x, y);
                     Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
                     TileType tileType =  GetTileType(tilePos);
 
-                    // create background for each tile
-                    var background =  Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                    var background = backgroundPool[bgIndex++];
                     background.transform.SetParent(gridRoot, false);
                     background.transform.localPosition = worldTilePos;
+                    background.SetActive(true);
 
                     // insert specific tiles
                     switch (tileType)
-                    { 
+                    {
                     case TileType.Empty:
-                            
+
                             SetTileType(tilePos, TileType.Empty);
                             break;
 
@@ -207,7 +221,7 @@ namespace Veverka.GridSystem.GameGrid
                             break;
 
                     case TileType.Veverka:
-                                         
+
                             SetTileType(tilePos, TileType.Empty);
 
                             // generete veverka
@@ -216,9 +230,9 @@ namespace Veverka.GridSystem.GameGrid
                             veverka.transform.localPosition = worldTilePos;
                             veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
 
-                            //Center grid according veverka                          
+                            //Center grid according veverka
                             gridStartCenterTarget = veverka.transform;
-                            break;                           
+                            break;
 
                     case TileType.Nut:
 
@@ -231,9 +245,9 @@ namespace Veverka.GridSystem.GameGrid
                             SetTileType(tilePos, TileType.Nut);
                             break;
 
-                    case TileType.Goal:            
-                        
-                            // generate goal 
+                    case TileType.Goal:
+
+                            // generate goal
                             GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
                             goalTile.transform.SetParent(gridRoot, false);
                             goalTile.transform.localPosition = worldTilePos;
@@ -243,8 +257,13 @@ namespace Veverka.GridSystem.GameGrid
                             break;
 
                     default: break;
-                    }                                          
+                    }
                 }
+            }
+
+            for (int i = bgIndex; i < backgroundPool.Count; i++)
+            {
+                backgroundPool[i].SetActive(false);
             }
         }
 
@@ -303,10 +322,18 @@ namespace Veverka.GridSystem.GameGrid
         /// <param name="noInt">no integer input necessary</param>
         private void ResetGrid()
         {
-            //Destroy old grid
+            //Destroy old grid except pooled backgrounds
             foreach (Transform child in gridRoot.transform)
             {
-                Destroy(child.gameObject);
+                if (!backgroundPool.Contains(child.gameObject))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+
+            foreach (var background in backgroundPool)
+            {
+                background.SetActive(false);
             }
 
             // clear dictionaries
