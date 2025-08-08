@@ -58,7 +58,8 @@ namespace Veverka.Characters.Veverka
             // Try to move in input arrow direction
             if (inputDirection == facingDirection)
             {
-                Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection);
+                int distance = moveDistance;
+                Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
                 Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
                 if (!GameGrid.Instance.IsInGrid(targetPos)) return;
 
@@ -75,8 +76,8 @@ namespace Veverka.Characters.Veverka
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
-                        Move(inputDirection, moveDistance);
-                        pushableObject.Move(inputDirection, moveDistance);
+                        Move(inputDirection, distance);
+                        pushableObject.Move(inputDirection, distance);
                     }
                     else
                     {
@@ -86,7 +87,7 @@ namespace Veverka.Characters.Veverka
                 // move character to empty tile
                 else if (GameGrid.Instance.IsWalkableAt(targetPos))
                 {
-                    Move(inputDirection, moveDistance);
+                    Move(inputDirection, distance);
                 }
             }
 
