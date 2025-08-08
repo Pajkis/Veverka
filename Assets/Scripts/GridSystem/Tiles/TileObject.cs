@@ -5,9 +5,6 @@ using UnityEngine;
 public abstract class TileObject : MonoBehaviour
 {
     #region fields
-    protected TileType tileType;
-    protected Vector2Int gridPosition;
-
     protected string UndoId;
     #endregion
 
@@ -20,19 +17,12 @@ public abstract class TileObject : MonoBehaviour
     /// <summary>
     /// Get grid position of the object
     /// </summary>
-    public virtual Vector2Int GridPosition 
-    { 
-        get { return gridPosition; }  // public virtual Vector2Int GridPosition => gridPosition;
-        //set { gridPosition = value; } 
-    }
+    public virtual Vector2Int GridPosition { get; protected set; }
 
     /// <summary>
     /// Get object tile type
     /// </summary>
-    public virtual TileType PosTileType
-    {
-        get {return tileType;}
-    }
+    public virtual TileType PosTileType { get; protected set; }
     #endregion
 
     #region Initialiazation
@@ -43,8 +33,8 @@ public abstract class TileObject : MonoBehaviour
     /// <param name="gridPosition"></param>
     public virtual void Init(TileType tileType, Vector2Int gridPosition)
     {
-        this.tileType = tileType;
-        this.gridPosition = gridPosition;
+        PosTileType = tileType;
+        GridPosition = gridPosition;
     }
 
     /// <summary>

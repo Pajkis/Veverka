@@ -64,7 +64,7 @@ public class MovableTile : TileObject
             onStart: null, onComplete: null);
 
         Debug.Log($"Undo movable tile:  {previous} → {current}");
-        gridPosition = previous;
+        GridPosition = previous;
     }
 
     /// <summary>
@@ -82,7 +82,7 @@ public class MovableTile : TileObject
 
         // calculate movement positions
         Vector3 currentPosition = transform.localPosition;
-        Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
+        Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(GridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
 
@@ -91,7 +91,7 @@ public class MovableTile : TileObject
         {
             movable = this,
             current = targetPosVec2Int,
-            previous = gridPosition,
+            previous = GridPosition,
          //   direction = direction,
         };
 
@@ -113,7 +113,7 @@ public class MovableTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        gridPosition = targetPosition;
+        GridPosition = targetPosition;
         //Complete turn record
         TurnRecordAddandComplete();
     }
@@ -125,7 +125,7 @@ public class MovableTile : TileObject
     protected void TurnRecordExpectSource()
     {
         // UndoID for turn history record
-        UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
+        UndoId = $"{GetType().Name}-{GridPosition.x}x{GridPosition.y}";
         // inform turn builder, that this component is going to register a action into turn record
         TurnBuilder.Instance.ExpectSource(UndoId);
     }
