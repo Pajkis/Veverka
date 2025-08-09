@@ -41,7 +41,7 @@ public class GoalTile : StaticTile
     /// <param name="payload"></param>
     private void OnPushableInGoal(PushableInGoalPayload payload)
     {
-        if (GameGrid.Instance.Goals.TryGetValue(payload.Position, out var goal) && GridPosition == payload.Position)
+        if (GridPosition == payload.Position)
         {
             goalRemovedEvent.Raise(new GoalRemovedPayload
             {
