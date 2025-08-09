@@ -8,11 +8,9 @@ namespace Veverka.Characters.Veverka
  { 
     public class CharVeverka : Character
     {
-
-        #region fields
+        #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;
-       
+        [SerializeField] CharacterMovedEvent veverkaMoved;       
         #endregion
 
         #region event handling

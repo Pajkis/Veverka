@@ -34,10 +34,7 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
         [SerializeField] private GoalSetEvent goalSetEvent;
         [SerializeField] private GoalRemovedEvent goalRemovedEvent;
-
-        [SerializeField]
-        private TileQueryEvent tileQueryEvent;
-
+        [SerializeField] private TileQueryEvent tileQueryEvent;
         #endregion
 
         #region tile objects
