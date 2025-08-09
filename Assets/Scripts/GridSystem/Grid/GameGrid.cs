@@ -126,10 +126,8 @@ namespace Veverka.GridSystem.GameGrid
         {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
-            resetGridEvent.AddListener(ResetGrid);
-            tileObjectAtEvent.AddListener(TileObjectAt);
-            tileQueryEvent.AddListener(OnTileQuery);
-        }
+            resetGridEvent.AddListener(ResetGrid);           
+            tileQueryEvent.AddListener(OnTileQuery);        
             pushableSetEvent.AddListener(OnPushableSet);
             pushableRemovedEvent.AddListener(OnPushableRemoved);
             goalSetEvent.AddListener(OnGoalSet);
@@ -143,8 +141,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);
-            tileObjectAtEvent.RemoveListener(TileObjectAt);
+            resetGridEvent.RemoveListener(ResetGrid);           
             tileQueryEvent.RemoveListener(OnTileQuery);
             pushableSetEvent.RemoveListener(OnPushableSet);
             pushableRemovedEvent.RemoveListener(OnPushableRemoved);
