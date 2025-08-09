@@ -1,10 +1,23 @@
 using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 public class GoalTile : StaticTile
 {
-    [SerializeField]
-    protected PushableInGoalEvent pushableInGoalEvent;
+    #region events
+    [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
+    [SerializeField] private GoalSetEvent goalSetEvent;
+    [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+    #endregion
+
+    #region methods
+    public override void Init(TileType tileType, Vector2Int gridPosition)
+    {
+        base.Init(tileType, gridPosition);
+        goalSetEvent.Raise(new GoalSetPayload
+        {
+            Position = gridPosition,
+            Goal = this,
+        });
+    }
 
     /// <summary>
     /// On enable add listener
@@ -28,10 +41,15 @@ public class GoalTile : StaticTile
     /// <param name="payload"></param>
     private void OnPushableInGoal(PushableInGoalPayload payload)
     {
-        if (GameGrid.Instance.Goals.TryGetValue(payload.Position, out var goal) && gridPosition == payload.Position)
-        { 
-            GameGrid.Instance.RemoveGoalAt(payload.Position);          
+        if (GridPosition == payload.Position)
+        {
+            goalRemovedEvent.Raise(new GoalRemovedPayload
+            {
+                Position = payload.Position,
+            });
             Destroy(gameObject);
         }
     }
+
+    #endregion
 }

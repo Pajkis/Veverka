@@ -102,6 +102,7 @@ MonoBehaviour:
   moveDistance: 1
   onArrowPressed: {fileID: 11400000, guid: 5934e5ff874e9fc48b7d5f329cfdc4b1, type: 2}
   veverkaMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
 --- !u!114 &-7049510064372506974
 MonoBehaviour:
   m_ObjectHideFlags: 0

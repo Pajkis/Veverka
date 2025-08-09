@@ -8,9 +8,11 @@ using Veverka.GridSystem.GameGrid;
 /// </summary>
 public class LevelBuilder : MonoBehaviour
 {
-    // Start is called before the first frame update
+    /// <summary>
+    /// Initializes the game grid using the cached level layout.
+    /// </summary>
     void Start()
     {
         GameGrid.Instance.InitializeGrid(LevelUtils.CachedGrid);
-    }  
+    }
 }

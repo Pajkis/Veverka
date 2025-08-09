@@ -21,6 +21,11 @@ public abstract class Character: MonoBehaviour
     protected string UndoId;
     #endregion
 
+    #region Events
+    [SerializeField] protected TileQueryEvent tileQueryEvent;
+    #endregion
+
+
     #region properties
     /// <summary>
     /// Facing direction property
@@ -96,7 +101,7 @@ public abstract class Character: MonoBehaviour
 
         // decide position to move
         Vector3 currentPosition = transform.position;
-        Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, moveDistance);
+        Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) ;
 
