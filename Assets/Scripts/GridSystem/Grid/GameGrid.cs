@@ -30,8 +30,10 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField]
         private LevelDatabase levelDatabase;
 
-        [SerializeField]
-        private TileObjectAtEvent tileObjectAtEvent;
+        [SerializeField] private PushableSetEvent pushableSetEvent;
+        [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
+        [SerializeField] private GoalSetEvent goalSetEvent;
+        [SerializeField] private GoalRemovedEvent goalRemovedEvent;
 
         [SerializeField]
         private TileQueryEvent tileQueryEvent;
@@ -124,10 +126,13 @@ namespace Veverka.GridSystem.GameGrid
         {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
-            resetGridEvent.AddListener(ResetGrid);
-            tileObjectAtEvent.AddListener(TileObjectAt);
-            tileQueryEvent.AddListener(OnTileQuery);
-        }
+            resetGridEvent.AddListener(ResetGrid);           
+            tileQueryEvent.AddListener(OnTileQuery);        
+            pushableSetEvent.AddListener(OnPushableSet);
+            pushableRemovedEvent.AddListener(OnPushableRemoved);
+            goalSetEvent.AddListener(OnGoalSet);
+            goalRemovedEvent.AddListener(OnGoalRemoved);
+         }
 
         /// <summary>
         /// On object disable
@@ -136,9 +141,12 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);
-            tileObjectAtEvent.RemoveListener(TileObjectAt);
+            resetGridEvent.RemoveListener(ResetGrid);           
             tileQueryEvent.RemoveListener(OnTileQuery);
+            pushableSetEvent.RemoveListener(OnPushableSet);
+            pushableRemovedEvent.RemoveListener(OnPushableRemoved);
+            goalSetEvent.RemoveListener(OnGoalSet);
+            goalRemovedEvent.RemoveListener(OnGoalRemoved);
         }
 
         #endregion
@@ -248,8 +256,6 @@ namespace Veverka.GridSystem.GameGrid
                             nutTile.transform.SetParent(gridRoot, false);
                             nutTile.transform.localPosition = worldTilePos;
                             nutTile.Init(tileType, tilePos);
-                            pushables.Add(tilePos, nutTile);
-                            SetTileType(tilePos, TileType.Nut);
                             break;
 
                     case TileType.Goal:
@@ -259,8 +265,6 @@ namespace Veverka.GridSystem.GameGrid
                             goalTile.transform.SetParent(gridRoot, false);
                             goalTile.transform.localPosition = worldTilePos;
                             goalTile.Init(tileType, tilePos);
-                            goals.Add(tilePos, goalTile);
-                            SetTileType(tilePos, TileType.Goal);
                             break;
 
                     default: break;
@@ -408,58 +412,28 @@ namespace Veverka.GridSystem.GameGrid
 
         #region tile handling
 
-        /// <summary>
-        /// tile object at action - set, remove, replace etc.
-        /// </summary>
-        /// <param name="payload">tile object data - position, type to change etc.</param>
-        private void TileObjectAt(TileObjectAtPayload payload)
+        private void OnPushableSet(PushableSetPayload payload)
         {
-            switch (payload.GridObjectAction)
-            { 
-                case GridObjectActionType.SetObject:
+            SetPushableAt(payload.Position, payload.Pushable);
+            SetTileType(payload.Position, payload.Pushable.PosTileType);
+        }
 
-                    if (payload.IsPushable)
-                    {
-                        SetPushableAt(payload.GridPosition, payload.TileObject as PushableTile);                        
-                    }
-                    else
-                    { 
-                        // TBD
-                    }
-                    
-                    // set tile type
-                    SetTileType(payload.GridPosition, payload.TileType);
-                    break;
+        private void OnPushableRemoved(PushableRemovedPayload payload)
+        {
+            RemovePushableAt(payload.Position);
+            SetTileType(payload.Position, TileType.Empty);
+        }
 
-                case GridObjectActionType.RemoveObject:
+        private void OnGoalSet(GoalSetPayload payload)
+        {
+            goals[payload.Position] = payload.Goal;
+            SetTileType(payload.Position, payload.Goal.PosTileType);
+        }
 
-                    if (payload.IsPushable)
-                    {
-                        RemovePushableAt(payload.GridPosition);                      
-                    }
-                    else
-                    {
-                        // TBD
-                    }
-
-                    break;
-
-                case GridObjectActionType.ReplaceObject:
-
-                    if (payload.IsPushable)
-                    {
-                        RemovePushableAt(payload.GridPosition);
-                    }
-                    else
-                    {
-                        // TBD
-                    }
-
-                    // set tile type
-                    SetTileType(payload.GridPosition, payload.TileType);
-                    break;                       
-            }
-                
+        private void OnGoalRemoved(GoalRemovedPayload payload)
+        {
+            RemoveGoalAt(payload.Position);
+            SetTileType(payload.Position, TileType.Empty);
         }
 
         /// <summary>
