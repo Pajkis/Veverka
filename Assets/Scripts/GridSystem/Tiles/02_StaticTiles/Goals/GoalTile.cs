@@ -1,14 +1,14 @@
 using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 public class GoalTile : StaticTile
 {
-    [SerializeField]
-    protected PushableInGoalEvent pushableInGoalEvent;
-
+    #region events
+    [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
     [SerializeField] private GoalSetEvent goalSetEvent;
     [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+    #endregion
 
+    #region methods
     public override void Init(TileType tileType, Vector2Int gridPosition)
     {
         base.Init(tileType, gridPosition);
@@ -50,4 +50,6 @@ public class GoalTile : StaticTile
             Destroy(gameObject);
         }
     }
+
+    #endregion
 }
