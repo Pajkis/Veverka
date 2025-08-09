@@ -5,17 +5,6 @@ using UnityEngine;
 /// </summary>
 public class NutTile : PushableTile
 {
-    #region Initialization
-    public override void Init(TileType tileType, Vector2Int gridPosition)
-    {
-        base.Init(tileType, gridPosition);
-        pushableSetEvent.Raise(new PushableSetPayload
-        {
-            Position = gridPosition,
-            Pushable = this,
-        });
-    }
-    #endregion
 
     #region methods
     /// <summary>

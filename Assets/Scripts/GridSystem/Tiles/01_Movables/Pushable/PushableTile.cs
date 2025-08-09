@@ -15,6 +15,18 @@ public class PushableTile : MovableTile
     #endregion
 
 
+    #region Initialization
+    public override void Init(TileType tileType, Vector2Int gridPosition)
+    {
+        base.Init(tileType, gridPosition);
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Position = gridPosition,
+            Pushable = this,
+        });
+    }
+    #endregion
+
     #region pushable methods
     /// <summary>
     /// Checks, whether tile can be pushed in the direction
