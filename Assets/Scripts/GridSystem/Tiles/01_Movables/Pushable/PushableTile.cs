@@ -42,10 +42,16 @@ public class PushableTile : MovableTile
     { 
         base.UndoAction(current, previous, duration);
 
-        GameGrid.Instance.RemovePushableAt(current);
-        GameGrid.Instance.SetTileType(current, TileType.Empty);
-        GameGrid.Instance.SetPushableAt(previous, this);
-        GameGrid.Instance.SetTileType(previous, PosTileType);
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        {         
+            Position = current
+        });
+
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = previous
+        });
     }
 
 
@@ -55,7 +61,10 @@ public class PushableTile : MovableTile
     protected override void OnMoveStart()
     {
         // Clear old grid tile, remove from dictionary       
-        GameGrid.Instance.SetTileType(GridPosition, TileType.Empty);
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        {            
+            Position = GridPosition
+        });
     }
 
     /// <summary>
@@ -64,10 +73,11 @@ public class PushableTile : MovableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        GameGrid.Instance.RemovePushableAt(GridPosition);
-        GameGrid.Instance.SetTileType(GridPosition, TileType.Empty);
-        GameGrid.Instance.SetPushableAt(targetPosition, this);
-        GameGrid.Instance.SetTileType(targetPosition, PosTileType);
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = targetPosition
+        });
 
         GridPosition = targetPosition;
         //Complete turn record
