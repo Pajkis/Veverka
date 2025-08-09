@@ -7,6 +7,11 @@ public class PushableTile : MovableTile
     #region fields
     [SerializeField] 
     protected PushableInGoalEvent pushableInGoalEvent;
+    [SerializeField]
+    protected PushableSetEvent pushableSetEvent;
+    [SerializeField]
+    protected PushableRemovedEvent pushableRemovedEvent;
+
     #endregion
 
 

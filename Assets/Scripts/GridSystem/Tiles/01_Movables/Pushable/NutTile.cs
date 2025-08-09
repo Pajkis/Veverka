@@ -6,9 +6,6 @@ using Veverka.GridSystem.GameGrid;
 /// </summary>
 public class NutTile : PushableTile
 {
-    [SerializeField] private PushableSetEvent pushableSetEvent;
-    [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
-
     #region Initialization
     public override void Init(TileType tileType, Vector2Int gridPosition)
     {
