@@ -51,6 +51,7 @@ namespace Veverka.Characters.Veverka
                 Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
                 Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
 
+                // check if target position is in grid and get tile query
                 var query = new TileQueryPayload { Position = targetPos };
                 tileQueryEvent.Raise(query);
                 if (!query.IsInGrid) return;
