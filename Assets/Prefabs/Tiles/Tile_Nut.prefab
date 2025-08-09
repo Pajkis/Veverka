@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a357827e8a4345444afd271de39d6463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tileObjectAt: {fileID: 11400000, guid: c52337cbdd1355c4d89705fa31bc805b, type: 2}
+  tileObjectAt: {fileID: 0}
+  tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
   moveDistance: 1
   moveDuration: 0.3
   pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}

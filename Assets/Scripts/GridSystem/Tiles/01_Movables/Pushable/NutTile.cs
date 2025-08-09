@@ -1,5 +1,4 @@
 using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 /// <summary>
 /// Class for the nut Tile - basic push to goal tile.
@@ -40,8 +39,10 @@ public class NutTile : PushableTile
             Position = GridPosition,
         });
 
-        // the nut does not reach goal
-        if (!GameGrid.Instance.IsGoalAt(targetPosition))
+        // Check if the nut reached the goal
+        TileQueryPayload query = new() { Position = targetPosition };
+        tileQueryEvent.Raise(query);
+        if (!(query.IsGoal))
         {
             pushableSetEvent.Raise(new PushableSetPayload
             {
