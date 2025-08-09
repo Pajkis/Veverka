@@ -21,6 +21,11 @@ public abstract class Character: MonoBehaviour
     protected string UndoId;
     #endregion
 
+    #region Events
+    [SerializeField] protected TileQueryEvent tileQueryEvent;
+    #endregion
+
+
     #region properties
     /// <summary>
     /// Facing direction property

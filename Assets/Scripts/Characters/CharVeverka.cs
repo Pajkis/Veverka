@@ -12,7 +12,7 @@ namespace Veverka.Characters.Veverka
         #region fields
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
-        [SerializeField] TileQueryEvent tileQueryEvent;
+       
         #endregion
 
         #region event handling
