@@ -1,5 +1,0 @@
-Current tile size:
- - 256x256 pixels
-Max layout size:
- - Height : 11 tiles
- - Width  : 21 tiles 
