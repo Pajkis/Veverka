@@ -6,6 +6,19 @@ public class GoalTile : StaticTile
     [SerializeField]
     protected PushableInGoalEvent pushableInGoalEvent;
 
+    [SerializeField] private GoalSetEvent goalSetEvent;
+    [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+
+    public override void Init(TileType tileType, Vector2Int gridPosition)
+    {
+        base.Init(tileType, gridPosition);
+        goalSetEvent.Raise(new GoalSetPayload
+        {
+            Position = gridPosition,
+            Goal = this,
+        });
+    }
+
     /// <summary>
     /// On enable add listener
     /// </summary>
@@ -29,8 +42,11 @@ public class GoalTile : StaticTile
     private void OnPushableInGoal(PushableInGoalPayload payload)
     {
         if (GameGrid.Instance.Goals.TryGetValue(payload.Position, out var goal) && GridPosition == payload.Position)
-        { 
-            GameGrid.Instance.RemoveGoalAt(payload.Position);          
+        {
+            goalRemovedEvent.Raise(new GoalRemovedPayload
+            {
+                Position = payload.Position,
+            });
             Destroy(gameObject);
         }
     }
