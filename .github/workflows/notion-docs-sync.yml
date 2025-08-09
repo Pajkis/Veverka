@@ -1,0 +1,31 @@
+name: Sync Notion docs to /docs
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 18 * * *" # denně 03:00 JST (18:00 UTC)
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - run: npm ci
+
+      - name: Export Notion pages
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_ROOT_ID: ${{ secrets.NOTION_ROOT_ID }}
+        run: npm run export:notion
+
+      - name: Commit changes
+        run: |
+          git config user.name "notion-bot"
+          git config user.email "actions@github.com"
+          git add docs
+          git commit -m "chore(docs): sync from Notion" || echo "No changes to commit"
+          git push
