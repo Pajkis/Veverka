@@ -35,6 +35,9 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private GoalSetEvent goalSetEvent;
         [SerializeField] private GoalRemovedEvent goalRemovedEvent;
 
+        [SerializeField]
+        private TileQueryEvent tileQueryEvent;
+
         #endregion
 
         #region tile objects
@@ -107,7 +110,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         void Awake()
         {
-        // singleton routine
+            // singleton routine
             if (Instance == null)
             {
                 Instance = this;
@@ -117,10 +120,16 @@ namespace Veverka.GridSystem.GameGrid
             {
                 Destroy(gameObject);
             }
+        }
 
+        private void OnEnable()
+        {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
             resetGridEvent.AddListener(ResetGrid);
+            tileObjectAtEvent.AddListener(TileObjectAt);
+            tileQueryEvent.AddListener(OnTileQuery);
+        }
             pushableSetEvent.AddListener(OnPushableSet);
             pushableRemovedEvent.AddListener(OnPushableRemoved);
             goalSetEvent.AddListener(OnGoalSet);
@@ -135,6 +144,8 @@ namespace Veverka.GridSystem.GameGrid
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
             resetGridEvent.RemoveListener(ResetGrid);
+            tileObjectAtEvent.RemoveListener(TileObjectAt);
+            tileQueryEvent.RemoveListener(OnTileQuery);
             pushableSetEvent.RemoveListener(OnPushableSet);
             pushableRemovedEvent.RemoveListener(OnPushableRemoved);
             goalSetEvent.RemoveListener(OnGoalSet);
@@ -426,6 +437,22 @@ namespace Veverka.GridSystem.GameGrid
         {
             RemoveGoalAt(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
+        }
+
+        /// <summary>
+        /// Responds to tile query events and fills the payload with information about the tile.
+        /// </summary>
+        /// <param name="payload">Query payload containing position to check.</param>
+        private void OnTileQuery(TileQueryPayload payload)
+        {
+            payload.IsInGrid = IsInGrid(payload.Position);
+            if (!payload.IsInGrid) return;
+
+            payload.TileObject = GetPushableAt(payload.Position);
+            payload.IsWalkable = IsWalkableAt(payload.Position);
+            payload.IsObstacle = IsObstacleAt(payload.Position);
+            payload.IsMovable = IsMovableAt(payload.Position);
+            payload.IsGoal = IsGoalAt(payload.Position);
         }
 
         /// <summary>

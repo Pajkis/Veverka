@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 /// <summary>
 /// Control of Veverka
@@ -12,7 +11,8 @@ namespace Veverka.Characters.Veverka
 
         #region fields
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;        
+        [SerializeField] CharacterMovedEvent veverkaMoved;
+        [SerializeField] TileQueryEvent tileQueryEvent;
         #endregion
 
         #region event handling
@@ -50,18 +50,15 @@ namespace Veverka.Characters.Veverka
                 int distance = moveDistance;
                 Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
                 Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
-                if (!GameGrid.Instance.IsInGrid(targetPos)) return;
 
-                // I should not get only I movable, but also Ipushable
-                PushableTile pushableObject = null;
-                TileObject targetObject = GameGrid.Instance.GetPushableAt(targetPos);            
-                if (targetObject != null && (targetObject is PushableTile))
-                {
-                    pushableObject = targetObject as PushableTile;
-                }
+                var query = new TileQueryPayload { Position = targetPos };
+                tileQueryEvent.Raise(query);
+                if (!query.IsInGrid) return;
+
+                PushableTile pushableObject = query.TileObject as PushableTile;
 
                 if (pushableObject != null)
-                {                   
+                {
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
@@ -74,7 +71,7 @@ namespace Veverka.Characters.Veverka
                     }
                 }
                 // move character to empty tile
-                else if (GameGrid.Instance.IsWalkableAt(targetPos))
+                else if (query.IsWalkable)
                 {
                     Move(inputDirection, distance);
                 }
