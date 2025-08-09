@@ -857,10 +857,10 @@ MonoBehaviour:
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   resetGridEvent: {fileID: 11400000, guid: f16b84b05db4cba4891c2d72c84bbc71, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
-  pushableSetEvent: {fileID: 0}
-  pushableRemovedEvent: {fileID: 0}
-  goalSetEvent: {fileID: 0}
-  goalRemovedEvent: {fileID: 0}
+  pushableSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
+  pushableRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
+  goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
+  goalRemovedEvent: {fileID: 11400000, guid: f7f87259c5d74884f9b08fc74b09dacd, type: 2}
   veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
   liskacekPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
