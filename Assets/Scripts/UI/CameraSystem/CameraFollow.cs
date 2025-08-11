@@ -34,6 +34,18 @@ namespace Veverka.CameraSystem
         #endregion
 
         #region methods
+        private void Awake()
+        {
+            if (DisplaySettings.Config != null)
+            {
+                smoothMoveTime = DisplaySettings.Config.smoothMoveTime;
+                FollowOffset = DisplaySettings.Config.FollowOffset;
+                ScreenToPlayScreenOffset = DisplaySettings.Config.ScreenToPlayScreenOffset;
+                tileSize = DisplaySettings.Config.tileSize;
+                maxStaticTileSize = DisplaySettings.Config.MaxStatisScreenSize;
+            }
+        }
+
         /// <summary>
         /// Initialize Camera and centers it on set target
         /// </summary>
