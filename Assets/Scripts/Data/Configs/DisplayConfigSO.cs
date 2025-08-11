@@ -25,6 +25,30 @@ public class DisplayConfigSO : ScriptableObject
     public float canvasScaleFactor = 1f;
 
     [Header("Platform Specifics (Optional)")]
-    public bool isMobile = false;
-   
+    public enum DevicePlatform { PC, Android, Apple }
+
+    /// <summary>
+    /// Current platform based on <see cref="Application.platform"/>.
+    /// </summary>
+    public DevicePlatform Platform
+    {
+        get
+        {
+            switch (Application.platform)
+            {
+                case RuntimePlatform.Android:
+                    return DevicePlatform.Android;
+                case RuntimePlatform.IPhonePlayer:
+                    return DevicePlatform.Apple;
+                default:
+                    return DevicePlatform.PC;
+            }
+        }
+    }
+
+    /// <summary>
+    /// True when running on a mobile platform.
+    /// </summary>
+    public bool isMobile => Platform != DevicePlatform.PC;
+
 }

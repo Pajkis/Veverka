@@ -25,7 +25,35 @@ public static class DisplaySettings
             return;
         }
 
-        Screen.SetResolution(Config.referenceResolution.x, Config.referenceResolution.y, !Config.isMobile);
+        if (Config.isMobile)
+        {
+            Screen.orientation = ScreenOrientation.Landscape;
+
+            var cam = Camera.main;
+            if (cam != null)
+            {
+                float targetAspect = Config.aspectRatio;
+                float screenAspect = (float)Screen.width / Screen.height;
+                if (screenAspect > targetAspect)
+                {
+                    float scale = targetAspect / screenAspect;
+                    cam.rect = new Rect((1f - scale) / 2f, 0f, scale, 1f);
+                }
+                else if (screenAspect < targetAspect)
+                {
+                    float scale = screenAspect / targetAspect;
+                    cam.rect = new Rect(0f, (1f - scale) / 2f, 1f, scale);
+                }
+                else
+                {
+                    cam.rect = new Rect(0f, 0f, 1f, 1f);
+                }
+            }
+        }
+        else
+        {
+            Screen.SetResolution(Config.referenceResolution.x, Config.referenceResolution.y, true);
+        }
 
         var scaler = Object.FindObjectOfType<CanvasScaler>();
         if (scaler != null)
