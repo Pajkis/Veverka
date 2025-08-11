@@ -13,7 +13,7 @@ public class GameSettings: MonoBehaviour
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
     #endregion
 
-    #region propeties
+    #region properties
 
     /// <summary>
     /// Get a value
@@ -33,6 +33,9 @@ public class GameSettings: MonoBehaviour
     #endregion
 
     #region Init methods
+    /// <summary>
+    /// Establishes the singleton instance and keeps it alive across scenes.
+    /// </summary>
     void Awake()
     {
         // Init singleton

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using Veverka.CameraSystem;
 using Veverka.Characters.Veverka;
@@ -30,9 +30,11 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField]
         private LevelDatabase levelDatabase;
 
-        [SerializeField]
-        private TileObjectAtEvent tileObjectAtEvent;
-
+        [SerializeField] private PushableSetEvent pushableSetEvent;
+        [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
+        [SerializeField] private GoalSetEvent goalSetEvent;
+        [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+        [SerializeField] private TileQueryEvent tileQueryEvent;
         #endregion
 
         #region tile objects
@@ -56,7 +58,10 @@ namespace Veverka.GridSystem.GameGrid
         private Transform gridStartCenterTarget;
         private TileType[,] grid;
         private Dictionary<Vector2Int, TileObject> pushables = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();        
+        private Dictionary<Vector2Int, TileObject> goals = new();
+        private readonly List<GameObject> backgroundPool = new();
+        // pool for surrounding wall tiles to avoid repeated instantiation
+        private readonly List<GameObject> surroundingWalls = new();
         #endregion
 
         #region Properties      
@@ -102,7 +107,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         void Awake()
         {
-        // singleton routine
+            // singleton routine
             if (Instance == null)
             {
                 Instance = this;
@@ -112,11 +117,18 @@ namespace Veverka.GridSystem.GameGrid
             {
                 Destroy(gameObject);
             }
+        }
 
+        private void OnEnable()
+        {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
-            resetGridEvent.AddListener(ResetGrid);
-            tileObjectAtEvent.AddListener(TileObjectAt);
+            resetGridEvent.AddListener(ResetGrid);           
+            tileQueryEvent.AddListener(OnTileQuery);        
+            pushableSetEvent.AddListener(OnPushableSet);
+            pushableRemovedEvent.AddListener(OnPushableRemoved);
+            goalSetEvent.AddListener(OnGoalSet);
+            goalRemovedEvent.AddListener(OnGoalRemoved);
          }
 
         /// <summary>
@@ -126,8 +138,12 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);
-            tileObjectAtEvent.RemoveListener(TileObjectAt);
+            resetGridEvent.RemoveListener(ResetGrid);           
+            tileQueryEvent.RemoveListener(OnTileQuery);
+            pushableSetEvent.RemoveListener(OnPushableSet);
+            pushableRemovedEvent.RemoveListener(OnPushableRemoved);
+            goalSetEvent.RemoveListener(OnGoalSet);
+            goalRemovedEvent.RemoveListener(OnGoalRemoved);
         }
 
         #endregion
@@ -149,11 +165,8 @@ namespace Veverka.GridSystem.GameGrid
             // Spawn objects based on tile types            
             BuildLevelFromGrid();
 
-            // add surround walls if gridize is smaller than screensize
-            if (gridSize.x < maxScreenGridSize.x || gridSize.y < maxScreenGridSize.y)
-            {
-                BuildSurroundings();
-            }
+            // add surrounding walls where grid does not fill the screen
+            BuildSurroundings();
 
             //raise event
             levelInitEvent.Raise(new LevelInitPayload
@@ -168,34 +181,47 @@ namespace Veverka.GridSystem.GameGrid
 
             return true;
         }
-    
+
+        private void EnsureBackgroundPool(int requiredCount)
+        {
+            for (int i = backgroundPool.Count; i < requiredCount; i++)
+            {
+                var background = Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                background.SetActive(false);
+                backgroundPool.Add(background);
+            }
+        }
+
         /// <summary>
         /// Build a level from a grid
         /// </summary>
         void BuildLevelFromGrid()
-        {    
+        {
+            EnsureBackgroundPool(gridSize.x * gridSize.y);
+
+            int bgIndex = 0;
 
             // for cycle over grid width
             for (int x = 0; x < gridSize.x; x++)
             {
                 // for cycle over grid height
                 for (int y = 0; y < gridSize.y; y++)
-                {   
+                {
                     //Prepare tile from the grid
                     Vector2Int tilePos = new(x, y);
                     Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
                     TileType tileType =  GetTileType(tilePos);
 
-                    // create background for each tile
-                    var background =  Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                    var background = backgroundPool[bgIndex++];
                     background.transform.SetParent(gridRoot, false);
                     background.transform.localPosition = worldTilePos;
+                    background.SetActive(true);
 
                     // insert specific tiles
                     switch (tileType)
-                    { 
+                    {
                     case TileType.Empty:
-                            
+
                             SetTileType(tilePos, TileType.Empty);
                             break;
 
@@ -207,7 +233,7 @@ namespace Veverka.GridSystem.GameGrid
                             break;
 
                     case TileType.Veverka:
-                                         
+
                             SetTileType(tilePos, TileType.Empty);
 
                             // generete veverka
@@ -216,9 +242,9 @@ namespace Veverka.GridSystem.GameGrid
                             veverka.transform.localPosition = worldTilePos;
                             veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
 
-                            //Center grid according veverka                          
+                            //Center grid according veverka
                             gridStartCenterTarget = veverka.transform;
-                            break;                           
+                            break;
 
                     case TileType.Nut:
 
@@ -227,24 +253,25 @@ namespace Veverka.GridSystem.GameGrid
                             nutTile.transform.SetParent(gridRoot, false);
                             nutTile.transform.localPosition = worldTilePos;
                             nutTile.Init(tileType, tilePos);
-                            pushables.Add(tilePos, nutTile);
-                            SetTileType(tilePos, TileType.Nut);
                             break;
 
-                    case TileType.Goal:            
-                        
-                            // generate goal 
+                    case TileType.Goal:
+
+                            // generate goal
                             GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
                             goalTile.transform.SetParent(gridRoot, false);
                             goalTile.transform.localPosition = worldTilePos;
                             goalTile.Init(tileType, tilePos);
-                            goals.Add(tilePos, goalTile);
-                            SetTileType(tilePos, TileType.Goal);
                             break;
 
                     default: break;
-                    }                                          
+                    }
                 }
+            }
+
+            for (int i = bgIndex; i < backgroundPool.Count; i++)
+            {
+                backgroundPool[i].SetActive(false);
             }
         }
 
@@ -252,26 +279,74 @@ namespace Veverka.GridSystem.GameGrid
         /// Build surround environment for grids smaller than screen
         /// </summary>
         void BuildSurroundings()
-        {           
-            int OffsetX = (maxScreenGridSize.x - gridSize.x) / 2;
-            int OffsetY = (maxScreenGridSize.y - gridSize.y) / 2;
+        {
+            int diffX = maxScreenGridSize.x - gridSize.x;
+            int diffY = maxScreenGridSize.y - gridSize.y;
 
-            for (int x = 0; x < maxScreenGridSize.x; x++)
+            if (diffX < 0 || diffY < 0 || (diffX == 0 && diffY == 0))
             {
-                for (int y = 0; y < maxScreenGridSize.y; y++)
-                {
-                    Vector2Int tilePos = new(x - OffsetX, y - OffsetY);
-                    
-                    if (!IsInGrid(tilePos))
-                    {
-                        Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
-                        var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
+                return;
+            }
 
-                    }
+            int offsetX = diffX / 2;
+            int offsetY = diffY / 2;
+
+            int widthWithOffset = gridSize.x + 2 * offsetX;
+            int needed = widthWithOffset * offsetY * 2 + gridSize.y * offsetX * 2;
+
+            for (int i = surroundingWalls.Count; i < needed; i++)
+            {
+                var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                surroundingWalls.Add(wall);
+            }
+
+            int index = 0;
+
+            for (int y = -offsetY; y < 0; y++)
+            {
+                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                {
+                    PositionWall(index++, x, y);
                 }
             }
+
+            for (int y = gridSize.y; y < gridSize.y + offsetY; y++)
+            {
+                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (int x = -offsetX; x < 0; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (int x = gridSize.x; x < gridSize.x + offsetX; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            for (; index < surroundingWalls.Count; index++)
+            {
+                surroundingWalls[index].SetActive(false);
+            }
+        }
+
+        void PositionWall(int index, int x, int y)
+        {
+            var wall = surroundingWalls[index];
+            wall.SetActive(true);
+            Vector3 worldTilePos = GridUtils.GridToWorld(new Vector2Int(x, y));
+            wall.transform.SetParent(gridRoot, false);
+            wall.transform.localPosition = worldTilePos;
         }
 
         /// <summary>
@@ -303,10 +378,27 @@ namespace Veverka.GridSystem.GameGrid
         /// <param name="noInt">no integer input necessary</param>
         private void ResetGrid()
         {
-            //Destroy old grid
-            foreach (Transform child in gridRoot.transform)
+            //Destroy old grid except pooled backgrounds
+           foreach (Transform child in gridRoot.transform)
             {
-                Destroy(child.gameObject);
+                // pool of surrounding walls
+                if (surroundingWalls.Contains(child.gameObject))
+                {
+                    child.gameObject.SetActive(false);
+                    continue;
+                }
+                
+                // pool of in game backgrounds
+                if (!backgroundPool.Contains(child.gameObject))
+                {
+                    Destroy(child.gameObject);
+                }
+                
+            }              
+
+            foreach (var background in backgroundPool)
+            {
+                background.SetActive(false);
             }
 
             // clear dictionaries
@@ -317,58 +409,44 @@ namespace Veverka.GridSystem.GameGrid
 
         #region tile handling
 
-        /// <summary>
-        /// tile object at action - set, remove, replace etc.
-        /// </summary>
-        /// <param name="payload">tile object data - position, type to change etc.</param>
-        private void TileObjectAt(TileObjectAtPayload payload)
+        private void OnPushableSet(PushableSetPayload payload)
         {
-            switch (payload.GridObjectAction)
-            { 
-                case GridObjectActionType.SetObject:
+            SetPushableAt(payload.Position, payload.Pushable);
+            SetTileType(payload.Position, payload.Pushable.PosTileType);
+        }
 
-                    if (payload.IsPushable)
-                    {
-                        SetPushableAt(payload.GridPosition, payload.TileObject as PushableTile);                        
-                    }
-                    else
-                    { 
-                        // TBD
-                    }
-                    
-                    // set tile type
-                    SetTileType(payload.GridPosition, payload.TileType);
-                    break;
+        private void OnPushableRemoved(PushableRemovedPayload payload)
+        {
+            RemovePushableAt(payload.Position);
+            SetTileType(payload.Position, TileType.Empty);
+        }
 
-                case GridObjectActionType.RemoveObject:
+        private void OnGoalSet(GoalSetPayload payload)
+        {
+            goals[payload.Position] = payload.Goal;
+            SetTileType(payload.Position, payload.Goal.PosTileType);
+        }
 
-                    if (payload.IsPushable)
-                    {
-                        RemovePushableAt(payload.GridPosition);                      
-                    }
-                    else
-                    {
-                        // TBD
-                    }
+        private void OnGoalRemoved(GoalRemovedPayload payload)
+        {
+            RemoveGoalAt(payload.Position);
+            SetTileType(payload.Position, TileType.Empty);
+        }
 
-                    break;
+        /// <summary>
+        /// Responds to tile query events and fills the payload with information about the tile.
+        /// </summary>
+        /// <param name="payload">Query payload containing position to check.</param>
+        private void OnTileQuery(TileQueryPayload payload)
+        {
+            payload.IsInGrid = IsInGrid(payload.Position);
+            if (!payload.IsInGrid) return;
 
-                case GridObjectActionType.ReplaceObject:
-
-                    if (payload.IsPushable)
-                    {
-                        RemovePushableAt(payload.GridPosition);
-                    }
-                    else
-                    {
-                        // TBD
-                    }
-
-                    // set tile type
-                    SetTileType(payload.GridPosition, payload.TileType);
-                    break;                       
-            }
-                
+            payload.TileObject = GetPushableAt(payload.Position);
+            payload.IsWalkable = IsWalkableAt(payload.Position);
+            payload.IsObstacle = IsObstacleAt(payload.Position);
+            payload.IsMovable = IsMovableAt(payload.Position);
+            payload.IsGoal = IsGoalAt(payload.Position);
         }
 
         /// <summary>

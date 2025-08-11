@@ -7,8 +7,25 @@ public class PushableTile : MovableTile
     #region fields
     [SerializeField] 
     protected PushableInGoalEvent pushableInGoalEvent;
+    [SerializeField]
+    protected PushableSetEvent pushableSetEvent;
+    [SerializeField]
+    protected PushableRemovedEvent pushableRemovedEvent;
+
     #endregion
 
+
+    #region Initialization
+    public override void Init(TileType tileType, Vector2Int gridPosition)
+    {
+        base.Init(tileType, gridPosition);
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Position = gridPosition,
+            Pushable = this,
+        });
+    }
+    #endregion
 
     #region pushable methods
     /// <summary>
@@ -18,10 +35,12 @@ public class PushableTile : MovableTile
     /// <returns></returns>
     public bool CanBePushed(Direction direction)
     {
-        Vector2Int targetPosition = GridUtils.GetPositionInDir(gridPosition, direction);
-        if (!GameGrid.Instance.IsInGrid(targetPosition)) return false;
+        Vector2Int targetPosition = GridUtils.GetPositionInDir(GridPosition, direction);
 
-        return GameGrid.Instance.IsWalkableAt(targetPosition);
+        TileQueryPayload query = new() { Position = targetPosition };
+        tileQueryEvent.Raise(query);
+        if (!query.IsInGrid) return false;
+        return query.IsWalkable;
     }
     #endregion
 
@@ -37,10 +56,16 @@ public class PushableTile : MovableTile
     { 
         base.UndoAction(current, previous, duration);
 
-        GameGrid.Instance.RemovePushableAt(current);
-        GameGrid.Instance.SetTileType(current, TileType.Empty);
-        GameGrid.Instance.SetPushableAt(previous, this);
-        GameGrid.Instance.SetTileType(previous, tileType);
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        {         
+            Position = current
+        });
+
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = previous
+        });
     }
 
 
@@ -50,7 +75,10 @@ public class PushableTile : MovableTile
     protected override void OnMoveStart()
     {
         // Clear old grid tile, remove from dictionary       
-        GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);        
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        {            
+            Position = GridPosition
+        });
     }
 
     /// <summary>
@@ -59,12 +87,13 @@ public class PushableTile : MovableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        GameGrid.Instance.RemovePushableAt(gridPosition);
-        GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);
-        GameGrid.Instance.SetPushableAt(targetPosition, this);
-        GameGrid.Instance.SetTileType(targetPosition, tileType);
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = targetPosition
+        });
 
-        gridPosition = targetPosition;
+        GridPosition = targetPosition;
         //Complete turn record
         TurnRecordAddandComplete();
     }

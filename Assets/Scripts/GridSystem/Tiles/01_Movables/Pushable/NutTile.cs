@@ -1,11 +1,11 @@
 using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 /// <summary>
 /// Class for the nut Tile - basic push to goal tile.
 /// </summary>
 public class NutTile : PushableTile
-{   
+{
+
     #region methods
     /// <summary>
     /// On Move start action
@@ -22,31 +22,21 @@ public class NutTile : PushableTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        // Remove pushable at grid position and set it to Empty tile
-     //   GameGrid.Instance.RemovePushableAt(gridPosition);
-       // GameGrid.Instance.SetTileType(gridPosition, TileType.Empty);
-        tileObjectAt.Raise(new TileObjectAtPayload
+        // remove pushable from previous position
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
         {
-            GridPosition = gridPosition,
-            TileType = TileType.Empty,
-            GridObjectAction = GridObjectActionType.ReplaceObject,
-            TileObject = this,
-            IsPushable = true,
+            Position = GridPosition,
         });
 
-
-        // The nut does not reach goal
-        if (!GameGrid.Instance.IsGoalAt(targetPosition))
+        // Check if the nut reached the goal
+        TileQueryPayload query = new() { Position = targetPosition };
+        tileQueryEvent.Raise(query);
+        if (!(query.IsGoal))
         {
-        //    GameGrid.Instance.SetPushableAt(targetPosition, this);
-          //  GameGrid.Instance.SetTileType(targetPosition, tileType);
-            tileObjectAt.Raise(new TileObjectAtPayload
+            pushableSetEvent.Raise(new PushableSetPayload
             {
-                GridPosition = targetPosition,
-                TileType = tileType,
-                GridObjectAction = GridObjectActionType.SetObject,
-                TileObject = this,
-                IsPushable = true,
+                Position = targetPosition,
+                Pushable = this,
             });
         }
         else
@@ -58,23 +48,13 @@ public class NutTile : PushableTile
                 PushableTileType = this,
                 GoalReduction = 1,
             });
-           
-            // replace goal with empty tile
-          //  GameGrid.Instance.SetTileType(targetPosition, TileType.Empty);
-            tileObjectAt.Raise(new TileObjectAtPayload
-            {
-                GridPosition = targetPosition,
-                TileType = TileType.Empty,
-                GridObjectAction = GridObjectActionType.SetObject,
-                TileObject = null,
-                IsPushable = false,
-            });
-            Destroy(gameObject);           
 
-            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);            
+            Destroy(gameObject);
+
+            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);
         }
 
-        gridPosition = targetPosition;
+        GridPosition = targetPosition;
 
         //Complete turn record
         TurnRecordAddandComplete();

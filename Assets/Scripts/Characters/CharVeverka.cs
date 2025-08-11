@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
 /// <summary>
 /// Control of Veverka
@@ -9,10 +8,9 @@ namespace Veverka.Characters.Veverka
  { 
     public class CharVeverka : Character
     {
-
-        #region fields
+        #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;        
+        [SerializeField] CharacterMovedEvent veverkaMoved;       
         #endregion
 
         #region event handling
@@ -34,19 +32,10 @@ namespace Veverka.Characters.Veverka
         #endregion
 
         #region methods
-        // Update is called once per frame
-        void Update()
-        {    
-            if (Input.GetKeyDown(KeyCode.UpArrow)) HandleInput(Direction.Up);
-            if (Input.GetKeyDown(KeyCode.DownArrow)) HandleInput(Direction.Down);
-            if (Input.GetKeyDown(KeyCode.LeftArrow)) HandleInput(Direction.Left);
-            if (Input.GetKeyDown(KeyCode.RightArrow)) HandleInput(Direction.Right);
-        }
-
         /// <summary>
-        /// Handles input from keyboard
+        /// Handles input from arrow direction events
         ///     - direction of object and input arrow are same -> tries to move in that direction
-        ///     - direction of object and input arrow does not match -> rotates to input arrow direction 
+        ///     - direction of object and input arrow does not match -> rotates to input arrow direction
         /// </summary>
         /// <param name="direction"></param>
         void HandleInput(Direction inputDirection)
@@ -56,25 +45,24 @@ namespace Veverka.Characters.Veverka
             // Try to move in input arrow direction
             if (inputDirection == facingDirection)
             {
-                Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection);
+                int distance = moveDistance;
+                Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
                 Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
-                if (!GameGrid.Instance.IsInGrid(targetPos)) return;
 
-                // I should not get only I movable, but also Ipushable
-                PushableTile pushableObject = null;
-                TileObject targetObject = GameGrid.Instance.GetPushableAt(targetPos);            
-                if (targetObject != null && (targetObject is PushableTile))
-                {
-                    pushableObject = targetObject as PushableTile;
-                }
+                // check if target position is in grid and get tile query
+                var query = new TileQueryPayload { Position = targetPos };
+                tileQueryEvent.Raise(query);
+                if (!query.IsInGrid) return;
+
+                PushableTile pushableObject = query.TileObject as PushableTile;
 
                 if (pushableObject != null)
-                {                   
+                {
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
-                        Move(inputDirection, moveDistance);
-                        pushableObject.Move(inputDirection, moveDistance);
+                        Move(inputDirection, distance);
+                        pushableObject.Move(inputDirection, distance);
                     }
                     else
                     {
@@ -82,9 +70,9 @@ namespace Veverka.Characters.Veverka
                     }
                 }
                 // move character to empty tile
-                else if (GameGrid.Instance.IsWalkableAt(targetPos))
+                else if (query.IsWalkable)
                 {
-                    Move(inputDirection, moveDistance);
+                    Move(inputDirection, distance);
                 }
             }
 
@@ -116,7 +104,9 @@ namespace Veverka.Characters.Veverka
             AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
         }
 
-
+        /// <summary>
+        /// Called after the character finishes moving; raises the movement event.
+        /// </summary>
         protected override void OnMoveComplete(Vector2Int targetPosition)
         {
             base.OnMoveComplete(targetPosition);

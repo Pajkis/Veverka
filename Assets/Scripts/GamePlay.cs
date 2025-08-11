@@ -57,7 +57,9 @@ public class GamePlay :  MonoBehaviour
         levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Handles frame-based input such as undo and opening the pause menu.
+    /// </summary>
     void Update()
     {
 
@@ -131,7 +133,7 @@ public class GamePlay :  MonoBehaviour
     }
 
     /// <summary>
-    /// Undo move for character
+    /// Reverts the last recorded turn and updates the turn counter.
     /// </summary>
     public void Undo()
     {

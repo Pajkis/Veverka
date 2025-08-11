@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
-/// Game settings ultilities - wrapping PlayerPrefab funtions
+/// Game settings utilities - wrapping PlayerPrefab funtions
 /// </summary>
 public static class GameSettingsUtils
 {

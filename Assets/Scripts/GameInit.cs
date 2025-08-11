@@ -3,21 +3,26 @@ using UnityEngine;
 
 public class GameInit : MonoBehaviour
 {
-    
-    // Start is called before the first frame update
+
+    /// <summary>
+    /// Ensures the initializer persists across scene loads.
+    /// </summary>
     void Awake()
-    {                   
+    {
         DontDestroyOnLoad(gameObject);
     }
 
+    /// <summary>
+    /// Initializes game-wide systems and schedules loading of the main menu.
+    /// </summary>
     void Start()
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
         AudioManager.Instance.Initialize();
 
-        //Game start Delay
-        StartCoroutine(GameStartDelayCoroutine());       
+        // Game start delay
+        StartCoroutine(GameStartDelayCoroutine());
     }
     /// <summary>
     /// Game start delay coroutine
