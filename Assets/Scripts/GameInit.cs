@@ -19,9 +19,6 @@ public class GameInit : MonoBehaviour
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
-        // apply display configuration
-        DisplaySettings.Init();
-
         AudioManager.Instance.Initialize();
 
         // Game start delay

@@ -8,6 +8,9 @@ namespace Veverka.CameraSystem
     /// </summary>
     public class CameraFollow : MonoBehaviour
     {
+        [Header("Config (SO)")]
+        [SerializeField] private InGameDisplayConfigSO inGameConfig; 
+
         #region fields
         [Header("Follow Settings")]
         [SerializeField] private Transform target;
@@ -34,16 +37,37 @@ namespace Veverka.CameraSystem
         #endregion
 
         #region methods
+        /// <summary>
+        /// awake is called when the script instance is being loaded
+        /// </summary>
         private void Awake()
         {
-            if (DisplaySettings.Config != null)
-            {
-                smoothMoveTime = DisplaySettings.Config.smoothMoveTime;
-                FollowOffset = DisplaySettings.Config.FollowOffset;
-                ScreenToPlayScreenOffset = DisplaySettings.Config.ScreenToPlayScreenOffset;
-                tileSize = DisplaySettings.Config.tileSize;
-                maxStaticTileSize = DisplaySettings.Config.MaxStatisScreenSize;
-            }
+            ApplyConfig();
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// called when the script is loaded or a value is changed in the inspector
+        /// </summary>
+        private void OnValidate()
+        {
+            // changes in editor are applied immediately
+            if (!Application.isPlaying)
+                ApplyConfig();
+        }
+#endif
+        /// <summary>
+        /// apply configuration from InGameDisplayConfigSO
+        /// </summary>
+        private void ApplyConfig()
+        {
+            if (inGameConfig == null) return;
+
+            smoothMoveTime = inGameConfig.smoothMoveTime;
+            FollowOffset = inGameConfig.FollowOffset;
+            ScreenToPlayScreenOffset = inGameConfig.ScreenToPlayScreenOffset;
+            tileSize = inGameConfig.tileSize;
+            maxStaticTileSize = inGameConfig.MaxStatisScreenSize;
         }
 
         /// <summary>
