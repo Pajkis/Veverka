@@ -9,13 +9,14 @@ public static class GameSettingsUtils
 /// load values from register or initialize new ones
 /// </summary>
 /// <returns>dictionary with game settings</returns>
-    public static Dictionary<GameSettingsEnum, int> LoadOrInitializeDefaults()
+    public static Dictionary<GameSettingsEnum, int> LoadOrInitializeDefaults(GameSettingsConfig config)
     {
         Dictionary<GameSettingsEnum, int> settings = new();
 
-        //Load or set default values
-        void Init(GameSettingsEnum key, int defaultValue)
+        // Load or set default values
+        void Init(GameSettingsEnum key)
         {
+            int defaultValue = config.GetDefault(key);
             if (!PlayerPrefs.HasKey(key.ToString()))
             {
                 PlayerPrefs.SetInt(key.ToString(), defaultValue);
@@ -27,12 +28,10 @@ public static class GameSettingsUtils
             }
         }
 
-        // Set each parameter
-        Init(GameSettingsEnum.ActivePlayer, 0);
-        Init(GameSettingsEnum.AnimationSpeed, 1);
-        Init(GameSettingsEnum.MusicVolume, 5);
-        Init(GameSettingsEnum.EffectVolume, 5);
-        Init(GameSettingsEnum.MenuVolume, 5);
+        foreach (GameSettingsEnum key in System.Enum.GetValues(typeof(GameSettingsEnum)))
+        {
+            Init(key);
+        }
 
         PlayerPrefs.Save();
 
