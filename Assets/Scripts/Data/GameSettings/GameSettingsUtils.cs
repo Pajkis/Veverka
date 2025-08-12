@@ -17,9 +17,14 @@ public static class GameSettingsUtils
         void Init(GameSettingsEnum key, int defaultValue)
         {
             if (!PlayerPrefs.HasKey(key.ToString()))
+            {
                 PlayerPrefs.SetInt(key.ToString(), defaultValue);
-
-            settings[key] = PlayerPrefs.GetInt(key.ToString());
+                settings[key] = defaultValue;
+            }
+            else
+            {
+                settings[key] = PlayerPrefs.GetInt(key.ToString());
+            }
         }
 
         // Set each parameter
