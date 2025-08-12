@@ -8,7 +8,7 @@ public class DisplaySettings : MonoBehaviour
     [Header("ConfigSO")]
     [SerializeField] private DisplayConfig displayConfig;
 
-    // aktivní rozřešený profil
+    // active profile
     private DisplayConfigPars _active;
 
     void Awake()
