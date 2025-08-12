@@ -18,8 +18,8 @@ MonoBehaviour:
     uiMatchWidthOrHeight: 1
     useLetterboxing: 1
     targetAspect: {x: 16, y: 9}
-    forceOrientation: 0
-    orientation: 0
+    forceOrientation: 1
+    orientation: 3
     targetFrameRate: 60
     vSyncCount: 1
     applySafeArea: 0

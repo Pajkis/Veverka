@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class DisplaySettings : MonoBehaviour
 {
-    [Header("Config")]
-    [SerializeField] private DisplayConfigSO displayConfigSO;
+    [Header("ConfigSO")]
+    [SerializeField] private DisplayConfig displayConfig;
 
     // aktivní rozřešený profil
-    private DisplayConfig _active;
+    private DisplayConfigPars _active;
 
     void Awake()
     {
@@ -48,11 +48,11 @@ public class DisplaySettings : MonoBehaviour
 
     private void ResolveActiveProfile()
     {
-        if (displayConfigSO == null)
+        if (displayConfig == null)
         {
             Debug.LogWarning("[DisplaySettings] Missing DisplayConfigSO — using defaults.");
             // nouzová konfigurace
-            _active = new DisplayConfig
+            _active = new DisplayConfigPars
             {
                 referenceResolution = new Vector2Int(1920, 1080),
                 uiMatchWidthOrHeight = 1f,
@@ -68,11 +68,11 @@ public class DisplaySettings : MonoBehaviour
             return;
         }
 
-        _active = displayConfigSO.ResolveProfile();
+        _active = displayConfig.ResolveProfile();
         if (_active == null)
         {
             Debug.LogWarning("[DisplaySettings] DisplayConfigSO has no profiles — using defaults.");
-            _active = new DisplayConfig
+            _active = new DisplayConfigPars
             {
                 referenceResolution = new Vector2Int(1920, 1080),
                 uiMatchWidthOrHeight = 1f,

@@ -9,13 +9,13 @@ namespace Veverka.CameraSystem
     public class CameraFollow : MonoBehaviour
     {
         [Header("Config (SO)")]
-        [SerializeField] private InGameDisplayConfigSO inGameConfig; 
+        [SerializeField] private InGameDisplayConfig inGameConfig; 
 
         #region fields
         [Header("Follow Settings")]
         [SerializeField] private Transform target;
         // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
-        [SerializeField] private float smoothMoveTime = 0.3f; 
+        [SerializeField] private float smoothMoveTime = 0.2f; 
         // adjust camera follow of character when it crosses over half the screen
         [SerializeField] private Vector3 FollowOffset = new Vector3(2.6666f, 0, -10f);
         // offset to switch center of the scene in the center of the left screen window

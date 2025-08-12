@@ -16,7 +16,7 @@ public enum DevicePlatformType
 }
 
 [System.Serializable]
-public class DisplayConfig
+public class DisplayConfigPars
 {
     [Header("Platform mapping")]
     public DevicePlatformType platform = DevicePlatformType.Auto;
@@ -47,15 +47,15 @@ public class DisplayConfig
     public bool autoApplyOnSceneLoaded = true;
 }
 
-[CreateAssetMenu(menuName = "Configs/DisplayConfigSO")]
-public class DisplayConfigSO : ScriptableObject
+[CreateAssetMenu(menuName = "Configs/DisplayConfig")]
+public class DisplayConfig : ScriptableObject
 {
-    public DisplayConfig[] profiles;
+    public DisplayConfigPars[] profiles;
 
     /// <summary>
     /// return profile with a current platform.
        /// </summary>
-    public DisplayConfig ResolveProfile()
+    public DisplayConfigPars ResolveProfile()
     {
         if (profiles == null || profiles.Length == 0) return null;
 

@@ -601,9 +601,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97b6add7abf5e74bbafcca169cf92f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameConfig: {fileID: 0}
+  inGameConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
   target: {fileID: 0}
-  smoothMoveTime: 0.3
+  smoothMoveTime: 0.2
   FollowOffset: {x: 2.6666, y: 0, z: -10}
   ScreenToPlayScreenOffset: {x: 2.1666, y: -0.5, z: -10}
   tileSize: 1

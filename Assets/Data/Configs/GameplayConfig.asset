@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: GameplayConfig
   m_EditorClassIdentifier: 
   maxUndoSteps: 10
-  moveTime: 0.3
+  moveTime: 0.2
   reduceGoalCount: 1

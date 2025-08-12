@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "InGameDisplayConfig", menuName = "Configs/InGameDisplayConfig")]
-public class InGameDisplayConfigSO : ScriptableObject
+public class InGameDisplayConfig : ScriptableObject
 {
     [Header("Grid & Tile Settings")]
     // Max number of tiles so the camera is static (does not move with character)
@@ -14,5 +14,5 @@ public class InGameDisplayConfigSO : ScriptableObject
     // offset to switch center of the scene in the center of the left screen window
     public Vector3 ScreenToPlayScreenOffset = new Vector3(2.1666f, -0.5f, -10f);
     // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
-    public float smoothMoveTime = 0.3f;
+    public float smoothMoveTime = 0.2f;
 }

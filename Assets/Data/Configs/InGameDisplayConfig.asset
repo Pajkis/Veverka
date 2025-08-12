@@ -16,4 +16,4 @@ MonoBehaviour:
   tileSize: 1
   FollowOffset: {x: 2.6666, y: 0, z: -10}
   ScreenToPlayScreenOffset: {x: 2.1666, y: -0.5, z: -10}
-  smoothMoveTime: 0.3
+  smoothMoveTime: 0.2
