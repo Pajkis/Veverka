@@ -11,6 +11,7 @@ public class GameSettings: MonoBehaviour
 
     #region fields
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
+    [SerializeField] private GameSettingsConfig config;
     #endregion
 
     #region properties
@@ -24,11 +25,11 @@ public class GameSettings: MonoBehaviour
     {
         if (!gameSettings.ContainsKey(key))
         {
-            Debug.LogError($"[GameSettings] Missing key {key}, returning 1 as fallback.");
-            return 1;
+            Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
+            return config != null ? config.GetDefault(key) : 0;
         }
         return gameSettings[key];
-    }  
+    }
 
     #endregion
 
@@ -55,8 +56,18 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     public void InitGameSettings()
     {
+        if (config == null)
+        {
+            config = Resources.Load<GameSettingsConfig>("GameSettingsConfig");
+            if (config == null)
+            {
+                Debug.LogError("GameSettingsConfig asset not found. Using default values.");
+                config = ScriptableObject.CreateInstance<GameSettingsConfig>();
+            }
+        }
+
         //get init values for PlayerPrefab
-        gameSettings =  GameSettingsUtils.LoadOrInitializeDefaults();
+        gameSettings =  GameSettingsUtils.LoadOrInitializeDefaults(config);
 
         // Test that values are set properly 
         foreach (GameSettingsEnum key in Enum.GetValues(typeof(GameSettingsEnum)))
@@ -67,8 +78,8 @@ public class GameSettings: MonoBehaviour
         // Validation of animation speed
         if (gameSettings[GameSettingsEnum.AnimationSpeed] <= 0)
         {
-            Debug.LogWarning("AnimationSpeed <= 0! Resetting to default (1).");
-            gameSettings[GameSettingsEnum.AnimationSpeed] = 1;
+            Debug.LogWarning("AnimationSpeed <= 0! Resetting to default.");
+            gameSettings[GameSettingsEnum.AnimationSpeed] = config.GetDefault(GameSettingsEnum.AnimationSpeed);
         }
     }
     #endregion
