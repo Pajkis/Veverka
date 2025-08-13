@@ -8,11 +8,14 @@ namespace Veverka.CameraSystem
     /// </summary>
     public class CameraFollow : MonoBehaviour
     {
+        [Header("Config (SO)")]
+        [SerializeField] private InGameDisplayConfig inGameConfig; 
+
         #region fields
         [Header("Follow Settings")]
         [SerializeField] private Transform target;
         // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
-        [SerializeField] private float smoothMoveTime = 0.3f; 
+        [SerializeField] private float smoothMoveTime = 0.2f; 
         // adjust camera follow of character when it crosses over half the screen
         [SerializeField] private Vector3 FollowOffset = new Vector3(2.6666f, 0, -10f);
         // offset to switch center of the scene in the center of the left screen window
@@ -34,6 +37,39 @@ namespace Veverka.CameraSystem
         #endregion
 
         #region methods
+        /// <summary>
+        /// awake is called when the script instance is being loaded
+        /// </summary>
+        private void Awake()
+        {
+            ApplyConfig();
+        }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// called when the script is loaded or a value is changed in the inspector
+        /// </summary>
+        private void OnValidate()
+        {
+            // changes in editor are applied immediately
+            if (!Application.isPlaying)
+                ApplyConfig();
+        }
+#endif
+        /// <summary>
+        /// apply configuration from InGameDisplayConfigSO
+        /// </summary>
+        private void ApplyConfig()
+        {
+            if (inGameConfig == null) return;
+
+            smoothMoveTime = inGameConfig.smoothMoveTime;
+            FollowOffset = inGameConfig.FollowOffset;
+            ScreenToPlayScreenOffset = inGameConfig.ScreenToPlayScreenOffset;
+            tileSize = inGameConfig.tileSize;
+            maxStaticTileSize = inGameConfig.MaxStatisScreenSize;
+        }
+
         /// <summary>
         /// Initialize Camera and centers it on set target
         /// </summary>

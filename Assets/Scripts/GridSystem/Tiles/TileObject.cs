@@ -12,6 +12,10 @@ public abstract class TileObject : MonoBehaviour
     [SerializeField] protected TileQueryEvent tileQueryEvent;
     #endregion
 
+    #region Configs
+    [SerializeField] protected GameplayConfig gameplayConfig;
+    #endregion
+
     #region propeties
     /// <summary>
     /// Get grid position of the object

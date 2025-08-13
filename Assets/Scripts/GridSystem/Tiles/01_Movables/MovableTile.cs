@@ -8,7 +8,7 @@ public class MovableTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1; // 1 tile
-    [SerializeField] protected float moveDuration = 0.15f;
+    [SerializeField] protected float moveDuration = 0.2f;
 
     protected MovableMovedPayload payload = new();
     protected SmoothMover smoothMover;
@@ -42,7 +42,18 @@ public class MovableTile : TileObject
     /// <param name="gridPosition"></param>
     public override void Init(TileType tileType, Vector2Int gridPosition)
     {
+        // get the smooth mover component
         smoothMover = GetComponent<SmoothMover>();
+        if (smoothMover == null)
+        {
+            Debug.LogError($"MovableTile: SmoothMover component is missing on {gameObject.name}");
+            return;
+        }
+
+        // set configs
+        moveDuration = gameplayConfig.moveTime;
+
+        // base initialization
         base.Init(tileType, gridPosition);      
     }
 

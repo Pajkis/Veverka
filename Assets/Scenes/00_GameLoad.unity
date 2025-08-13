@@ -157,8 +157,8 @@ Camera:
   m_GameObject: {fileID: 712305979}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 862168024}
   - component: {fileID: 862168026}
   - component: {fileID: 862168027}
+  - component: {fileID: 862168028}
   m_Layer: 0
   m_Name: GameInit
   m_TagString: Untagged
@@ -340,6 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfb02b362f79fdf47ab424175ce52038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: db6cd4c4041d60a45a132f07bfc4f122, type: 2}
 --- !u!114 &862168027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -367,6 +369,19 @@ MonoBehaviour:
   gameSongs:
   - {fileID: 8300000, guid: c5afbdb8f2ae12e4986c0e4b402a2399, type: 3}
   - {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
+--- !u!114 &862168028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862168023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b411c2f5dbf4511a88c588e926892f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
 --- !u!1001 &1409563348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -485,9 +500,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5966936232506663890, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_MatchWidthOrHeight
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6986148865788718439, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

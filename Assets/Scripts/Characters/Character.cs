@@ -25,6 +25,10 @@ public abstract class Character: MonoBehaviour
     [SerializeField] protected TileQueryEvent tileQueryEvent;
     #endregion
 
+    #region Configs
+    [SerializeField] protected GameplayConfig gameplayConfig;
+    #endregion
+
 
     #region properties
     /// <summary>
@@ -47,14 +51,18 @@ public abstract class Character: MonoBehaviour
     /// <param name="facingDirection"></param>
     public virtual void Init(TileType tileType, CharacterType characterType, Vector2Int gridPosition, Direction facingDirection = Direction.Down)
     {
+        //Set initial values
         this.tileType = tileType;
         this.characterType = characterType;
         this.gridPosition = gridPosition;
         this.facingDirection = facingDirection;
 
+        //set configs
+        moveDuration = gameplayConfig.moveTime;
+     
         smoothMover = GetComponent<SmoothMover>();
         Rotate(facingDirection);
-        Debug.Log($"[Veverka INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
+        Debug.Log($"[Character INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
     }
   
 

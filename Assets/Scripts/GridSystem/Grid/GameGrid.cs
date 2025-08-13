@@ -280,6 +280,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         void BuildSurroundings()
         {
+            // if grid is larger than max screen size, do not build surroundings
             int diffX = maxScreenGridSize.x - gridSize.x;
             int diffY = maxScreenGridSize.y - gridSize.y;
 
@@ -288,12 +289,17 @@ namespace Veverka.GridSystem.GameGrid
                 return;
             }
 
-            int offsetX = diffX / 2;
-            int offsetY = diffY / 2;
+            //Offset calculation for surrounding walls
+            int offsetLeft = diffX / 2;
+            int offsetRight = diffX - offsetLeft;
+            int offsetDown = diffY / 2;
+            int offsetUp = diffY - offsetDown;
 
-            int widthWithOffset = gridSize.x + 2 * offsetX;
-            int needed = widthWithOffset * offsetY * 2 + gridSize.y * offsetX * 2;
+            //number of needed surrounding walls
+            int widthWithOffset = gridSize.x + offsetLeft + offsetRight;
+            int needed = widthWithOffset * (offsetDown + offsetUp) + gridSize.y * (offsetLeft + offsetRight);
 
+            // if there are not enough walls in pool, instantiate new ones
             for (int i = surroundingWalls.Count; i < needed; i++)
             {
                 var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
@@ -302,31 +308,26 @@ namespace Veverka.GridSystem.GameGrid
 
             int index = 0;
 
-            for (int y = -offsetY; y < 0; y++)
+            // Position surrounding walls on bottom
+            for (int y = -offsetDown; y < 0; y++)
             {
-                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
                 {
                     PositionWall(index++, x, y);
                 }
             }
 
-            for (int y = gridSize.y; y < gridSize.y + offsetY; y++)
+            // Position surrounding walls on top
+            for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
             {
-                for (int x = -offsetX; x < gridSize.x + offsetX; x++)
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
                 {
                     PositionWall(index++, x, y);
                 }
             }
 
-            for (int x = -offsetX; x < 0; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    PositionWall(index++, x, y);
-                }
-            }
-
-            for (int x = gridSize.x; x < gridSize.x + offsetX; x++)
+            //position surrounding walls on left
+            for (int x = -offsetLeft; x < 0; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
@@ -334,12 +335,31 @@ namespace Veverka.GridSystem.GameGrid
                 }
             }
 
+            //position surrounding walls on right
+            for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
+            }
+
+            // Deactivate remaining walls in pool
             for (; index < surroundingWalls.Count; index++)
             {
                 surroundingWalls[index].SetActive(false);
             }
         }
 
+        /// <summary>
+        /// Positions a wall at the specified grid coordinates and activates it.
+        /// </summary>
+        /// <remarks>The method activates the wall at the specified index, sets its parent to the grid
+        /// root, and positions it at the corresponding world coordinates. Ensure that the <paramref name="index"/> is
+        /// within the bounds of the surrounding walls collection.</remarks>
+        /// <param name="index">The index of the wall in the surrounding walls collection. Must be a valid index within the collection.</param>
+        /// <param name="x">The x-coordinate of the grid position where the wall should be placed.</param>
+        /// <param name="y">The y-coordinate of the grid position where the wall should be placed.</param>
         void PositionWall(int index, int x, int y)
         {
             var wall = surroundingWalls[index];
