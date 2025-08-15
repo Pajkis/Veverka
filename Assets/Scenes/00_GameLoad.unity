@@ -363,12 +363,16 @@ MonoBehaviour:
   buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
   sliderMove: {fileID: 8300000, guid: b3f582e53aaf2fa4e8e89cc9d2e501f1, type: 3}
   menuSongs:
-  - {fileID: 8300000, guid: 65eaff83ff1ecba47816d91dbf36845d, type: 3}
-  - {fileID: 8300000, guid: cebbeb55a93154e42b21ff5981bc5ca1, type: 3}
-  - {fileID: 8300000, guid: 2d1569c8913185b47a411d34786ad7fd, type: 3}
+  - {fileID: 8300000, guid: 2e1e454dab9664549a7320a8d38c16f3, type: 3}
+  - {fileID: 8300000, guid: 0c939b759de1712418b1d28473f25919, type: 3}
+  - {fileID: 8300000, guid: 8b4e9a8c47d4ac54ba7fc0761ce7b609, type: 3}
+  - {fileID: 8300000, guid: 793028f89f4171d43bffac195e3bd2d1, type: 3}
   gameSongs:
-  - {fileID: 8300000, guid: c5afbdb8f2ae12e4986c0e4b402a2399, type: 3}
-  - {fileID: 8300000, guid: 4dd8e58cf9a2fb44da6780a9dfe4ff23, type: 3}
+  - {fileID: 8300000, guid: db6b84f700f79ab429f996daea4dec65, type: 3}
+  - {fileID: 8300000, guid: 711746d8aa2e359449de37e2853bbef5, type: 3}
+  - {fileID: 8300000, guid: 127c965e073089c4a99750bf26a34e04, type: 3}
+  - {fileID: 8300000, guid: 1e7c900ef3cbed44d8eb741e91fb82e3, type: 3}
+  - {fileID: 8300000, guid: 39658523782c5704f9221e72a39455cd, type: 3}
 --- !u!114 &862168028
 MonoBehaviour:
   m_ObjectHideFlags: 0
