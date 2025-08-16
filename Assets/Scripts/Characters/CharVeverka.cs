@@ -80,7 +80,7 @@ namespace Veverka.Characters.Veverka
             else
             {          
                 facingDirection = Rotate(inputDirection);
-                AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaRotate);
+                AudioManager.Instance.PlaySfx(SfxEnum.VeverkaRotate);
             }
         }
 
@@ -101,7 +101,7 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         protected override void OnMoveStart()
         {
-            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.VeverkaMove);
+            AudioManager.Instance.PlaySfx(SfxEnum.VeverkaMove);
         }
 
         /// <summary>
