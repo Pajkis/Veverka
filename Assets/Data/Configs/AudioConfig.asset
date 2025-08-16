@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e402fb31aaabc1f45a1bb8378f1edf51, type: 3}
   m_Name: AudioConfig
   m_EditorClassIdentifier: 
-  soundEffectVolumeAdj: 20
-  soundMusicVolumeAdj: 40
-  soundUIVolumeAdj: 20
+  soundEffectVolumeAdj: 25
+  soundMusicVolumeAdj: 50
+  soundUIVolumeAdj: 25

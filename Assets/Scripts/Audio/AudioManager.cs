@@ -37,11 +37,6 @@ public class AudioManager : MonoBehaviour
     private AudioSource backgroundMusicSource;
     private AudioSource uiSource;
 
-    [Header("Audio Volume")]
-    private float volumeEffects;
-    private float volumeMusic;
-    private float volumeMenu;
-
     // audio sources and channels
     private Dictionary<SoundChannel, AudioSource> sources = new(); // Sfx and menu sounds
     private Dictionary<MusicEnum, List<AudioClip>> musicPlaylists; // background music soundds
@@ -73,7 +68,7 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         // play next song after it ends
-        if (!backgroundMusicSource.isPlaying)
+        if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
         {
             PlayRandomMusic(currentMusicType);
         }
@@ -112,19 +107,18 @@ public class AudioManager : MonoBehaviour
           { MusicEnum.Game, gameSongs }
         };
 
-        // load volume
+        // load volume from game settings
         if (audioConfig == null)
         {
             Debug.LogError("AudioConfig is not assigned in AudioManager!");
             return;
         }
-        volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
-        volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
-        volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
-
-        sources[SoundChannel.SoundEffect].volume = volumeEffects;
-        sources[SoundChannel.SoundMusic].volume = volumeMusic;
-        sources[SoundChannel.SoundUI].volume = volumeMenu;
+        sources[SoundChannel.SoundEffect].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
+        sources[SoundChannel.SoundMusic].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
+        sources[SoundChannel.SoundUI].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
 
 
         // other init settings
@@ -158,6 +152,16 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Play sound effect clip on the effects channel.
+    /// </summary>
+    public void PlaySfx(SfxEnum clipKey) => PlaySound(SoundChannel.SoundEffect, clipKey);
+
+    /// <summary>
+    /// Play UI sound clip on the UI channel.
+    /// </summary>
+    public void PlayUi(UiEnum clipKey) => PlaySound(SoundChannel.SoundUI, clipKey);
+
+    /// <summary>
     /// play random background music
     /// </summary>
     /// <param name="musicType"></param>
@@ -170,26 +174,26 @@ public class AudioManager : MonoBehaviour
             return;
 
         AudioClip oldClip = backgroundMusicSource.clip;
-        AudioClip newclip = null;
-        
+        AudioClip newClip;
+
         // only one song in playlist
         if (playlist.Count == 1)
-        { 
-            newclip = playlist[0];
+        {
+            newClip = playlist[0];
         }
-        // play random song
+        // play random song avoiding immediate repeats
         else
         {
-            int attempts = 0;
-            do 
-            { 
-             newclip = playlist[UnityEngine.Random.Range(0, playlist.Count)];
-             attempts++;
+            int oldIndex = playlist.IndexOf(oldClip);
+            int newIndex = UnityEngine.Random.Range(0, playlist.Count - (oldIndex != -1 ? 1 : 0));
+            if (oldIndex != -1 && newIndex >= oldIndex)
+            {
+                newIndex++;
             }
-            while (attempts <= 10 && newclip == oldClip);            
+            newClip = playlist[newIndex];
         }
-        
-        backgroundMusicSource.clip = newclip;
+
+        backgroundMusicSource.clip = newClip;
         currentMusicType = musicType;
         backgroundMusicSource.Play();
     }
@@ -200,16 +204,17 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayUIClickSound()
     {
-        PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
+        PlayUi(UiEnum.ButtonClick);
     }
+
     /// <summary>
     /// Update volume value from game settings
     /// </summary>
     /// <param name="source">music source to be updated</param>
     /// <param name="value">new volume value</param>
-    public void UpdateVolume(GameSettingsEnum source, int value)
+    public void UpdateVolume(GameSettingsEnum source, int volumeValue)
     {
-        // map gamesettings to Soundchannel
+        // check if audioConfig is assigned
         SoundChannel soundChannel = source switch
         {
             GameSettingsEnum.EffectVolume => SoundChannel.SoundEffect,
@@ -217,33 +222,27 @@ public class AudioManager : MonoBehaviour
             GameSettingsEnum.MenuVolume => SoundChannel.SoundUI,
             _ => SoundChannel.NoSound
         };
-                
-        if (soundChannel != SoundChannel.NoSound)
+
+        if (soundChannel == SoundChannel.NoSound)
+            return;
+
+        // check if the sound channel exists in sources
+        if (!sources.TryGetValue(soundChannel, out AudioSource audioSource))
         {
-            //Change volume of channel
-            if (sources.TryGetValue(soundChannel, out AudioSource audioSource))
-            {
-                if (soundChannel == SoundChannel.SoundMusic)
-                {
-                    // if music channel, update volume of background music
-                    audioSource.volume = value / audioConfig.soundMusicVolumeAdj; // music volume is half of the sound effect volume
-                }
-                else if (soundChannel == SoundChannel.SoundUI)
-                {
-                    // if UI channel, update volume of UI sounds
-                    audioSource.volume = value / audioConfig.soundUIVolumeAdj; // UI volume is same as sound effect volume
-                }
-                else if (soundChannel == SoundChannel.SoundEffect)
-                {
-                    // if sound effect channel, update volume of sound effects
-                    audioSource.volume = value / audioConfig.soundEffectVolumeAdj; // sound effect volume is same as sound effect volume
-                }
-            }
-            else 
-            {
-                Debug.LogWarning($"AudioSource for {soundChannel} not found!");
-            }            
+            Debug.LogWarning($"AudioSource for {soundChannel} not found!");
+            return;
         }
+
+        // calculate volume adjustment based on sound channel
+        float volumeAdj = soundChannel switch
+        {
+            SoundChannel.SoundMusic => audioConfig.soundMusicVolumeAdj,
+            SoundChannel.SoundUI => audioConfig.soundUIVolumeAdj,
+            SoundChannel.SoundEffect => audioConfig.soundEffectVolumeAdj,
+            _ => 1f
+        };
+
+        audioSource.volume = volumeValue / volumeAdj;
     }
 
     #endregion
