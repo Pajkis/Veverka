@@ -5,9 +5,11 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     /// <summary>
-    /// Singleton 
+    /// audio manager singleton instance
     /// </summary>
     public static AudioManager Instance { get; private set; }
+
+    [SerializeField] AudioConfig audioConfig;
 
     #region sound input
     [Header("Effects")]
@@ -36,9 +38,9 @@ public class AudioManager : MonoBehaviour
     private AudioSource uiSource;
 
     [Header("Audio Volume")]
-    private float volumeEffects = 0;
-    private float volumeMusic = 0;
-    private float volumeMenu = 0;
+    private float volumeEffects;
+    private float volumeMusic;
+    private float volumeMenu;
 
     // audio sources and channels
     private Dictionary<SoundChannel, AudioSource> sources = new(); // Sfx and menu sounds
@@ -111,13 +113,19 @@ public class AudioManager : MonoBehaviour
         };
 
         // load volume
-        volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / 10f;
-        volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / 10f;
-        volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / 10f;
+        if (audioConfig == null)
+        {
+            Debug.LogError("AudioConfig is not assigned in AudioManager!");
+            return;
+        }
+        volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
+        volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
+        volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
 
         sources[SoundChannel.SoundEffect].volume = volumeEffects;
         sources[SoundChannel.SoundMusic].volume = volumeMusic;
         sources[SoundChannel.SoundUI].volume = volumeMenu;
+
 
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
@@ -215,7 +223,21 @@ public class AudioManager : MonoBehaviour
             //Change volume of channel
             if (sources.TryGetValue(soundChannel, out AudioSource audioSource))
             {
-                audioSource.volume = value / 10f;
+                if (soundChannel == SoundChannel.SoundMusic)
+                {
+                    // if music channel, update volume of background music
+                    audioSource.volume = value / audioConfig.soundMusicVolumeAdj; // music volume is half of the sound effect volume
+                }
+                else if (soundChannel == SoundChannel.SoundUI)
+                {
+                    // if UI channel, update volume of UI sounds
+                    audioSource.volume = value / audioConfig.soundUIVolumeAdj; // UI volume is same as sound effect volume
+                }
+                else if (soundChannel == SoundChannel.SoundEffect)
+                {
+                    // if sound effect channel, update volume of sound effects
+                    audioSource.volume = value / audioConfig.soundEffectVolumeAdj; // sound effect volume is same as sound effect volume
+                }
             }
             else 
             {
