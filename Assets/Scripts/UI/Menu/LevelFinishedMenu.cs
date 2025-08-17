@@ -56,7 +56,7 @@ public class LevelFinishedMenu : MonoBehaviour
     {
         Time.timeScale = 1;
                         
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
+        AudioManager.Instance.PlayRandomMusic(MusicType.Menu);
         SceneManager.GoToScene(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }

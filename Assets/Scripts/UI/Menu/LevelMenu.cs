@@ -18,7 +18,7 @@ public class LevelMenu : MonoBehaviour
     /// <param name="levelNumber"></param>
     public void HandleLevelButtonOnClickEvent(int levelNumber)
     {
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Game);
+        AudioManager.Instance.PlayRandomMusic(MusicType.Game);
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;

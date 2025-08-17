@@ -41,8 +41,12 @@ public class GoalTile : StaticTile
     /// <param name="payload"></param>
     private void OnPushableInGoal(PushableInGoalPayload payload)
     {
+        // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
         {
+            // Play goal reached sound effect
+            AudioManager.Instance.PlaySfx(SfxType.GoalReached);
+            // Raise goal reached event
             goalRemovedEvent.Raise(new GoalRemovedPayload
             {
                 Position = payload.Position,

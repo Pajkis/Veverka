@@ -20,7 +20,7 @@ public class UIButtonAudioHook : MonoBehaviour
             // Add click sound
             button.onClick.AddListener(() =>
             {
-                AudioManager.Instance?.PlayUi(UiEnum.ButtonClick);
+                AudioManager.Instance?.PlayUi(UiType.ButtonClick);
             });
             
             // Add hover sound via EventTrigger
@@ -57,7 +57,7 @@ public class UIButtonAudioHook : MonoBehaviour
         };
         entryHover.callback.AddListener((data) =>
         {
-            AudioManager.Instance?.PlayUi(UiEnum.ButtonHover);
+            AudioManager.Instance?.PlayUi(UiType.ButtonHover);
         });
 
         trigger.triggers.Add(entryHover);

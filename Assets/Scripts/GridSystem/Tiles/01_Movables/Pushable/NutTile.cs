@@ -12,7 +12,7 @@ public class NutTile : PushableTile
     /// </summary>
     protected override void OnMoveStart()
     {
-        AudioManager.Instance.PlaySfx(SfxEnum.NutMove);
+        AudioManager.Instance.PlaySfx(SfxType.NutMove);
         base.OnMoveStart();
     }
 
@@ -49,9 +49,7 @@ public class NutTile : PushableTile
                 GoalReduction = 1,
             });
 
-            Destroy(gameObject);
-
-            AudioManager.Instance.PlaySfx(SfxEnum.GoalReached);
+            Destroy(gameObject);            
         }
 
         GridPosition = targetPosition;

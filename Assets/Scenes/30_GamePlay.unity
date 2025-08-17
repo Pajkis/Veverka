@@ -1227,6 +1227,7 @@ GameObject:
   - component: {fileID: 988765905}
   - component: {fileID: 988765904}
   - component: {fileID: 988765906}
+  - component: {fileID: 988765907}
   m_Layer: 0
   m_Name: GamePlay
   m_TagString: Untagged
@@ -1280,6 +1281,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 766902dc0d5b00e4193d49cd54d76b2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &988765907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988765903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b4cf25423bfac742aebeec73122b0a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambientClips:
+  - {fileID: 8300000, guid: 6e21e38b1192dca46a48db0279829e4c, type: 3}
+  - {fileID: 8300000, guid: ce59fc73d7acb944c84c60da00e3e1db, type: 3}
+  - {fileID: 8300000, guid: 6a145e30e9735444b8518219030e2c6c, type: 3}
+  - {fileID: 8300000, guid: 890f6ab852f6cac4e86c2513d2494c37, type: 3}
+  - {fileID: 8300000, guid: 01c27bd46420f3d479316f152d93dc5e, type: 3}
+  - {fileID: 8300000, guid: 2eac12bd2c053794f822c5c12068da60, type: 3}
+  - {fileID: 8300000, guid: 2976e211a5fec674bab08a0da22fa63b, type: 3}
+  - {fileID: 8300000, guid: bd30238dca4112544bad94f3fb6c9853, type: 3}
+  minDelay: 0
+  maxDelay: 0
+  audioConfig: {fileID: 11400000, guid: 05401f8670677d243812c794083e48d1, type: 2}
 --- !u!1 &1013319274
 GameObject:
   m_ObjectHideFlags: 0

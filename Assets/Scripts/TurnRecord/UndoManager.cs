@@ -37,6 +37,7 @@ public class UndoManager
             return false;
         }
 
+        AudioManager.Instance.PlaySfx(SfxType.Undo);
         var turn = history.Pop();
         turn.Undo();
         return true;

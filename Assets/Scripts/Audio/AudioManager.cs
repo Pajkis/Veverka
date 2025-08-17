@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip goalReached;
     [SerializeField] private AudioClip levelFinished;
     [SerializeField] private AudioClip veverkaRotate;
+    [SerializeField] private AudioClip Undo;
 
     [Header("UI")]
     [SerializeField] private AudioClip buttonClick;
@@ -39,8 +40,8 @@ public class AudioManager : MonoBehaviour
 
     // audio sources and channels
     private Dictionary<SoundChannel, AudioSource> sources = new(); // Sfx and menu sounds
-    private Dictionary<MusicEnum, List<AudioClip>> musicPlaylists; // background music soundds
-    private MusicEnum currentMusicType;
+    private Dictionary<MusicType, List<AudioClip>> musicPlaylists; // background music soundds
+    private MusicType currentMusicType;
     private Dictionary<Enum, AudioClip> clips = new();
     #endregion
 
@@ -90,21 +91,22 @@ public class AudioManager : MonoBehaviour
         sources[SoundChannel.SoundUI] = uiSource;
 
         // Map clips
-        clips[SfxEnum.VeverkaMove] = veverkaMove;
-        clips[SfxEnum.NutMove] = nutMove;
-        clips[SfxEnum.GoalReached] = goalReached;
-        clips[SfxEnum.LevelFinished] = levelFinished;
-        clips[SfxEnum.VeverkaRotate] = veverkaRotate;
+        clips[SfxType.VeverkaMove] = veverkaMove;
+        clips[SfxType.NutMove] = nutMove;
+        clips[SfxType.GoalReached] = goalReached;
+        clips[SfxType.LevelFinished] = levelFinished;
+        clips[SfxType.VeverkaRotate] = veverkaRotate;
+        clips[SfxType.Undo] = Undo;
 
-        clips[UiEnum.ButtonClick] = buttonClick;
-        clips[UiEnum.ButtonHover] = buttonHover;
-        clips[UiEnum.Slider] = sliderMove;
+        clips[UiType.ButtonClick] = buttonClick;
+        clips[UiType.ButtonHover] = buttonHover;
+        clips[UiType.Slider] = sliderMove;
 
         //Map music
-        musicPlaylists = new Dictionary<MusicEnum, List<AudioClip>>
+        musicPlaylists = new Dictionary<MusicType, List<AudioClip>>
         {
-          { MusicEnum.Menu, menuSongs },
-          { MusicEnum.Game, gameSongs }
+          { MusicType.Menu, menuSongs },
+          { MusicType.Game, gameSongs }
         };
 
         // load volume from game settings
@@ -125,14 +127,14 @@ public class AudioManager : MonoBehaviour
         // sources[SoundChannel.SoundMusic].loop = true;
 
         // play background sound
-        currentMusicType = MusicEnum.Menu;
-        PlayRandomMusic(MusicEnum.Menu);
+        currentMusicType = MusicType.Menu;
+        PlayRandomMusic(MusicType.Menu);
 
     }
 
     #endregion
 
-    #region methods
+    #region play sounds methods
     /// <summary>
     /// play sound 
     /// </summary>
@@ -143,6 +145,34 @@ public class AudioManager : MonoBehaviour
     {
         if (clips.TryGetValue(clipKey, out var clip) && sources.TryGetValue(channel, out var source))
         {
+            // check if clip and source are not null
+            if (clip == null)
+            {
+                Debug.LogWarning($"Clip for {clipKey} is null.");               
+            }
+            if (source == null)
+            {
+                Debug.LogWarning($"AudioSource for {channel} is null.");
+            }
+
+            // adjust pitch for sound effects based on animation speed setting
+            if (channel == SoundChannel.SoundEffect)
+            {
+                float pitch = GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) switch
+                {
+                    1 => audioConfig.minPitch,
+                    2 => audioConfig.normalPitch,
+                    3 => audioConfig.maxPitch,
+                    _ => audioConfig.normalPitch
+                };                
+                source.pitch = pitch;
+            }
+            // reset pitch for other channels
+            else
+            {
+                source.pitch = audioConfig.normalPitch; 
+            }
+
             source.PlayOneShot(clip);
         }
         else
@@ -154,18 +184,18 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Play sound effect clip on the effects channel.
     /// </summary>
-    public void PlaySfx(SfxEnum clipKey) => PlaySound(SoundChannel.SoundEffect, clipKey);
+    public void PlaySfx(SfxType clipKey) => PlaySound(SoundChannel.SoundEffect, clipKey);
 
     /// <summary>
     /// Play UI sound clip on the UI channel.
     /// </summary>
-    public void PlayUi(UiEnum clipKey) => PlaySound(SoundChannel.SoundUI, clipKey);
+    public void PlayUi(UiType clipKey) => PlaySound(SoundChannel.SoundUI, clipKey);
 
     /// <summary>
     /// play random background music
     /// </summary>
     /// <param name="musicType"></param>
-    public void PlayRandomMusic(MusicEnum musicType)
+    public void PlayRandomMusic(MusicType musicType)
     {
         if (!musicPlaylists.TryGetValue(musicType, out List<AudioClip> playlist) || playlist == null || playlist.Count == 0)
             return;
@@ -204,8 +234,12 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayUIClickSound()
     {
-        PlayUi(UiEnum.ButtonClick);
+        PlayUi(UiType.ButtonClick);
     }
+
+    #endregion
+
+    #region volume methods
 
     /// <summary>
     /// Update volume value from game settings
@@ -239,7 +273,7 @@ public class AudioManager : MonoBehaviour
             SoundChannel.SoundMusic => audioConfig.soundMusicVolumeAdj,
             SoundChannel.SoundUI => audioConfig.soundUIVolumeAdj,
             SoundChannel.SoundEffect => audioConfig.soundEffectVolumeAdj,
-            _ => 1f
+            _ => 0f
         };
 
         audioSource.volume = volumeValue / volumeAdj;
