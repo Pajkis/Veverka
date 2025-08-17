@@ -461,6 +461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetGridEvent: {fileID: 11400000, guid: f16b84b05db4cba4891c2d72c84bbc71, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
 --- !u!114 &763656222236711846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,6 +474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
 --- !u!114 &4686649228107062448
 MonoBehaviour:
   m_ObjectHideFlags: 0

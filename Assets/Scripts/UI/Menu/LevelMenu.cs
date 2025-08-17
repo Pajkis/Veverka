@@ -6,10 +6,12 @@ using UnityEngine;
 public class LevelMenu : MonoBehaviour
 {
 
-    #region fields  
+    #region fields
 
     [SerializeField]
     private LevelDatabase levelDatabase;
+
+    [SerializeField] private PlayMusicEvent playMusicEvent;
     #endregion
 
     /// <summary>
@@ -18,7 +20,7 @@ public class LevelMenu : MonoBehaviour
     /// <param name="levelNumber"></param>
     public void HandleLevelButtonOnClickEvent(int levelNumber)
     {
-        AudioManager.Instance.PlayRandomMusic(MusicType.Game);
+        playMusicEvent.Raise(MusicType.Game);
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;

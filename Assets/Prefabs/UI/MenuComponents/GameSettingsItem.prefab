@@ -158,6 +158,7 @@ MonoBehaviour:
   settingType: 3
   minValue: 1
   maxValue: 10
+  audioVolumeEvent: {fileID: 11400000, guid: aae02edc94a44b7eaadb42025c136334, type: 2}
 --- !u!222 &7539452457846179150
 CanvasRenderer:
   m_ObjectHideFlags: 0

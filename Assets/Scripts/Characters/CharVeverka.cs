@@ -10,7 +10,8 @@ namespace Veverka.Characters.Veverka
     {
         #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;       
+        [SerializeField] CharacterMovedEvent veverkaMoved;
+        [SerializeField] private PlaySfxEvent playSfxEvent;
         #endregion
 
         #region event handling
@@ -80,7 +81,7 @@ namespace Veverka.Characters.Veverka
             else
             {          
                 facingDirection = Rotate(inputDirection);
-                AudioManager.Instance.PlaySfx(SfxType.VeverkaRotate);
+                playSfxEvent.Raise(SfxType.VeverkaRotate);
             }
         }
 
@@ -101,7 +102,7 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         protected override void OnMoveStart()
         {
-            AudioManager.Instance.PlaySfx(SfxType.VeverkaMove);
+            playSfxEvent.Raise(SfxType.VeverkaMove);
         }
 
         /// <summary>

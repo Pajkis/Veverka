@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class NutTile : PushableTile
 {
+    [SerializeField] private PlaySfxEvent playSfxEvent;
 
     #region methods
     /// <summary>
@@ -12,7 +13,7 @@ public class NutTile : PushableTile
     /// </summary>
     protected override void OnMoveStart()
     {
-        AudioManager.Instance.PlaySfx(SfxType.NutMove);
+        playSfxEvent.Raise(SfxType.NutMove);
         base.OnMoveStart();
     }
 

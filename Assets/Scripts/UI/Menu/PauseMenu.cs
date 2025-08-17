@@ -6,12 +6,14 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     #region fields
-   
+
     [SerializeField]
     private ResetGridEvent resetGridEvent;
 
     [SerializeField]
     private LevelDatabase levelDatabase;
+
+    [SerializeField] private PlayMusicEvent playMusicEvent;
     #endregion
 
     #region methods
@@ -56,8 +58,8 @@ public class PauseMenu : MonoBehaviour
     {
         Time.timeScale = 1;
         
-        AudioManager.Instance.PlayRandomMusic(MusicType.Menu);
-        SceneManager.GoToScene(SceneType.UnloadLevel);       
+        playMusicEvent.Raise(MusicType.Menu);
+        SceneManager.GoToScene(SceneType.UnloadLevel);
        
       //  Destroy(gameObject);
     }
