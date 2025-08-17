@@ -13,9 +13,11 @@ public class GameSettingItem : MonoBehaviour
     [SerializeField] private int minValue;
     [SerializeField] private int maxValue;
 
+    [SerializeField] private AudioVolumeEvent audioVolumeEvent;
+
     private Slider slider;
     private TextMeshProUGUI nameLabel;
-    private TextMeshProUGUI valueLabel;   
+    private TextMeshProUGUI valueLabel;
     #endregion
 
     #region method
@@ -82,10 +84,11 @@ public class GameSettingItem : MonoBehaviour
             GameSettings.Instance.Set(settingType, Mathf.RoundToInt(value));            
             
             // change volume in audio manager
-            if (AudioManager.Instance != null)
+            audioVolumeEvent.Raise(new AudioVolumePayload
             {
-                AudioManager.Instance.UpdateVolume(settingType, Mathf.RoundToInt(value));
-            }
+                Source = settingType,
+                VolumeValue = Mathf.RoundToInt(value)
+            });
         }
 
         // change text in settings menu

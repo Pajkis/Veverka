@@ -30,11 +30,13 @@ public class GamePlay :  MonoBehaviour
     [SerializeField]
     private LevelInitEvent levelInitEvent;
 
-    [SerializeField]  
+    [SerializeField]
     private CharacterMovedEvent characterMoved;
 
+    [SerializeField] private PlaySfxEvent playSfxEvent;
+
     [Header("turn undo logic")]
-    private UndoManager undoManager = new();
+    private UndoManager undoManager;
     #endregion   
 
     /// <summary>
@@ -42,7 +44,7 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void Awake()
     {
-        undoManager = new UndoManager();
+        undoManager = new UndoManager(playSfxEvent);
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
        // Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
     }

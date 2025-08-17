@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    /// <summary>
-    /// audio manager singleton instance
-    /// </summary>
-    public static AudioManager Instance { get; private set; }
-
     [SerializeField] AudioConfig audioConfig;
+
+    #region events
+    [Header("Events")]
+    [SerializeField] private PlaySfxEvent playSfxEvent;
+    [SerializeField] private PlayUiEvent playUiEvent;
+    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private AudioInitEvent audioInitEvent;
+    [SerializeField] private AudioVolumeEvent audioVolumeEvent;
+    #endregion
 
     #region sound input
     [Header("Effects")]
@@ -47,20 +51,35 @@ public class AudioManager : MonoBehaviour
 
     #region Init methods
     /// <summary>
-    /// Creates the singleton instance and persists it across scenes.
+    /// Persist audio manager across scenes.
     /// </summary>
     void Awake()
     {
-        // Init singleton
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        DontDestroyOnLoad(gameObject);
+    }
+
+    /// <summary>
+    /// Subscribe to audio events.
+    /// </summary>
+    private void OnEnable()
+    {
+        audioInitEvent?.AddListener(Initialize);
+        playSfxEvent?.AddListener(PlaySfx);
+        playUiEvent?.AddListener(PlayUi);
+        playMusicEvent?.AddListener(PlayRandomMusic);
+        audioVolumeEvent?.AddListener(OnVolumeChanged);
+    }
+
+    /// <summary>
+    /// Unsubscribe from audio events.
+    /// </summary>
+    private void OnDisable()
+    {
+        audioInitEvent?.RemoveListener(Initialize);
+        playSfxEvent?.RemoveListener(PlaySfx);
+        playUiEvent?.RemoveListener(PlayUi);
+        playMusicEvent?.RemoveListener(PlayRandomMusic);
+        audioVolumeEvent?.RemoveListener(OnVolumeChanged);
     }
 
     /// <summary>
@@ -78,7 +97,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Init volume of sounds, play background music
     /// </summary>
-    public void Initialize()
+    private void Initialize()
     {
         // Add separate audio sources
         effectsSource = gameObject.AddComponent<AudioSource>();
@@ -280,4 +299,13 @@ public class AudioManager : MonoBehaviour
     }
 
     #endregion
+
+    /// <summary>
+    /// Handles audio volume change event payload.
+    /// </summary>
+    /// <param name="payload">Volume change data</param>
+    private void OnVolumeChanged(AudioVolumePayload payload)
+    {
+        UpdateVolume(payload.Source, payload.VolumeValue);
+    }
 }

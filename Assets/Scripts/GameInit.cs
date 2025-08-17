@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameInit : MonoBehaviour
 {
+    [SerializeField] private AudioInitEvent audioInitEvent;
 
     /// <summary>
     /// Ensures the initializer persists across scene loads.
@@ -19,7 +20,7 @@ public class GameInit : MonoBehaviour
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
-        AudioManager.Instance.Initialize();
+        audioInitEvent.Raise();
 
         // Game start delay
         StartCoroutine(GameStartDelayCoroutine());
