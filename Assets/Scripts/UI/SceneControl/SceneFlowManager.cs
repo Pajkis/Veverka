@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Manages navigation across the menu universe system
 /// </summary>
-public static class SceneManager 
+public static class SceneFlowManager 
 {
     /// <summary>
     /// Go to menu navigation
@@ -16,7 +16,7 @@ public static class SceneManager
         {
             case SceneType.MainMenu:
                 // Go to main menu scene
-                UnityEngine.SceneManagement.SceneManager.LoadScene("10_MainMenu");
+                SceneManager.LoadScene("10_MainMenu");
                 break;
 
             case SceneType.PlayerMenu:
@@ -26,7 +26,7 @@ public static class SceneManager
             case SceneType.LevelMenu:
 
                 // Go to level menu scene
-                UnityEngine.SceneManagement.SceneManager.LoadScene("11_LevelMenu");
+                SceneManager.LoadScene("11_LevelMenu");
                 break;
 
             case SceneType.PauseMenu:
@@ -50,15 +50,15 @@ public static class SceneManager
 
             case SceneType.LoadLevel:
 
-                UnityEngine.SceneManagement.SceneManager.LoadScene("20_LevelLoad");
+                SceneManager.LoadScene("20_LevelLoad");
                 break;
 
             case SceneType.UnloadLevel:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("21_LevelUnload");
+                SceneManager.LoadScene("21_LevelUnload");
                 break;
                     
             case SceneType.GamePlay:
-                UnityEngine.SceneManagement.SceneManager.LoadScene("30_GamePlay");
+                SceneManager.LoadScene("30_GamePlay");
                 break;
 
             case SceneType.GameHelp:

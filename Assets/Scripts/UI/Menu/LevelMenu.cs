@@ -24,7 +24,7 @@ public class LevelMenu : MonoBehaviour
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        SceneManager.GoToScene(SceneType.LoadLevel);
+        SceneFlowManager.GoToScene(SceneType.LoadLevel);
 
     }
 
@@ -33,7 +33,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void HandleBackButtonOnCLickEvent()
     {
-        SceneManager.GoToScene(SceneType.MainMenu);
+        SceneFlowManager.GoToScene(SceneType.MainMenu);
     }
 
 

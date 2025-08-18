@@ -39,7 +39,7 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        SceneManager.GoToScene(SceneType.LoadLevel);          
+       SceneFlowManager.GoToScene(SceneType.LoadLevel);          
        // Destroy(gameObject);
     }
 
@@ -48,7 +48,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        SceneManager.GoToScene(SceneType.SettingsMenu);
+        SceneFlowManager.GoToScene(SceneType.SettingsMenu);
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         
         playMusicEvent.Raise(MusicType.Menu);
-        SceneManager.GoToScene(SceneType.UnloadLevel);
+        SceneFlowManager.GoToScene(SceneType.UnloadLevel);
        
       //  Destroy(gameObject);
     }

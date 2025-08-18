@@ -12,7 +12,7 @@ public class MainMenu : MonoBehaviour
     {
         // play cool sound
         // go to level menu
-        SceneManager.GoToScene(SceneType.LevelMenu);
+        SceneFlowManager.GoToScene(SceneType.LevelMenu);
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-       SceneManager.GoToScene(SceneType.SettingsMenu);
+       SceneFlowManager.GoToScene(SceneType.SettingsMenu);
     }
 
     /// <summary>
