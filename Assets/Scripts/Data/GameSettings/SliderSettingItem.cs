@@ -5,7 +5,7 @@ using TMPro;
 /// <summary>
 /// Game setting slider
 /// </summary>
-public class GameSettingItem : MonoBehaviour
+public class SliderSettingItem : MonoBehaviour
 {
     #region fields
 

@@ -52,7 +52,7 @@ GameObject:
   - component: {fileID: 7539452457846179150}
   - component: {fileID: 7756750727650767053}
   m_Layer: 5
-  m_Name: GameSettingsItem
+  m_Name: SliderSettingsItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
