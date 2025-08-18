@@ -294,7 +294,6 @@ GameObject:
   - component: {fileID: 862168024}
   - component: {fileID: 862168026}
   - component: {fileID: 862168028}
-  - component: {fileID: 862168029}
   m_Layer: 0
   m_Name: GameInit
   m_TagString: Untagged
@@ -356,22 +355,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
---- !u!114 &862168029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 862168023}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a35d3d1c2c5f9d40826e2c77f05820a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pauseMenuPrefab: {fileID: 3636506746201861303, guid: 0bee78c77c6e4144191013752c86f62a, type: 3}
-  levelFinishedMenuPrefab: {fileID: 2626405333016797077, guid: ce00f5013661a8e47a54789320a27448, type: 3}
-  settingsMenuPrefab: {fileID: 3636506746201861303, guid: 790556a0848b1204da261a48dbb1740c, type: 3}
-  gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
 --- !u!1001 &1409563348
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -501,6 +484,74 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1780488896}
   m_SourcePrefab: {fileID: 100100000, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+--- !u!1 &1498983316
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1498983319}
+  - component: {fileID: 1498983318}
+  - component: {fileID: 1498983317}
+  m_Layer: 0
+  m_Name: SceneManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1498983317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498983316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a35d3d1c2c5f9d40826e2c77f05820a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenuPrefab: {fileID: 3636506746201861303, guid: 0bee78c77c6e4144191013752c86f62a, type: 3}
+  levelFinishedMenuPrefab: {fileID: 2626405333016797077, guid: ce00f5013661a8e47a54789320a27448, type: 3}
+  settingsMenuPrefab: {fileID: 3636506746201861303, guid: 790556a0848b1204da261a48dbb1740c, type: 3}
+  gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
+--- !u!114 &1498983318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498983316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a96ab0f8fe3f4fc6b5fea61c37730708, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainMenuScene: 10_MainMenu
+  levelMenuScene: 11_LevelMenu
+  playerMenuScene: 
+  highScoreMenuScene: 
+  gamePlayScene: 30_GamePlay
+  loadLevelScene: 20_LevelLoad
+  unloadLevelScene: 21_LevelUnload
+--- !u!4 &1498983319
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498983316}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1640321002
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,6 +729,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 712305982}
   - {fileID: 862168025}
+  - {fileID: 1498983319}
   - {fileID: 1640321004}
   - {fileID: 745832935}
   - {fileID: 1409563348}

@@ -33,17 +33,17 @@ public class OverlayPrefabProvider : MonoBehaviour
     /// <summary>
     /// Retrieves overlay prefab for given scene type.
     /// </summary>
-    /// <param name="scene">Overlay scene type</param>
-    /// <returns>Prefab assigned for the scene type, or null if not set.</returns>
-    public GameObject GetPrefab(SceneType scene)
+    /// <param name="overlay">Overlay type</param>
+    /// <returns>Prefab assigned for the overlay type, or null if not set.</returns>
+    public GameObject GetPrefab(OverlayType overlay)
     {
-        return scene switch
+        return overlay switch
         {
-            SceneType.PauseMenu => pauseMenuPrefab,
-            SceneType.LevelFinishedMenu => levelFinishedMenuPrefab,
-            SceneType.SettingsMenu => settingsMenuPrefab,
-            SceneType.GameHelp => gameHelpPrefab,
-            _ => null
+            OverlayType.PauseMenu => pauseMenuPrefab,
+            OverlayType.LevelFinishedMenu => levelFinishedMenuPrefab,
+            OverlayType.SettingsMenu => settingsMenuPrefab,
+            OverlayType.GameHelp => gameHelpPrefab,
+            _ => null,
         };
     }
 }
