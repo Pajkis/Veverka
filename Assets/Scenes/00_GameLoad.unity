@@ -294,6 +294,7 @@ GameObject:
   - component: {fileID: 862168024}
   - component: {fileID: 862168026}
   - component: {fileID: 862168028}
+  - component: {fileID: 862168029}
   m_Layer: 0
   m_Name: GameInit
   m_TagString: Untagged
@@ -355,6 +356,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
+--- !u!114 &862168029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862168023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a35d3d1c2c5f9d40826e2c77f05820a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pauseMenuPrefab: {fileID: 3636506746201861303, guid: 0bee78c77c6e4144191013752c86f62a, type: 3}
+  levelFinishedMenuPrefab: {fileID: 2626405333016797077, guid: ce00f5013661a8e47a54789320a27448, type: 3}
+  settingsMenuPrefab: {fileID: 3636506746201861303, guid: 790556a0848b1204da261a48dbb1740c, type: 3}
+  gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
 --- !u!1001 &1409563348
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -988,7 +988,7 @@ GameObject:
   - component: {fileID: 7265935565006132164}
   - component: {fileID: 3016050867045878182}
   m_Layer: 5
-  m_Name: GameHelp
+  m_Name: 31_GameHelpOverlay
   m_TagString: PauseMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

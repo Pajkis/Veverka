@@ -29,24 +29,17 @@ public static class SceneFlowManager
                 SceneManager.LoadScene("11_LevelMenu");
                 break;
 
+            // Handle overlay scenes
             case SceneType.PauseMenu:
-
-                Object.Instantiate(Resources.Load("PauseMenu"));
-                break;
-
-             case SceneType.LevelFinishedMenu:
-
-                Object.Instantiate(Resources.Load("LevelFinishedMenu"));
+            case SceneType.LevelFinishedMenu:
+            case SceneType.SettingsMenu:
+            case SceneType.GameHelp:
+                InstantiateOverlay(sceneName);
                 break;
 
             case SceneType.HighScoreMenu:
 
-                break;
-
-            case SceneType.SettingsMenu:
-
-                Object.Instantiate(Resources.Load("SettingsMenu"));
-                break;
+                break;                         
 
             case SceneType.LoadLevel:
 
@@ -59,13 +52,30 @@ public static class SceneFlowManager
                     
             case SceneType.GamePlay:
                 SceneManager.LoadScene("30_GamePlay");
-                break;
-
-            case SceneType.GameHelp:
-                Object.Instantiate(Resources.Load("GameHelp"));
-                break;
+                break;            
         }
     }
 
+    // <summary>
+    /// Instantiates overlay prefabs based on scene type using <see cref="OverlayPrefabProvider"/>.
+    /// </summary>
+    /// <param name="overlayType">Type of overlay to instantiate.</param>
+    private static void InstantiateOverlay(SceneType overlayType)
+    {
+        if (OverlayPrefabProvider.Instance == null)
+        {
+            Debug.LogWarning("OverlayPrefabProvider.Instance is not set.");
+            return;
+        }
 
+        GameObject prefab = OverlayPrefabProvider.Instance.GetPrefab(overlayType);
+
+        if (prefab == null)
+        {
+            Debug.LogWarning($"Overlay prefab for {overlayType} is not assigned in OverlayPrefabProvider.");
+            return;
+        }
+
+        Object.Instantiate(prefab);
+    }
 }

@@ -91,7 +91,7 @@ GameObject:
   - component: {fileID: 4451034296246099691}
   - component: {fileID: 3211403757700227233}
   m_Layer: 5
-  m_Name: SettingsMenu
+  m_Name: 10_SettingsMenuOverlay
   m_TagString: PauseMenu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

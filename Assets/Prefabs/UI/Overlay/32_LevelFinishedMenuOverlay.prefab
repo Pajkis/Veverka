@@ -355,7 +355,7 @@ GameObject:
   - component: {fileID: 763656222236711846}
   - component: {fileID: 4686649228107062448}
   m_Layer: 5
-  m_Name: LevelFinishedMenu
+  m_Name: 32_LevelFinishedMenuOverlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
