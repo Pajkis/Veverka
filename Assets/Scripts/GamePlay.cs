@@ -76,7 +76,7 @@ public class GamePlay :  MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                SceneFlowManager.GoToScene(SceneType.PauseMenu);
+                SceneFlowManager.OpenOverlay(OverlayType.PauseMenu);
             }
         }
     }
@@ -115,7 +115,7 @@ public class GamePlay :  MonoBehaviour
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            SceneFlowManager.GoToScene(SceneType.LevelFinishedMenu);
+            SceneFlowManager.OpenOverlay(OverlayType.LevelFinishedMenu);
         }
 
         // reset history recording

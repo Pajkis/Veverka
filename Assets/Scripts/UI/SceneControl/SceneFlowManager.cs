@@ -4,63 +4,36 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// Manages navigation across the menu universe system
 /// </summary>
-public static class SceneFlowManager 
+public static class SceneFlowManager
 {
     /// <summary>
-    /// Go to menu navigation
+    /// Loads the specified scene.
     /// </summary>
-    /// <param name="sceneName">name of the menu enum</param>
-    public static void GoToScene(SceneType sceneName)
+    /// <param name="scene">Scene to load.</param>
+    public static void GoToScene(SceneType scene)
     {
-        switch (sceneName)
+        if (SceneNameProvider.Instance == null)
         {
-            case SceneType.MainMenu:
-                // Go to main menu scene
-                SceneManager.LoadScene("10_MainMenu");
-                break;
-
-            case SceneType.PlayerMenu:
-
-                break;
-
-            case SceneType.LevelMenu:
-
-                // Go to level menu scene
-                SceneManager.LoadScene("11_LevelMenu");
-                break;
-
-            // Handle overlay scenes
-            case SceneType.PauseMenu:
-            case SceneType.LevelFinishedMenu:
-            case SceneType.SettingsMenu:
-            case SceneType.GameHelp:
-                InstantiateOverlay(sceneName);
-                break;
-
-            case SceneType.HighScoreMenu:
-
-                break;                         
-
-            case SceneType.LoadLevel:
-
-                SceneManager.LoadScene("20_LevelLoad");
-                break;
-
-            case SceneType.UnloadLevel:
-                SceneManager.LoadScene("21_LevelUnload");
-                break;
-                    
-            case SceneType.GamePlay:
-                SceneManager.LoadScene("30_GamePlay");
-                break;            
+            Debug.LogWarning("SceneNameProvider.Instance is not set.");
+            return;
         }
+
+        string sceneName = SceneNameProvider.Instance.GetSceneName(scene);
+
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogWarning($"Scene name for {scene} is not assigned in SceneNameProvider.");
+            return;
+        }
+
+        SceneManager.LoadScene(sceneName);
     }
 
-    // <summary>
-    /// Instantiates overlay prefabs based on scene type using <see cref="OverlayPrefabProvider"/>.
+    /// <summary>
+    /// Opens the specified overlay.
     /// </summary>
-    /// <param name="overlayType">Type of overlay to instantiate.</param>
-    private static void InstantiateOverlay(SceneType overlayType)
+    /// <param name="overlay">Overlay to open.</param>
+    public static void OpenOverlay(OverlayType overlay)
     {
         if (OverlayPrefabProvider.Instance == null)
         {
@@ -68,11 +41,11 @@ public static class SceneFlowManager
             return;
         }
 
-        GameObject prefab = OverlayPrefabProvider.Instance.GetPrefab(overlayType);
+        GameObject prefab = OverlayPrefabProvider.Instance.GetPrefab(overlay);
 
         if (prefab == null)
         {
-            Debug.LogWarning($"Overlay prefab for {overlayType} is not assigned in OverlayPrefabProvider.");
+            Debug.LogWarning($"Overlay prefab for {overlay} is not assigned in OverlayPrefabProvider.");
             return;
         }
 

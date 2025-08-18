@@ -15,7 +15,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandlePauseButtonOnClickEvent()
     {
-        SceneFlowManager.GoToScene(SceneType.PauseMenu);
+        SceneFlowManager.OpenOverlay(OverlayType.PauseMenu);
     }
 
     /// <summary>
@@ -23,6 +23,6 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
     {
-        SceneFlowManager.GoToScene(SceneType.GameHelp);
+        SceneFlowManager.OpenOverlay(OverlayType.GameHelp);
     }
 }

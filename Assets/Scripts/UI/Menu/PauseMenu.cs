@@ -48,7 +48,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        SceneFlowManager.GoToScene(SceneType.SettingsMenu);
+        SceneFlowManager.OpenOverlay(OverlayType.SettingsMenu);
     }
 
     /// <summary>

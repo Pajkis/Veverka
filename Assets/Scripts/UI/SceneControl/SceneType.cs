@@ -2,16 +2,12 @@
 /// Menu name enumeration
 /// </summary>
 public enum SceneType
-{ 
+{
     MainMenu,
-    LevelMenu,  
-    PauseMenu,
+    LevelMenu,
     PlayerMenu,
-    LevelFinishedMenu,
-    SettingsMenu,
     HighScoreMenu,
     GamePlay,
     LoadLevel,
     UnloadLevel,
-    GameHelp,
 }
