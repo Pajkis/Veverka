@@ -1,5 +1,6 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
+
 
 /// <summary>
 /// Manages navigation across the menu universe system
@@ -12,21 +13,21 @@ public static class SceneFlowManager
     /// <param name="scene">Scene to load.</param>
     public static void GoToScene(SceneType scene)
     {
-        if (SceneNameProvider.Instance == null)
+        if (SceneRefProvider.Instance == null)
         {
             Debug.LogWarning("SceneNameProvider.Instance is not set.");
             return;
         }
 
-        string sceneName = SceneNameProvider.Instance.GetSceneName(scene);
+        AssetReference sceneRef = SceneRefProvider.Instance.GetScene(scene);
 
-        if (string.IsNullOrEmpty(sceneName))
+        if (sceneRef == null || !sceneRef.RuntimeKeyIsValid())
         {
-            Debug.LogWarning($"Scene name for {scene} is not assigned in SceneNameProvider.");
+            Debug.LogWarning($"Scene reference for {scene} is not assigned in SceneNameProvider.");
             return;
         }
 
-        SceneManager.LoadScene(sceneName);
+        sceneRef.LoadSceneAsync();
     }
 
     /// <summary>

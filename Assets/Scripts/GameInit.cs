@@ -37,7 +37,7 @@ public class GameInit : MonoBehaviour
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("10_MainMenu");
+        SceneFlowManager.GoToScene(SceneType.MainMenu);
     }
 
 

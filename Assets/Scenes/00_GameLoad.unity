@@ -530,13 +530,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a96ab0f8fe3f4fc6b5fea61c37730708, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuScene: 10_MainMenu
-  levelMenuScene: 11_LevelMenu
-  playerMenuScene: 
-  highScoreMenuScene: 
-  gamePlayScene: 30_GamePlay
-  loadLevelScene: 20_LevelLoad
-  unloadLevelScene: 21_LevelUnload
+  mainMenuScene:
+    m_AssetGUID: 20dcd85568c54204f84ae6e5e7409d98
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  levelMenuScene:
+    m_AssetGUID: cf32a0027ff2bcc44a687b34da600605
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  playerMenuScene:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  highScoreMenuScene:
+    m_AssetGUID: 
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  gamePlayScene:
+    m_AssetGUID: 2cda990e2423bbf4892e6590ba056729
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  loadLevelScene:
+    m_AssetGUID: ddfe4556805467348aba625339db2cd5
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  unloadLevelScene:
+    m_AssetGUID: 9428cb2979b128349b87eebd3ae2d3b4
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
 --- !u!4 &1498983319
 Transform:
   m_ObjectHideFlags: 0
