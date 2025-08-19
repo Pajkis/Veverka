@@ -7,15 +7,7 @@ public class PauseMenu : MonoBehaviour
 {
     #region fields
 
-    [SerializeField]
-    private ResetGridEvent resetGridEvent;
-
-    [SerializeField]
-    private LevelDatabase levelDatabase;
-
-    [SerializeField] private PlayMusicEvent playMusicEvent;
-
-    [SerializeField]
+     [SerializeField]
     private GoToSceneEvent goToSceneEvent;
 
     [SerializeField]
@@ -60,11 +52,10 @@ public class PauseMenu : MonoBehaviour
     /// <summary>
     /// Handles on click quit button event
     /// </summary>
-    public void HandleQuitButtonOnClickEvent()
-    {
-        Time.timeScale = 1;
-        
-        playMusicEvent.Raise(MusicType.Menu);
+    public void HandleQuitButtonOnClickEvent()   
+    
+    {       
+        Time.timeScale = 1;       
         goToSceneEvent.Raise(SceneType.UnloadLevel);
        
       //  Destroy(gameObject);

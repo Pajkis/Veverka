@@ -5,16 +5,14 @@ using UnityEngine;
 /// </summary>
 public class NutTile : PushableTile
 {
-    [SerializeField] private PlaySfxEvent playSfxEvent;
-
     #region methods
     /// <summary>
     /// On Move start action
     /// </summary>
     protected override void OnMoveStart()
-    {
-        playSfxEvent.Raise(SfxType.NutMove);
+    {        
         base.OnMoveStart();
+        playSfxEvent.Raise(SfxType.NutMove);
     }
 
     /// <summary>
