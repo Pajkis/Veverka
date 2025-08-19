@@ -1,17 +1,37 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-
 /// <summary>
 /// Manages navigation across the menu universe system
 /// </summary>
-public static class SceneFlowManager
+public class SceneFlowManager : MonoBehaviour
 {
+    [Header("Events")]
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        goToSceneEvent?.AddListener(GoToScene);
+        openOverlayEvent?.AddListener(OpenOverlay);
+    }
+
+    private void OnDisable()
+    {
+        goToSceneEvent?.RemoveListener(GoToScene);
+        openOverlayEvent?.RemoveListener(OpenOverlay);
+    }
+
     /// <summary>
     /// Loads the specified scene.
     /// </summary>
     /// <param name="scene">Scene to load.</param>
-    public static void GoToScene(SceneType scene)
+    private void GoToScene(SceneType scene)
     {
         if (SceneRefProvider.Instance == null)
         {
@@ -34,7 +54,7 @@ public static class SceneFlowManager
     /// Opens the specified overlay.
     /// </summary>
     /// <param name="overlay">Overlay to open.</param>
-    public static void OpenOverlay(OverlayType overlay)
+    private void OpenOverlay(OverlayType overlay)
     {
         if (OverlayPrefabProvider.Instance == null)
         {

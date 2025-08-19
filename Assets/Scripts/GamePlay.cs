@@ -35,6 +35,8 @@ public class GamePlay :  MonoBehaviour
 
     [SerializeField] private PlaySfxEvent playSfxEvent;
 
+    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
     [Header("turn undo logic")]
     private UndoManager undoManager;
     #endregion   
@@ -76,7 +78,7 @@ public class GamePlay :  MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                SceneFlowManager.OpenOverlay(OverlayType.PauseMenu);
+                openOverlayEvent.Raise(OverlayType.PauseMenu);
             }
         }
     }
@@ -115,7 +117,7 @@ public class GamePlay :  MonoBehaviour
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            SceneFlowManager.OpenOverlay(OverlayType.LevelFinishedMenu);
+            openOverlayEvent.Raise(OverlayType.LevelFinishedMenu);
         }
 
         // reset history recording

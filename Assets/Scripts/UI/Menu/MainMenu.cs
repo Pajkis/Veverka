@@ -5,6 +5,8 @@ using Veverka.GridSystem.GameGrid;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private OpenOverlayEvent openOverlayEvent;
     /// <summary>
     /// Handles the click on play button event
     /// </summary>
@@ -12,7 +14,7 @@ public class MainMenu : MonoBehaviour
     {
         // play cool sound
         // go to level menu
-        SceneFlowManager.GoToScene(SceneType.LevelMenu);
+        goToSceneEvent.Raise(SceneType.LevelMenu);
     }
 
     /// <summary>
@@ -37,16 +39,14 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-       SceneFlowManager.OpenOverlay(OverlayType.SettingsMenu);
+       openOverlayEvent.Raise(OverlayType.SettingsMenu);
     }
 
     /// <summary>
     /// Handles the on click event from the quit button
     /// </summary>
-    public void HandleQuitGameButtonOnClickEvent() 
-    { 
-        Application.Quit(); 
+    public void HandleQuitGameButtonOnClickEvent()
+    {
+        Application.Quit();
     }
-
-
 }

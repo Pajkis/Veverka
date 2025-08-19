@@ -6,6 +6,9 @@ public class LevelUnloader : MonoBehaviour
     [SerializeField]
     private ResetGridEvent resetGridEvent;
 
+    [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
+
 
     void Start()
     {
@@ -30,7 +33,7 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        SceneFlowManager.GoToScene(SceneType.MainMenu);      
+        goToSceneEvent.Raise(SceneType.MainMenu);
      }
 
 

@@ -314,6 +314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioInitEvent: {fileID: 11400000, guid: 3adef766108b4d05816450a3a75c9120, type: 2}
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
 --- !u!4 &862168025
 Transform:
   m_ObjectHideFlags: 0
@@ -495,6 +496,7 @@ GameObject:
   - component: {fileID: 1498983319}
   - component: {fileID: 1498983318}
   - component: {fileID: 1498983317}
+  - component: {fileID: 1498983320}
   m_Layer: 0
   m_Name: SceneManager
   m_TagString: Untagged
@@ -580,6 +582,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1498983320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498983316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e85abd43fb99a04c975220600647898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
+  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
 --- !u!1 &1640321002
 GameObject:
   m_ObjectHideFlags: 0

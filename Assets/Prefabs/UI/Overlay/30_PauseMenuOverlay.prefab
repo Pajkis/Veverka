@@ -596,6 +596,8 @@ MonoBehaviour:
   resetGridEvent: {fileID: 11400000, guid: f16b84b05db4cba4891c2d72c84bbc71, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
   playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
+  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
 --- !u!114 &6935047262844824697
 MonoBehaviour:
   m_ObjectHideFlags: 0

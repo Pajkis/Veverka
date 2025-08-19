@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   resetGridEvent: {fileID: 11400000, guid: f16b84b05db4cba4891c2d72c84bbc71, type: 2}
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
 --- !u!1 &827205070
 GameObject:
   m_ObjectHideFlags: 0
