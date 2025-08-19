@@ -1,19 +1,22 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Level unloading manager
+/// </summary>
 public class LevelUnloader : MonoBehaviour
 {
-    [SerializeField]
-    private ResetGridEvent resetGridEvent;
+    [SerializeField] private ResetGridEvent resetGridEvent;
 
-    [SerializeField]
-    private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
 
+    [SerializeField] private PlayMusicEvent playMusicEvent;
 
     void Start()
     {
         // raise reset event
         resetGridEvent.Raise();
+        playMusicEvent.Raise(MusicType.Menu);
         StartCoroutine(UnloadLevelCoroutine());
     }
 

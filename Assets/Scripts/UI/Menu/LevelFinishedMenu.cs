@@ -9,12 +9,7 @@ public class LevelFinishedMenu : MonoBehaviour
     GameObject buttonNextLevel;
 
     [SerializeField]
-    private ResetGridEvent resetGridEvent;
-
-    [SerializeField]
-    private LevelDatabase levelDatabase;
-
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    private LevelDatabase levelDatabase;   
 
     [SerializeField]
     private GoToSceneEvent goToSceneEvent;
@@ -59,9 +54,8 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        Time.timeScale = 1;
-                        
-        playMusicEvent.Raise(MusicType.Menu);
+        Time.timeScale = 1;                        
+      
         goToSceneEvent.Raise(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }

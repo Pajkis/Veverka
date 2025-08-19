@@ -11,7 +11,7 @@ namespace Veverka.Characters.Veverka
         #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
-        [SerializeField] private PlaySfxEvent playSfxEvent;
+       
         #endregion
 
         #region event handling

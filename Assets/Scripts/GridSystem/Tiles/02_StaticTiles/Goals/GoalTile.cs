@@ -5,8 +5,7 @@ public class GoalTile : StaticTile
     #region events
     [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
     [SerializeField] private GoalSetEvent goalSetEvent;
-    [SerializeField] private GoalRemovedEvent goalRemovedEvent;
-    [SerializeField] private PlaySfxEvent playSfxEvent;
+    [SerializeField] private GoalRemovedEvent goalRemovedEvent;  
     #endregion
 
     #region methods
