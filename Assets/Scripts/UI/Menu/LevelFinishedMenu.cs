@@ -16,6 +16,9 @@ public class LevelFinishedMenu : MonoBehaviour
 
     [SerializeField] private PlayMusicEvent playMusicEvent;
 
+    [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
+
     #endregion
 
     #region methods
@@ -47,7 +50,7 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        SceneFlowManager.GoToScene(SceneType.LoadLevel);
+        goToSceneEvent.Raise(SceneType.LoadLevel);
         // Destroy(gameObject);
     }
 
@@ -59,7 +62,7 @@ public class LevelFinishedMenu : MonoBehaviour
         Time.timeScale = 1;
                         
         playMusicEvent.Raise(MusicType.Menu);
-        SceneFlowManager.GoToScene(SceneType.UnloadLevel);
+        goToSceneEvent.Raise(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }
 

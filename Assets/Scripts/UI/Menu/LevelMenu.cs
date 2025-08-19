@@ -12,6 +12,9 @@ public class LevelMenu : MonoBehaviour
     private LevelDatabase levelDatabase;
 
     [SerializeField] private PlayMusicEvent playMusicEvent;
+
+    [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
     #endregion
 
     /// <summary>
@@ -24,7 +27,7 @@ public class LevelMenu : MonoBehaviour
 
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
-        SceneFlowManager.GoToScene(SceneType.LoadLevel);
+        goToSceneEvent.Raise(SceneType.LoadLevel);
 
     }
 
@@ -33,7 +36,7 @@ public class LevelMenu : MonoBehaviour
     /// </summary>
     public void HandleBackButtonOnCLickEvent()
     {
-        SceneFlowManager.GoToScene(SceneType.MainMenu);
+        goToSceneEvent.Raise(SceneType.MainMenu);
     }
 
 

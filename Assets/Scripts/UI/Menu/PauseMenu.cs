@@ -14,6 +14,12 @@ public class PauseMenu : MonoBehaviour
     private LevelDatabase levelDatabase;
 
     [SerializeField] private PlayMusicEvent playMusicEvent;
+
+    [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
+
+    [SerializeField]
+    private OpenOverlayEvent openOverlayEvent;
     #endregion
 
     #region methods
@@ -39,7 +45,7 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         Time.timeScale = 1;
-       SceneFlowManager.GoToScene(SceneType.LoadLevel);          
+       goToSceneEvent.Raise(SceneType.LoadLevel);
        // Destroy(gameObject);
     }
 
@@ -48,7 +54,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        SceneFlowManager.OpenOverlay(OverlayType.SettingsMenu);
+        openOverlayEvent.Raise(OverlayType.SettingsMenu);
     }
 
     /// <summary>
@@ -59,7 +65,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1;
         
         playMusicEvent.Raise(MusicType.Menu);
-        SceneFlowManager.GoToScene(SceneType.UnloadLevel);
+        goToSceneEvent.Raise(SceneType.UnloadLevel);
        
       //  Destroy(gameObject);
     }

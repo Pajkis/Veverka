@@ -13,6 +13,9 @@ public class LevelLoader: MonoBehaviour
     private LevelSelectEvent levelSelectEvent;
 
     [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
+
+    [SerializeField]
     private LevelDatabase levelDatabase;
     #endregion
 
@@ -79,8 +82,7 @@ public class LevelLoader: MonoBehaviour
             {
                 //level data not valid
                 Debug.LogWarning("Invalid level configuration!");
-                SceneFlowManager.GoToScene(SceneType.LevelMenu);
-                        
+                goToSceneEvent.Raise(SceneType.LevelMenu);
                 yield break;
             }
             else
@@ -91,13 +93,13 @@ public class LevelLoader: MonoBehaviour
                     yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
                 //enter game scene              
-                SceneFlowManager.GoToScene(SceneType.GamePlay);
+                goToSceneEvent.Raise(SceneType.GamePlay);
             }
         }
         // Grid is not loaded properly
         else
         {
-            SceneFlowManager.GoToScene(SceneType.LevelMenu);
+            goToSceneEvent.Raise(SceneType.LevelMenu);
             yield break;
         }
     }
