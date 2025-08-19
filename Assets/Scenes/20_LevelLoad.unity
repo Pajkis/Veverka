@@ -167,6 +167,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
 --- !u!1 &827205070
 GameObject:

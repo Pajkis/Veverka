@@ -55,7 +55,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject);        
     }
 
     /// <summary>

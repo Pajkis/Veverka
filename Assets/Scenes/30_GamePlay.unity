@@ -1255,6 +1255,7 @@ MonoBehaviour:
   levelInitEvent: {fileID: 11400000, guid: c57de046fb3b7a546b5a1e24544bfb2d, type: 2}
   characterMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
+  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
 --- !u!4 &988765905
 Transform:
   m_ObjectHideFlags: 0
@@ -1437,6 +1438,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8807dcdee4e9a44eb0013066c9d6491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
+  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
 --- !u!114 &1013319280
 MonoBehaviour:
   m_ObjectHideFlags: 0
