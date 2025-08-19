@@ -9,9 +9,7 @@ public class LevelMenu : MonoBehaviour
     #region fields
 
     [SerializeField]
-    private LevelDatabase levelDatabase;
-
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    private LevelDatabase levelDatabase;    
 
     [SerializeField]
     private GoToSceneEvent goToSceneEvent;
@@ -23,8 +21,6 @@ public class LevelMenu : MonoBehaviour
     /// <param name="levelNumber"></param>
     public void HandleLevelButtonOnClickEvent(int levelNumber)
     {
-        playMusicEvent.Raise(MusicType.Game);
-
         // Set level and change screen
         levelDatabase.CurrentLevelIndex = levelNumber;
         goToSceneEvent.Raise(SceneType.LoadLevel);

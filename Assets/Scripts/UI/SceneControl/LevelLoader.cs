@@ -9,14 +9,13 @@ public class LevelLoader: MonoBehaviour
 
     #region fields
 
-    [SerializeField]
-    private LevelSelectEvent levelSelectEvent;
+    [SerializeField]  private LevelSelectEvent levelSelectEvent;
 
-    [SerializeField]
-    private GoToSceneEvent goToSceneEvent;
+    [SerializeField]   private GoToSceneEvent goToSceneEvent;
 
-    [SerializeField]
-    private LevelDatabase levelDatabase;
+    [SerializeField]  private LevelDatabase levelDatabase;
+
+    [SerializeField] private PlayMusicEvent playMusicEvent;
     #endregion
 
 
@@ -29,6 +28,9 @@ public class LevelLoader: MonoBehaviour
     {
         // add listener
         levelSelectEvent.AddListener(LoadLevel);
+
+        //play music
+        playMusicEvent.Raise(MusicType.Game);
 
         // invoke level reset 
         levelSelectEvent.Raise(new LevelSelectPayload
