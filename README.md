@@ -1,5 +1,3 @@
-# Demo Mata
-
 A demonstration project repository containing game development and API integration examples.
 
 ## Projects
