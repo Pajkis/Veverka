@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 4132ca2abbb30374bb06e57f7385e1d6
+  m_DefaultGroup: b080ecd0a60248d45a7433c7f327ff4e
   m_currentHash:
     serializedVersion: 2
-    Hash: 166e6e211616627a4c9e50a2b32b5d97
+    Hash: a49b50bb74510988cce6f6c3e9ba3e7b
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     m_Id: 
   m_RemoteCatalogLoadPath:
     m_Id: 
-  m_ContentStateBuildPathProfileVariableName: 
+  m_ContentStateBuildPathProfileVariableName: <default settings path>
   m_CustomContentStateBuildPath: 
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
@@ -56,6 +56,20 @@ MonoBehaviour:
     - m_InheritedParent: 
       m_Id: 8393846ce069b51419bcee95d2e1e086
       m_ProfileName: Default
+      m_Values:
+      - m_Id: 0227f18dc790b204cbfff3ba2bb11447
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+      - m_Id: 2f58081c2587f4c4fa3786576bdec2b9
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: 52399e391ea1af1419ce9854c9d6afb5
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: f314eaf4f2998a449afd46899a24ea91
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: f90e473243b08664f99edd3ae9f08913
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+    - m_InheritedParent: 
+      m_Id: cafcd3366e1f0e64e8f30eb8791ad997
+      m_ProfileName: Veverka
       m_Values:
       - m_Id: 0227f18dc790b204cbfff3ba2bb11447
         m_Value: http://[PrivateIpAddress]:[HostingServicePort]
@@ -100,7 +114,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dd344498feea2c409c1625387771342, type: 2}
   - {fileID: 11400000, guid: d3407fb5600fb364e93fbd2164c61b81, type: 2}
   - {fileID: 11400000, guid: e8d4ae33bf69a114f817ec87719f5993, type: 2}
-  m_ActiveProfileId: 8393846ce069b51419bcee95d2e1e086
+  m_ActiveProfileId: cafcd3366e1f0e64e8f30eb8791ad997
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}
