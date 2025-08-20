@@ -23,6 +23,7 @@ public abstract class Character: MonoBehaviour
 
     #region Events
     [SerializeField] protected TileQueryEvent tileQueryEvent;
+    [SerializeField] protected PlaySfxEvent playSfxEvent;
     #endregion
 
     #region Configs
@@ -45,10 +46,10 @@ public abstract class Character: MonoBehaviour
     /// <summary>
     /// Init Character in the grid
     /// </summary>
-    /// <param name="tileType"></param>
-    /// <param name="characterType"></param>
-    /// <param name="gridPosition"></param>
-    /// <param name="facingDirection"></param>
+    /// <param name="tileType">type of tile in the grid </param>
+    /// <param name="characterType">character type</param>
+    /// <param name="gridPosition">position in the grid </param>
+    /// <param name="facingDirection">facing direction of the character</param>
     public virtual void Init(TileType tileType, CharacterType characterType, Vector2Int gridPosition, Direction facingDirection = Direction.Down)
     {
         //Set initial values
@@ -92,7 +93,7 @@ public abstract class Character: MonoBehaviour
     /// <summary>
     /// Move of a character over a distance in set direction
     /// </summary>
-    /// <param name="direction">direction of movemebt</param>
+    /// <param name="direction">direction of movement</param>
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
     protected virtual void Move(Direction direction, int distance, float duration = 0.15f)

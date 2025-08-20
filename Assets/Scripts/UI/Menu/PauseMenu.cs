@@ -6,12 +6,12 @@ using UnityEngine;
 public class PauseMenu : MonoBehaviour
 {
     #region fields
-   
-    [SerializeField]
-    private ResetGridEvent resetGridEvent;
+
+     [SerializeField]
+    private GoToSceneEvent goToSceneEvent;
 
     [SerializeField]
-    private LevelDatabase levelDatabase;
+    private OpenOverlayEvent openOverlayEvent;
     #endregion
 
     #region methods
@@ -37,7 +37,7 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         Time.timeScale = 1;
-        SceneManager.GoToScene(SceneType.LoadLevel);          
+       goToSceneEvent.Raise(SceneType.LoadLevel);
        // Destroy(gameObject);
     }
 
@@ -46,18 +46,17 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        SceneManager.GoToScene(SceneType.SettingsMenu);
+        openOverlayEvent.Raise(OverlayType.SettingsMenu);
     }
 
     /// <summary>
     /// Handles on click quit button event
     /// </summary>
-    public void HandleQuitButtonOnClickEvent()
-    {
-        Time.timeScale = 1;
-        
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        SceneManager.GoToScene(SceneType.UnloadLevel);       
+    public void HandleQuitButtonOnClickEvent()   
+    
+    {       
+        Time.timeScale = 1;       
+        goToSceneEvent.Raise(SceneType.UnloadLevel);
        
       //  Destroy(gameObject);
     }

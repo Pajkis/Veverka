@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameInit : MonoBehaviour
 {
+    [SerializeField] private AudioInitEvent audioInitEvent;
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
 
     /// <summary>
     /// Ensures the initializer persists across scene loads.
@@ -19,7 +21,7 @@ public class GameInit : MonoBehaviour
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
-        AudioManager.Instance.Initialize();
+        audioInitEvent.Raise();
 
         // Game start delay
         StartCoroutine(GameStartDelayCoroutine());
@@ -36,7 +38,7 @@ public class GameInit : MonoBehaviour
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
-        UnityEngine.SceneManagement.SceneManager.LoadScene("10_MainMenu");
+        goToSceneEvent.Raise(SceneType.MainMenu);
     }
 
 

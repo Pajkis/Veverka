@@ -7,6 +7,8 @@ using UnityEngine.UI;
 /// </summary>
 public class UIButtonAudioHook : MonoBehaviour
 {
+    [SerializeField] private PlayUiEvent playUiEvent;
+
     // hook all butons with tag
     void Start()
     {
@@ -20,12 +22,12 @@ public class UIButtonAudioHook : MonoBehaviour
             // Add click sound
             button.onClick.AddListener(() =>
             {
-                AudioManager.Instance?.PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
+                playUiEvent.Raise(UiType.ButtonClick);
             });
-            
+
             // Add hover sound via EventTrigger
             AddHoverSound(button.gameObject);
-        }       
+        }
     }
 
     /// <summary>
@@ -57,7 +59,7 @@ public class UIButtonAudioHook : MonoBehaviour
         };
         entryHover.callback.AddListener((data) =>
         {
-            AudioManager.Instance?.PlaySound(SoundChannel.SoundUI, UiEnum.ButtonHover);
+            playUiEvent.Raise(UiType.ButtonHover);
         });
 
         trigger.triggers.Add(entryHover);

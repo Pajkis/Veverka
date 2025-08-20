@@ -3131,6 +3131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
 --- !u!114 &2082483739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3143,6 +3145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
 --- !u!1 &2088394075
 GameObject:
   m_ObjectHideFlags: 0

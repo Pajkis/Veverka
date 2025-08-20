@@ -30,11 +30,15 @@ public class GamePlay :  MonoBehaviour
     [SerializeField]
     private LevelInitEvent levelInitEvent;
 
-    [SerializeField]  
+    [SerializeField]
     private CharacterMovedEvent characterMoved;
 
+    [SerializeField] private PlaySfxEvent playSfxEvent;
+
+    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
     [Header("turn undo logic")]
-    private UndoManager undoManager = new();
+    private UndoManager undoManager;
     #endregion   
 
     /// <summary>
@@ -42,7 +46,7 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void Awake()
     {
-        undoManager = new UndoManager();
+        undoManager = new UndoManager(playSfxEvent);
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
        // Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
     }
@@ -74,7 +78,7 @@ public class GamePlay :  MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                SceneManager.GoToScene(SceneType.PauseMenu);
+                openOverlayEvent.Raise(OverlayType.PauseMenu);
             }
         }
     }
@@ -113,7 +117,7 @@ public class GamePlay :  MonoBehaviour
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            SceneManager.GoToScene(SceneType.LevelFinishedMenu);
+            openOverlayEvent.Raise(OverlayType.LevelFinishedMenu);
         }
 
         // reset history recording

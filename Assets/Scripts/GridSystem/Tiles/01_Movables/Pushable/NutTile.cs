@@ -5,15 +5,14 @@ using UnityEngine;
 /// </summary>
 public class NutTile : PushableTile
 {
-
     #region methods
     /// <summary>
     /// On Move start action
     /// </summary>
     protected override void OnMoveStart()
-    {
-        AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.NutMove);
+    {        
         base.OnMoveStart();
+        playSfxEvent.Raise(SfxType.NutMove);
     }
 
     /// <summary>
@@ -49,9 +48,7 @@ public class NutTile : PushableTile
                 GoalReduction = 1,
             });
 
-            Destroy(gameObject);
-
-            AudioManager.Instance.PlaySound(SoundChannel.SoundEffect, SfxEnum.GoalReached);
+            Destroy(gameObject);            
         }
 
         GridPosition = targetPosition;

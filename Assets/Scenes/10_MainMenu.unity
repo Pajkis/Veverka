@@ -242,6 +242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67a08fab36481f4b96c4ed63966d37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
+  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
 --- !u!114 &405905181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
 --- !u!1 &507590988
 GameObject:
   m_ObjectHideFlags: 0

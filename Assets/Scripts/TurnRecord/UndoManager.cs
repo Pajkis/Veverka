@@ -8,6 +8,12 @@ public class UndoManager
 {
     // stack of turn records
     private Stack<SingleTurnRecord> history = new();
+    private readonly PlaySfxEvent playSfxEvent;
+
+    public UndoManager(PlaySfxEvent playSfxEvent)
+    {
+        this.playSfxEvent = playSfxEvent;
+    }
 
     /// <summary>
     /// Register one turn in turn record
@@ -37,6 +43,7 @@ public class UndoManager
             return false;
         }
 
+        playSfxEvent?.Raise(SfxType.Undo);
         var turn = history.Pop();
         turn.Undo();
         return true;

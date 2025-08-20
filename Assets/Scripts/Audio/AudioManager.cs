@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    /// <summary>
-    /// Singleton 
-    /// </summary>
-    public static AudioManager Instance { get; private set; }
+    [SerializeField] AudioConfig audioConfig;
+
+    #region events
+    [Header("Events")]
+    [SerializeField] private PlaySfxEvent playSfxEvent;
+    [SerializeField] private PlayUiEvent playUiEvent;
+    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private AudioInitEvent audioInitEvent;
+    [SerializeField] private AudioVolumeEvent audioVolumeEvent;
+    #endregion
 
     #region sound input
     [Header("Effects")]
@@ -16,6 +22,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip goalReached;
     [SerializeField] private AudioClip levelFinished;
     [SerializeField] private AudioClip veverkaRotate;
+    [SerializeField] private AudioClip Undo;
 
     [Header("UI")]
     [SerializeField] private AudioClip buttonClick;
@@ -35,34 +42,44 @@ public class AudioManager : MonoBehaviour
     private AudioSource backgroundMusicSource;
     private AudioSource uiSource;
 
-    [Header("Audio Volume")]
-    private float volumeEffects = 0;
-    private float volumeMusic = 0;
-    private float volumeMenu = 0;
-
     // audio sources and channels
     private Dictionary<SoundChannel, AudioSource> sources = new(); // Sfx and menu sounds
-    private Dictionary<MusicEnum, List<AudioClip>> musicPlaylists; // background music soundds
-    private MusicEnum currentMusicType;
+    private Dictionary<MusicType, List<AudioClip>> musicPlaylists; // background music soundds
+    private MusicType currentMusicType;
     private Dictionary<Enum, AudioClip> clips = new();
     #endregion
 
     #region Init methods
     /// <summary>
-    /// Creates the singleton instance and persists it across scenes.
+    /// Persist audio manager across scenes.
     /// </summary>
     void Awake()
     {
-        // Init singleton
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        DontDestroyOnLoad(gameObject);        
+    }
+
+    /// <summary>
+    /// Subscribe to audio events.
+    /// </summary>
+    private void OnEnable()
+    {
+        audioInitEvent?.AddListener(Initialize);
+        playSfxEvent?.AddListener(PlaySfx);
+        playUiEvent?.AddListener(PlayUi);
+        playMusicEvent?.AddListener(PlayRandomMusic);
+        audioVolumeEvent?.AddListener(OnVolumeChanged);
+    }
+
+    /// <summary>
+    /// Unsubscribe from audio events.
+    /// </summary>
+    private void OnDisable()
+    {
+        audioInitEvent?.RemoveListener(Initialize);
+        playSfxEvent?.RemoveListener(PlaySfx);
+        playUiEvent?.RemoveListener(PlayUi);
+        playMusicEvent?.RemoveListener(PlayRandomMusic);
+        audioVolumeEvent?.RemoveListener(OnVolumeChanged);
     }
 
     /// <summary>
@@ -71,7 +88,7 @@ public class AudioManager : MonoBehaviour
     void Update()
     {
         // play next song after it ends
-        if (!backgroundMusicSource.isPlaying)
+        if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
         {
             PlayRandomMusic(currentMusicType);
         }
@@ -80,7 +97,7 @@ public class AudioManager : MonoBehaviour
     /// <summary>
     /// Init volume of sounds, play background music
     /// </summary>
-    public void Initialize()
+    private void Initialize()
     {
         // Add separate audio sources
         effectsSource = gameObject.AddComponent<AudioSource>();
@@ -93,44 +110,50 @@ public class AudioManager : MonoBehaviour
         sources[SoundChannel.SoundUI] = uiSource;
 
         // Map clips
-        clips[SfxEnum.VeverkaMove] = veverkaMove;
-        clips[SfxEnum.NutMove] = nutMove;
-        clips[SfxEnum.GoalReached] = goalReached;
-        clips[SfxEnum.LevelFinished] = levelFinished;
-        clips[SfxEnum.VeverkaRotate] = veverkaRotate;
+        clips[SfxType.VeverkaMove] = veverkaMove;
+        clips[SfxType.NutMove] = nutMove;
+        clips[SfxType.GoalReached] = goalReached;
+        clips[SfxType.LevelFinished] = levelFinished;
+        clips[SfxType.VeverkaRotate] = veverkaRotate;
+        clips[SfxType.Undo] = Undo;
 
-        clips[UiEnum.ButtonClick] = buttonClick;
-        clips[UiEnum.ButtonHover] = buttonHover;
-        clips[UiEnum.Slider] = sliderMove;
+        clips[UiType.ButtonClick] = buttonClick;
+        clips[UiType.ButtonHover] = buttonHover;
+        clips[UiType.Slider] = sliderMove;
 
         //Map music
-        musicPlaylists = new Dictionary<MusicEnum, List<AudioClip>>
+        musicPlaylists = new Dictionary<MusicType, List<AudioClip>>
         {
-          { MusicEnum.Menu, menuSongs },
-          { MusicEnum.Game, gameSongs }
+          { MusicType.Menu, menuSongs },
+          { MusicType.Game, gameSongs }
         };
 
-        // load volume
-        volumeEffects = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / 10f;
-        volumeMusic = GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / 10f;
-        volumeMenu = GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / 10f;
+        // load volume from game settings
+        if (audioConfig == null)
+        {
+            Debug.LogError("AudioConfig is not assigned in AudioManager!");
+            return;
+        }
+        sources[SoundChannel.SoundEffect].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
+        sources[SoundChannel.SoundMusic].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
+        sources[SoundChannel.SoundUI].volume =
+            GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
 
-        sources[SoundChannel.SoundEffect].volume = volumeEffects;
-        sources[SoundChannel.SoundMusic].volume = volumeMusic;
-        sources[SoundChannel.SoundUI].volume = volumeMenu;
 
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
 
         // play background sound
-        currentMusicType = MusicEnum.Menu;
-        PlayRandomMusic(MusicEnum.Menu);
+        currentMusicType = MusicType.Menu;
+        PlayRandomMusic(MusicType.Menu);
 
     }
 
     #endregion
 
-    #region methods
+    #region play sounds methods
     /// <summary>
     /// play sound 
     /// </summary>
@@ -141,6 +164,34 @@ public class AudioManager : MonoBehaviour
     {
         if (clips.TryGetValue(clipKey, out var clip) && sources.TryGetValue(channel, out var source))
         {
+            // check if clip and source are not null
+            if (clip == null)
+            {
+                Debug.LogWarning($"Clip for {clipKey} is null.");               
+            }
+            if (source == null)
+            {
+                Debug.LogWarning($"AudioSource for {channel} is null.");
+            }
+
+            // adjust pitch for sound effects based on animation speed setting
+            if (channel == SoundChannel.SoundEffect)
+            {
+                float pitch = GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) switch
+                {
+                    1 => audioConfig.minPitch,
+                    2 => audioConfig.normalPitch,
+                    3 => audioConfig.maxPitch,
+                    _ => audioConfig.normalPitch
+                };                
+                source.pitch = pitch;
+            }
+            // reset pitch for other channels
+            else
+            {
+                source.pitch = audioConfig.normalPitch; 
+            }
+
             source.PlayOneShot(clip);
         }
         else
@@ -150,10 +201,20 @@ public class AudioManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Play sound effect clip on the effects channel.
+    /// </summary>
+    public void PlaySfx(SfxType clipKey) => PlaySound(SoundChannel.SoundEffect, clipKey);
+
+    /// <summary>
+    /// Play UI sound clip on the UI channel.
+    /// </summary>
+    public void PlayUi(UiType clipKey) => PlaySound(SoundChannel.SoundUI, clipKey);
+
+    /// <summary>
     /// play random background music
     /// </summary>
     /// <param name="musicType"></param>
-    public void PlayRandomMusic(MusicEnum musicType)
+    public void PlayRandomMusic(MusicType musicType)
     {
         if (!musicPlaylists.TryGetValue(musicType, out List<AudioClip> playlist) || playlist == null || playlist.Count == 0)
             return;
@@ -162,26 +223,26 @@ public class AudioManager : MonoBehaviour
             return;
 
         AudioClip oldClip = backgroundMusicSource.clip;
-        AudioClip newclip = null;
-        
+        AudioClip newClip;
+
         // only one song in playlist
         if (playlist.Count == 1)
-        { 
-            newclip = playlist[0];
+        {
+            newClip = playlist[0];
         }
-        // play random song
+        // play random song avoiding immediate repeats
         else
         {
-            int attempts = 0;
-            do 
-            { 
-             newclip = playlist[UnityEngine.Random.Range(0, playlist.Count)];
-             attempts++;
+            int oldIndex = playlist.IndexOf(oldClip);
+            int newIndex = UnityEngine.Random.Range(0, playlist.Count - (oldIndex != -1 ? 1 : 0));
+            if (oldIndex != -1 && newIndex >= oldIndex)
+            {
+                newIndex++;
             }
-            while (attempts <= 10 && newclip == oldClip);            
+            newClip = playlist[newIndex];
         }
-        
-        backgroundMusicSource.clip = newclip;
+
+        backgroundMusicSource.clip = newClip;
         currentMusicType = musicType;
         backgroundMusicSource.Play();
     }
@@ -192,16 +253,21 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayUIClickSound()
     {
-        PlaySound(SoundChannel.SoundUI, UiEnum.ButtonClick);
+        PlayUi(UiType.ButtonClick);
     }
+
+    #endregion
+
+    #region volume methods
+
     /// <summary>
     /// Update volume value from game settings
     /// </summary>
     /// <param name="source">music source to be updated</param>
     /// <param name="value">new volume value</param>
-    public void UpdateVolume(GameSettingsEnum source, int value)
+    public void UpdateVolume(GameSettingsEnum source, int volumeValue)
     {
-        // map gamesettings to Soundchannel
+        // check if audioConfig is assigned
         SoundChannel soundChannel = source switch
         {
             GameSettingsEnum.EffectVolume => SoundChannel.SoundEffect,
@@ -209,20 +275,37 @@ public class AudioManager : MonoBehaviour
             GameSettingsEnum.MenuVolume => SoundChannel.SoundUI,
             _ => SoundChannel.NoSound
         };
-                
-        if (soundChannel != SoundChannel.NoSound)
+
+        if (soundChannel == SoundChannel.NoSound)
+            return;
+
+        // check if the sound channel exists in sources
+        if (!sources.TryGetValue(soundChannel, out AudioSource audioSource))
         {
-            //Change volume of channel
-            if (sources.TryGetValue(soundChannel, out AudioSource audioSource))
-            {
-                audioSource.volume = value / 10f;
-            }
-            else 
-            {
-                Debug.LogWarning($"AudioSource for {soundChannel} not found!");
-            }            
+            Debug.LogWarning($"AudioSource for {soundChannel} not found!");
+            return;
         }
+
+        // calculate volume adjustment based on sound channel
+        float volumeAdj = soundChannel switch
+        {
+            SoundChannel.SoundMusic => audioConfig.soundMusicVolumeAdj,
+            SoundChannel.SoundUI => audioConfig.soundUIVolumeAdj,
+            SoundChannel.SoundEffect => audioConfig.soundEffectVolumeAdj,
+            _ => 0f
+        };
+
+        audioSource.volume = volumeValue / volumeAdj;
     }
 
     #endregion
+
+    /// <summary>
+    /// Handles audio volume change event payload.
+    /// </summary>
+    /// <param name="payload">Volume change data</param>
+    private void OnVolumeChanged(AudioVolumePayload payload)
+    {
+        UpdateVolume(payload.Source, payload.VolumeValue);
+    }
 }
