@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-
 /// <summary>
 /// enumeration of sound enumerators
 /// </summary>
@@ -17,19 +12,20 @@ public enum SoundChannel
 /// <summary>
 /// Sound effects enum
 /// </summary>
-public enum SfxEnum    
+public enum SfxType   
 {
 VeverkaMove,
 VeverkaRotate,
 NutMove,
 GoalReached,
-LevelFinished
+LevelFinished,
+Undo
 }
 
 /// <summary>
 /// Sound music enum - background music
 /// </summary>
-public enum MusicEnum 
+public enum MusicType
 {
  Menu,
  Game
@@ -38,7 +34,7 @@ public enum MusicEnum
 /// <summary>
 /// sound of UI
 /// </summary>
-public enum UiEnum
+public enum UiType
 { 
   ButtonClick,
   ButtonHover,

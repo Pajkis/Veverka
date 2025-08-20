@@ -1,13 +1,16 @@
 using UnityEngine;
 
 public class InGameMenu : MonoBehaviour
-{        
+{
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
     /// <summary>
     /// Handles on click level restart button event
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        SceneManager.GoToScene(SceneType.LoadLevel);
+        goToSceneEvent.Raise(SceneType.LoadLevel);
     }
 
     /// <summary>
@@ -15,7 +18,7 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandlePauseButtonOnClickEvent()
     {
-        SceneManager.GoToScene(SceneType.PauseMenu);
+        openOverlayEvent.Raise(OverlayType.PauseMenu);
     }
 
     /// <summary>
@@ -23,6 +26,6 @@ public class InGameMenu : MonoBehaviour
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
     {
-        SceneManager.GoToScene(SceneType.GameHelp);
+        openOverlayEvent.Raise(OverlayType.GameHelp);
     }
 }

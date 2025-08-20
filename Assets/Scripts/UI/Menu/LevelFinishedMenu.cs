@@ -5,14 +5,14 @@ using UnityEngine;
 /// </summary>
 public class LevelFinishedMenu : MonoBehaviour
 {
-    #region fields   
-    GameObject buttonNextLevel;   
+    #region fields
+    GameObject buttonNextLevel;
 
     [SerializeField]
-    private ResetGridEvent resetGridEvent;
+    private LevelDatabase levelDatabase;   
 
     [SerializeField]
-    private LevelDatabase levelDatabase;
+    private GoToSceneEvent goToSceneEvent;
 
     #endregion
 
@@ -45,7 +45,7 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        SceneManager.GoToScene(SceneType.LoadLevel);
+        goToSceneEvent.Raise(SceneType.LoadLevel);
         // Destroy(gameObject);
     }
 
@@ -54,10 +54,9 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        Time.timeScale = 1;
-                        
-        AudioManager.Instance.PlayRandomMusic(MusicEnum.Menu);
-        SceneManager.GoToScene(SceneType.UnloadLevel);
+        Time.timeScale = 1;                        
+      
+        goToSceneEvent.Raise(SceneType.UnloadLevel);
       //  Destroy(gameObject);
     }
 

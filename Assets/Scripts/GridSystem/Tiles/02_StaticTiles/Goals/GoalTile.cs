@@ -5,7 +5,7 @@ public class GoalTile : StaticTile
     #region events
     [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
     [SerializeField] private GoalSetEvent goalSetEvent;
-    [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+    [SerializeField] private GoalRemovedEvent goalRemovedEvent;  
     #endregion
 
     #region methods
@@ -41,8 +41,12 @@ public class GoalTile : StaticTile
     /// <param name="payload"></param>
     private void OnPushableInGoal(PushableInGoalPayload payload)
     {
+        // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
         {
+            // Play goal reached sound effect
+            playSfxEvent.Raise(SfxType.GoalReached);
+            // Raise goal reached event
             goalRemovedEvent.Raise(new GoalRemovedPayload
             {
                 Position = payload.Position,

@@ -10,6 +10,11 @@ public abstract class TileObject : MonoBehaviour
 
     #region events   
     [SerializeField] protected TileQueryEvent tileQueryEvent;
+    [SerializeField] protected PlaySfxEvent playSfxEvent;
+    #endregion
+
+    #region Configs
+    [SerializeField] protected GameplayConfig gameplayConfig;
     #endregion
 
     #region propeties

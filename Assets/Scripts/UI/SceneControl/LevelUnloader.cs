@@ -1,16 +1,22 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Level unloading manager
+/// </summary>
 public class LevelUnloader : MonoBehaviour
 {
-    [SerializeField]
-    private ResetGridEvent resetGridEvent;
+    [SerializeField] private ResetGridEvent resetGridEvent;
 
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
+
+    [SerializeField] private PlayMusicEvent playMusicEvent;
 
     void Start()
     {
         // raise reset event
         resetGridEvent.Raise();
+        playMusicEvent.Raise(MusicType.Menu);
         StartCoroutine(UnloadLevelCoroutine());
     }
 
@@ -30,7 +36,7 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        SceneManager.GoToScene(SceneType.MainMenu);      
+        goToSceneEvent.Raise(SceneType.MainMenu);
      }
 
 
