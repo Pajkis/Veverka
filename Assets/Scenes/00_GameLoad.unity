@@ -372,6 +372,10 @@ PrefabInstance:
       propertyPath: m_RenderMode
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1581751956966254716, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -729493209
+      objectReference: {fileID: 0}
     - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Name
       value: LoadBackground

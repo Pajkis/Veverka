@@ -18,17 +18,11 @@ namespace Veverka.GridSystem.GameGrid
         #endregion
 
         #region events
-        [SerializeField]
-        private LevelInitEvent levelInitEvent;
-
-        [SerializeField]
-        private LevelSelectEvent levelSelectEvent;
-
-        [SerializeField]
-        private ResetGridEvent resetGridEvent;
-
-        [SerializeField]
-        private LevelDatabase levelDatabase;
+        [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
+        [SerializeField] private LevelSelectEvent levelSelectEvent;
+        [SerializeField] private ResetGridEvent resetGridEvent;
+        [SerializeField] private BuildGridEvent buildGridEvent;
+        [SerializeField] private LevelDatabase levelDatabase;
 
         [SerializeField] private PushableSetEvent pushableSetEvent;
         [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
@@ -49,13 +43,12 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private Transform gridRoot;
         #endregion
 
-
         #region fields
         // grid variables       
         readonly Vector2Int maxScreenGridSize = new(15, 11);
         private Vector2Int gridSize; 
         private float tileSize = 1f;     
-        private Transform gridStartCenterTarget;
+      //  private Transform gridStartCenterTarget;
         private TileType[,] grid;
         private Dictionary<Vector2Int, TileObject> pushables = new();
         private Dictionary<Vector2Int, TileObject> goals = new();
@@ -123,6 +116,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
+            buildGridEvent.AddListener(InitializeGrid);
             resetGridEvent.AddListener(ResetGrid);           
             tileQueryEvent.AddListener(OnTileQuery);        
             pushableSetEvent.AddListener(OnPushableSet);
@@ -138,7 +132,8 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);           
+            resetGridEvent.RemoveListener(ResetGrid);        
+            buildGridEvent.RemoveListener(InitializeGrid);
             tileQueryEvent.RemoveListener(OnTileQuery);
             pushableSetEvent.RemoveListener(OnPushableSet);
             pushableRemovedEvent.RemoveListener(OnPushableRemoved);
@@ -153,12 +148,13 @@ namespace Veverka.GridSystem.GameGrid
         /// Initialize a new grid
         /// </summary>
         /// <param name="grid"></param>
-        public bool InitializeGrid(TileType[,] grid)
+        private void InitializeGrid(TileType[,] grid)
         {
             //get new grid size
             this.grid = grid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
+            
 
             Debug.Log($"Size GameGrid: {gridSize.x}, {gridSize.y}");
 
@@ -168,20 +164,23 @@ namespace Veverka.GridSystem.GameGrid
             // add surrounding walls where grid does not fill the screen
             BuildSurroundings();
 
+            //level database initialization
+            levelDatabase.gridSize = gridSize;
+            levelDatabase.GoalsCount = goals.Count;
+            levelDatabase.gridOrigin = transform;
+
             //raise event
-            levelInitEvent.Raise(new LevelInitPayload
-            {
-                GoalCount = goals.Count
-            });
-            Debug.Log($"Goal Count in GameGrid: {goals.Count}");           
-
-            //find camera and assign to veverka
-            CameraFollow camFollow = Camera.main.GetComponent<CameraFollow>();
-            camFollow.Init(gridStartCenterTarget, new Vector2Int(gridSize.x, gridSize.y));
-
-            return true;
+            buildGridDoneEvent.Raise();
         }
 
+        /// <summary>
+        /// Ensures that the background pool contains at least the specified number of objects.
+        /// </summary>
+        /// <remarks>If the current count of objects in the background pool is less than <paramrefname="requiredCount"/>,
+        /// additional objects are instantiated using the <c>backgroundPrefab</c> and added to
+        /// the pool.  Newly instantiated objects are initialized at the origin, deactivated, and parented to
+        /// <c>gridRoot</c>.</remarks>
+        /// <param name="requiredCount">The minimum number of objects that the background pool should contain.</param>
         private void EnsureBackgroundPool(int requiredCount)
         {
             for (int i = backgroundPool.Count; i < requiredCount; i++)
@@ -195,7 +194,7 @@ namespace Veverka.GridSystem.GameGrid
         /// <summary>
         /// Build a level from a grid
         /// </summary>
-        void BuildLevelFromGrid()
+        private void BuildLevelFromGrid()
         {
             EnsureBackgroundPool(gridSize.x * gridSize.y);
 
@@ -243,7 +242,7 @@ namespace Veverka.GridSystem.GameGrid
                             veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
 
                             //Center grid according veverka
-                            gridStartCenterTarget = veverka.transform;
+                            levelDatabase.gridCenterStartTarget = veverka.transform;
                             break;
 
                     case TileType.Nut:
@@ -424,6 +423,15 @@ namespace Veverka.GridSystem.GameGrid
             // clear dictionaries
             if (pushables != null) pushables.Clear();
             if (goals != null) goals.Clear();
+
+            // clear level database
+            if (levelDatabase != null)
+            {
+                levelDatabase.gridSize = Vector2Int.zero;
+                levelDatabase.GoalsCount = 0;
+                levelDatabase.gridCenterStartTarget = null;
+                levelDatabase.gridOrigin = null;
+            }
         }
         #endregion
 

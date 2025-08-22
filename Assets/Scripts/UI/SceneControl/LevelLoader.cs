@@ -9,13 +9,16 @@ public class LevelLoader: MonoBehaviour
 
     #region fields
 
-    [SerializeField]  private LevelSelectEvent levelSelectEvent;
-
-    [SerializeField]   private GoToSceneEvent goToSceneEvent;
-
+    // Serialized fields for events and level database
+    [SerializeField]  private LevelSelectEvent levelSelectEvent;   
+    [SerializeField]  private GoToSceneEvent goToSceneEvent;
+    [SerializeField]  private BuildGridEvent buildGridEvent;
+    [SerializeField]  private BuildGridDoneEvent buildGridDoneEvent;
+    [SerializeField]  private PlayMusicEvent playMusicEvent;
     [SerializeField]  private LevelDatabase levelDatabase;
 
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    private bool levelBuilt = false;
+        
     #endregion
 
 
@@ -26,18 +29,23 @@ public class LevelLoader: MonoBehaviour
     /// </summary>
     private void Start()
     {
-        // add listener
-        levelSelectEvent.AddListener(LoadLevel);
-
         //play music
         playMusicEvent.Raise(MusicType.Game);
 
-        // invoke level reset 
+        // invoke level reset
         levelSelectEvent.Raise(new LevelSelectPayload
         {
             levelNumber = levelDatabase.CurrentLevelIndex,
             resetRequested = true
         });
+    }
+
+    private void OnEnable()
+    {
+        // add listener
+        levelSelectEvent.AddListener(LoadLevel);
+        buildGridDoneEvent.AddListener(onLevelBuilt);
+        
     }
 
     /// <summary>
@@ -46,6 +54,18 @@ public class LevelLoader: MonoBehaviour
     private void OnDisable()
     {
         levelSelectEvent.RemoveListener(LoadLevel);
+        buildGridDoneEvent.RemoveListener(onLevelBuilt);
+    }
+
+    /// <summary>
+    /// Get info that level built has finished
+    /// </summary>
+    /// <remarks>This method sets the internal state to indicate that the level build process has
+    /// started.</remarks>
+    /// <param name="payload">The data required to initialize the level.</param>
+    private void onLevelBuilt()
+    {
+        levelBuilt = true;    
     }
 
     /// <summary>
@@ -76,34 +96,35 @@ public class LevelLoader: MonoBehaviour
         string levelName = ((LevelEnum)levelDatabase.CurrentLevelIndex).ToString();
         TileType[,] grid = LevelUtils.LoadGridFromCsv(levelName);
 
-        if (grid != null)
+        // raise event to build grid
+        if (grid == null)
         {
-            //level Grid Validation
-            bool success = LevelUtils.ValidateGrid(grid);
-            if (!success)
-            {
-                //level data not valid
-                Debug.LogWarning("Invalid level configuration!");
-                goToSceneEvent.Raise(SceneType.LevelMenu);
-                yield break;
-            }
-            else
-            {
-                // Wait for loading to pass
-                float timeElapsed = Time.time - startTime;
-                if (timeElapsed < minLoadingTime)
-                    yield return new WaitForSeconds(minLoadingTime - timeElapsed);
-
-                //enter game scene              
-                goToSceneEvent.Raise(SceneType.GamePlay);
-            }
-        }
-        // Grid is not loaded properly
-        else
-        {
+            Debug.LogError("Grid is null, level loading failed!");
             goToSceneEvent.Raise(SceneType.LevelMenu);
             yield break;
         }
+
+        // validate grid
+        if (!LevelUtils.ValidateGrid(grid))
+        {
+            Debug.LogWarning("Invalid level configuration!");
+            goToSceneEvent.Raise(SceneType.LevelMenu);
+            yield break;
+        }
+
+        // wait for the level to be built
+        levelBuilt = false;
+        buildGridEvent.Raise(grid);
+        yield return new WaitUntil(() => levelBuilt);
+
+        //keep track of the time elapsed and ensure a minimum loading time
+        float timeElapsed = Time.time - startTime;
+        if (timeElapsed < minLoadingTime)
+        {
+            yield return new WaitForSeconds(minLoadingTime - timeElapsed);
+        }
+
+        goToSceneEvent.Raise(SceneType.GamePlay);
     }
 
     #endregion

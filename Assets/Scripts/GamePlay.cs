@@ -4,38 +4,25 @@ using UnityEngine;
 /// Game play class
 /// handles game play lost/win logic and events 
 /// </summary>
-public class GamePlay :  MonoBehaviour
+public class GamePlay : MonoBehaviour
 {
     #region fields
     int levelGoalCount = 0;
     int turnCount = 0;
 
     [Header("UI display")]
-    [SerializeField]
-    private SpriteNumberDisplay goalCountDisplay;
-
-    [SerializeField]
-    private SpriteNumberDisplay turnCountDisplay;
-
-    [SerializeField]
-    private SpriteNumberDisplay levelDisplay;
-
-    [SerializeField]
-    private LevelDatabase levelDatabase;
+    [SerializeField] private SpriteNumberDisplay goalCountDisplay;
+    [SerializeField] private SpriteNumberDisplay turnCountDisplay;
+    [SerializeField] private SpriteNumberDisplay levelDisplay;
 
     [Header("Events")]
-    [SerializeField]
-    private PushableInGoalEvent pushableInGoalEvent;
-
-    [SerializeField]
-    private LevelInitEvent levelInitEvent;
-
-    [SerializeField]
-    private CharacterMovedEvent characterMoved;
-
+    [SerializeField] private PushableInGoalEvent pushableInGoalEvent;   
+    [SerializeField] private CharacterMovedEvent characterMoved;
     [SerializeField] private PlaySfxEvent playSfxEvent;
-
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
+    [Header("Level Data")]
+    [SerializeField] private LevelDatabase levelDatabase;
 
     [Header("turn undo logic")]
     private UndoManager undoManager;
@@ -46,16 +33,25 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void Awake()
     {
+        //undo manager initialization
         undoManager = new UndoManager(playSfxEvent);
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
-       // Debug.Log("[GamePlay] FinalizeCallback set for TurnBuilder");
+          
+        // initialize level goal count and turn count
+        LevelInit();
     }
 
+    /// <summary>
+    /// Subscribes to relevant events and initializes the level display when the object is enabled.
+    /// </summary>
+    /// <remarks>This method adds listeners to the <see cref="pushableInGoalEvent"/>, <see
+    /// cref="characterMoved"/>,  and other relevant events to handle game logic. It also updates the level display to
+    /// reflect the  current level index.</remarks>
     private void OnEnable()
     {
         // add listeners     
         pushableInGoalEvent.AddListener(UpdateGoalCount);
-        levelInitEvent.AddListener(LevelInit);
+      //  levelInitEvent.AddListener(LevelInit);
         characterMoved.AddListener(OnCharacterMoved);
 
         levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
@@ -66,7 +62,6 @@ public class GamePlay :  MonoBehaviour
     /// </summary>
     void Update()
     {
-
         // undo last turn
         if (Input.GetKeyDown(KeyCode.B))
         {
@@ -89,7 +84,7 @@ public class GamePlay :  MonoBehaviour
     private void OnDisable()
     {
         pushableInGoalEvent.RemoveListener(UpdateGoalCount);
-        levelInitEvent.RemoveListener(LevelInit);
+      //  levelInitEvent.RemoveListener(LevelInit);
         characterMoved.RemoveListener(OnCharacterMoved);
     }
 
@@ -97,11 +92,19 @@ public class GamePlay :  MonoBehaviour
     /// Set level goal count for current level
     /// </summary>
     /// <param name="goalCount"></param>
-    void LevelInit(LevelInitPayload payload)
+    void LevelInit() // LevelInitPayload payload
     {
+        //Set turn count and goal count
         turnCount = 0;
         turnCountDisplay.SetNumber(turnCount);
-        levelGoalCount = payload.GoalCount;
+
+        if (levelDatabase == null || levelDatabase.GoalsCount == 0)
+        {
+            Debug.LogError("LevelDatabase is null or no goals set");
+            return;
+        }
+
+        levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
         goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
     }
@@ -123,7 +126,6 @@ public class GamePlay :  MonoBehaviour
         // reset history recording
         TurnBuilder.Instance.CancelTurn();     
         undoManager.ClearHistory();
-
     }
 
     /// <summary>

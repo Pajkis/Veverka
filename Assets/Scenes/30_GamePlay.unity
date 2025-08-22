@@ -602,6 +602,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inGameConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
+  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
   target: {fileID: 0}
   smoothMoveTime: 0.2
   FollowOffset: {x: 2.6666, y: 0, z: -10}
@@ -1226,7 +1227,6 @@ GameObject:
   m_Component:
   - component: {fileID: 988765905}
   - component: {fileID: 988765904}
-  - component: {fileID: 988765906}
   - component: {fileID: 988765907}
   m_Layer: 0
   m_Name: GamePlay
@@ -1271,18 +1271,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &988765906
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 988765903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 766902dc0d5b00e4193d49cd54d76b2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &988765907
 MonoBehaviour:
   m_ObjectHideFlags: 0

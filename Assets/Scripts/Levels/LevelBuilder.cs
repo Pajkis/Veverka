@@ -13,6 +13,6 @@ public class LevelBuilder : MonoBehaviour
     /// </summary>
     void Start()
     {
-        GameGrid.Instance.InitializeGrid(LevelUtils.CachedGrid);
+     //   GameGrid.Instance.InitializeGrid(LevelUtils.CachedGrid);
     }
 }
