@@ -16,37 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: b080ecd0a60248d45a7433c7f327ff4e
-  m_SerializeEntries:
-  - m_GUID: 20dcd85568c54204f84ae6e5e7409d98
-    m_Address: Assets/Scenes/10_MainMenu.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 2cda990e2423bbf4892e6590ba056729
-    m_Address: Assets/Scenes/30_GamePlay.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 65eb4676041ce4643ac48987ba4fbbaa
-    m_Address: Assets/Scenes/00_GameLoad.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9428cb2979b128349b87eebd3ae2d3b4
-    m_Address: Assets/Scenes/21_LevelUnload.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: cf32a0027ff2bcc44a687b34da600605
-    m_Address: Assets/Scenes/11_LevelMenu.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: ddfe4556805467348aba625339db2cd5
-    m_Address: Assets/Scenes/20_LevelLoad.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: d8a8b0d8e1f55e045b1c8c98673085e6, type: 2}
   m_SchemaSet:
