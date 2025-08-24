@@ -2,7 +2,7 @@
 /// <summary>
 /// layout style types enumeration
 /// </summary>
-enum LayoutStyleTypes
+public enum LayoutStyleTypes
 {
     WindowsRight = 0,
     AndroidRight = 1,

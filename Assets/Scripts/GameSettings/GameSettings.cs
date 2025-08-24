@@ -22,6 +22,7 @@ public class GameSettings: MonoBehaviour
     #region fields
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
     [SerializeField] private GameSettingsConfig config;
+    [SerializeField] private LayoutStyleChangeEvent layoutStyleChange;
     #endregion
 
     #region properties
@@ -109,7 +110,13 @@ public class GameSettings: MonoBehaviour
     {
         gameSettings[key] = value;
         GameSettingsUtils.Set(key, value); // persist
-        PlayerPrefs.Save();      
+        PlayerPrefs.Save();
+
+        // Raise event if layout style changed
+        if (key == GameSettingsEnum.LayoutStyle)
+        {
+            layoutStyleChange.Raise((LayoutStyleTypes)value);
+        }
     }
 
     #endregion
