@@ -13,6 +13,8 @@ public class GameSettingsConfig : ScriptableObject
     [SerializeField] private int musicVolume = 5;
     [SerializeField] private int effectVolume = 5;
     [SerializeField] private int menuVolume = 5;
+    [SerializeField] private int layoutStyle = 0;
+    [SerializeField] private int layoutSide = 0;
 
     /// <summary>
     /// Get default value for a given setting.
@@ -26,6 +28,8 @@ public class GameSettingsConfig : ScriptableObject
         GameSettingsEnum.MusicVolume => musicVolume,
         GameSettingsEnum.EffectVolume => effectVolume,
         GameSettingsEnum.MenuVolume => menuVolume,
+        GameSettingsEnum.LayoutStyle => layoutStyle,
+        GameSettingsEnum.LayoutSide=> layoutSide,
         _ => 0
     };
 }

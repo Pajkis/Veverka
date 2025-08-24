@@ -11,5 +11,7 @@ public enum GameSettingsEnum
     AnimationSpeed,
     MusicVolume,
     EffectVolume,
-    MenuVolume
+    MenuVolume,
+    LayoutStyle,
+    LayoutSide,
 }
