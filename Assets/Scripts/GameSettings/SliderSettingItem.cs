@@ -34,7 +34,7 @@ public class SliderSettingItem : MonoBehaviour
             return;
         }
 
-        // get textMesh components
+        //get textMesh components
         var textsComponents = GetComponentsInChildren<TextMeshProUGUI>();
         foreach (var component in textsComponents)
         {
