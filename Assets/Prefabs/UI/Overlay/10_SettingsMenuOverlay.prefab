@@ -1411,6 +1411,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6742022244000364739, guid: 5f36f73ed3b7f6442bd5bd89a6469497, type: 3}
+      propertyPath: enumType.typeName
+      value: LayoutStyleTypes
+      objectReference: {fileID: 0}
     - target: {fileID: 7884435997367103924, guid: 5f36f73ed3b7f6442bd5bd89a6469497, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1

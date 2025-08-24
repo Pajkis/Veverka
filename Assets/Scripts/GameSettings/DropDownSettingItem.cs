@@ -1,23 +1,23 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// Represents a UI component for configuring a game setting using a dropdown menu.
+/// Universal dropdown setting item that works with any enum type.
+/// Select the enum type directly in the Inspector.
 /// </summary>
-/// <remarks>This class is responsible for initializing the dropdown menu with the current value of the associated
-/// game setting and updating the game setting when the dropdown value changes. It requires a <see cref="Dropdown"/>
-/// component and a <see cref="TextMeshProUGUI"/> component for the name label to be present as children of the
-/// GameObject. Ensure that the <see cref="GameSettings.Instance"/> is properly initialized before using this
-/// component.</remarks>
 public class DropDownSettingItem : MonoBehaviour
 {
-    #region fields
+    #region Fields
     [SerializeField] private GameSettingsEnum settingType;
-    [SerializeField] private TMP_Dropdown dropdown;       // doporučeno nastavit v Inspectoru
+
+    [Header("Enum Configuration")]
+    [SerializeField] private EnumType enumType;
+    [SerializeField] private TMP_Dropdown dropdown;
     [SerializeField] private TextMeshProUGUI nameLabel;
     #endregion
 
+    #region Unity Lifecycle
     private void Awake()
     {
         // Try to get components if not set in Inspector
@@ -28,83 +28,226 @@ public class DropDownSettingItem : MonoBehaviour
         if (nameLabel == null)
         {
             var labels = GetComponentsInChildren<TextMeshProUGUI>(true);
-            foreach (var t in labels)
-                if (t.name.Contains("NameLabel")) { nameLabel = t; break; }
+            foreach (var label in labels)
+            {
+                if (label.name.Contains("NameLabel"))
+                {
+                    nameLabel = label;
+                    break;
+                }
+            }
         }
 
-        // Validate found components
+        // Validate components
         if (dropdown == null)
         {
             Debug.LogError($"[{nameof(DropDownSettingItem)}] TMP_Dropdown not found on {name}.");
-            enabled = false; return;
+            enabled = false;
+            return;
         }
+
         if (nameLabel == null)
         {
             Debug.LogWarning($"[{nameof(DropDownSettingItem)}] Name label not found on {name}.");
         }
+
+        PopulateDropdown();
     }
 
-    /// <summary>
-    /// Subscribes to the dropdown value change event and initializes the component's state from settings.
-    /// </summary>
-    /// <remarks>This method is called automatically when the component is enabled. It ensures that the
-    /// dropdown's value change listener is registered and the component's state is initialized based on the current
-    /// settings.</remarks>
     private void OnEnable()
     {
-        dropdown.onValueChanged.AddListener(OnDropDownValueChanged);
-        InitializeFromSettings();
-    }
-
-    /// <summary>
-    /// Unsubscribes to the dropdown value change event
-    /// </summary>
-    private void OnDisable()
-    {
-        dropdown.onValueChanged.RemoveListener(OnDropDownValueChanged);
-    }
-
-    /// <summary>
-    /// Initializes the dropdown value and name label from the game settings.
-    /// </summary>
-    private void InitializeFromSettings()
-    {
-        if (GameSettings.Instance == null) return;
-
-        // Načti hodnotu
-        int index = GameSettings.Instance.Get(settingType);       
-        dropdown.SetValueWithoutNotify(index);
-
-        // Nastav popisek
-        if (nameLabel != null)
-            nameLabel.text = SplitCamelCase(settingType.ToString());
-    }
-
-    /// <summary>
-    /// Handles the event triggered when the dropdown value changes.
-    /// </summary>
-    /// <remarks>Updates the corresponding game setting with the specified value.  Ensure that <see
-    /// cref="GameSettings.Instance"/> is not null before invoking this method.</remarks>
-    /// <param name="value">The new value selected in the dropdown.</param>
-    public void OnDropDownValueChanged(int value)
-    {
-        // Update GameSettings when the dropdown value changes
-        Debug.Log($"[{nameof(DropDownSettingItem)}] {settingType} changed to {value}");
-
-        if (GameSettings.Instance != null)
+        if (dropdown != null)
         {
-            GameSettings.Instance.Set(settingType, value);
+            dropdown.onValueChanged.AddListener(OnDropDownValueChanged);
+            InitializeFromSettings();
         }
     }
 
-    /// <summary>
-    /// Changes EnumName (text without space) into text with spaces
-    /// </summary>
-    /// <param name="input">Text without spaces</param>
-    /// <returns>Text with spaces</returns>
-    private string SplitCamelCase(string input)
+    private void OnDisable()
     {
-        return System.Text.RegularExpressions.Regex.Replace(input, "(\\B[A-Z])", " $1");
+        if (dropdown != null)
+        {
+            dropdown.onValueChanged.RemoveListener(OnDropDownValueChanged);
+        }
+    }
+    #endregion
+
+    #region Initialization Methods
+    /// <summary>
+    /// Populates the dropdown with options based on the selected enum
+    /// </summary>
+    private void PopulateDropdown()
+    {
+        if (enumType == null || dropdown == null)
+            return;
+
+        dropdown.options.Clear();
+
+        var enumValues = enumType.GetValues();
+        foreach (var enumValue in enumValues)
+        {
+            string optionText = FormatEnumName(enumValue.ToString());
+            dropdown.options.Add(new TMP_Dropdown.OptionData(optionText));
+        }
+
+        dropdown.RefreshShownValue();
     }
 
+    /// <summary>
+    /// Initializes the dropdown value and name label from the game settings
+    /// </summary>
+    private void InitializeFromSettings()
+    {
+        if (GameSettings.Instance == null || enumType == null)
+            return;
+
+        // Load current value from settings
+        int settingValue = GameSettings.Instance.Get(settingType);
+
+        // Find the corresponding enum value index
+        int dropdownIndex = FindEnumIndex(settingValue);
+
+        if (dropdownIndex >= 0 && dropdownIndex < dropdown.options.Count)
+        {
+            dropdown.SetValueWithoutNotify(dropdownIndex);
+        }
+        else
+        {
+            Debug.LogWarning($"[{nameof(DropDownSettingItem)}] Setting value {settingValue} not found in enum. Using default (0).");
+            dropdown.SetValueWithoutNotify(0);
+        }
+
+        // Set name label
+        if (nameLabel != null)
+        {
+            nameLabel.text = FormatEnumName(settingType.ToString());
+        }
+    }
+    #endregion
+
+    #region Event Handlers
+    /// <summary>
+    /// Handles dropdown value changes
+    /// </summary>
+    /// <param name="dropdownIndex">Selected dropdown index</param>
+    public void OnDropDownValueChanged(int dropdownIndex)
+    {
+        if (GameSettings.Instance == null || enumType == null)
+            return;
+
+        var enumValues = enumType.GetValues();
+        if (dropdownIndex < 0 || dropdownIndex >= enumValues.Length)
+            return;
+
+        // Get the enum value at the selected index
+        var selectedEnumValue = enumValues[dropdownIndex];
+        int enumIntValue = enumType.GetIntValue(selectedEnumValue);
+
+        Debug.Log($"[{nameof(DropDownSettingItem)}] {settingType} changed to {selectedEnumValue} (value: {enumIntValue})");
+
+        // Update game settings
+        GameSettings.Instance.Set(settingType, enumIntValue);
+    }
+    #endregion
+
+    #region Helper Methods
+    /// <summary>
+    /// Formats enum name by adding spaces before uppercase letters and making all letters lowercase
+    /// </summary>
+    /// <param name="enumName">Raw enum name</param>
+    /// <returns>Formatted name with spaces and lowercase letters</returns>
+    private string FormatEnumName(string enumName)
+    {
+        if (string.IsNullOrEmpty(enumName))
+            return enumName;
+
+        // Add spaces before uppercase letters (except the first one)
+        string spacedName = System.Text.RegularExpressions.Regex.Replace(enumName, "(\\B[A-Z])", " $1");
+
+        // Make all letters lowercase
+        return spacedName.ToLower();
+    }
+
+    /// <summary>
+    /// Finds the dropdown index for a given enum integer value
+    /// </summary>
+    /// <param name="enumIntValue">Integer value of the enum</param>
+    /// <returns>Index in the dropdown, or -1 if not found</returns>
+    private int FindEnumIndex(int enumIntValue)
+    {
+        if (enumType == null)
+            return -1;
+
+        var enumValues = enumType.GetValues();
+        for (int i = 0; i < enumValues.Length; i++)
+        {
+            if (enumType.GetIntValue(enumValues[i]) == enumIntValue)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+    #endregion
+}
+
+/// <summary>
+/// Wrapper class for enum types to enable Inspector selection
+/// </summary>
+[System.Serializable]
+public class EnumType
+{
+    [SerializeField] private string typeName;
+    private Type cachedType;
+    private object[] cachedValues;
+
+    public string TypeName
+    {
+        get => typeName;
+        set
+        {
+            if (typeName != value)
+            {
+                typeName = value;
+                cachedType = null;
+                cachedValues = null;
+            }
+        }
+    }
+
+    public Type GetSystemType()
+    {
+        if (cachedType == null && !string.IsNullOrEmpty(typeName))
+        {
+            cachedType = Type.GetType(typeName);
+        }
+        return cachedType;
+    }
+
+    public object[] GetValues()
+    {
+        if (cachedValues == null)
+        {
+            var type = GetSystemType();
+            if (type != null && type.IsEnum)
+            {
+                var values = Enum.GetValues(type);
+                cachedValues = new object[values.Length];
+                values.CopyTo(cachedValues, 0);
+            }
+        }
+        return cachedValues ?? new object[0];
+    }
+
+    public int GetIntValue(object enumValue)
+    {
+        return Convert.ToInt32(enumValue);
+    }
+
+    public bool IsValid()
+    {
+        var type = GetSystemType();
+        return type != null && type.IsEnum;
+    }
 }
