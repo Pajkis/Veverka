@@ -8,6 +8,5 @@ public enum GameSettingsEnum
     MusicVolume,
     EffectVolume,
     MenuVolume,
-    LayoutStyle,
-    LayoutSide,
+    LayoutStyle,    
 }

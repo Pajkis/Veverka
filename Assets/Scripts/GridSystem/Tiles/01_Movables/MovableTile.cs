@@ -14,11 +14,7 @@ public class MovableTile : TileObject
     protected SmoothMover smoothMover;
     #endregion
 
-    #region Events
-    [Header("Events")]
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
-    #endregion
+    
 
     #region Event handling
     /// <summary>

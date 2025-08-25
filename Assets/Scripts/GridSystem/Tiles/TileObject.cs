@@ -8,7 +8,11 @@ public abstract class TileObject : MonoBehaviour
     protected string UndoId;
     #endregion
 
-    #region events   
+    #region Events  
+    
+    [Header("Events")]
+    [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;    
     [SerializeField] protected TileQueryEvent tileQueryEvent;
     [SerializeField] protected PlaySfxEvent playSfxEvent;
     #endregion
