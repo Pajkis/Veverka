@@ -7,33 +7,13 @@ using Veverka.Movement.SmoothMover;
 public class MovableTile : TileObject
 {
     #region Fields
-    [SerializeField] protected int moveDistance = 1; // 1 tile
-    [SerializeField] protected float moveDuration = 0.2f;
+    [SerializeField] protected int moveDistance = 1;
+    [SerializeField] protected float moveDuration = 0.15f;
 
     protected MovableMovedPayload payload = new();
     protected SmoothMover smoothMover;
     #endregion
-
-    #region Propeties
-    /// <summary>
-    /// Move duration property
-    /// </summary>
-    public float MoveDuration
-    {
-        get {return moveDuration;}
-        set { moveDuration = value;}
-    }
-
-    /// <summary>
-    /// Move distance property
-    /// </summary>
-    public int MoveDistance
-    {
-        get { return moveDistance; }
-        set { moveDistance = value;}
-    }
-    #endregion
-
+    
     #region Methods
     /// <summary>
     /// Initialize tile type on grid position, init smooth mover
@@ -52,7 +32,7 @@ public class MovableTile : TileObject
 
         // set configs
         moveDuration = gameplayConfig.moveTime;
-
+        
         // base initialization
         base.Init(tileType, gridPosition);      
     }

@@ -11,6 +11,7 @@ namespace Veverka.Movement.SmoothMover
     {
         #region propeties
         public bool IsMoving { get; private set; }
+
         #endregion
 
         #region methods
@@ -23,7 +24,7 @@ namespace Veverka.Movement.SmoothMover
         /// <param name="duration"> duration of movement</param>
         /// <param name="onStart">callback on start method</param>
         /// <param name="onComplete">callback on complete method</param>
-        public void Move(Vector3 currentPosition,Vector3 targetPosition, float duration = 0.15f, Action onStart = null, Action onComplete = null)
+        public void Move(Vector3 currentPosition,Vector3 targetPosition, float duration, Action onStart = null, Action onComplete = null)
         {
             if (IsMoving) return;
             float moveDuration = duration / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);

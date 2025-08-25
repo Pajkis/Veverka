@@ -62,8 +62,8 @@ namespace Veverka.Characters.Veverka
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
-                        Move(inputDirection, distance);
-                        pushableObject.Move(inputDirection, distance);
+                        Move(inputDirection, distance, moveDuration);
+                        pushableObject.Move(inputDirection, distance, moveDuration);
                     }
                     else
                     {
@@ -73,7 +73,7 @@ namespace Veverka.Characters.Veverka
                 // move character to empty tile
                 else if (query.IsWalkable)
                 {
-                    Move(inputDirection, distance);
+                    Move(inputDirection, distance, moveDuration);
                 }
             }
 
@@ -92,7 +92,7 @@ namespace Veverka.Characters.Veverka
         /// <param name="direction">direction of movement</param>
         /// <param name="distance">number of tiles to move</param>
         /// <param name="duration">duration of movement</param>
-        protected override void Move(Direction direction, int distance, float duration = 0.15F)
+        protected override void Move(Direction direction, int distance, float duration = 0.15f)
         {           
             base.Move(direction, distance, duration);    
         }
