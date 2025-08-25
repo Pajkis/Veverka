@@ -129,20 +129,6 @@ public class DropDownSettingItem : MonoBehaviour
         dropdown.RefreshShownValue();
     }
 
-    /// <summary>
-    /// Initializes the dropdown value and name label from the game settings
-    /// </summary>
-    private void InitializeFromSettings()
-    {
-        if (enumType == null)
-            return;
-
-        // Set name label
-        if (nameLabel != null)
-        {
-            nameLabel.text = FormatEnumName(settingType.ToString());
-        }
-    }
     #endregion
 
     #region Event Handlers

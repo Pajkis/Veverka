@@ -27,7 +27,6 @@ public class GameSettings: MonoBehaviour
     #region events
     [Header("Configs and efents")]
     [SerializeField] private GameSettingsConfig config;
-    [SerializeField] private LayoutStyleChangeEvent layoutStyleChange;
     [SerializeField] private SettingDataBroadcastEvent settingDataBroadcast;
     [SerializeField] private SettingDataRequestEvent settingDataRequest;
     #endregion
@@ -136,11 +135,6 @@ public class GameSettings: MonoBehaviour
         gameSettings[payload.Setting] = intValue;
         GameSettingsUtils.Set(payload.Setting, intValue);
         PlayerPrefs.Save();
-
-        if (payload.Setting == GameSettingsEnum.LayoutStyle)
-        {
-            layoutStyleChange.Raise((LayoutStyleTypes)intValue);
-        }
     }
     #endregion
 }
