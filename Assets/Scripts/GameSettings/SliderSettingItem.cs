@@ -25,7 +25,7 @@ public class SliderSettingItem : MonoBehaviour
     /// <summary>
     /// Start method
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         //get slider object
         slider = GetComponentInChildren<Slider>();
@@ -59,13 +59,30 @@ public class SliderSettingItem : MonoBehaviour
         }
 
         slider.minValue = minValue;
-        slider.maxValue = maxValue;
-        slider.onValueChanged.AddListener(OnSliderChanged);
+        slider.maxValue = maxValue;        
+    }
 
+    /// <summary>
+    /// add listneres and init on enable
+    /// </summary>
+    private void OnEnable()
+    {
+        slider.onValueChanged.AddListener(OnSliderChanged);
         settingDataBroadcastEvent.AddListener(OnSettingData);
         nameLabel.text = SplitCamelCase(settingType.ToString());
         settingDataRequestEvent.Raise(settingType);
     }
+
+
+    /// <summary>
+    /// Remove listeners
+    /// </summary>
+    private void OnDisable()
+    {
+        slider.onValueChanged.RemoveListener(OnSliderChanged);
+        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+    }
+
 
     /// <summary>
     /// Reacts on slider value change and save it
@@ -95,12 +112,7 @@ public class SliderSettingItem : MonoBehaviour
         return System.Text.RegularExpressions.Regex.Replace(input, "(\\B[A-Z])", " $1");
     }
 
-    private void OnDestroy()
-    {
-        slider.onValueChanged.RemoveListener(OnSliderChanged);
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);
-    }
-
+    
     private void OnSettingData(SettingDataPayload payload)
     {
         if (payload.Setting != settingType)
