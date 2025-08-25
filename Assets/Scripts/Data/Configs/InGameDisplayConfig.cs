@@ -15,4 +15,15 @@ public class InGameDisplayConfig : ScriptableObject
     public Vector3 ScreenToPlayScreenOffset = new Vector3(2.1666f, -0.5f, -10f);
     // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
     public float smoothMoveTime = 0.2f;
+
+    [Header("UI Layout Style Settings")]
+    public float LeftColumnButtonPosX = 585f;
+    public float MiddleColumnButtonPosX = 720f;
+    public float RightColumnButtonPosX = 855f;
+
+    public float BottomRowButtonPosY = -425f;
+    public float MiddleRowButtonPosY = -290f;
+    public float TopRowButtonPosY = -155f;
+
+    public float AndroidMiddleRowButtonPosY = -225f;
 }

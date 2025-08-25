@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -13,6 +12,7 @@ public class GameSettingsConfig : ScriptableObject
     [SerializeField] private int musicVolume = 5;
     [SerializeField] private int effectVolume = 5;
     [SerializeField] private int menuVolume = 5;
+    [SerializeField] private int layoutStyle = 0;    
 
     /// <summary>
     /// Get default value for a given setting.
@@ -26,6 +26,7 @@ public class GameSettingsConfig : ScriptableObject
         GameSettingsEnum.MusicVolume => musicVolume,
         GameSettingsEnum.EffectVolume => effectVolume,
         GameSettingsEnum.MenuVolume => menuVolume,
+        GameSettingsEnum.LayoutStyle => layoutStyle,       
         _ => 0
     };
 }
