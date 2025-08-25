@@ -21,29 +21,17 @@ public class GameSettings: MonoBehaviour
 
     #region fields
     Dictionary<GameSettingsEnum, int> gameSettings = new Dictionary<GameSettingsEnum, int>();
+
+    #endregion
+
+    #region events
+    [Header("Configs and efents")]
     [SerializeField] private GameSettingsConfig config;
     [SerializeField] private LayoutStyleChangeEvent layoutStyleChange;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcast;
+    [SerializeField] private SettingDataRequestEvent settingDataRequest;
     #endregion
-
-    #region properties
-
-    /// <summary>
-    /// Get a value
-    /// </summary>
-    /// <param name="key">GameSettings enum name</param>
-    /// <returns>value of settings property</returns>
-    public int Get(GameSettingsEnum key)
-    {
-        if (!gameSettings.ContainsKey(key))
-        {
-            Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
-            return config != null ? config.GetDefault(key) : 0;
-        }
-        return gameSettings[key];
-    }
-
-    #endregion
-
+      
     #region Init methods
     /// <summary>
     /// Establishes the singleton instance and keeps it alive across scenes.
@@ -62,14 +50,33 @@ public class GameSettings: MonoBehaviour
         }
     }
 
-   /// <summary>
-   /// Initializes the game settings by loading configuration values from a predefined asset or using default values if
-   /// the asset is not found.
-   /// </summary>
-   /// <remarks>This method ensures that the game settings are properly initialized and validated. If the
-   /// configuration asset  <c>GameSettingsConfig</c> is not found, a default configuration is created. The method also
-   /// validates specific  settings, such as <see cref="GameSettingsEnum.AnimationSpeed"/>, and resets invalid values to
-   /// their defaults.</remarks>
+    /// <summary>
+    /// Adds listeners for setting data events.
+    /// </summary>
+    private void OnEnable()
+    {
+        settingDataRequest.AddListener(OnSettingDataRequest);
+        settingDataBroadcast.AddListener(OnSettingDataBroadcast);
+    }
+
+    /// <summary>
+    /// Removes listeners for setting data events.
+    /// </summary>
+    private void OnDisable()
+    {
+        settingDataRequest.RemoveListener(OnSettingDataRequest);
+        settingDataBroadcast.RemoveListener(OnSettingDataBroadcast);
+    }
+
+
+    /// <summary>
+    /// Initializes the game settings by loading configuration values from a predefined asset or using default values if
+    /// the asset is not found.
+    /// </summary>
+    /// <remarks>This method ensures that the game settings are properly initialized and validated. If the
+    /// configuration asset  <c>GameSettingsConfig</c> is not found, a default configuration is created. The method also
+    /// validates specific  settings, such as <see cref="GameSettingsEnum.AnimationSpeed"/>, and resets invalid values to
+    /// their defaults.</remarks>
     public void InitGameSettings()
     {
         if (config == null)
@@ -100,24 +107,40 @@ public class GameSettings: MonoBehaviour
     }
     #endregion
 
-    #region methods
-    /// <summary>
-    /// Set a value of settings property
-    /// </summary>
-    /// <param name="key">key of the property</param>
-    /// <param name="value">value to be set</param>
-    public void Set(GameSettingsEnum key, int value)
-    {
-        gameSettings[key] = value;
-        GameSettingsUtils.Set(key, value); // persist
-        PlayerPrefs.Save();
+    #region event handlers
 
-        // Raise event if layout style changed
-        if (key == GameSettingsEnum.LayoutStyle)
+    /// <summary>
+    /// On setting data request event handler
+    /// </summary>
+    /// <param name="key"></param>
+    private void OnSettingDataRequest(GameSettingsEnum key)
+    {
+        if (!gameSettings.TryGetValue(key, out int value))
         {
-            layoutStyleChange.Raise((LayoutStyleTypes)value);
+            Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
+            value = config != null ? config.GetDefault(key) : 0;
         }
+        settingDataBroadcast.Raise(new SettingDataPayload { Setting = key, Value = value });
     }
 
+    /// <summary>
+    /// on setting data broadcast event handler
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnSettingDataBroadcast(SettingDataPayload payload)
+    {
+        int intValue = Mathf.RoundToInt(payload.Value);
+        if (gameSettings.TryGetValue(payload.Setting, out int current) && current == intValue)
+            return;
+
+        gameSettings[payload.Setting] = intValue;
+        GameSettingsUtils.Set(payload.Setting, intValue);
+        PlayerPrefs.Save();
+
+        if (payload.Setting == GameSettingsEnum.LayoutStyle)
+        {
+            layoutStyleChange.Raise((LayoutStyleTypes)intValue);
+        }
+    }
     #endregion
 }

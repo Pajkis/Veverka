@@ -11,7 +11,6 @@ namespace Veverka.Characters.Veverka
         #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
-       
         #endregion
 
         #region event handling
@@ -20,16 +19,19 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         private void OnEnable()
         {
-           onArrowPressed.AddListener(HandleInput);          
+            onArrowPressed.AddListener(HandleInput);
+            settingDataBroadcastEvent.AddListener(OnSettingData);
+            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
         }
-        
+
         /// <summary>
         /// on disable - remove listeners
         /// </summary>
-        private void OnDisable() 
+        private void OnDisable()
         {
-         onArrowPressed.RemoveListener(HandleInput);
-        }        
+            onArrowPressed.RemoveListener(HandleInput);
+            settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        }
         #endregion
 
         #region methods

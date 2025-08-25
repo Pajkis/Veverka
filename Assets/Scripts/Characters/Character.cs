@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using Veverka.Movement.SmoothMover;
 
 /// <summary>
 /// Character Control anstract class 
 /// </summary>
-public abstract class Character: MonoBehaviour
+public abstract class Character : MonoBehaviour
 {
     #region Fields
     protected TileType tileType;
@@ -14,6 +13,7 @@ public abstract class Character: MonoBehaviour
 
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
+    protected float animationSpeed;
     protected CharacterMovedPayload payload = new();
 
     protected SmoothMover smoothMover;
@@ -22,11 +22,15 @@ public abstract class Character: MonoBehaviour
     #endregion
 
     #region Events
+    [Header("Events")]
     [SerializeField] protected TileQueryEvent tileQueryEvent;
-    [SerializeField] protected PlaySfxEvent playSfxEvent;
+    [SerializeField] protected PlaySfxEvent playSfxEvent;    
+    [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;
     #endregion
 
     #region Configs
+    [Header("Configs")]
     [SerializeField] protected GameplayConfig gameplayConfig;
     #endregion
 
@@ -41,6 +45,20 @@ public abstract class Character: MonoBehaviour
     }
     #endregion
 
+
+    #region event handling
+    /// <summary>
+    /// Get animation speed from settings
+    /// </summary>
+    /// <param name="payload"></param>
+    protected void OnSettingData(SettingDataPayload payload)
+    {
+        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
+        {
+            animationSpeed = payload.Value;
+        }
+    }
+    #endregion
 
     #region Methods
     /// <summary>
@@ -96,7 +114,7 @@ public abstract class Character: MonoBehaviour
     /// <param name="direction">direction of movement</param>
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
-    protected virtual void Move(Direction direction, int distance, float duration = 0.15f)
+    protected virtual void Move(Direction direction, int distance, float duration)
     {
         //do not execute move when already moving
         if (smoothMover.IsMoving) return;
@@ -112,7 +130,7 @@ public abstract class Character: MonoBehaviour
         Vector3 currentPosition = transform.position;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) ;
+        float moveDuration = (duration * distance) / animationSpeed;
 
         // fill character moved payload for events - calling events in children classes 
         payload = new CharacterMovedPayload
