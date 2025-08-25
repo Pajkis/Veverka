@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,8 +17,9 @@ public class LayoutStyleManager : MonoBehaviour
     [SerializeField] private Button undo;
     [SerializeField] private Button action;
 
-    [Header("Events ")]
-    [SerializeField] private LayoutStyleChangeEvent layoutStyleChangeEvent;
+    [Header("Events ")]   
+    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
 
 
     [Header("Configs ")]
@@ -42,15 +44,6 @@ public class LayoutStyleManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        if (GameSettings.Instance == null)
-        {
-            Debug.LogError($"[{nameof(LayoutStyleManager)}] GameSettings instance not found in scene.");
-            enabled = false;
-            return;
-        }
-        currentLayoutStyle = (LayoutStyleTypes)GameSettings.Instance.Get(GameSettingsEnum.LayoutStyle);
-        Debug.Log($"[{nameof(LayoutStyleManager)}] Current layout style: {currentLayoutStyle}");
-
         if (inGameDisplayConfig == null)
         {
             Debug.LogError($"[{nameof(LayoutStyleManager)}] InGameDisplayConfig not set in Inspector.");
@@ -65,17 +58,16 @@ public class LayoutStyleManager : MonoBehaviour
         middleRowButtonPosY = inGameDisplayConfig.MiddleRowButtonPosY;
         topRowButtonPosY = inGameDisplayConfig.TopRowButtonPosY;
         androidMiddleRowButtonPosY = inGameDisplayConfig.AndroidMiddleRowButtonPosY;
-
-        // Set initial layout
-        setLayout();
+              
     }
-
+    
     /// <summary>
     /// Add listener to the layout style change event.
     /// </summary>
     private void OnEnable()
-    {
-        layoutStyleChangeEvent.AddListener(onLayoutStyleChange);
+    {     
+        settingDataBroadcastEvent.AddListener(OnSettingData);
+        settingDataRequestEvent.Raise(GameSettingsEnum.LayoutStyle);
     }
 
     /// <summary>
@@ -83,27 +75,22 @@ public class LayoutStyleManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        layoutStyleChangeEvent.RemoveListener(onLayoutStyleChange);
+      settingDataBroadcastEvent.RemoveListener(OnSettingData);
     }
 
     #endregion
 
-    #region layout style methods
-    /// <summary>
-    /// Apply the layout style to the UI elements.
-    /// </summary>
-    /// <param name="newLayoutStyle"></param>
-    private void onLayoutStyleChange(LayoutStyleTypes newLayoutStyle)
+    private void OnSettingData(SettingDataPayload payload)
     {
-        if (currentLayoutStyle != newLayoutStyle)
-        {
-            currentLayoutStyle = newLayoutStyle;
-            Debug.Log($"[{nameof(LayoutStyleManager)}] Layout style changed to: {currentLayoutStyle}");
+        if (payload.Setting != GameSettingsEnum.LayoutStyle)
+            return;
 
-            setLayout();
-        }
+        currentLayoutStyle = (LayoutStyleTypes)payload.Value;
+        Debug.Log($"[{nameof(LayoutStyleManager)}] Current layout style: {currentLayoutStyle}");
+        setLayout();
     }
 
+    #region layout style methods
     /// <summary>
     /// Set the layout based on the current layout style.
     /// </summary>

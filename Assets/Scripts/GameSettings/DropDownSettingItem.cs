@@ -15,6 +15,10 @@ public class DropDownSettingItem : MonoBehaviour
     [SerializeField] private EnumType enumType;
     [SerializeField] private TMP_Dropdown dropdown;
     [SerializeField] private TextMeshProUGUI nameLabel;
+
+    [Header("Events")]
+    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
     #endregion
 
     #region Unity Lifecycle
@@ -59,7 +63,8 @@ public class DropDownSettingItem : MonoBehaviour
         if (dropdown != null)
         {
             dropdown.onValueChanged.AddListener(OnDropDownValueChanged);
-            InitializeFromSettings();
+            settingDataBroadcastEvent.AddListener(OnSettingData);
+            settingDataRequestEvent.Raise(settingType);
         }
     }
 
@@ -68,6 +73,37 @@ public class DropDownSettingItem : MonoBehaviour
         if (dropdown != null)
         {
             dropdown.onValueChanged.RemoveListener(OnDropDownValueChanged);
+            settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        }
+    }
+    #endregion
+
+    #region event handlers
+
+    /// <summary>
+    /// Gets setting data from broadcast event and updates dropdown and label
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnSettingData(SettingDataPayload payload)
+    {
+        if (payload.Setting != settingType)
+            return;
+
+        int settingValue = Mathf.RoundToInt(payload.Value);
+        int dropdownIndex = FindEnumIndex(settingValue);
+
+        if (dropdownIndex >= 0 && dropdownIndex < dropdown.options.Count)
+        {
+            dropdown.SetValueWithoutNotify(dropdownIndex);
+        }
+        else
+        {
+            dropdown.SetValueWithoutNotify(0);
+        }
+
+        if (nameLabel != null)
+        {
+            nameLabel.text = FormatEnumName(settingType.ToString());
         }
     }
     #endregion
@@ -98,24 +134,8 @@ public class DropDownSettingItem : MonoBehaviour
     /// </summary>
     private void InitializeFromSettings()
     {
-        if (GameSettings.Instance == null || enumType == null)
+        if (enumType == null)
             return;
-
-        // Load current value from settings
-        int settingValue = GameSettings.Instance.Get(settingType);
-
-        // Find the corresponding enum value index
-        int dropdownIndex = FindEnumIndex(settingValue);
-
-        if (dropdownIndex >= 0 && dropdownIndex < dropdown.options.Count)
-        {
-            dropdown.SetValueWithoutNotify(dropdownIndex);
-        }
-        else
-        {
-            Debug.LogWarning($"[{nameof(DropDownSettingItem)}] Setting value {settingValue} not found in enum. Using default (0).");
-            dropdown.SetValueWithoutNotify(0);
-        }
 
         // Set name label
         if (nameLabel != null)
@@ -132,7 +152,7 @@ public class DropDownSettingItem : MonoBehaviour
     /// <param name="dropdownIndex">Selected dropdown index</param>
     public void OnDropDownValueChanged(int dropdownIndex)
     {
-        if (GameSettings.Instance == null || enumType == null)
+        if (enumType == null)
             return;
 
         var enumValues = enumType.GetValues();
@@ -145,8 +165,12 @@ public class DropDownSettingItem : MonoBehaviour
 
         Debug.Log($"[{nameof(DropDownSettingItem)}] {settingType} changed to {selectedEnumValue} (value: {enumIntValue})");
 
-        // Update game settings
-        GameSettings.Instance.Set(settingType, enumIntValue);
+        // Update game settings       
+        settingDataBroadcastEvent.Raise(new SettingDataPayload
+        {
+            Setting = settingType,
+            Value = enumIntValue
+        });
     }
     #endregion
 

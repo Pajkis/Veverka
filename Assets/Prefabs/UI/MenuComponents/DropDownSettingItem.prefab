@@ -516,8 +516,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   settingType: 5
+  enumType:
+    typeName: 
   dropdown: {fileID: 1970962625535363201}
   nameLabel: {fileID: 3278650361633641588}
+  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
+  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!1 &3440256488888762896
 GameObject:
   m_ObjectHideFlags: 0

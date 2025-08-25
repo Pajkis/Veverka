@@ -140,15 +140,8 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("AudioConfig is not assigned in AudioManager!");
             return;
         }
-
-
-        //sources[SoundChannel.SoundEffect].volume =
-        //    GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
-        //sources[SoundChannel.SoundMusic].volume =
-        //    GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
-        //sources[SoundChannel.SoundUI].volume =
-        //    GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
-
+      
+        // Request volume values at init
         settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
         settingDataRequestEvent.Raise(GameSettingsEnum.MusicVolume);
         settingDataRequestEvent.Raise(GameSettingsEnum.MenuVolume);
@@ -313,14 +306,9 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Handles audio volume change event payload.
+    /// Change volume or pitch based on requested change
     /// </summary>
-    /// <param name="payload">Volume change data</param>
-    private void OnVolumeChanged(AudioVolumePayload payload)
-    {
-        UpdateVolume(payload.Source, payload.VolumeValue);
-    }
-
+    /// <param name="payload"></param>
     private void OnSettingsData(SettingDataPayload payload)
     {
         switch (payload.Setting)
@@ -340,7 +328,6 @@ public class AudioManager : MonoBehaviour
             case GameSettingsEnum.AnimationSpeed:
                 pitchAdjust = payload.Value;
                 break;
-
         }
     }
 }
