@@ -17,3 +17,5 @@ MonoBehaviour:
   musicVolume: 5
   effectVolume: 5
   menuVolume: 5
+  layoutStyle: 0
+  layoutSide: 0

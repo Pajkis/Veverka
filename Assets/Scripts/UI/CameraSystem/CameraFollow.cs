@@ -9,7 +9,8 @@ namespace Veverka.CameraSystem
     public class CameraFollow : MonoBehaviour
     {
         [Header("Config (SO)")]
-        [SerializeField] private InGameDisplayConfig inGameConfig; 
+        [SerializeField] private InGameDisplayConfig inGameConfig;
+        [SerializeField] private LevelDatabase levelDatabase;
 
         #region fields
         [Header("Follow Settings")]
@@ -43,6 +44,14 @@ namespace Veverka.CameraSystem
         private void Awake()
         {
             ApplyConfig();
+
+            if (levelDatabase == null || levelDatabase.gridOrigin == null || 
+                levelDatabase.gridCenterStartTarget == null || levelDatabase.gridSize == null)
+            {
+                Debug.LogError("LevelDatabase or its paramateres is not set in CameraFollow. Please assign it or set values.");
+                return;
+            }
+            Init(levelDatabase.gridCenterStartTarget, levelDatabase.gridOrigin, levelDatabase.gridSize);
         }
 
 #if UNITY_EDITOR
@@ -75,11 +84,11 @@ namespace Veverka.CameraSystem
         /// </summary>
         /// <param name="target">set target of camera to follow</param>
         /// <param name="gridSize">size of the grid</param>
-        public void Init(Transform target, Vector2Int gridSize)
+        private void Init(Transform target, Transform origin, Vector2Int gridSize)
         {
             this.target = target;
-
-            Vector3 gridOrigin = GameGrid.Instance.transform.position;
+                       
+            Vector3 gridOrigin = origin.position;
 
             Vector2 levelSize = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
             Vector2 visibleSize = new Vector2(maxStaticTileSize.x * tileSize, maxStaticTileSize.y * tileSize);

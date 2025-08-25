@@ -62,3 +62,6 @@ TagManager:
   - name: UI_Buttons
     uniqueID: 541054781
     locked: 0
+  - name: UI_LoadingScreen
+    uniqueID: 3565474087
+    locked: 0

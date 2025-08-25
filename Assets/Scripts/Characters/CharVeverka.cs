@@ -11,7 +11,6 @@ namespace Veverka.Characters.Veverka
         #region events definition
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
-       
         #endregion
 
         #region event handling
@@ -20,16 +19,19 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         private void OnEnable()
         {
-           onArrowPressed.AddListener(HandleInput);          
+            onArrowPressed.AddListener(HandleInput);
+            settingDataBroadcastEvent.AddListener(OnSettingData);
+            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
         }
-        
+
         /// <summary>
         /// on disable - remove listeners
         /// </summary>
-        private void OnDisable() 
+        private void OnDisable()
         {
-         onArrowPressed.RemoveListener(HandleInput);
-        }        
+            onArrowPressed.RemoveListener(HandleInput);
+            settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        }
         #endregion
 
         #region methods
@@ -62,8 +64,8 @@ namespace Veverka.Characters.Veverka
                     //try to push
                     if (pushableObject.CanBePushed(inputDirection))
                     {
-                        Move(inputDirection, distance);
-                        pushableObject.Move(inputDirection, distance);
+                        Move(inputDirection, distance, moveDuration);
+                        pushableObject.Move(inputDirection, distance, moveDuration);
                     }
                     else
                     {
@@ -73,7 +75,7 @@ namespace Veverka.Characters.Veverka
                 // move character to empty tile
                 else if (query.IsWalkable)
                 {
-                    Move(inputDirection, distance);
+                    Move(inputDirection, distance, moveDuration);
                 }
             }
 
@@ -92,7 +94,7 @@ namespace Veverka.Characters.Veverka
         /// <param name="direction">direction of movement</param>
         /// <param name="distance">number of tiles to move</param>
         /// <param name="duration">duration of movement</param>
-        protected override void Move(Direction direction, int distance, float duration = 0.15F)
+        protected override void Move(Direction direction, int distance, float duration = 0.15f)
         {           
             base.Move(direction, distance, duration);    
         }

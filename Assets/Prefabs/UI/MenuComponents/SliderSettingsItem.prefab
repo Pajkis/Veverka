@@ -125,7 +125,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &5579416427276231692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,7 +158,8 @@ MonoBehaviour:
   settingType: 3
   minValue: 1
   maxValue: 10
-  audioVolumeEvent: {fileID: 11400000, guid: aae02edc94a44b7eaadb42025c136334, type: 2}
+  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
+  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!222 &7539452457846179150
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -12,7 +12,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private PlayUiEvent playUiEvent;
     [SerializeField] private PlayMusicEvent playMusicEvent;
     [SerializeField] private AudioInitEvent audioInitEvent;
-    [SerializeField] private AudioVolumeEvent audioVolumeEvent;
+    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
     #endregion
 
     #region sound input
@@ -47,6 +48,11 @@ public class AudioManager : MonoBehaviour
     private Dictionary<MusicType, List<AudioClip>> musicPlaylists; // background music soundds
     private MusicType currentMusicType;
     private Dictionary<Enum, AudioClip> clips = new();
+
+    float effectVolume;
+    float musicVolume;
+    float uiVolume;
+    float pitchAdjust;
     #endregion
 
     #region Init methods
@@ -67,7 +73,7 @@ public class AudioManager : MonoBehaviour
         playSfxEvent?.AddListener(PlaySfx);
         playUiEvent?.AddListener(PlayUi);
         playMusicEvent?.AddListener(PlayRandomMusic);
-        audioVolumeEvent?.AddListener(OnVolumeChanged);
+        settingDataBroadcastEvent?.AddListener(OnSettingsData);
     }
 
     /// <summary>
@@ -79,7 +85,7 @@ public class AudioManager : MonoBehaviour
         playSfxEvent?.RemoveListener(PlaySfx);
         playUiEvent?.RemoveListener(PlayUi);
         playMusicEvent?.RemoveListener(PlayRandomMusic);
-        audioVolumeEvent?.RemoveListener(OnVolumeChanged);
+        settingDataBroadcastEvent?.RemoveListener(OnSettingsData);
     }
 
     /// <summary>
@@ -134,13 +140,12 @@ public class AudioManager : MonoBehaviour
             Debug.LogError("AudioConfig is not assigned in AudioManager!");
             return;
         }
-        sources[SoundChannel.SoundEffect].volume =
-            GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;
-        sources[SoundChannel.SoundMusic].volume =
-            GameSettings.Instance.Get(GameSettingsEnum.MusicVolume) / audioConfig.soundMusicVolumeAdj;
-        sources[SoundChannel.SoundUI].volume =
-            GameSettings.Instance.Get(GameSettingsEnum.MenuVolume) / audioConfig.soundUIVolumeAdj;
-
+      
+        // Request volume values at init
+        settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
+        settingDataRequestEvent.Raise(GameSettingsEnum.MusicVolume);
+        settingDataRequestEvent.Raise(GameSettingsEnum.MenuVolume);
+        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed); // to set pitch for sound effects
 
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
@@ -177,7 +182,7 @@ public class AudioManager : MonoBehaviour
             // adjust pitch for sound effects based on animation speed setting
             if (channel == SoundChannel.SoundEffect)
             {
-                float pitch = GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed) switch
+                float pitch = (int)pitchAdjust switch
                 {
                     1 => audioConfig.minPitch,
                     2 => audioConfig.normalPitch,
@@ -301,11 +306,28 @@ public class AudioManager : MonoBehaviour
     #endregion
 
     /// <summary>
-    /// Handles audio volume change event payload.
+    /// Change volume or pitch based on requested change
     /// </summary>
-    /// <param name="payload">Volume change data</param>
-    private void OnVolumeChanged(AudioVolumePayload payload)
+    /// <param name="payload"></param>
+    private void OnSettingsData(SettingDataPayload payload)
     {
-        UpdateVolume(payload.Source, payload.VolumeValue);
+        switch (payload.Setting)
+        {
+            case GameSettingsEnum.EffectVolume:
+                effectVolume = payload.Value / audioConfig.soundEffectVolumeAdj;
+                UpdateVolume(GameSettingsEnum.EffectVolume, (int)payload.Value);
+                break;
+            case GameSettingsEnum.MusicVolume:
+                musicVolume = payload.Value / audioConfig.soundMusicVolumeAdj;
+                UpdateVolume(GameSettingsEnum.MusicVolume, (int)payload.Value);
+                break;
+            case GameSettingsEnum.MenuVolume:
+                uiVolume = payload.Value /  audioConfig.soundUIVolumeAdj;
+                UpdateVolume(GameSettingsEnum.MenuVolume, (int)payload.Value);
+                break;
+            case GameSettingsEnum.AnimationSpeed:
+                pitchAdjust = payload.Value;
+                break;
+        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Veverka.Movement.SmoothMover;
 
 /// <summary>
 /// Movable object setup and control
@@ -7,30 +6,43 @@ using Veverka.Movement.SmoothMover;
 public class MovableTile : TileObject
 {
     #region Fields
-    [SerializeField] protected int moveDistance = 1; // 1 tile
-    [SerializeField] protected float moveDuration = 0.2f;
+    [SerializeField] protected int moveDistance = 1;
+    [SerializeField] protected float moveDuration = 0.15f;
+    protected float animationSpeed;
 
     protected MovableMovedPayload payload = new();
     protected SmoothMover smoothMover;
     #endregion
 
-    #region Propeties
+    
+
+    #region Event handling
     /// <summary>
-    /// Move duration property
+    /// on enable - add listeners
     /// </summary>
-    public float MoveDuration
+    protected void OnEnable()
     {
-        get {return moveDuration;}
-        set { moveDuration = value;}
+        settingDataBroadcastEvent.AddListener(OnSettingData);
+        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+    }
+    /// <summary>
+    /// remove listeners
+    /// </summary>
+    protected void OnDisable()
+    {
+        settingDataBroadcastEvent.RemoveListener(OnSettingData);
     }
 
     /// <summary>
-    /// Move distance property
+    /// get animation speed from settings
     /// </summary>
-    public int MoveDistance
+    /// <param name="payload"></param>
+    private void OnSettingData(SettingDataPayload payload)
     {
-        get { return moveDistance; }
-        set { moveDistance = value;}
+        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
+        {
+            animationSpeed = payload.Value;
+        }
     }
     #endregion
 
@@ -52,7 +64,7 @@ public class MovableTile : TileObject
 
         // set configs
         moveDuration = gameplayConfig.moveTime;
-
+        
         // base initialization
         base.Init(tileType, gridPosition);      
     }
@@ -63,7 +75,7 @@ public class MovableTile : TileObject
     /// <param name="previous"> previous position</param>
     /// <param name="current">current position</param>  
     /// <param name="duration"> duration of movement</param>
-    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration = 0.15f)
+    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration)
     {        
         if (smoothMover.IsMoving) return;
 
@@ -84,7 +96,7 @@ public class MovableTile : TileObject
     /// <param name="direction">direction of movemebt</param>
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
-    public virtual void Move(Direction direction, int distance, float duration = 0.15f)
+    public virtual void Move(Direction direction, int distance, float duration)
     {
         if (smoothMover.IsMoving) return;
 
@@ -95,7 +107,7 @@ public class MovableTile : TileObject
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(GridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float moveDuration = (duration * distance) / GameSettings.Instance.Get(GameSettingsEnum.AnimationSpeed);
+        float moveDuration = (duration * distance) / animationSpeed;
 
         // fill character moved payload for events - calling events in children classes 
         payload = new MovableMovedPayload

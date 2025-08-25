@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6083ac727e9cd428e2746d7fb3451c, type: 3}
-  m_Name: LevelInitEvent
+  m_Script: {fileID: 11500000, guid: 1dada0d2a068a3244b41464d625c64d5, type: 3}
+  m_Name: SettingDataRequestEvent
   m_EditorClassIdentifier: 
   onEvent:
     m_PersistentCalls:

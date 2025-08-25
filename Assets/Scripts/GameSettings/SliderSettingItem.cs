@@ -13,7 +13,8 @@ public class SliderSettingItem : MonoBehaviour
     [SerializeField] private int minValue;
     [SerializeField] private int maxValue;
 
-    [SerializeField] private AudioVolumeEvent audioVolumeEvent;
+    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
 
     private Slider slider;
     private TextMeshProUGUI nameLabel;
@@ -24,7 +25,7 @@ public class SliderSettingItem : MonoBehaviour
     /// <summary>
     /// Start method
     /// </summary>
-    private void Start()
+    private void Awake()
     {
         //get slider object
         slider = GetComponentInChildren<Slider>();
@@ -34,7 +35,7 @@ public class SliderSettingItem : MonoBehaviour
             return;
         }
 
-        // get textMesh components
+        //get textMesh components
         var textsComponents = GetComponentsInChildren<TextMeshProUGUI>();
         foreach (var component in textsComponents)
         {
@@ -57,21 +58,31 @@ public class SliderSettingItem : MonoBehaviour
             }
         }
 
-        // Set initial value from GameSettings
-        if (GameSettings.Instance != null)
-        {            
-            float value = GameSettings.Instance.Get(settingType);
-            value = Mathf.Clamp(value, minValue, maxValue);
-            slider.minValue = minValue;
-            slider.maxValue = maxValue;
-            slider.value = value;
-            valueLabel.text = Mathf.RoundToInt(value).ToString();
-            nameLabel.text = SplitCamelCase(settingType.ToString());
-        }
-
-        // Add listener for changes
-        slider.onValueChanged.AddListener(OnSliderChanged);
+        slider.minValue = minValue;
+        slider.maxValue = maxValue;        
     }
+
+    /// <summary>
+    /// add listneres and init on enable
+    /// </summary>
+    private void OnEnable()
+    {
+        slider.onValueChanged.AddListener(OnSliderChanged);
+        settingDataBroadcastEvent.AddListener(OnSettingData);
+        nameLabel.text = SplitCamelCase(settingType.ToString());
+        settingDataRequestEvent.Raise(settingType);
+    }
+
+
+    /// <summary>
+    /// Remove listeners
+    /// </summary>
+    private void OnDisable()
+    {
+        slider.onValueChanged.RemoveListener(OnSliderChanged);
+        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+    }
+
 
     /// <summary>
     /// Reacts on slider value change and save it
@@ -79,19 +90,12 @@ public class SliderSettingItem : MonoBehaviour
     /// <param name="value"></param>
     private void OnSliderChanged(float value)
     {
-        if (GameSettings.Instance != null)
+        settingDataBroadcastEvent.Raise(new SettingDataPayload
         {
-            GameSettings.Instance.Set(settingType, Mathf.RoundToInt(value));            
-            
-            // change volume in audio manager
-            audioVolumeEvent.Raise(new AudioVolumePayload
-            {
-                Source = settingType,
-                VolumeValue = Mathf.RoundToInt(value)
-            });
-        }
+            Setting = settingType,
+            Value = Mathf.RoundToInt(value)
+        });
 
-        // change text in settings menu
         if (valueLabel != null)
         {
             valueLabel.text = Mathf.RoundToInt(value).ToString();
@@ -106,6 +110,18 @@ public class SliderSettingItem : MonoBehaviour
     private string SplitCamelCase(string input)
     {
         return System.Text.RegularExpressions.Regex.Replace(input, "(\\B[A-Z])", " $1");
+    }
+
+    
+    private void OnSettingData(SettingDataPayload payload)
+    {
+        if (payload.Setting != settingType)
+            return;
+
+        float value = Mathf.Clamp(payload.Value, minValue, maxValue);
+        slider.SetValueWithoutNotify(value);
+        if (valueLabel != null)
+            valueLabel.text = Mathf.RoundToInt(value).ToString();
     }
 
     #endregion

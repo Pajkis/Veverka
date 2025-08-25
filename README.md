@@ -1,61 +1,103 @@
 # Veverka
 
-## Overview
+A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The squirrel (Veverka) must push nuts to their designated goals across increasingly challenging levels.
 
-Veverka is a 2D Unity project that demonstrates a lightweight menu and level
-flow. It includes scenes for bootstrapping the game, navigating menus, loading
-levels, and playing through grid-based stages. The project uses Unity's 2D
-feature set and TextMeshPro for crisp UI text.
+**Key Features:**
 
-## Unity Version and Packages
+-   Grid-based movement and puzzle mechanics
+-   10 challenging levels with progressive difficulty
+-   Undo system for strategic gameplay
+-   Complete audio system with music and sound effects
+-   Multi-platform support (Windows & Android 12+)
+-   Professional UI/UX with smooth transitions
+-   Configurable game settings
+-   Lightweight menu and level flow system
+-   TextMeshPro integration for crisp UI text
 
-- **Editor:** Unity 2022.3.54f1
-- **Key packages:**
-  - `com.unity.feature.2d`
-  - `com.unity.textmeshpro`
-  - `com.unity.test-framework` (for PlayMode/EditMode tests)
+**Technical Highlights:**
 
-## Opening the Project
+-   Unity 2022.3.54f1 with 2D feature set
+-   Key packages: `com.unity.feature.2d`, `com.unity.textmeshpro`, `com.unity.test-framework`
+-   ScriptableObject-based configuration system
+-   Event-driven architecture
+-   Clean scene flow management with 6 dedicated scenes
+-   Addressable asset system integration
+-   Comprehensive testing framework support
 
-1. Install Unity **2022.3.54f1** or later.
-2. In Unity Hub, click **Add project** and select this repository's root folder.
-3. Open one of the scenes in `Assets/Scenes`:
-   - `00_GameLoad`
-   - `10_MainMenu`
-   - `11_LevelMenu`
-   - `20_LevelLoad`
-   - `21_LevelUnload`
-   - `30_GamePlay`
-4. Essential prefabs and assets live in `Assets/Prefabs`, `Assets/Sprites`, and
-   related folders.
+**Game Scenes:**
 
-## Building
+-   `00_GameLoad` - Game bootstrap and initialization
+-   `10_MainMenu` - Main menu navigation
+-   `11_LevelMenu` - Level selection interface
+-   `20_LevelLoad` - Level loading sequence
+-   `21_LevelUnload` - Level cleanup
+-   `30_GamePlay` - Core gameplay experience
 
-1. In the Unity Editor, open **File → Build Settings**.
-2. Ensure the desired scenes are added in the build list (use the order above).
-3. Choose your target platform and click **Build**.
+**How to Play:**
 
-## How to run
+-   **Movement:** Arrow keys, cursor buttons, or on-screen controls
+-   **Undo:** Press 'B' key or squirrel button to reverse moves
+-   **Pause:** Press 'Esc' key or pause button to access menu
+-   **Goal:** Push all nuts onto their designated goal positions
 
-Windows: 
-Download VeverkaGame_WinVx.x.x.zip, unpack open and run Veverka.exe -> play
+**Installation & Running:**
 
-Android 12+: 
-Download VeverkaGame_AndroidVx.x.x.apk, open -> install -> play
+-   **Windows:** Download `VeverkaGame_WinVx.x.x.zip`, extract and run `Veverka.exe`
+-   **Android 12+:** Download `VeverkaGame_AndroidVx.x.x.apk` and install
 
-## How to play
+**Asset Structure:**
 
-- movement - cursor buttons or keyboard arrows
-- Undo - one of the squirrel buttons or key "B"
-- Pause - pause button or "Esc"
+-   Essential prefabs located in `Assets/Prefabs`
+-   Sprites and visual assets in `Assets/Sprites`
+-   Audio files organized by type (music, effects, UI sounds)
 
-## Contribution
+## Getting Started
 
-Contributions are welcome! Please fork the repository and submit a pull
-request. For significant changes, open an issue first to discuss what you would
-like to change.
+### Development Setup
+
+1. Install Unity **2022.3.54f1** or later
+2. In Unity Hub, click **Add project** and select the `Veverka/` folder
+3. Open scene `00_GameLoad` to start the game flow
+4. For development, explore scenes in `Assets/Scenes/` directory
+5. Build via **File → Build Settings** (ensure all 6 scenes are added in correct order)
+
+### Building for Distribution
+
+1. Open **File → Build Settings** in Unity Editor
+2. Add scenes in this order: `00_GameLoad`, `10_MainMenu`, `11_LevelMenu`, `20_LevelLoad`, `21_LevelUnload`, `30_GamePlay`
+3. Select target platform (Windows/Android)
+4. Configure platform-specific settings
+5. Click **Build** to generate executable
+
+### Development Requirements
+
+-   Unity 2022.3.54f1+
+-   Git
+-   Platform-specific SDKs (for mobile deployment)
+
+## Project Structure
+
+```
+Veverka/
+├── Assets/           # Game assets and scripts
+│   ├── Prefabs/      # Essential game prefabs
+│   ├── Sprites/      # Visual assets
+│   ├── Audio/        # Music, effects, UI sounds
+│   └── Scenes/       # Game scenes (6 total)
+├── ProjectSettings/  # Unity project configuration
+├── README.md         # Detailed game documentation
+└── CHANGELOG.md      # Version history
+```
+
+## Contributing
+
+Contributions are welcome! Please fork the repository and submit pull requests. For significant changes, open an issue first to discuss proposed modifications.
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file
-for details.
+This project is licensed under the MIT License.
+
+## Version
+
+Current version: v0.10.0 (Initial Release)  
+Release date: 2025-08-20

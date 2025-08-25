@@ -17,7 +17,10 @@ public class EnvironmentSounds : MonoBehaviour
 
     [Header("Audio Config")]
     [SerializeField] private AudioConfig audioConfig;
+    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
+    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
 
+    private float effectVolume;
     private AudioSource audioSource;
 
     /// <summary>
@@ -30,16 +33,7 @@ public class EnvironmentSounds : MonoBehaviour
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
-    }
 
-    /// <summary>
-    /// Initializes the ambient sound system and starts playing ambient audio clips in a loop.
-    /// </summary>
-    /// <remarks>This method checks for assigned ambient audio clips and configures the delay settings  based
-    /// on the provided audio configuration. If no ambient clips are assigned, a warning  is logged. The method then
-    /// starts a coroutine to play the ambient audio clips in a loop.</remarks>
-    void Start()
-    {
         // Audio source check
         if (ambientClips == null || ambientClips.Count == 0)
         {
@@ -49,9 +43,21 @@ public class EnvironmentSounds : MonoBehaviour
         // AudioConfig settings
         minDelay = audioConfig.minAmbientSoundDelay;
         maxDelay = audioConfig.maxAmbientSoundDelay;
-
+    }
+       
+    private void OnEnable()
+    {
+        settingDataBroadcastEvent.AddListener(OnSettingData);
+        settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
         StartCoroutine(PlayAmbientLoop());
     }
+
+    private void OnDisable()
+    {
+        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        StopAllCoroutines();
+    }
+
 
     /// <summary>
     /// Plays ambient sound effects in a loop with randomized delays between each playback.
@@ -72,9 +78,21 @@ public class EnvironmentSounds : MonoBehaviour
                 AudioClip clip = ambientClips[Random.Range(0, ambientClips.Count)];
 
                 // get volume from GameSettings (same as Effects)
-                float volume = GameSettings.Instance.Get(GameSettingsEnum.EffectVolume) / audioConfig.soundEffectVolumeAdj;  
+                float volume = effectVolume / audioConfig.soundEffectVolumeAdj;
                 audioSource.PlayOneShot(clip, volume);
             }
+        }
+    }
+
+    /// <summary>
+    /// Setting data event handler
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnSettingData(SettingDataPayload payload)
+    {
+        if (payload.Setting == GameSettingsEnum.EffectVolume)
+        {
+            effectVolume = payload.Value;
         }
     }
 }
