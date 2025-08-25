@@ -25,7 +25,7 @@ public class GameSettings: MonoBehaviour
     #endregion
 
     #region events
-    [Header("Configs and efents")]
+    [Header("Configs and events")]
     [SerializeField] private GameSettingsConfig config;
     [SerializeField] private SettingDataBroadcastEvent settingDataBroadcast;
     [SerializeField] private SettingDataRequestEvent settingDataRequest;
