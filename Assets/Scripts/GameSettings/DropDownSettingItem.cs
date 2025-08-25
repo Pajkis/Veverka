@@ -226,6 +226,10 @@ public class EnumType
         }
     }
 
+    /// <summary>
+    /// Get System type
+    /// </summary>
+    /// <returns></returns>
     public Type GetSystemType()
     {
         if (cachedType == null && !string.IsNullOrEmpty(typeName))
@@ -235,6 +239,10 @@ public class EnumType
         return cachedType;
     }
 
+    /// <summary>
+    /// Get values of enum
+    /// </summary>
+    /// <returns></returns>
     public object[] GetValues()
     {
         if (cachedValues == null)
@@ -250,11 +258,20 @@ public class EnumType
         return cachedValues ?? new object[0];
     }
 
+    /// <summary>
+    /// Get int value of enum
+    /// </summary>
+    /// <param name="enumValue"></param>
+    /// <returns></returns>
     public int GetIntValue(object enumValue)
     {
         return Convert.ToInt32(enumValue);
     }
 
+    /// <summary>
+    /// Check validity
+    /// </summary>
+    /// <returns></returns>
     public bool IsValid()
     {
         var type = GetSystemType();
