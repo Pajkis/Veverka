@@ -6,4 +6,5 @@ using UnityEngine;
 public struct GoalRemovedPayload
 {
     public Vector2Int Position;
+    public int GoalReduction;
 }

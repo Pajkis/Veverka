@@ -1,4 +1,3 @@
-using UnityEngine;
 
 /// <summary>
 /// Tile types extension static class
@@ -58,6 +57,9 @@ public static class TileTypeExtensions
             case "V": return TileType.Veverka;
             case "N": return TileType.Nut;
             case "G": return TileType.Goal;
+            case "NS": return TileType.StoneNut;
+            case "WS": return TileType.StoneWall;
+            case "H": return TileType.Hole;
             case ".": return TileType.Empty;           
             default: return TileType.ErrorTile; 
         }   

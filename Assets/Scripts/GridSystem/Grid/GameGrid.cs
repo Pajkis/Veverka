@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Veverka.CameraSystem;
 using Veverka.Characters.Veverka;
 
 namespace Veverka.GridSystem.GameGrid
@@ -33,11 +32,15 @@ namespace Veverka.GridSystem.GameGrid
 
         #region tile objects
         // Prefabs
-        [SerializeField] private GameObject veverkaPrefab;
-        [SerializeField] private GameObject liskacekPrefab;
         [SerializeField] private GameObject emptyPrefab;
+        [SerializeField] private GameObject veverkaPrefab;
+        [SerializeField] private GameObject nutPrefab;
+        [SerializeField] private GameObject nutStonePrefab;       
         [SerializeField] private GameObject wallPrefab;
-        [SerializeField] private GameObject goalPrefab;
+        [SerializeField] private GameObject wallStonePrefab;
+        [SerializeField] private GameObject holePrefab;
+        [SerializeField] private GameObject goalPrefab;        
+         
         [SerializeField] private GameObject backgroundPrefab;
         //Adjust screen for each level size
         [SerializeField] private Transform gridRoot;
@@ -219,19 +222,28 @@ namespace Veverka.GridSystem.GameGrid
                     // insert specific tiles
                     switch (tileType)
                     {
-                    case TileType.Empty:
+                        case TileType.Empty:
 
-                            SetTileType(tilePos, TileType.Empty);
-                            break;
+                                SetTileType(tilePos, TileType.Empty);
+                                break;
 
-                    case TileType.Wall:
+                        case TileType.Wall:
+
                             var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                             tile.transform.SetParent(gridRoot, false);
                             tile.transform.localPosition = worldTilePos;
-                            SetTileType(tilePos, TileType.Wall);
+                            SetTileType(tilePos, tileType);
                             break;
 
-                    case TileType.Veverka:
+                        case TileType.StoneWall:
+
+                            tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            tile.transform.SetParent(gridRoot, false);
+                            tile.transform.localPosition = worldTilePos;
+                            SetTileType(tilePos, tileType);
+                            break;
+
+                        case TileType.Veverka:
 
                             SetTileType(tilePos, TileType.Empty);
 
@@ -245,16 +257,35 @@ namespace Veverka.GridSystem.GameGrid
                             levelDatabase.gridCenterStartTarget = veverka.transform;
                             break;
 
-                    case TileType.Nut:
+                        case TileType.Nut:
 
-                            // generate nut
-                            NutTile nutTile = Instantiate(liskacekPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
-                            nutTile.transform.SetParent(gridRoot, false);
-                            nutTile.transform.localPosition = worldTilePos;
-                            nutTile.Init(tileType, tilePos);
+                                // generate nut
+                                NutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
+                                nutTile.transform.SetParent(gridRoot, false);
+                                nutTile.transform.localPosition = worldTilePos;
+                                nutTile.Init(tileType, tilePos);
+                                break;
+
+                        case TileType.StoneNut:
+
+                                // generate stone nut
+                                StoneNutTile stoneNutTile = Instantiate(nutStonePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<StoneNutTile>();
+                                stoneNutTile.transform.SetParent(gridRoot, false);
+                                stoneNutTile.transform.localPosition = worldTilePos;
+                                stoneNutTile.Init(tileType, tilePos);
+                                break;
+
+                        case TileType.Hole:
+
+                            // generate hole
+                            HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
+                            holeTile.transform.SetParent(gridRoot, false);
+                            holeTile.transform.localPosition = worldTilePos;
+                            //SetTileType(tilePos, tileType);
+                            holeTile.Init(tileType, tilePos);
                             break;
 
-                    case TileType.Goal:
+                        case TileType.Goal:
 
                             // generate goal
                             GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();

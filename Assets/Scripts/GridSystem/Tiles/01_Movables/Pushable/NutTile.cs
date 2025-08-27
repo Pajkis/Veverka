@@ -45,7 +45,7 @@ public class NutTile : PushableTile
             {
                 Position = targetPosition,
                 PushableTileType = this,
-                GoalReduction = 1,
+               // GoalReduction = 1,
             });
 
             Destroy(gameObject);            

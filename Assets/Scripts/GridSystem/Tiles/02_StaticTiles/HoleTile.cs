@@ -1,13 +1,10 @@
 using UnityEngine;
 
-/// <summary>
-/// 
-/// </summary>
-public class GoalTile : StaticTile
+public class HoleTile : StaticTile
 {
     #region events
     [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
-    [SerializeField] private GoalSetEvent goalSetEvent;
+ //   [SerializeField] private GoalSetEvent goalSetEvent;
     [SerializeField] private GoalRemovedEvent goalRemovedEvent;  
     #endregion
 
@@ -15,11 +12,12 @@ public class GoalTile : StaticTile
     public override void Init(TileType tileType, Vector2Int gridPosition)
     {
         base.Init(tileType, gridPosition);
-        goalSetEvent.Raise(new GoalSetPayload
-        {
-            Position = gridPosition,
-            Goal = this,
-        });
+       
+        //goalSetEvent.Raise(new GoalSetPayload
+        //{
+        //    Position = gridPosition,
+        //    Goal = this,
+        //});
     }
 
     /// <summary>
@@ -27,7 +25,7 @@ public class GoalTile : StaticTile
     /// </summary>
     private void OnEnable()
     {
-        pushableInGoalEvent.AddListener(OnPushableInGoal);
+        pushableInGoalEvent.AddListener(OnPushableInHole);
     }
 
     /// <summary>
@@ -35,14 +33,14 @@ public class GoalTile : StaticTile
     /// </summary>
     private void OnDisable()
     {
-        pushableInGoalEvent.RemoveListener(OnPushableInGoal);
+        pushableInGoalEvent.RemoveListener(OnPushableInHole);
     }
 
     /// <summary>
     /// On pushable in goal event settlement
     /// </summary>
     /// <param name="payload"></param>
-    private void OnPushableInGoal(PushableInGoalPayload payload)
+    private void OnPushableInHole(PushableInGoalPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
@@ -53,7 +51,6 @@ public class GoalTile : StaticTile
             goalRemovedEvent.Raise(new GoalRemovedPayload
             {
                 Position = payload.Position,
-                GoalReduction = 1,
             });
             Destroy(gameObject);
         }

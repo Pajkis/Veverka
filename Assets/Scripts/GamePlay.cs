@@ -16,7 +16,7 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private SpriteNumberDisplay levelDisplay;
 
     [Header("Events")]
-    [SerializeField] private PushableInGoalEvent pushableInGoalEvent;   
+    [SerializeField] private GoalRemovedEvent goalRemovedEvent;   
     [SerializeField] private CharacterMovedEvent characterMoved;
     [SerializeField] private PlaySfxEvent playSfxEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
@@ -50,7 +50,7 @@ public class GamePlay : MonoBehaviour
     private void OnEnable()
     {
         // add listeners     
-        pushableInGoalEvent.AddListener(UpdateGoalCount);
+        goalRemovedEvent.AddListener(UpdateGoalCount);
       //  levelInitEvent.AddListener(LevelInit);
         characterMoved.AddListener(OnCharacterMoved);
 
@@ -83,7 +83,7 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        pushableInGoalEvent.RemoveListener(UpdateGoalCount);
+        goalRemovedEvent.RemoveListener(UpdateGoalCount);
       //  levelInitEvent.RemoveListener(LevelInit);
         characterMoved.RemoveListener(OnCharacterMoved);
     }
@@ -112,7 +112,7 @@ public class GamePlay : MonoBehaviour
     /// <summary>
     /// Update goal count, check for level complete condition
     /// </summary>
-    void UpdateGoalCount(PushableInGoalPayload payload)
+    void UpdateGoalCount(GoalRemovedPayload payload)
     {        
         levelGoalCount -= payload.GoalReduction;
         goalCountDisplay.SetNumber(levelGoalCount);
