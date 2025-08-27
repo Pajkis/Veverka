@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: eb25cf9adb47a5c419c8d9ac18438bd5
+guid: 705488eaa6c9b674cbceffe7dec0d14d
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 512
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -123,13 +123,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SquareButton_Refresh_0
+      name: Button_Help_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 512
-        width: 512
-        height: 512
+        x: 172
+        y: 827
+        width: 665
+        height: 601
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -137,20 +137,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9dbcc5bc5bc347840a369153bb00b0be
-      internalID: 1459391531
+      spriteID: 4ac319f0d2318b44db26f522dab3f29a
+      internalID: 966042773
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SquareButton_Refresh_1
+      name: Button_Help_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 512
-        height: 512
+        x: 173
+        y: 191
+        width: 663
+        height: 591
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -158,8 +158,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: de22766cbcd81fc4dbfd39bcda35219b
-      internalID: 783635606
+      spriteID: 7faace0d3a1c87d46ac59b46e27181e3
+      internalID: -798291848
       vertices: []
       indices: 
       edges: []
@@ -175,8 +175,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SquareButton_Refresh_0: 1459391531
-      SquareButton_Refresh_1: 783635606
+      Button_Help_0: 966042773
+      Button_Help_1: -798291848
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

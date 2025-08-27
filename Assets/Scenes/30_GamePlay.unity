@@ -2401,11 +2401,11 @@ PrefabInstance:
     - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
       propertyPath: m_SpriteState.m_PressedSprite
       value: 
-      objectReference: {fileID: 315323419, guid: 8be75f83e972920488e8b40366d29fcd, type: 3}
+      objectReference: {fileID: -798291848, guid: 705488eaa6c9b674cbceffe7dec0d14d, type: 3}
     - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
       propertyPath: m_SpriteState.m_HighlightedSprite
       value: 
-      objectReference: {fileID: 315323419, guid: 8be75f83e972920488e8b40366d29fcd, type: 3}
+      objectReference: {fileID: -798291848, guid: 705488eaa6c9b674cbceffe7dec0d14d, type: 3}
     - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -2437,7 +2437,7 @@ PrefabInstance:
     - target: {fileID: 4508605405800831478, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 752150286, guid: 8be75f83e972920488e8b40366d29fcd, type: 3}
+      objectReference: {fileID: 966042773, guid: 705488eaa6c9b674cbceffe7dec0d14d, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
