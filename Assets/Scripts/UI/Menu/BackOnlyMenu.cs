@@ -6,8 +6,16 @@ public class BackOnlyMenu : MonoBehaviour
     /// Handle on click quit button event
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
-    {       
-        Destroy(gameObject);
+    {
+        // Find the parent canvas of this menu
+        GameObject overlay = gameObject.GetComponentInParent<Canvas>().gameObject;
+        if (overlay == null)
+        {
+            Debug.LogWarning("Overlay menu does not include canvas");
+            return;
+        }
+
+        Destroy(overlay);
     }
 
 }
