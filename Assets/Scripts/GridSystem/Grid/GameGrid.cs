@@ -427,7 +427,7 @@ namespace Veverka.GridSystem.GameGrid
 
         #region tile handling
 
-        private void OnPushableSet(NutSetPayload payload)
+        private void OnPushableSet(NutBasicPayload payload)
         {
             SetPushableAt(payload.Position, payload.NutType);
             SetTileType(payload.Position, payload.NutType.PosTileType);

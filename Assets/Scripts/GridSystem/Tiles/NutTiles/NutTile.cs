@@ -71,7 +71,7 @@ public class NutTile : TileObject
 
         // base initialization
         base.Init(tileType, gridPosition);
-        nutSetEvent.Raise(new NutSetPayload
+        nutSetEvent.Raise(new NutBasicPayload
         {
             Position = gridPosition,
             NutType = this,
@@ -117,13 +117,13 @@ public class NutTile : TileObject
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        // fill character moved payload for events - calling events in children classes 
+        // fill character moved payload for turn records
         payload = new NutMovedPayload
         {
             NutType = this,
             Current = targetPosVec2Int,
             Previous = GridPosition,
-         //   direction = direction,
+            Duration = moveDuration,
         };
 
         // execute smooth movement
@@ -144,7 +144,7 @@ public class NutTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        nutSetEvent.Raise(new NutSetPayload
+        nutSetEvent.Raise(new NutBasicPayload
         {
             NutType = this,
             Position = targetPosition
@@ -182,7 +182,7 @@ public class NutTile : TileObject
             Position = current
         });
 
-        nutSetEvent.Raise(new NutSetPayload
+        nutSetEvent.Raise(new NutBasicPayload
         {
             NutType = this,
             Position = previous

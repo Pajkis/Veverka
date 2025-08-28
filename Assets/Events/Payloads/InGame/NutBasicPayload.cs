@@ -1,10 +1,11 @@
 using UnityEngine;
 
 /// <summary>
-/// Payload for setting a pushable tile on the grid.
+/// Basic payload for nut-related events.
 /// </summary>
-public struct NutSetPayload
+public struct NutBasicPayload
 {
     public Vector2Int Position;
     public NutTile NutType;
 }
+

@@ -40,7 +40,7 @@ public class HoleTile : StaticTile
     /// On pushable in goal event settlement
     /// </summary>
     /// <param name="payload"></param>
-    private void OnPushableInHole(NutInGoalPayload payload)
+      private void OnPushableInHole(NutBasicPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
