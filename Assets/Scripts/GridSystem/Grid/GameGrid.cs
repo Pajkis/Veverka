@@ -441,7 +441,7 @@ namespace Veverka.GridSystem.GameGrid
             SetTileType(payload.Position, TileType.Nut);
         }
 
-        private void OnPushableRemoved(NutRemovedPayload payload)
+        private void OnPushableRemoved(NutBasicPayload payload)
         {
             RemovePushableAt(payload.Position);
             SetTileType(payload.Position, TileType.Empty);

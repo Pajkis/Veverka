@@ -22,7 +22,7 @@ public class BasicNutTile : NutTile
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
         // remove pushable from previous position
-        nutRemovedEvent.Raise(new NutRemovedPayload
+        nutRemovedEvent.Raise(new NutBasicPayload
         {
             Position = GridPosition,
         });

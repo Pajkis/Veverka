@@ -183,7 +183,7 @@ public class NutTile : TileObject
         Debug.Log($"Undo movable tile:  {previous} → {current}");
         GridPosition = previous;
 
-        nutRemovedEvent.Raise(new NutRemovedPayload
+        nutRemovedEvent.Raise(new NutBasicPayload
         {
             Position = current
         });
