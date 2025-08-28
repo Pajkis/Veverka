@@ -42,7 +42,7 @@ public class GoalTile : StaticTile
     /// On pushable in goal event settlement
     /// </summary>
     /// <param name="payload"></param>
-    private void OnPushableInGoal(NutInGoalPayload payload)
+      private void OnPushableInGoal(NutBasicPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)

@@ -32,7 +32,7 @@ public class BasicNutTile : NutTile
         tileQueryEvent.Raise(query);
         if (!(query.IsGoal))
         {
-            nutSetEvent.Raise(new NutSetPayload
+            nutSetEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
                 NutType  = this,
@@ -41,7 +41,7 @@ public class BasicNutTile : NutTile
         else
         {
             // nut enters goal event raise
-            nutInGoalEvent.Raise(new NutInGoalPayload
+            nutInGoalEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
                 NutType = this,
