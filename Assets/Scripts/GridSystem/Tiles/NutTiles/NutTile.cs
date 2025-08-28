@@ -12,6 +12,7 @@ public class NutTile : TileObject
 
     protected NutMovedPayload payload = new();
     protected SmoothMover smoothMover;
+    public NutType NutKind { get; private set; }
     #endregion
 
     #region  nut events
@@ -56,7 +57,8 @@ public class NutTile : TileObject
     /// </summary>
     /// <param name="tileType"></param>
     /// <param name="gridPosition"></param>
-    public override void Init(TileType tileType, Vector2Int gridPosition)
+    /// <param name="nutType"></param>
+    public virtual void Init(TileType tileType, Vector2Int gridPosition, NutType nutType)
     {
         // get the smooth mover component
         smoothMover = GetComponent<SmoothMover>();
@@ -71,10 +73,12 @@ public class NutTile : TileObject
 
         // base initialization
         base.Init(tileType, gridPosition);
+        NutKind = nutType;
         nutSetEvent.Raise(new NutBasicPayload
         {
             Position = gridPosition,
-            NutType = this,
+            NutType = NutKind,
+            NutTile = this,
         });
     }
 
@@ -120,7 +124,8 @@ public class NutTile : TileObject
         // fill character moved payload for turn records
         payload = new NutMovedPayload
         {
-            NutType = this,
+            NutType = NutKind,
+            NutTile = this,
             Current = targetPosVec2Int,
             Previous = GridPosition,
             Duration = moveDuration,
@@ -146,7 +151,8 @@ public class NutTile : TileObject
     {
         nutSetEvent.Raise(new NutBasicPayload
         {
-            NutType = this,
+            NutType = NutKind,
+            NutTile = this,
             Position = targetPosition
         });
 
@@ -184,7 +190,8 @@ public class NutTile : TileObject
 
         nutSetEvent.Raise(new NutBasicPayload
         {
-            NutType = this,
+            NutType = NutKind,
+            NutTile = this,
             Position = previous
         });
     }

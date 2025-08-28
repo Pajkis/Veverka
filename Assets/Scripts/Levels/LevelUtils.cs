@@ -11,6 +11,9 @@ public static class LevelUtils
     /// loaded/validated grid for building the level
     /// </summary>
     public static TileType[,] CachedGrid { get; private set; }
+    public static NutType[,] CachedNutGrid { get; private set; }
+    public static GoalType[,] CachedGoalGrid { get; private set; }
+    public static WallType[,] CachedWallGrid { get; private set; }
         
     /// <summary>
     /// Loads data from file into array
@@ -32,7 +35,14 @@ public static class LevelUtils
             int height = lines.Length;
             int width = lines[0].Split(',').Length;
 
+            CachedNutGrid = null;
+            CachedGoalGrid = null;
+            CachedWallGrid = null;
+
             TileType[,] levelGrid = new TileType[width, height];
+            NutType[,] nutGrid = new NutType[width, height];
+            GoalType[,] goalGrid = new GoalType[width, height];
+            WallType[,] wallGrid = new WallType[width, height];
 
             Debug.Log("Size of layout is (width, height): " + width + ", " + height);
             // put data into grid
@@ -41,10 +51,14 @@ public static class LevelUtils
                 string[] row = lines[height - 1 - y].Split(",");
                 for (int x = 0; x < width; x++)
                 {
-                    levelGrid[x, y] = TileTypeExtensions.ParseTileType(row[x].Trim());
-                    
+                    ParsedTile parsed = TileTypeExtensions.ParseTileType(row[x].Trim());
+                    levelGrid[x, y] = parsed.TileType;
+                    nutGrid[x, y] = parsed.NutType;
+                    goalGrid[x, y] = parsed.GoalType;
+                    wallGrid[x, y] = parsed.WallType;
+
                     //Catch error types
-                    if (levelGrid[x, y] == TileType.ErrorTile)
+                    if (parsed.TileType == TileType.ErrorTile)
                     {
                         Debug.LogWarning($"error tile on position[x,y]: {x}, {y}");
                     }
@@ -52,6 +66,9 @@ public static class LevelUtils
                 }
             }
 
+            CachedNutGrid = nutGrid;
+            CachedGoalGrid = goalGrid;
+            CachedWallGrid = wallGrid;
             return levelGrid;
 
         }
@@ -115,7 +132,7 @@ public static class LevelUtils
         if (nutCount != goalCount)
         {
             Debug.LogWarning($"The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
-            valid =  false;
+           // valid =  false;
         }
 
         // Check for invalid tiles

@@ -6,5 +6,6 @@ using UnityEngine;
 public struct GoalSetPayload
 {
     public Vector2Int Position;
-    public GoalTile Goal;
+    public GoalType GoalType;
+    public GoalTile GoalTile;
 }
