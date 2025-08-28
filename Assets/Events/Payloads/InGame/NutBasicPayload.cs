@@ -6,6 +6,7 @@ using UnityEngine;
 public struct NutBasicPayload
 {
     public Vector2Int Position;
-    public NutTile NutType;
+    public NutType NutType;
+    public NutTile NutTile;
 }
 

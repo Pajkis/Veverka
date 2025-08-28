@@ -6,7 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public struct NutMovedPayload
 {
-    public NutTile NutType;
+    public NutType NutType;
+    public NutTile NutTile;
     public Vector2Int Current;
     public Vector2Int Previous;
     public float Duration;

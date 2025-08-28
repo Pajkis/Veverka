@@ -35,7 +35,8 @@ public class BasicNutTile : NutTile
             nutSetEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
-                NutType  = this,
+                NutType  = NutKind,
+                NutTile = this,
             });
         }
         else
@@ -44,7 +45,8 @@ public class BasicNutTile : NutTile
             nutInGoalEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
-                NutType = this,
+                NutType = NutKind,
+                NutTile = this,
                // GoalReduction = 1,
             });
 

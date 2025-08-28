@@ -2,6 +2,14 @@
 /// <summary>
 /// Tile types extension static class
 /// </summary>
+public struct ParsedTile
+{
+    public TileType TileType;
+    public GoalType GoalType;
+    public WallType WallType;
+    public NutType NutType;
+}
+
 public static class TileTypeExtensions
 {
     /// <summary>
@@ -49,19 +57,53 @@ public static class TileTypeExtensions
     /// </summary>
     /// <param name="symbol"></param>
     /// <returns></returns>
-    public static TileType ParseTileType(string symbol)
+    public static ParsedTile ParseTileType(string symbol)
     {
+        var result = new ParsedTile
+        {
+            TileType = TileType.ErrorTile,
+            GoalType = GoalType.BasicGoal,
+            WallType = WallType.BasicWall,
+            NutType = NutType.BasicNut
+        };
+
         switch (symbol)
         {
-            case "W": return TileType.Wall;
-            case "V": return TileType.Veverka;
-            case "N": return TileType.Nut;
-            case "G": return TileType.Goal;
-            case "NS": return TileType.StoneNut;
-            case "WS": return TileType.StoneWall;
-            case "H": return TileType.Hole;
-            case ".": return TileType.Empty;           
-            default: return TileType.ErrorTile; 
-        }   
+            case "W":
+                result.TileType = TileType.Wall;
+                result.WallType = WallType.BasicWall;
+                break;
+            case "WS":
+                result.TileType = TileType.Wall;
+                result.WallType = WallType.StoneWall;
+                break;
+            case "V":
+                result.TileType = TileType.Veverka;
+                break;
+            case "N":
+                result.TileType = TileType.Nut;
+                result.NutType = NutType.BasicNut;
+                break;
+            case "NS":
+                result.TileType = TileType.Nut;
+                result.NutType = NutType.StoneNut;
+                break;
+            case "G":
+                result.TileType = TileType.Goal;
+                result.GoalType = GoalType.BasicGoal;
+                break;
+            case "H":
+                result.TileType = TileType.Goal;
+                result.GoalType = GoalType.HoleGoal;
+                break;
+            case ".":
+                result.TileType = TileType.Empty;
+                break;
+            default:
+                result.TileType = TileType.ErrorTile;
+                break;
+        }
+
+        return result;
     }
 }

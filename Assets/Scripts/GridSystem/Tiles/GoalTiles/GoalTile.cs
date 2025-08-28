@@ -11,19 +11,24 @@ public abstract class GoalTile : TileObject
     [SerializeField] protected GoalRemovedEvent goalRemovedEvent;
     #endregion
 
+    public GoalType GoalKind { get; private set; }
+
     #region Init
     /// <summary>
     /// Init goals and put the into dictionary in GameGrid
     /// </summary>
     /// <param name="tileType"></param>
     /// <param name="gridPosition"></param>
-    public override void Init(TileType tileType, Vector2Int gridPosition)
+    /// <param name="goalType"></param>
+    public virtual void Init(TileType tileType, Vector2Int gridPosition, GoalType goalType)
     {
         base.Init(tileType, gridPosition);
+        GoalKind = goalType;
         goalSetEvent.Raise(new GoalSetPayload
         {
             Position = gridPosition,
-            Goal = this,
+            GoalType = goalType,
+            GoalTile = this,
         });
     }
 
