@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 104517ee3d8f4fe46a4c55537211de20, type: 3}
-  m_Name: PushableInGoalEvent
+  m_Name: NutInGoalEvent
   m_EditorClassIdentifier: 
   onEvent:
     m_PersistentCalls:

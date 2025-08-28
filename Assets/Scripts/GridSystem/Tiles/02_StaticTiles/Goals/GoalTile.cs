@@ -6,7 +6,7 @@ using UnityEngine;
 public class GoalTile : StaticTile
 {
     #region events
-    [SerializeField] protected PushableInGoalEvent pushableInGoalEvent;
+    [SerializeField] protected NutInGoalEvent nutInGoalEvent;
     [SerializeField] private GoalSetEvent goalSetEvent;
     [SerializeField] private GoalRemovedEvent goalRemovedEvent;  
     #endregion
@@ -27,7 +27,7 @@ public class GoalTile : StaticTile
     /// </summary>
     private void OnEnable()
     {
-        pushableInGoalEvent.AddListener(OnPushableInGoal);
+        nutInGoalEvent.AddListener(OnPushableInGoal);
     }
 
     /// <summary>
@@ -35,14 +35,14 @@ public class GoalTile : StaticTile
     /// </summary>
     private void OnDisable()
     {
-        pushableInGoalEvent.RemoveListener(OnPushableInGoal);
+        nutInGoalEvent.RemoveListener(OnPushableInGoal);
     }
 
     /// <summary>
     /// On pushable in goal event settlement
     /// </summary>
     /// <param name="payload"></param>
-    private void OnPushableInGoal(PushableInGoalPayload payload)
+    private void OnPushableInGoal(NutInGoalPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)

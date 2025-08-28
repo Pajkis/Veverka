@@ -10,14 +10,14 @@ public class NutTile : TileObject
     [SerializeField] protected float moveDuration = 0.15f;
     protected float animationSpeed;
 
-    protected MovableMovedPayload payload = new();
+    protected NutMovedPayload payload = new();
     protected SmoothMover smoothMover;
     #endregion
 
     #region  nut events
-    [SerializeField]  protected PushableInGoalEvent pushableInGoalEvent;
-    [SerializeField]  protected PushableSetEvent pushableSetEvent;
-    [SerializeField]  protected PushableRemovedEvent pushableRemovedEvent;
+    [SerializeField]  protected NutInGoalEvent nutInGoalEvent;
+    [SerializeField]  protected NutSetEvent nutSetEvent;
+    [SerializeField]  protected NutRemovedEvent nutRemovedEvent;
     #endregion
 
     #region Event handling
@@ -71,10 +71,10 @@ public class NutTile : TileObject
 
         // base initialization
         base.Init(tileType, gridPosition);
-        pushableSetEvent.Raise(new PushableSetPayload
+        nutSetEvent.Raise(new NutSetPayload
         {
             Position = gridPosition,
-            Pushable = this,
+            NutType = this,
         });
     }
 
@@ -120,11 +120,11 @@ public class NutTile : TileObject
         float moveDuration = (duration * distance) / animationSpeed;
 
         // fill character moved payload for events - calling events in children classes 
-        payload = new MovableMovedPayload
+        payload = new NutMovedPayload
         {
-            movable = this,
-            current = targetPosVec2Int,
-            previous = GridPosition,
+            NutType = this,
+            Current = targetPosVec2Int,
+            Previous = GridPosition,
          //   direction = direction,
         };
 
@@ -146,9 +146,9 @@ public class NutTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        pushableSetEvent.Raise(new PushableSetPayload
+        nutSetEvent.Raise(new NutSetPayload
         {
-            Pushable = this,
+            NutType = this,
             Position = targetPosition
         });
 
@@ -180,14 +180,14 @@ public class NutTile : TileObject
         Debug.Log($"Undo movable tile:  {previous} → {current}");
         GridPosition = previous;
 
-        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        nutRemovedEvent.Raise(new NutRemovedPayload
         {
             Position = current
         });
 
-        pushableSetEvent.Raise(new PushableSetPayload
+        nutSetEvent.Raise(new NutSetPayload
         {
-            Pushable = this,
+            NutType = this,
             Position = previous
         });
     }
@@ -210,7 +210,7 @@ public class NutTile : TileObject
     {
         // register movement as action into turn record 
         TurnBuilder.Instance.AddAction(
-         new UndoMovableAction(this, payload.current, payload.previous)
+         new UndoMovableAction(this, payload.Current, payload.Previous)
            );
 
         // inform turn builder, tht this component has registered an action into turn record

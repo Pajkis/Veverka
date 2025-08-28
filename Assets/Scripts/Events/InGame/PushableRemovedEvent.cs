@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Event raised when a pushable tile is removed from the grid.
+/// Event raised when a Nut tile is removed from the grid.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/PushableRemovedEvent")]
-public class PushableRemovedEvent : GameEventSO<PushableRemovedPayload> { }
+[CreateAssetMenu(menuName = "Events/NutRemovedEvent")]
+public class NutRemovedEvent : GameEventSO<NutRemovedPayload> { }

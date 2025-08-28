@@ -23,8 +23,8 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private BuildGridEvent buildGridEvent;
         [SerializeField] private LevelDatabase levelDatabase;
 
-        [SerializeField] private PushableSetEvent pushableSetEvent;
-        [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
+        [SerializeField] private NutSetEvent nutSetEvent;
+        [SerializeField] private NutRemovedEvent nutRemovedEvent;
         [SerializeField] private GoalSetEvent goalSetEvent;
         [SerializeField] private GoalRemovedEvent goalRemovedEvent;
         [SerializeField] private TileQueryEvent tileQueryEvent;
@@ -122,8 +122,8 @@ namespace Veverka.GridSystem.GameGrid
             buildGridEvent.AddListener(InitializeGrid);
             resetGridEvent.AddListener(ResetGrid);           
             tileQueryEvent.AddListener(OnTileQuery);        
-            pushableSetEvent.AddListener(OnPushableSet);
-            pushableRemovedEvent.AddListener(OnPushableRemoved);
+            nutSetEvent.AddListener(OnPushableSet);
+            nutRemovedEvent.AddListener(OnPushableRemoved);
             goalSetEvent.AddListener(OnGoalSet);
             goalRemovedEvent.AddListener(OnGoalRemoved);
          }
@@ -138,8 +138,8 @@ namespace Veverka.GridSystem.GameGrid
             resetGridEvent.RemoveListener(ResetGrid);        
             buildGridEvent.RemoveListener(InitializeGrid);
             tileQueryEvent.RemoveListener(OnTileQuery);
-            pushableSetEvent.RemoveListener(OnPushableSet);
-            pushableRemovedEvent.RemoveListener(OnPushableRemoved);
+            nutSetEvent.RemoveListener(OnPushableSet);
+            nutRemovedEvent.RemoveListener(OnPushableRemoved);
             goalSetEvent.RemoveListener(OnGoalSet);
             goalRemovedEvent.RemoveListener(OnGoalRemoved);
         }
@@ -468,13 +468,13 @@ namespace Veverka.GridSystem.GameGrid
 
         #region tile handling
 
-        private void OnPushableSet(PushableSetPayload payload)
+        private void OnPushableSet(NutSetPayload payload)
         {
-            SetPushableAt(payload.Position, payload.Pushable);
-            SetTileType(payload.Position, payload.Pushable.PosTileType);
+            SetPushableAt(payload.Position, payload.NutType);
+            SetTileType(payload.Position, payload.NutType.PosTileType);
         }
 
-        private void OnPushableRemoved(PushableRemovedPayload payload)
+        private void OnPushableRemoved(NutRemovedPayload payload)
         {
             RemovePushableAt(payload.Position);
             SetTileType(payload.Position, TileType.Empty);

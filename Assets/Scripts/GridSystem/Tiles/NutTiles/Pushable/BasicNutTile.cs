@@ -22,7 +22,7 @@ public class BasicNutTile : NutTile
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
         // remove pushable from previous position
-        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        nutRemovedEvent.Raise(new NutRemovedPayload
         {
             Position = GridPosition,
         });
@@ -32,19 +32,19 @@ public class BasicNutTile : NutTile
         tileQueryEvent.Raise(query);
         if (!(query.IsGoal))
         {
-            pushableSetEvent.Raise(new PushableSetPayload
+            nutSetEvent.Raise(new NutSetPayload
             {
                 Position = targetPosition,
-                Pushable = this,
+                NutType  = this,
             });
         }
         else
         {
             // nut enters goal event raise
-            pushableInGoalEvent.Raise(new PushableInGoalPayload
+            nutInGoalEvent.Raise(new NutInGoalPayload
             {
                 Position = targetPosition,
-                PushableTileType = this,
+                NutType = this,
                // GoalReduction = 1,
             });
 
