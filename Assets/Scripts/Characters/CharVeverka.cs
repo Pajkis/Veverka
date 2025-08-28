@@ -11,7 +11,6 @@ namespace Veverka.Characters.Veverka
         #region events 
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
-        [SerializeField] PushNutEvent pushNutEvent;
         [SerializeField] CanPushQueryEvent canPushQueryEvent;
         #endregion
 
@@ -67,29 +66,19 @@ namespace Veverka.Characters.Veverka
                     {
                         Position = targetPos,
                         Direction = inputDirection,
+                        Distance = distance,
+                        Duration = moveDuration,
                         CanBePushed = false,
-                        HasNutAtPosition = false
                     };
 
+                    // Push query and push if possible
                     canPushQueryEvent.Raise(pushQuery);
 
                     // If there's a nut and it can be pushed
-                    if (pushQuery.HasNutAtPosition && pushQuery.CanBePushed)
+                    if (pushQuery.CanBePushed)
                     {
-
                         // Move the character
-                        Move(inputDirection, distance, moveDuration);
-
-                        // Send push event to the nut
-                        pushNutEvent.Raise(new PushNutPayload
-                        {
-                            Position = targetPos,
-                            Direction = inputDirection,
-                            Distance = distance,
-                            Duration = moveDuration
-                        });
-
-                       
+                        Move(inputDirection, distance, moveDuration);  
                     }
                     else
                     {
@@ -114,19 +103,7 @@ namespace Veverka.Characters.Veverka
                 playSfxEvent.Raise(SfxType.VeverkaRotate);
             }
         }
-
-        /// <summary>
-        /// Move update in character movement 
-        /// Add expect source to registrer, that object is going to move and this action will be registered via TurnBuilder into SingleTurnRecord
-       /// </summary>
-        /// <param name="direction">direction of movement</param>
-        /// <param name="distance">number of tiles to move</param>
-        /// <param name="duration">duration of movement</param>
-        protected override void Move(Direction direction, int distance, float duration = 0.15f)
-        {           
-            base.Move(direction, distance, duration);    
-        }
-
+        
         /// <summary>
         /// On Move start action
         /// </summary>

@@ -119,8 +119,6 @@ public abstract class Character : MonoBehaviour
         //do not execute move when already moving
         if (smoothMover.IsMoving) return;
 
-        // Start new turn
-        TurnBuilder.Instance.StartNewTurn();
         // UndoID for turn history record
         UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
         // inform turn builder, that this component is going to register a action into turn record
