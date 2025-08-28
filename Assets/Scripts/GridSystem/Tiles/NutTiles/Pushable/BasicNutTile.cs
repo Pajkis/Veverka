@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Class for the nut Tile - basic push to goal tile.
 /// </summary>
-public class NutTile : PushableTile
+public class BasicNutTile : NutTile
 {
     #region methods
     /// <summary>

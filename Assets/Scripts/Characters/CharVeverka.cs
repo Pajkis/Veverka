@@ -57,7 +57,7 @@ namespace Veverka.Characters.Veverka
                 tileQueryEvent.Raise(query);
                 if (!query.IsInGrid) return;
 
-                PushableTile pushableObject = query.TileObject as PushableTile;
+                NutTile pushableObject = query.TileObject as NutTile;
 
                 if (pushableObject != null)
                 {

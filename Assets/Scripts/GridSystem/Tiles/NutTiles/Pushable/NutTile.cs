@@ -3,7 +3,7 @@
 /// <summary>
 /// Movable object setup and control
 /// </summary>
-public class MovableTile : TileObject
+public class NutTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1;
@@ -14,7 +14,11 @@ public class MovableTile : TileObject
     protected SmoothMover smoothMover;
     #endregion
 
-    
+    #region  nut events
+    [SerializeField]  protected PushableInGoalEvent pushableInGoalEvent;
+    [SerializeField]  protected PushableSetEvent pushableSetEvent;
+    [SerializeField]  protected PushableRemovedEvent pushableRemovedEvent;
+    #endregion
 
     #region Event handling
     /// <summary>
@@ -46,7 +50,7 @@ public class MovableTile : TileObject
     }
     #endregion
 
-    #region Methods
+    #region Initialization
     /// <summary>
     /// Initialize tile type on grid position, init smooth mover
     /// </summary>
@@ -64,31 +68,37 @@ public class MovableTile : TileObject
 
         // set configs
         moveDuration = gameplayConfig.moveTime;
-        
+
         // base initialization
-        base.Init(tileType, gridPosition);      
+        base.Init(tileType, gridPosition);
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Position = gridPosition,
+            Pushable = this,
+        });
     }
 
+    #endregion
+
+    #region pushable methods
     /// <summary>
-    /// Undo move of movable tile
+    /// Checks, whether tile can be pushed in the direction
     /// </summary>
-    /// <param name="previous"> previous position</param>
-    /// <param name="current">current position</param>  
-    /// <param name="duration"> duration of movement</param>
-    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration)
-    {        
-        if (smoothMover.IsMoving) return;
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public bool CanBePushed(Direction direction)
+    {
+        Vector2Int targetPosition = GridUtils.GetPositionInDir(GridPosition, direction);
 
-        Vector3 fromWorld = GridUtils.GridToWorld(current);
-        Vector3 toWorld = GridUtils.GridToWorld(previous);
-
-        //Rotate(direction);
-        smoothMover.Move(fromWorld, toWorld, duration,
-            onStart: null, onComplete: null);
-
-        Debug.Log($"Undo movable tile:  {previous} → {current}");
-        GridPosition = previous;
+        TileQueryPayload query = new() { Position = targetPosition };
+        tileQueryEvent.Raise(query);
+        if (!query.IsInGrid) return false;
+        return query.IsWalkable;
     }
+    #endregion
+
+    #region Move Methods
+   
 
     /// <summary>
     /// Move of a object over a distance in set direction
@@ -136,11 +146,51 @@ public class MovableTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = targetPosition
+        });
+
         GridPosition = targetPosition;
         //Complete turn record
         TurnRecordAddandComplete();
     }
+    #endregion
 
+    #region Undo record
+
+    /// <summary>
+    /// Undo move of movable tile
+    /// </summary>
+    /// <param name="previous"> previous position</param>
+    /// <param name="current">current position</param>  
+    /// <param name="duration"> duration of movement</param>
+    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration)
+    {
+        if (smoothMover.IsMoving) return;
+
+        Vector3 fromWorld = GridUtils.GridToWorld(current);
+        Vector3 toWorld = GridUtils.GridToWorld(previous);
+
+        //Rotate(direction);
+        smoothMover.Move(fromWorld, toWorld, duration,
+            onStart: null, onComplete: null);
+
+        Debug.Log($"Undo movable tile:  {previous} → {current}");
+        GridPosition = previous;
+
+        pushableRemovedEvent.Raise(new PushableRemovedPayload
+        {
+            Position = current
+        });
+
+        pushableSetEvent.Raise(new PushableSetPayload
+        {
+            Pushable = this,
+            Position = previous
+        });
+    }
 
     /// <summary>
     /// inform TurnBuilder, that this source will provide data for this turn record

@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public struct MovableMovedPayload
 {
-    public MovableTile movable;
+    public NutTile movable;
     public Vector2Int current;
     public Vector2Int previous;
     public float duration;

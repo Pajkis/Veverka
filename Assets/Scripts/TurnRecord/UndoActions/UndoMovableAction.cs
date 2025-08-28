@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class UndoMovableAction : IUndoableAction
 {
-    private MovableTile movableTile;
+    private NutTile pushableTile;
     private Vector2Int current;
     private Vector2Int previous;
     private float duration;
@@ -17,9 +17,9 @@ public class UndoMovableAction : IUndoableAction
     /// <param name="current">current position</param>
     /// <param name="previous">previous position</param>
     /// <param name="duration">duration of movement in seconds</param>
-    public UndoMovableAction(MovableTile movableTile, Vector2Int current, Vector2Int previous, float duration = 0.15f)
+    public UndoMovableAction(NutTile pushableTile, Vector2Int current, Vector2Int previous, float duration = 0.15f)
     {
-        this.movableTile = movableTile;
+        this.pushableTile = pushableTile;
         this.current = current;
         this.previous = previous;
         this.duration = duration;   
@@ -30,6 +30,6 @@ public class UndoMovableAction : IUndoableAction
     /// </summary>
     public void Undo()
     {
-        movableTile.UndoAction(current, previous, duration);
+        pushableTile.UndoAction(current, previous, duration);
     }
 }

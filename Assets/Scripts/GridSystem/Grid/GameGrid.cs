@@ -260,7 +260,7 @@ namespace Veverka.GridSystem.GameGrid
                         case TileType.Nut:
 
                                 // generate nut
-                                NutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
+                                BasicNutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<BasicNutTile>();
                                 nutTile.transform.SetParent(gridRoot, false);
                                 nutTile.transform.localPosition = worldTilePos;
                                 nutTile.Init(tileType, tilePos);
@@ -627,7 +627,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         /// <param name="position"> position to add pushable</param>
         /// <param name="tileObject">pushable tile object</param>
-        public void SetPushableAt(Vector2Int position, PushableTile tileObject)
+        public void SetPushableAt(Vector2Int position, NutTile tileObject)
         { 
             if (!IsInGrid(position))
                 {

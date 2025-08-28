@@ -7,5 +7,5 @@ using UnityEngine;
 public struct PushableInGoalPayload
 {
     public Vector2Int Position;
-    public PushableTile PushableTileType;
+    public NutTile PushableTileType;
 }
