@@ -107,6 +107,8 @@ MonoBehaviour:
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   onArrowPressed: {fileID: 11400000, guid: 5934e5ff874e9fc48b7d5f329cfdc4b1, type: 2}
   veverkaMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  pushNutEvent: {fileID: 11400000, guid: eca2538f523e2524bb0a784244790d6b, type: 2}
+  canPushQueryEvent: {fileID: 11400000, guid: 1f6653d05a638b14b94fcdfce724a1df, type: 2}
 --- !u!114 &-7049510064372506974
 MonoBehaviour:
   m_ObjectHideFlags: 0

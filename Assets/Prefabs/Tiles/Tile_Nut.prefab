@@ -108,6 +108,8 @@ MonoBehaviour:
   nutInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
   nutSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
   nutRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
+  pushNutEvent: {fileID: 11400000, guid: eca2538f523e2524bb0a784244790d6b, type: 2}
+  canPushQueryEvent: {fileID: 11400000, guid: 1f6653d05a638b14b94fcdfce724a1df, type: 2}
 --- !u!114 &959817345349971074
 MonoBehaviour:
   m_ObjectHideFlags: 0

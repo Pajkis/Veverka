@@ -8,9 +8,11 @@ namespace Veverka.Characters.Veverka
  { 
     public class CharVeverka : Character
     {
-        #region events definition
+        #region events 
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
+        [SerializeField] PushNutEvent pushNutEvent;
+        [SerializeField] CanPushQueryEvent canPushQueryEvent;
         #endregion
 
         #region event handling
@@ -50,38 +52,64 @@ namespace Veverka.Characters.Veverka
             {
                 int distance = moveDistance;
                 Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
-                Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
+                Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y}");
 
-                // check if target position is in grid and get tile query
-                var query = new TileQueryPayload { Position = targetPos };
-                tileQueryEvent.Raise(query);
-                if (!query.IsInGrid) return;
+                // Check if target position is in grid
+                var gridQuery = new TileQueryPayload { Position = targetPos };
+                tileQueryEvent.Raise(gridQuery);
+                if (!gridQuery.IsInGrid) return;
 
-                NutTile pushableObject = query.TileObject as NutTile;
-
-                if (pushableObject != null)
+                // Check if there's a movable object at target position
+                if (gridQuery.IsMovable)
                 {
-                    //try to push
-                    if (pushableObject.CanBePushed(inputDirection))
+                    // Query if the nut can be pushed in this direction
+                    var pushQuery = new CanPushQueryPayload
                     {
+                        Position = targetPos,
+                        Direction = inputDirection,
+                        CanBePushed = false,
+                        HasNutAtPosition = false
+                    };
+
+                    canPushQueryEvent.Raise(pushQuery);
+
+                    // If there's a nut and it can be pushed
+                    if (pushQuery.HasNutAtPosition && pushQuery.CanBePushed)
+                    {
+
+                        // Move the character
                         Move(inputDirection, distance, moveDuration);
-                        pushableObject.Move(inputDirection, distance, moveDuration);
+
+                        // Send push event to the nut
+                        pushNutEvent.Raise(new PushNutPayload
+                        {
+                            Position = targetPos,
+                            Direction = inputDirection,
+                            Distance = distance,
+                            Duration = moveDuration
+                        });
+
+                       
                     }
                     else
                     {
-                        // Optionally animate failed push
+                        // Cannot push - optionally animate failed push
+                        Debug.Log("Cannot push nut in this direction");
                     }
                 }
-                // move character to empty tile
-                else if (query.IsWalkable)
+                // Move character to empty walkable tile
+                else if (gridQuery.IsWalkable)
                 {
                     Move(inputDirection, distance, moveDuration);
                 }
+                else
+                {
+                    Debug.Log("Cannot move - tile not walkable");
+                }
             }
-
-            // rotate to input arrow direction
+            // Rotate to input arrow direction
             else
-            {          
+            {
                 facingDirection = Rotate(inputDirection);
                 playSfxEvent.Raise(SfxType.VeverkaRotate);
             }

@@ -3,7 +3,7 @@
 /// <summary>
 /// Movable object setup and control
 /// </summary>
-public class NutTile : TileObject
+public abstract class NutTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1;
@@ -19,6 +19,8 @@ public class NutTile : TileObject
     [SerializeField]  protected NutInGoalEvent nutInGoalEvent;
     [SerializeField]  protected NutSetEvent nutSetEvent;
     [SerializeField]  protected NutRemovedEvent nutRemovedEvent;
+    [SerializeField] protected PushNutEvent pushNutEvent;
+    [SerializeField] protected CanPushQueryEvent canPushQueryEvent;
     #endregion
 
     #region Event handling
@@ -29,6 +31,8 @@ public class NutTile : TileObject
     {
         settingDataBroadcastEvent.AddListener(OnSettingData);
         settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+        pushNutEvent.AddListener(OnPushRequested);
+        canPushQueryEvent.AddListener(OnCanPushQuery);
     }
     /// <summary>
     /// remove listeners
@@ -36,6 +40,8 @@ public class NutTile : TileObject
     protected void OnDisable()
     {
         settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        pushNutEvent.RemoveListener(OnPushRequested);
+        canPushQueryEvent.RemoveListener(OnCanPushQuery);
     }
 
     /// <summary>
@@ -85,6 +91,41 @@ public class NutTile : TileObject
     #endregion
 
     #region pushable methods
+    /// <summary>
+    /// Handle push request - only respond if it's for this nut's position
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnPushRequested(PushNutPayload payload)
+    {
+        // Only respond if the push is intended for this nut's position
+        if (payload.Position == GridPosition)
+        {
+            // Double-check that we can actually be pushed
+            if (CanBePushed(payload.Direction))
+            {
+                Move(payload.Direction, payload.Distance, payload.Duration);
+            }
+            else
+            {
+                Debug.LogWarning($"Nut at {GridPosition} received push request but cannot be pushed in {payload.Direction}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handle can push query - only respond if it's for this nut's position
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCanPushQuery(CanPushQueryPayload payload)
+    {
+        // Only respond if the query is for this nut's position
+        if (payload.Position == GridPosition)
+        {
+            payload.HasNutAtPosition = true;
+            payload.CanBePushed = CanBePushed(payload.Direction);
+        }
+    }
+
     /// <summary>
     /// Checks, whether tile can be pushed in the direction
     /// </summary>
