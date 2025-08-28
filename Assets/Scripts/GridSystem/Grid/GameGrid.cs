@@ -10,10 +10,8 @@ namespace Veverka.GridSystem.GameGrid
     public class GameGrid : MonoBehaviour
     {
         #region global vars
-
         // global grid - Singleton 
         public static GameGrid Instance { get; private set; }
-
         #endregion
 
         #region events
@@ -49,54 +47,15 @@ namespace Veverka.GridSystem.GameGrid
         #region fields
         // grid variables       
         readonly Vector2Int maxScreenGridSize = new(15, 11);
-        private Vector2Int gridSize; 
-        private float tileSize = 1f;     
-      //  private Transform gridStartCenterTarget;
+        private Vector2Int gridSize;     
         private TileType[,] grid;
-        private Dictionary<Vector2Int, TileObject> pushables = new();
+        private Dictionary<Vector2Int, TileObject> nuts = new();
         private Dictionary<Vector2Int, TileObject> goals = new();
         private readonly List<GameObject> backgroundPool = new();
         // pool for surrounding wall tiles to avoid repeated instantiation
         private readonly List<GameObject> surroundingWalls = new();
         #endregion
-
-        #region Properties      
-
-        /// <summary>
-        /// size of a grid
-        /// </summary>
-        public Vector2Int GridSize
-        { 
-            get { return gridSize; } 
-        }    
-
-        // tile size 
-        public float TileSize
-        {
-            get { return tileSize; }
-            // short version of exploiting get only property
-            //***
-            // public float TileSize => tileSize;
-            //***
-        }
-
-        /// <summary>
-        /// get movables position and objects
-        /// </summary>
-        public Dictionary<Vector2Int, TileObject> Pushables
-        {
-            get { return pushables; }
-        }
-
-        /// <summary>
-        /// get goals position and objects
-        /// </summary>
-        public Dictionary<Vector2Int, TileObject> Goals
-        {
-            get { return goals; }
-        }
-        #endregion
-
+           
         #region Awake
         /// <summary>
         /// init singleton and events
@@ -452,7 +411,7 @@ namespace Veverka.GridSystem.GameGrid
             }
 
             // clear dictionaries
-            if (pushables != null) pushables.Clear();
+            if (nuts != null) nuts.Clear();
             if (goals != null) goals.Clear();
 
             // clear level database
@@ -604,7 +563,7 @@ namespace Veverka.GridSystem.GameGrid
         /// <returns></returns>
         public TileObject GetPushableAt(Vector2Int position)
         {
-            return pushables.GetValueOrDefault(position);
+            return nuts.GetValueOrDefault(position);
         }
 
 
@@ -619,7 +578,7 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Remove tile is outside the grid");
                 return;
             }
-            pushables.Remove(position);
+            nuts.Remove(position);
         }
 
         /// <summary>
@@ -634,7 +593,7 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Set tile is outside the grid");
                 return;
                 }   
-            pushables[position] = tileObject;
+            nuts[position] = tileObject;
         }
 
         /// <summary>
@@ -642,7 +601,7 @@ namespace Veverka.GridSystem.GameGrid
         /// </summary>
         public void LogMovablePositions()
         {       
-            Debug.Log("Pushable object count: " + pushables.Count);     
+            Debug.Log("Pushable object count: " + nuts.Count);     
         }
 
         #endregion

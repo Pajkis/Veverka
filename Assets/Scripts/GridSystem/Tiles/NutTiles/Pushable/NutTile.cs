@@ -98,8 +98,6 @@ public class NutTile : TileObject
     #endregion
 
     #region Move Methods
-   
-
     /// <summary>
     /// Move of a object over a distance in set direction
     /// </summary>
@@ -159,7 +157,6 @@ public class NutTile : TileObject
     #endregion
 
     #region Undo record
-
     /// <summary>
     /// Undo move of movable tile
     /// </summary>
@@ -210,7 +207,7 @@ public class NutTile : TileObject
     {
         // register movement as action into turn record 
         TurnBuilder.Instance.AddAction(
-         new UndoMovableAction(this, payload.Current, payload.Previous)
+         new UndoMovableAction(this, payload.Current, payload.Previous, moveDuration)
            );
 
         // inform turn builder, tht this component has registered an action into turn record

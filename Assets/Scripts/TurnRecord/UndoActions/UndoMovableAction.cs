@@ -17,7 +17,7 @@ public class UndoMovableAction : IUndoableAction
     /// <param name="current">current position</param>
     /// <param name="previous">previous position</param>
     /// <param name="duration">duration of movement in seconds</param>
-    public UndoMovableAction(NutTile pushableTile, Vector2Int current, Vector2Int previous, float duration = 0.15f)
+    public UndoMovableAction(NutTile pushableTile, Vector2Int current, Vector2Int previous, float duration)
     {
         this.pushableTile = pushableTile;
         this.current = current;
