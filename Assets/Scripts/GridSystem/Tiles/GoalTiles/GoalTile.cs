@@ -9,6 +9,8 @@ public abstract class GoalTile : TileObject
     [SerializeField] protected NutInGoalEvent nutInGoalEvent;
     [SerializeField] protected GoalSetEvent goalSetEvent;
     [SerializeField] protected GoalRemovedEvent goalRemovedEvent;
+    [SerializeField] protected WallSetEvent wallSetEvent;
+    [SerializeField] protected RoadSetEvent roadSetEvent;
     #endregion
 
     public GoalType GoalKind { get; private set; }
