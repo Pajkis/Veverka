@@ -59,7 +59,7 @@ namespace Veverka.Characters.Veverka
                 if (!gridQuery.IsInGrid) return;
 
                 // Check if there's a pushable object at target position
-                if (gridQuery.TileObject != null)
+                if (gridQuery.TileType == TileType.Nut)
                 {
                     // Query if the nut can be pushed in this direction
                     var pushQuery = new CanPushQueryPayload

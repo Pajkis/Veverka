@@ -17,7 +17,7 @@ public abstract class GoalTile : TileObject
     
     #region Init
     /// <summary>
-    /// Init goals and put the into dictionary in GameGrid
+    /// Init goals and register them in GameGrid
     /// </summary>
     /// <param name="tileType"></param>
     /// <param name="gridPosition"></param>
