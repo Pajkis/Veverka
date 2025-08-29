@@ -174,14 +174,38 @@ public abstract class NutTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        nutSetEvent.Raise(new NutBasicPayload
+        // remove nut from previous position
+        nutRemovedEvent.Raise(new NutBasicPayload
         {
-            NutType = this.nutType,
-            NutTile = this,
-            Position = targetPosition
+            Position = GridPosition,
         });
 
+        // Check if the nut reached the goal
+        TileQueryPayload query = new() { Position = targetPosition };
+        tileQueryEvent.Raise(query);
+        if (query.TileType != TileType.Goal)
+        {
+            nutSetEvent.Raise(new NutBasicPayload
+            {
+                Position = targetPosition,
+                NutType = this.nutType,
+                NutTile = this,
+            });
+        }
+        else
+        {
+            // nut enters goal event raise
+            nutInGoalEvent.Raise(new NutBasicPayload
+            {
+                Position = targetPosition,
+                NutType = this.nutType,
+                NutTile = this,
+            });
+            Destroy(gameObject);
+        }
+
         GridPosition = targetPosition;
+
         //Complete turn record
         TurnRecordAddandComplete();
     }
