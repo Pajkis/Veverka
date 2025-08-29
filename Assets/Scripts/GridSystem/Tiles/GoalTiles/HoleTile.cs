@@ -32,6 +32,7 @@ public class HoleTile : GoalTile
                 {
                     Position = payload.Position,
                     RoadType = RoadType.StoneRoad,
+                    instantiateTile = true,
                 });
             }                    
         }

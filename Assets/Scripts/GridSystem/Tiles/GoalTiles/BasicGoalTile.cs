@@ -22,17 +22,18 @@ public class BasicGoalTile : GoalTile
                 GoalReduction = 1,
             });
             Destroy(gameObject);
-        }
 
-        // Build wall if stone nut reached the goal
-        if (payload.NutType == NutType.StoneNut)
-        { 
-            wallSetEvent.Raise(new WallBasicPayload
+            // Build wall if stone nut reached the goal
+            if (payload.NutType == NutType.StoneNut)
             {
-                Position = payload.Position,
-                WallType = WallType.StoneWall,
-            });
-        }
+                wallSetEvent.Raise(new WallBasicPayload
+                {
+                    Position = payload.Position,
+                    WallType = WallType.StoneWall,
+                    instantiateTile = true,
+                });
+            }
+        }        
     }
 
     #endregion
