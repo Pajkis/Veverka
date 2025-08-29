@@ -31,7 +31,7 @@ public class StoneNutTile : NutTile
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
         tileQueryEvent.Raise(query);
-        if (!(query.IsGoal))
+        if (query.TileType != TileType.Goal)
         {
             nutSetEvent.Raise(new NutBasicPayload
             {

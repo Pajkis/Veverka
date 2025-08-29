@@ -122,7 +122,7 @@ public abstract class NutTile : TileObject
         TileQueryPayload query = new() { Position = targetPosition };
         tileQueryEvent.Raise(query);
         if (!query.IsInGrid) return false;
-        return query.IsWalkable || query.IsGoal;
+        return query.IsPushable;
     }
     #endregion
 

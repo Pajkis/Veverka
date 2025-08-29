@@ -1,6 +1,6 @@
 
 /// <summary>
-/// Tile types extension static class
+/// Helper structure used when parsing level data.
 /// </summary>
 public struct ParsedTile
 {
@@ -11,54 +11,16 @@ public struct ParsedTile
     public RoadType RoadType;
 }
 
-public static class TileTypeExtensions
+/// <summary>
+/// Static parser for translating string symbols into tile type data.
+/// </summary>
+public static class TileParser
 {
     /// <summary>
-    /// defines what tile types are considered as obstacle
+    /// Parse grid symbols into tile types.
     /// </summary>
-    /// <param name="tiletype">type of the tile</param>
-    /// <returns></returns>
-    public static bool IsObstacle(TileType tileType)
-    {
-        return tileType == TileType.Wall || tileType == TileType.Nut;
-    }
-
-    // <summary>
-    /// defines what tile types are considered as movable obstacles
-    /// </summary>
-    /// <param name="tiletype">type of the tile</param>
-    /// <returns></returns>
-    public static bool IsMovable(TileType tileType)
-    {
-        return tileType == TileType.Nut;
-    }
-
-    /// <summary>
-    /// checks whether input tile types can be walked on
-    /// </summary>
-    /// <param name="tileType"></param>
-    /// <returns></returns>
-    public static bool IsWalkable(TileType tileType)
-    {
-        return tileType == TileType.Empty || tileType == TileType.Goal || tileType == TileType.Road;
-    }
-
-    /// <summary>
-    /// check whether tile is goal
-    /// </summary>
-    /// <param name="tileType"></param>
-    /// <returns></returns>
-    public static bool IsGoal(TileType tileType)
-    { 
-      return tileType == TileType.Goal;
-    }
-
-
-    /// <summary>
-    /// parse grid symbols into tile types
-    /// </summary>
-    /// <param name="symbol"></param>
-    /// <returns></returns>
+    /// <param name="symbol">String representation of a tile.</param>
+    /// <returns>Parsed tile data.</returns>
     public static ParsedTile ParseTileType(string symbol)
     {
         var result = new ParsedTile
@@ -66,7 +28,8 @@ public static class TileTypeExtensions
             TileType = TileType.ErrorTile,
             GoalType = GoalType.BasicGoal,
             WallType = WallType.BasicWall,
-            NutType = NutType.BasicNut
+            NutType = NutType.BasicNut,
+            RoadType = RoadType.BasicRoad,
         };
 
         switch (symbol)
@@ -97,6 +60,14 @@ public static class TileTypeExtensions
             case "H":
                 result.TileType = TileType.Goal;
                 result.GoalType = GoalType.HoleGoal;
+                break;
+            case "R":
+                result.TileType = TileType.Road;
+                result.RoadType = RoadType.BasicRoad;
+                break;
+            case "RS":
+                result.TileType = TileType.Road;
+                result.RoadType = RoadType.StoneRoad;
                 break;
             case ".":
                 result.TileType = TileType.Empty;

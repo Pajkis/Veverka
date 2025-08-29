@@ -14,6 +14,7 @@ public static class LevelUtils
     public static NutType[,] CachedNutGrid { get; private set; }
     public static GoalType[,] CachedGoalGrid { get; private set; }
     public static WallType[,] CachedWallGrid { get; private set; }
+    public static RoadType[,] CachedRoadGrid { get; private set; }
         
     /// <summary>
     /// Loads data from file into array
@@ -38,11 +39,13 @@ public static class LevelUtils
             CachedNutGrid = null;
             CachedGoalGrid = null;
             CachedWallGrid = null;
+            CachedRoadGrid = null;
 
             TileType[,] levelGrid = new TileType[width, height];
             NutType[,] nutGrid = new NutType[width, height];
             GoalType[,] goalGrid = new GoalType[width, height];
             WallType[,] wallGrid = new WallType[width, height];
+            RoadType[,] roadGrid = new RoadType[width, height];
 
             Debug.Log("Size of layout is (width, height): " + width + ", " + height);
             // put data into grid
@@ -51,11 +54,12 @@ public static class LevelUtils
                 string[] row = lines[height - 1 - y].Split(",");
                 for (int x = 0; x < width; x++)
                 {
-                    ParsedTile parsed = TileTypeExtensions.ParseTileType(row[x].Trim());
+                    ParsedTile parsed = TileParser.ParseTileType(row[x].Trim());
                     levelGrid[x, y] = parsed.TileType;
                     nutGrid[x, y] = parsed.NutType;
                     goalGrid[x, y] = parsed.GoalType;
                     wallGrid[x, y] = parsed.WallType;
+                    roadGrid[x, y] = parsed.RoadType;
 
                     //Catch error types
                     if (parsed.TileType == TileType.ErrorTile)
@@ -69,6 +73,7 @@ public static class LevelUtils
             CachedNutGrid = nutGrid;
             CachedGoalGrid = goalGrid;
             CachedWallGrid = wallGrid;
+            CachedRoadGrid = roadGrid;
             return levelGrid;
 
         }
