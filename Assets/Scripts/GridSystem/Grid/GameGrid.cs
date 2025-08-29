@@ -645,8 +645,7 @@ namespace Veverka.GridSystem.GameGrid
             else
             {              
                 return false;
-            }
-                 
+            }                 
         }
         
         /// <summary>
@@ -658,15 +657,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             return nuts.GetValueOrDefault(position);
         }
-
-        /// <summary>
-        /// Get positon log of movable objects position
-        /// </summary>
-        public void LogMovablePositions()
-        {       
-            Debug.Log("Pushable object count: " + nuts.Count);     
-        }
-
+           
         #endregion
     }
 }

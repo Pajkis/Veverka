@@ -12,7 +12,7 @@ public abstract class NutTile : TileObject
 
     protected NutMovedPayload payload = new();
     protected SmoothMover smoothMover;
-    public NutType NutKind { get; private set; }
+    protected NutType nutType;
     #endregion
 
     #region  nut events
@@ -76,11 +76,13 @@ public abstract class NutTile : TileObject
 
         // base initialization
         base.Init(tileType, gridPosition);
-        NutKind = nutType;
+        this.nutType = nutType;
+
+        // raise event to add pushable into dictionary in GameGrid
         nutSetEvent.Raise(new NutBasicPayload
         {
             Position = gridPosition,
-            NutType = NutKind,
+            NutType = nutType,
             NutTile = this,
         });
     }
@@ -113,14 +115,14 @@ public abstract class NutTile : TileObject
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    public bool CanBePushed(Direction direction)
+    protected virtual bool CanBePushed(Direction direction)
     {
         Vector2Int targetPosition = GridUtils.GetPositionInDir(GridPosition, direction);
 
         TileQueryPayload query = new() { Position = targetPosition };
         tileQueryEvent.Raise(query);
         if (!query.IsInGrid) return false;
-        return query.IsWalkable;
+        return query.IsWalkable || query.IsGoal;
     }
     #endregion
 
@@ -147,7 +149,7 @@ public abstract class NutTile : TileObject
         // fill character moved payload for turn records
         payload = new NutMovedPayload
         {
-            NutType = NutKind,
+            NutType = this.nutType,
             NutTile = this,
             Current = targetPosVec2Int,
             Previous = GridPosition,
@@ -174,7 +176,7 @@ public abstract class NutTile : TileObject
     {
         nutSetEvent.Raise(new NutBasicPayload
         {
-            NutType = NutKind,
+            NutType = this.nutType,
             NutTile = this,
             Position = targetPosition
         });
@@ -213,7 +215,7 @@ public abstract class NutTile : TileObject
 
         nutSetEvent.Raise(new NutBasicPayload
         {
-            NutType = NutKind,
+            NutType = this.nutType,
             NutTile = this,
             Position = previous
         });

@@ -1012,7 +1012,11 @@ MonoBehaviour:
   goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
   goalRemovedEvent: {fileID: 11400000, guid: f7f87259c5d74884f9b08fc74b09dacd, type: 2}
   tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
+  wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  roadSetEvent: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
+  roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
+  roadStonePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
   veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}

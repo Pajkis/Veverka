@@ -8,6 +8,7 @@ public struct ParsedTile
     public GoalType GoalType;
     public WallType WallType;
     public NutType NutType;
+    public RoadType RoadType;
 }
 
 public static class TileTypeExtensions
@@ -19,7 +20,7 @@ public static class TileTypeExtensions
     /// <returns></returns>
     public static bool IsObstacle(TileType tileType)
     {
-        return tileType == TileType.Wall;
+        return tileType == TileType.Wall || tileType == TileType.Nut;
     }
 
     // <summary>
@@ -39,7 +40,7 @@ public static class TileTypeExtensions
     /// <returns></returns>
     public static bool IsWalkable(TileType tileType)
     {
-        return tileType == TileType.Empty || tileType == TileType.Goal;
+        return tileType == TileType.Empty || tileType == TileType.Goal || tileType == TileType.Road;
     }
 
     /// <summary>
@@ -51,6 +52,7 @@ public static class TileTypeExtensions
     { 
       return tileType == TileType.Goal;
     }
+
 
     /// <summary>
     /// parse grid symbols into tile types

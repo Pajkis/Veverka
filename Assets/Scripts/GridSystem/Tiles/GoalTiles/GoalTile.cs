@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public abstract class GoalTile : TileObject
 {
+    protected GoalType goalType;
+
     #region events
     [SerializeField] protected NutInGoalEvent nutInGoalEvent;
     [SerializeField] protected GoalSetEvent goalSetEvent;
@@ -12,9 +14,7 @@ public abstract class GoalTile : TileObject
     [SerializeField] protected WallSetEvent wallSetEvent;
     [SerializeField] protected RoadSetEvent roadSetEvent;
     #endregion
-
-    public GoalType GoalKind { get; private set; }
-
+    
     #region Init
     /// <summary>
     /// Init goals and put the into dictionary in GameGrid
@@ -25,7 +25,7 @@ public abstract class GoalTile : TileObject
     public virtual void Init(TileType tileType, Vector2Int gridPosition, GoalType goalType)
     {
         base.Init(tileType, gridPosition);
-        GoalKind = goalType;
+        this.goalType = goalType;
         goalSetEvent.Raise(new GoalBasicPayload
         {
             Position = gridPosition,

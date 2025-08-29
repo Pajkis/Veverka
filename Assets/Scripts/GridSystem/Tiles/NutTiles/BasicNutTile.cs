@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 /// <summary>
@@ -35,7 +36,7 @@ public class BasicNutTile : NutTile
             nutSetEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
-                NutType  = NutKind,
+                NutType  = this.nutType,
                 NutTile = this,
             });
         }
@@ -45,11 +46,9 @@ public class BasicNutTile : NutTile
             nutInGoalEvent.Raise(new NutBasicPayload
             {
                 Position = targetPosition,
-                NutType = NutKind,
-                NutTile = this,
-               // GoalReduction = 1,
+                NutType = this.nutType,
+                NutTile = this,              
             });
-
             Destroy(gameObject);            
         }
 
