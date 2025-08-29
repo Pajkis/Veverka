@@ -58,9 +58,9 @@ namespace Veverka.GridSystem.GameGrid
         private Vector2Int gridSize;     
         private TileType[,] grid;
         private NutType[,] nutGrid;
-        private GoalType[,] goalGridTypes;
-        private WallType[,] wallGridTypes;
-        private RoadType[,] roadGridTypes;
+        private GoalType[,] goalGrid;
+        private WallType[,] wallGrid;
+        private RoadType[,] roadGrid;
         private Dictionary<Vector2Int, TileObject> nuts = new();
         private Dictionary<Vector2Int, TileObject> goals = new();
         private readonly List<GameObject> backgroundPool = new();
@@ -131,9 +131,9 @@ namespace Veverka.GridSystem.GameGrid
             //get new grid size
             this.grid = grid;
             this.nutGrid = GridUtils.CachedNutGrid;
-            this.goalGridTypes = GridUtils.CachedGoalGrid;
-            this.wallGridTypes = GridUtils.CachedWallGrid;
-            this.roadGridTypes = GridUtils.CachedRoadGrid;
+            this.goalGrid = GridUtils.CachedGoalGrid;
+            this.wallGrid= GridUtils.CachedWallGrid;
+            this.roadGrid = GridUtils.CachedRoadGrid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
             
@@ -209,7 +209,7 @@ namespace Veverka.GridSystem.GameGrid
                         case TileType.Wall:
 
                             GameObject tile;
-                            if (wallGridTypes[x, y] == WallType.StoneWall)
+                            if (wallGrid[x, y] == WallType.StoneWall)
                             {
                                 tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
                             }
@@ -256,7 +256,7 @@ namespace Veverka.GridSystem.GameGrid
 
                         case TileType.Goal:
 
-                            if (goalGridTypes[x, y] == GoalType.HoleGoal)
+                            if (goalGrid[x, y] == GoalType.HoleGoal)
                             {
                                 HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
                                 holeTile.transform.SetParent(gridRoot, false);
@@ -433,9 +433,9 @@ namespace Veverka.GridSystem.GameGrid
             if (nuts != null) nuts.Clear();
             if (goals != null) goals.Clear();
             nutGrid = null;
-            goalGridTypes = null;
-            wallGridTypes = null;
-            roadGridTypes = null;
+            goalGrid = null;
+            wallGrid = null;
+            roadGrid = null;
 
             // clear level database
             if (levelDatabase != null)
@@ -473,7 +473,7 @@ namespace Veverka.GridSystem.GameGrid
             }
             // set tile and wall type in grid
             SetTileType(payload.Position, TileType.Wall);
-            wallGridTypes[payload.Position.x, payload.Position.y] = payload.WallType;
+            wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
         }
 
         /// <summary>
@@ -500,7 +500,7 @@ namespace Veverka.GridSystem.GameGrid
 
             // set tile type and road type in grid
             SetTileType(payload.Position, TileType.Road);
-            roadGridTypes[payload.Position.x, payload.Position.y] = payload.RoadType;
+            roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
         }
 
         /// <summary>
@@ -543,7 +543,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             goals[payload.Position] = payload.GoalTile;
             SetTileType(payload.Position, TileType.Goal);
-            goalGridTypes[payload.Position.x, payload.Position.y] = payload.GoalType;
+            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>
@@ -559,7 +559,7 @@ namespace Veverka.GridSystem.GameGrid
             }
             goals.Remove(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
-            goalGridTypes[payload.Position.x, payload.Position.y] = GoalType.BasicGoal;
+            goalGrid[payload.Position.x, payload.Position.y] = GoalType.BasicGoal;
         }
 
         /// <summary>
@@ -575,10 +575,10 @@ namespace Veverka.GridSystem.GameGrid
             payload.IsWalkable = IsWalkableAt(payload.Position);
             payload.IsPushable = IsPushableAt(payload.Position);
             payload.TileType = grid[payload.Position.x, payload.Position.y];
-            payload.GoalType = goalGridTypes[payload.Position.x, payload.Position.y];
-            payload.WallType = wallGridTypes[payload.Position.x, payload.Position.y];
+            payload.GoalType = goalGrid[payload.Position.x, payload.Position.y];
+            payload.WallType = wallGrid[payload.Position.x, payload.Position.y];
             payload.NutType = nutGrid[payload.Position.x, payload.Position.y];
-            payload.RoadType = roadGridTypes[payload.Position.x, payload.Position.y];
+            payload.RoadType = roadGrid[payload.Position.x, payload.Position.y];
         }
 
         /// <summary>
@@ -609,7 +609,7 @@ namespace Veverka.GridSystem.GameGrid
             var tile = grid[position.x, position.y];
             if (tile == TileType.Goal)
             {
-                return goalGridTypes[position.x, position.y] != GoalType.HoleGoal;
+                return goalGrid[position.x, position.y] != GoalType.HoleGoal;
             }
             return tile == TileType.Empty || tile == TileType.Road;
         }
