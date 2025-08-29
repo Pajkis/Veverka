@@ -6,9 +6,8 @@ using UnityEngine;
 /// </summary>
 public class LevelLoader: MonoBehaviour
 {
-
     #region fields
-
+    
     // Serialized fields for events and level database
     [SerializeField]  private LevelSelectEvent levelSelectEvent;   
     [SerializeField]  private GoToSceneEvent goToSceneEvent;
@@ -20,7 +19,6 @@ public class LevelLoader: MonoBehaviour
     private bool levelBuilt = false;
         
     #endregion
-
 
     #region Methods       
 
@@ -94,7 +92,7 @@ public class LevelLoader: MonoBehaviour
 
         // selected level to grid   
         string levelName = ((LevelEnum)levelDatabase.CurrentLevelIndex).ToString();
-        TileType[,] grid = LevelUtils.LoadGridFromCsv(levelName);
+        TileType[,] grid = GridUtils.LoadGridFromCsv(levelName);
 
         // raise event to build grid
         if (grid == null)
@@ -105,7 +103,7 @@ public class LevelLoader: MonoBehaviour
         }
 
         // validate grid
-        if (!LevelUtils.ValidateGrid(grid))
+        if (!GridUtils.ValidateGrid(grid))
         {
             Debug.LogWarning("Invalid level configuration!");
             goToSceneEvent.Raise(SceneType.LevelMenu);

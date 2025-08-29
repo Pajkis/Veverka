@@ -130,10 +130,10 @@ namespace Veverka.GridSystem.GameGrid
         {
             //get new grid size
             this.grid = grid;
-            this.nutGrid = LevelUtils.CachedNutGrid;
-            this.goalGridTypes = LevelUtils.CachedGoalGrid;
-            this.wallGridTypes = LevelUtils.CachedWallGrid;
-            this.roadGridTypes = LevelUtils.CachedRoadGrid;
+            this.nutGrid = GridUtils.CachedNutGrid;
+            this.goalGridTypes = GridUtils.CachedGoalGrid;
+            this.wallGridTypes = GridUtils.CachedWallGrid;
+            this.roadGridTypes = GridUtils.CachedRoadGrid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
             
