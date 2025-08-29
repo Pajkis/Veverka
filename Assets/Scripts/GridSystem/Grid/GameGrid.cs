@@ -61,8 +61,6 @@ namespace Veverka.GridSystem.GameGrid
         private GoalType[,] goalGrid;
         private WallType[,] wallGrid;
         private RoadType[,] roadGrid;
-        private Dictionary<Vector2Int, TileObject> nuts = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();
         private readonly List<GameObject> backgroundPool = new();
         // pool for surrounding wall tiles to avoid repeated instantiation
         private readonly List<GameObject> surroundingWalls = new();
@@ -148,7 +146,18 @@ namespace Veverka.GridSystem.GameGrid
 
             //level database initialization
             levelDatabase.gridSize = gridSize;
-            levelDatabase.GoalsCount = goals.Count;
+            int goalCount = 0;
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    if (grid[x, y] == TileType.Goal && goalGrid[x, y] == GoalType.BasicGoal)
+                    {
+                        goalCount++;
+                    }
+                }
+            }
+            levelDatabase.GoalsCount = goalCount;
             levelDatabase.gridOrigin = transform;
 
             //raise event
@@ -429,9 +438,7 @@ namespace Veverka.GridSystem.GameGrid
                 background.SetActive(false);
             }
 
-            // clear dictionaries
-            if (nuts != null) nuts.Clear();
-            if (goals != null) goals.Clear();
+            // clear grids
             nutGrid = null;
             goalGrid = null;
             wallGrid = null;
@@ -504,7 +511,7 @@ namespace Veverka.GridSystem.GameGrid
         }
 
         /// <summary>
-        /// Set nut tile on position in dictionary and set tile type in grid
+        /// Set nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
         private void OnNutSet(NutBasicPayload payload)
@@ -514,13 +521,12 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Set tile is outside the grid");
                 return;
             }
-            nuts[payload.Position] = payload.NutTile;
             SetTileType(payload.Position, TileType.Nut);
             nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
         }
 
         /// <summary>
-        /// Remove nut tile on position in dictionary and set tile type in grid
+        /// Remove nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
         private void OnNutRemoved(NutBasicPayload payload)
@@ -530,24 +536,22 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Remove tile is outside the grid");
                 return;
             }
-            nuts.Remove(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
-            nutGrid[payload.Position.x, payload.Position.y] = NutType.BasicNut;
+            nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
         }
 
         /// <summary>
-        /// SEt goal tile on position in dictionary and set tile type in grid
+        /// Set goal tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
         private void OnGoalSet(GoalBasicPayload payload)
         {
-            goals[payload.Position] = payload.GoalTile;
             SetTileType(payload.Position, TileType.Goal);
             goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>
-        /// Remove goal tile on position in dictionary and set tile type in grid
+        /// Remove goal tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
         private void OnGoalRemoved(GoalBasicPayload payload)
@@ -557,9 +561,8 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Remove tile is outside the grid");
                 return;
             }
-            goals.Remove(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
-            goalGrid[payload.Position.x, payload.Position.y] = GoalType.BasicGoal;
+            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>
@@ -571,7 +574,6 @@ namespace Veverka.GridSystem.GameGrid
             payload.IsInGrid = IsInGrid(payload.Position);
             if (!payload.IsInGrid) return;
 
-            payload.TileObject = GetPushableAt(payload.Position);
             payload.IsWalkable = IsWalkableAt(payload.Position);
             payload.IsPushable = IsPushableAt(payload.Position);
             payload.TileType = grid[payload.Position.x, payload.Position.y];
@@ -645,16 +647,6 @@ namespace Veverka.GridSystem.GameGrid
             }                 
         }
         
-        /// <summary>
-        /// Get movable object at a position
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public TileObject GetPushableAt(Vector2Int position)
-        {
-            return nuts.GetValueOrDefault(position);
-        }
-           
         #endregion
     }
 }

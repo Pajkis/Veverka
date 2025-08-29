@@ -78,7 +78,7 @@ public abstract class NutTile : TileObject
         base.Init(tileType, gridPosition);
         this.nutType = nutType;
 
-        // raise event to add pushable into dictionary in GameGrid
+        // raise event to register nut tile in the GameGrid
         nutSetEvent.Raise(new NutBasicPayload
         {
             Position = gridPosition,

@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// stone nut tile class - pushable tile type that can be pushed into goals or holes
+/// stone nut tile class - nut tile type that can be pushed into goals or holes
 /// </summary>
 public class StoneNutTile : NutTile
 {
@@ -22,7 +22,7 @@ public class StoneNutTile : NutTile
     /// <param name="targetPosition"></param>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
-        // remove pushable from previous position
+        // remove nut from previous position
         nutRemovedEvent.Raise(new NutBasicPayload
         {
             Position = GridPosition,

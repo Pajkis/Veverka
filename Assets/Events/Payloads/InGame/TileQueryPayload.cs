@@ -11,7 +11,6 @@ public class TileQueryPayload
     public Vector2Int Position;
 
     // results populated by GameGrid
-    public TileObject TileObject;
     public bool IsWalkable;
     public bool IsPushable;
     public bool IsInGrid;
