@@ -60,6 +60,7 @@ namespace Veverka.GridSystem.GameGrid
         private NutType[,] nutGrid;
         private GoalType[,] goalGridTypes;
         private WallType[,] wallGridTypes;
+        private RoadType[,] roadGridTypes;
         private Dictionary<Vector2Int, TileObject> nuts = new();
         private Dictionary<Vector2Int, TileObject> goals = new();
         private readonly List<GameObject> backgroundPool = new();
@@ -132,6 +133,7 @@ namespace Veverka.GridSystem.GameGrid
             this.nutGrid = LevelUtils.CachedNutGrid;
             this.goalGridTypes = LevelUtils.CachedGoalGrid;
             this.wallGridTypes = LevelUtils.CachedWallGrid;
+            this.roadGridTypes = LevelUtils.CachedRoadGrid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
             
@@ -433,6 +435,7 @@ namespace Veverka.GridSystem.GameGrid
             nutGrid = null;
             goalGridTypes = null;
             wallGridTypes = null;
+            roadGridTypes = null;
 
             // clear level database
             if (levelDatabase != null)
@@ -468,8 +471,9 @@ namespace Veverka.GridSystem.GameGrid
                 tile.transform.SetParent(gridRoot, false);
                 tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
             }
-            // set tile type in grid
+            // set tile and wall type in grid
             SetTileType(payload.Position, TileType.Wall);
+            wallGridTypes[payload.Position.x, payload.Position.y] = payload.WallType;
         }
 
         /// <summary>
@@ -494,8 +498,9 @@ namespace Veverka.GridSystem.GameGrid
                 tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
             }
 
-            // set tile type in grid
+            // set tile type and road type in grid
             SetTileType(payload.Position, TileType.Road);
+            roadGridTypes[payload.Position.x, payload.Position.y] = payload.RoadType;
         }
 
         /// <summary>
@@ -509,8 +514,9 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Set tile is outside the grid");
                 return;
             }
-            nuts[payload.Position] = payload.NutTile;          
+            nuts[payload.Position] = payload.NutTile;
             SetTileType(payload.Position, TileType.Nut);
+            nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
         }
 
         /// <summary>
@@ -524,8 +530,9 @@ namespace Veverka.GridSystem.GameGrid
                 Debug.LogError("Remove tile is outside the grid");
                 return;
             }
-            nuts.Remove(payload.Position);            
+            nuts.Remove(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
+            nutGrid[payload.Position.x, payload.Position.y] = NutType.BasicNut;
         }
 
         /// <summary>
@@ -536,6 +543,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             goals[payload.Position] = payload.GoalTile;
             SetTileType(payload.Position, TileType.Goal);
+            goalGridTypes[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>
@@ -551,6 +559,7 @@ namespace Veverka.GridSystem.GameGrid
             }
             goals.Remove(payload.Position);
             SetTileType(payload.Position, TileType.Empty);
+            goalGridTypes[payload.Position.x, payload.Position.y] = GoalType.BasicGoal;
         }
 
         /// <summary>
@@ -564,9 +573,12 @@ namespace Veverka.GridSystem.GameGrid
 
             payload.TileObject = GetPushableAt(payload.Position);
             payload.IsWalkable = IsWalkableAt(payload.Position);
-            payload.IsObstacle = IsObstacleAt(payload.Position);
-            payload.IsMovable = IsMovableAt(payload.Position);
-            payload.IsGoal = IsGoalAt(payload.Position);
+            payload.IsPushable = IsPushableAt(payload.Position);
+            payload.TileType = grid[payload.Position.x, payload.Position.y];
+            payload.GoalType = goalGridTypes[payload.Position.x, payload.Position.y];
+            payload.WallType = wallGridTypes[payload.Position.x, payload.Position.y];
+            payload.NutType = nutGrid[payload.Position.x, payload.Position.y];
+            payload.RoadType = roadGridTypes[payload.Position.x, payload.Position.y];
         }
 
         /// <summary>
@@ -590,44 +602,29 @@ namespace Veverka.GridSystem.GameGrid
         }
 
         /// <summary>
-        /// Checks whether tile at position is obstacle
+        /// Checks whether a tile at position can be walked on by a character.
         /// </summary>
-        /// <param name="position"> checked position for obstacle</param>
-        /// <returns></returns>
-        public bool IsObstacleAt(Vector2Int position)
-        {
-            return TileTypeExtensions.IsObstacle(grid[position.x, position.y]);
-        }
-    
-        /// <summary>
-        /// Checks whether tile at position is movable obstacle
-        /// </summary>
-        /// <param name="position"> checked position for movable obstacle</param>
-        /// <returns></returns>
-        public bool IsMovableAt(Vector2Int position)
-        {
-            return TileTypeExtensions.IsMovable(grid[position.x, position.y]);
-        }
-     
-        /// <summary>
-        /// Checkes whether tile at position can be walked on
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
         public bool IsWalkableAt(Vector2Int position)
         {
-            if (grid[position.x, position.y] == TileType.Goal &&
-                goalGridTypes[position.x, position.y] == GoalType.HoleGoal)
+            var tile = grid[position.x, position.y];
+            if (tile == TileType.Goal)
             {
-                return false;
+                return goalGridTypes[position.x, position.y] != GoalType.HoleGoal;
             }
-            return TileTypeExtensions.IsWalkable(grid[position.x, position.y]);
+            return tile == TileType.Empty || tile == TileType.Road;
         }
 
-        public bool IsGoalAt(Vector2Int position)
+        /// <summary>
+        /// Checks whether a tile at position can be entered by a nut.
+        /// </summary>
+        public bool IsPushableAt(Vector2Int position)
         {
-            //  Debug.Log($"isGoalat reached at position: {position}");
-            return TileTypeExtensions.IsGoal(grid[position.x, position.y]);
+            var tile = grid[position.x, position.y];
+            if (tile == TileType.Goal)
+            {
+                return true;
+            }
+            return tile == TileType.Empty || tile == TileType.Road;
         }
         
         /// <summary>

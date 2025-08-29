@@ -31,7 +31,7 @@ public class BasicNutTile : NutTile
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
         tileQueryEvent.Raise(query);
-        if (!(query.IsGoal))
+        if (query.TileType != TileType.Goal)
         {
             nutSetEvent.Raise(new NutBasicPayload
             {
@@ -47,9 +47,9 @@ public class BasicNutTile : NutTile
             {
                 Position = targetPosition,
                 NutType = this.nutType,
-                NutTile = this,              
+                NutTile = this,
             });
-            Destroy(gameObject);            
+            Destroy(gameObject);
         }
 
         GridPosition = targetPosition;
