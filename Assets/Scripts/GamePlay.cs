@@ -112,7 +112,7 @@ public class GamePlay : MonoBehaviour
     /// <summary>
     /// Update goal count, check for level complete condition
     /// </summary>
-    void UpdateGoalCount(GoalRemovedPayload payload)
+    void UpdateGoalCount(GoalBasicPayload payload)
     {        
         levelGoalCount -= payload.GoalReduction;
         goalCountDisplay.SetNumber(levelGoalCount);

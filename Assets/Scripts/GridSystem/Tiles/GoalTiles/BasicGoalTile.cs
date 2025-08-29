@@ -16,7 +16,7 @@ public class BasicGoalTile : GoalTile
             // Play goal reached sound effect
             playSfxEvent.Raise(SfxType.GoalReached);
             // Raise goal reached event
-            goalRemovedEvent.Raise(new GoalRemovedPayload
+            goalRemovedEvent.Raise(new GoalBasicPayload
             {
                 Position = payload.Position,
                 GoalReduction = 1,

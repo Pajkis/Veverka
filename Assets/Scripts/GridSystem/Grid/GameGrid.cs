@@ -447,13 +447,13 @@ namespace Veverka.GridSystem.GameGrid
             SetTileType(payload.Position, TileType.Empty);
         }
 
-        private void OnGoalSet(GoalSetPayload payload)
+        private void OnGoalSet(GoalBasicPayload payload)
         {
             goals[payload.Position] = payload.GoalTile;
             SetTileType(payload.Position, TileType.Goal);
         }
 
-        private void OnGoalRemoved(GoalRemovedPayload payload)
+        private void OnGoalRemoved(GoalBasicPayload payload)
         {
             RemoveGoalAt(payload.Position);
             SetTileType(payload.Position, TileType.Empty);

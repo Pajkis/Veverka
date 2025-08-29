@@ -17,7 +17,7 @@ public class HoleTile : GoalTile
             playSfxEvent.Raise(SfxType.GoalReached);
             // Raise goal reached event
 
-            goalRemovedEvent.Raise(new GoalRemovedPayload
+            goalRemovedEvent.Raise(new GoalBasicPayload
             {
                 Position = payload.Position,
             });

@@ -24,7 +24,7 @@ public abstract class GoalTile : TileObject
     {
         base.Init(tileType, gridPosition);
         GoalKind = goalType;
-        goalSetEvent.Raise(new GoalSetPayload
+        goalSetEvent.Raise(new GoalBasicPayload
         {
             Position = gridPosition,
             GoalType = goalType,
