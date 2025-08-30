@@ -94,25 +94,43 @@ public static class GridUtils
     }
 
     /// <summary>
-    /// Loads data from file into array
+    /// Loads data from TextAsset into array
     /// </summary>
-    /// <param name="filename"></param>
-    /// <returns></returns>
-    public static TileType[,] LoadGridFromCsv(string filename)
+    /// <param name="levelData">TextAsset containing the CSV level data</param>
+    /// <returns>2D array of TileType representing the level</returns>
+    public static TileType[,] LoadGridFromTextAsset(TextAsset levelData)
     {
         try
         {
-            // get file into variable
-            TextAsset levelData = Resources.Load<TextAsset>($"{filename}");
-
             if (levelData == null)
-                throw new FileNotFoundException($"File not found: {filename}");
+            {
+                Debug.LogError("Level data is null!");
+                return null;
+            }
 
             // get size of the array
             string[] lines = levelData.text.Split('\n');
-            int height = lines.Length;
-            int width = lines[0].Split(',').Length;
 
+            // Remove empty lines
+            var validLines = new System.Collections.Generic.List<string>();
+            foreach (var line in lines)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    validLines.Add(line.Trim());
+                }
+            }
+
+            if (validLines.Count == 0)
+            {
+                Debug.LogError("No valid data found in level file!");
+                return null;
+            }
+
+            int height = validLines.Count;
+            int width = validLines[0].Split(',').Length;
+
+            // Clear cached grids
             CachedNutGrid = null;
             CachedGoalGrid = null;
             CachedWallGrid = null;
@@ -124,12 +142,19 @@ public static class GridUtils
             WallType[,] wallGrid = new WallType[width, height];
             RoadType[,] roadGrid = new RoadType[width, height];
 
-            Debug.Log("Size of layout is (width, height): " + width + ", " + height);
-            // put data into grid
+            Debug.Log($"Loading level '{levelData.name}' with size (width, height): {width}, {height}");
+
+            // put data into grid (flip Y axis to match Unity's coordinate system)
             for (int y = 0; y < height; y++)
             {
-                string[] row = lines[height - 1 - y].Split(",");
-                for (int x = 0; x < width; x++)
+                string[] row = validLines[height - 1 - y].Split(",");
+
+                if (row.Length != width)
+                {
+                    Debug.LogWarning($"Row {y} has {row.Length} columns, expected {width}. Level: {levelData.name}");
+                }
+
+                for (int x = 0; x < width && x < row.Length; x++)
                 {
                     ParsedTile parsed = ParseTileType(row[x].Trim());
                     levelGrid[x, y] = parsed.TileType;
@@ -138,28 +163,27 @@ public static class GridUtils
                     wallGrid[x, y] = parsed.WallType;
                     roadGrid[x, y] = parsed.RoadType;
 
-                    //Catch error types
+                    // Catch error types
                     if (parsed.TileType == TileType.ErrorTile)
                     {
-                        Debug.LogWarning($"error tile on position[x,y]: {x}, {y}");
+                        Debug.LogWarning($"Error tile at position [{x},{y}] in level '{levelData.name}'. Symbol: '{row[x].Trim()}'");
                     }
-
                 }
             }
 
+            // Cache the grids
             CachedNutGrid = nutGrid;
             CachedGoalGrid = goalGrid;
             CachedWallGrid = wallGrid;
             CachedRoadGrid = roadGrid;
-            return levelGrid;
 
+            return levelGrid;
         }
         catch (Exception ex)
         {
-            Debug.LogError(ex);
+            Debug.LogError($"Error loading level from TextAsset '{levelData?.name}': {ex.Message}");
             return null;
         }
-
     }
 
     /// <summary>

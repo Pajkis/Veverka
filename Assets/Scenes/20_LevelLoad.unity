@@ -172,6 +172,7 @@ MonoBehaviour:
   buildGridDoneEvent: {fileID: 11400000, guid: 8ec110636ed184f46a8e72e8a7789016, type: 2}
   playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  levelSetManager: {fileID: 11400000, guid: a23fa7146678e6f4d8f4bad900248039, type: 2}
 --- !u!1 &827205070
 GameObject:
   m_ObjectHideFlags: 0
