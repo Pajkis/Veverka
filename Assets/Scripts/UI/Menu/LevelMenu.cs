@@ -24,6 +24,7 @@ public class LevelMenu : MonoBehaviour
     public void HandleSetButtonOnClickEvent(int setIndex)
     {
         currentSet = (LevelSetType)setIndex;
+        levelDatabase.LevelSetType = currentSet;
         Debug.Log("Current set: " + currentSet.ToString());
     }
 
