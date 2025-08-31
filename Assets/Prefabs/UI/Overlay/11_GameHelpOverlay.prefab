@@ -2622,7 +2622,7 @@ GameObject:
   - component: {fileID: 6969734066225823983}
   - component: {fileID: 1801448637381326493}
   m_Layer: 5
-  m_Name: UniversalTabManager
+  m_Name: TabManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2687,7 +2687,7 @@ MonoBehaviour:
   defaultTabIndex: 0
   deactivateOtherTabs: 1
   activeTabSpriteType: 0
-  unavailableSprite: {fileID: 21300000, guid: c6a5db8cfac3f9b4d8a5984113989afc, type: 3}
+  unavailableSprite: {fileID: 0}
   allowHoverOnInactive: 1
   onTabChanged:
     m_PersistentCalls:

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
@@ -69,10 +69,16 @@ public class UniversalTabManager : MonoBehaviour
     // Store original sprites for each button
     private Sprite[] originalSprites;
 
+    /// <summary>
+    /// Init and show default tab
+    /// </summary>
     void Start()
     {
+        Debug.Log($"UniversalTabManager Start - Default tab: {defaultTabIndex}");
         InitializeTabs();
-        ShowTab(defaultTabIndex);
+
+        // Přidej delay pro případ, že ostatní komponenty ještě nejsou ready
+        StartCoroutine(DelayedShowTab(defaultTabIndex));
     }
 
     /// <summary>
@@ -107,7 +113,19 @@ public class UniversalTabManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Show tab by index
+    /// Show tab after a short delay to ensure all components are ready
+    /// </summary>
+    /// <param name="tabIndex"></param>
+    /// <returns></returns>
+    private System.Collections.IEnumerator DelayedShowTab(int tabIndex)
+    {
+        yield return new WaitForEndOfFrame(); // Počkej do konce frame
+        Debug.Log($"Delayed showing tab: {tabIndex}");
+        ShowTab(tabIndex);
+    }
+
+     /// <summary>
+    /// Show tab by index - OPRAVENÁ VERZE
     /// </summary>
     /// <param name="tabIndex">Index of tab to show</param>
     public void ShowTab(int tabIndex)
@@ -115,7 +133,10 @@ public class UniversalTabManager : MonoBehaviour
         // Validation checks
         if (tabIndex < 0 || tabIndex >= tabs.Length) return;
         if (!tabs[tabIndex].isAvailable) return;
-        if (currentTabIndex == tabIndex) return;
+
+
+        // Refresh detection
+        bool isRefresh = (currentTabIndex == tabIndex);
 
         // Deactivate other tabs
         if (deactivateOtherTabs)
@@ -127,7 +148,7 @@ public class UniversalTabManager : MonoBehaviour
             }
         }
 
-        // Activate selected tab
+        // Activate selected tab 
         if (tabs[tabIndex].content != null)
         {
             tabs[tabIndex].content.SetActive(true);
@@ -136,13 +157,28 @@ public class UniversalTabManager : MonoBehaviour
         currentTabIndex = tabIndex;
         UpdateButtonVisuals();
 
-        // Fire events
-        onTabClicked?.Invoke(tabIndex);
-        onTabChanged?.Invoke(tabIndex);
-        onTabChangedWithInfo?.Invoke(tabs[tabIndex]);
+        // Fire events - pouze pokud to není refresh
+        if (!isRefresh)
+        {
+            onTabClicked?.Invoke(tabIndex);
+            onTabChanged?.Invoke(tabIndex);
+            onTabChangedWithInfo?.Invoke(tabs[tabIndex]);
+        }
 
-        Debug.Log($"Tab activated: {tabs[tabIndex].tabName} (index: {tabIndex})");
+        Debug.Log($"Tab activated: {tabs[tabIndex].tabName} (index: {tabIndex}) {(isRefresh ? "[REFRESH]" : "")}");
     }
+
+    /// <summary>
+    /// Nová metoda pro force refresh current tabu
+    /// </summary>
+    public void RefreshCurrentTab()
+    {
+        if (currentTabIndex >= 0 && currentTabIndex < tabs.Length)
+        {
+            ShowTab(currentTabIndex);
+        }
+    }
+     
 
     /// <summary>
     /// Show tab by its assigned value
