@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Adapter for connecting AnimatedUniversalTabManager with level set system
-/// Handles communication between tab manager and level data
+/// level select menu component
+/// Handles interaction between tab manager and level data
+/// Chooses level set based on selected tab and button level number
 /// </summary>
-public class LevelSetAdapter : MonoBehaviour
+public class LevelSelectMenu : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private UniversalTabManager tabManager;
