@@ -37,7 +37,7 @@ namespace Veverka.GridSystem.GameGrid
         // Prefabs
         [SerializeField] private GameObject emptyPrefab;
         [SerializeField] private GameObject roadPrefab;
-        [SerializeField] private GameObject roadStonePrefab;
+        [SerializeField] private GameObject stoneFilledHolePrefab;
         [SerializeField] private GameObject veverkaPrefab;
         [SerializeField] private GameObject nutPrefab;
         [SerializeField] private GameObject nutStonePrefab;       
@@ -492,9 +492,9 @@ namespace Veverka.GridSystem.GameGrid
             if (payload.instantiateTile) 
             {
                 GameObject tile;
-                if (payload.RoadType == RoadType.StoneRoad)
+                if (payload.RoadType == RoadType.StoneFilledHole)
                 {
-                    tile = Instantiate(roadStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                    tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 }
                 else
                 {
