@@ -31,7 +31,7 @@ public class HoleTile : GoalTile
                 roadSetEvent.Raise(new RoadBasicPayload
                 {
                     Position = payload.Position,
-                    RoadType = RoadType.StoneRoad,
+                    RoadType = RoadType.StoneFilledHole,
                     instantiateTile = true,
                 });
             }                    

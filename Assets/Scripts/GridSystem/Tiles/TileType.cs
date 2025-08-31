@@ -21,7 +21,7 @@ public enum NutType
     StoneNut
 }
 
-// <summary>
+/// <summary>
 /// Enumeration of goal types
 /// </summary>
 public enum GoalType
@@ -39,12 +39,12 @@ public enum WallType
     StoneWall
 }
 
-
 /// <summary>
 /// Road types enumeration
 /// </summary>
 public enum RoadType
 { 
  BasicRoad,
- StoneRoad
+ StoneRoad,
+ StoneFilledHole
 }
