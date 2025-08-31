@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 862168026}
   - component: {fileID: 862168028}
   m_Layer: 0
-  m_Name: GameInit
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -614,7 +614,7 @@ GameObject:
   - component: {fileID: 1640321004}
   - component: {fileID: 1640321003}
   m_Layer: 0
-  m_Name: Audio
+  m_Name: AudioManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
