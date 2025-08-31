@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4951753574590568483}
   - component: {fileID: 8037321432119109282}
   m_Layer: 0
-  m_Name: Tile_StoneRoad
+  m_Name: Tile_StoneFilledHole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -71,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1154779117
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: c6a5db8cfac3f9b4d8a5984113989afc, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fddb7fe4b52691d4689f130198860c62, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
