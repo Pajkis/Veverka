@@ -50,11 +50,8 @@ public class GamePlay : MonoBehaviour
     private void OnEnable()
     {
         // add listeners     
-        goalRemovedEvent.AddListener(UpdateGoalCount);
-      //  levelInitEvent.AddListener(LevelInit);
-        characterMoved.AddListener(OnCharacterMoved);
-
-        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
+        goalRemovedEvent.AddListener(UpdateGoalCount);     
+        characterMoved.AddListener(OnCharacterMoved);        
     }
 
     /// <summary>
@@ -83,8 +80,7 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        goalRemovedEvent.RemoveListener(UpdateGoalCount);
-      //  levelInitEvent.RemoveListener(LevelInit);
+        goalRemovedEvent.RemoveListener(UpdateGoalCount);     
         characterMoved.RemoveListener(OnCharacterMoved);
     }
 
@@ -104,6 +100,7 @@ public class GamePlay : MonoBehaviour
             return;
         }
 
+        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex + 1);
         levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
         goalCountDisplay.SetNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
@@ -151,7 +148,4 @@ public class GamePlay : MonoBehaviour
             turnCountDisplay.SetNumber(turnCount);
         }
     }
-   
-
-
 }
