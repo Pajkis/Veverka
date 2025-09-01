@@ -241,7 +241,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1576294030
+--- !u!1001 &1267429316
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -254,8 +254,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1583062718}
     - target: {fileID: 1581751956966254716, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_RenderMode
-      value: 1
+      propertyPath: m_SortingOrder
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1581751956966254716, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_SortingLayerID
@@ -264,22 +264,6 @@ PrefabInstance:
     - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Name
       value: LoadBackground
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643873105861837935, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643873105861837935, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643873105861837935, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -150
-      objectReference: {fileID: 0}
-    - target: {fileID: 4643873105861837935, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 5572173992726777165, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Pivot.x
@@ -360,10 +344,6 @@ PrefabInstance:
     - target: {fileID: 5572173992726777165, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5966936232506663890, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
-      propertyPath: m_MatchWidthOrHeight
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -469,4 +449,4 @@ SceneRoots:
   - {fileID: 1583062719}
   - {fileID: 650055307}
   - {fileID: 827205073}
-  - {fileID: 1576294030}
+  - {fileID: 1267429316}

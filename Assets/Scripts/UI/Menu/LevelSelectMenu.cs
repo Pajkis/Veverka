@@ -257,6 +257,8 @@ public class LevelSelectMenu : MonoBehaviour
         Debug.Log($"Current Tab Value: {(tabManager != null ? tabManager.GetCurrentTabValue() : -1)}");
 
         for (int i = 0; i < levelSetMappings.Length; i++)
+
+
         {
             var mapping = levelSetMappings[i];
             bool isUnlocked = IsLevelSetUnlocked(mapping.setType);
