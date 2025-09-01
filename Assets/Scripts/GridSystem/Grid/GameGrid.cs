@@ -84,6 +84,9 @@ namespace Veverka.GridSystem.GameGrid
             }
         }
 
+        /// <summary>
+        /// On object enable
+        /// </summary>
         private void OnEnable()
         {
             // add listeners for events
@@ -645,8 +648,7 @@ namespace Veverka.GridSystem.GameGrid
             {              
                 return false;
             }                 
-        }
-        
+        }        
         #endregion
     }
 }

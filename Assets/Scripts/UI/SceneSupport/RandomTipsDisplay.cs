@@ -33,7 +33,8 @@ public class RandomTipsDisplay : MonoBehaviour
         "Advice: Learn from your mistakes. Or keep repeating them, if you enjoy it!",
         "Tip: Patience leads to better results. Lack of patience leads to breaking your keyboard and getting new better one",
         "Tip: Communication and proper teamwork solves many problems. Sadly, this is single player game.",
-        "Hint: You can use 'Undo' to go back until last scored goal."
+        "Hint: You can use 'Undo' to go back until last scored goal.",
+        "Message: If you think some visuals and grafics does not match, you are right.",
     };
 
     /// <summary>

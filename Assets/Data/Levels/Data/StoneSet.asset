@@ -16,6 +16,6 @@ MonoBehaviour:
   setDisplayName: Stone
   levelCsvFiles:
   - {fileID: 4900000, guid: 3f7a470eda4ff7e40bc616fa69ba06f1, type: 3}
-  - {fileID: 4900000, guid: 31a0523b9a1a5f44399834effc3e7a79, type: 3}
   - {fileID: 4900000, guid: 3c481a3fa9e92314a8a3e2db43d001ef, type: 3}
-  - {fileID: 4900000, guid: 738513398a7d228418eb28dfa746d6dc, type: 3}
+  - {fileID: 4900000, guid: 5849b4e739859da40a71e7f274e82ac5, type: 3}
+  - {fileID: 4900000, guid: 31a0523b9a1a5f44399834effc3e7a79, type: 3}
