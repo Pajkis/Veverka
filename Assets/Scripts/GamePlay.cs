@@ -10,10 +10,11 @@ public class GamePlay : MonoBehaviour
     int levelGoalCount = 0;
     int turnCount = 0;
 
-    [Header("UI display")]
-    [SerializeField] private SpriteNumberDisplay goalCountDisplay;
-    [SerializeField] private SpriteNumberDisplay turnCountDisplay;
-    [SerializeField] private SpriteNumberDisplay levelDisplay;
+    [Header("Display Components")]
+    [SerializeField] private UniversalTextDisplay levelTypeDisplay;
+    [SerializeField] private UniversalTextDisplay levelNumDisplay;
+    [SerializeField] private UniversalTextDisplay goalDisplay;
+    [SerializeField] private UniversalTextDisplay turnsDisplay;
 
     [Header("Events")]
     [SerializeField] private GoalRemovedEvent goalRemovedEvent;   
@@ -35,8 +36,12 @@ public class GamePlay : MonoBehaviour
     {
         //undo manager initialization
         undoManager = new UndoManager(playSfxEvent);
-        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
-          
+        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);         
+        
+    }
+
+    private void Start()
+    {
         // initialize level goal count and turn count
         LevelInit();
     }
@@ -51,7 +56,9 @@ public class GamePlay : MonoBehaviour
     {
         // add listeners     
         goalRemovedEvent.AddListener(UpdateGoalCount);     
-        characterMoved.AddListener(OnCharacterMoved);        
+        characterMoved.AddListener(OnCharacterMoved);
+
+       
     }
 
     /// <summary>
@@ -92,17 +99,18 @@ public class GamePlay : MonoBehaviour
     {
         //Set turn count and goal count
         turnCount = 0;
-        turnCountDisplay.SetNumber(turnCount);
+        turnsDisplay.DisplayNumber(turnCount);
 
         if (levelDatabase == null || levelDatabase.GoalsCount == 0)
         {
             Debug.LogError("LevelDatabase is null or no goals set");
             return;
         }
-
-        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex + 1);
+        
+        levelNumDisplay.DisplayNumber(levelDatabase.CurrentLevelIndex + 1);
+        levelTypeDisplay.DisplayEnum<LevelSetType>(levelDatabase.LevelSetType);
         levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
-        goalCountDisplay.SetNumber(levelGoalCount);
+        goalDisplay.DisplayNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 
@@ -112,7 +120,7 @@ public class GamePlay : MonoBehaviour
     void UpdateGoalCount(GoalBasicPayload payload)
     {        
         levelGoalCount -= payload.GoalReduction;
-        goalCountDisplay.SetNumber(levelGoalCount);
+        goalDisplay.DisplayNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {
@@ -132,7 +140,7 @@ public class GamePlay : MonoBehaviour
     private void OnCharacterMoved(CharacterMovedPayload payload)
     {
         turnCount++;
-        turnCountDisplay.SetNumber(turnCount);
+        turnsDisplay.DisplayNumber(turnCount);
     }
 
     /// <summary>
@@ -145,7 +153,7 @@ public class GamePlay : MonoBehaviour
         if (undoDone)
         {
             turnCount++;
-            turnCountDisplay.SetNumber(turnCount);
+            turnsDisplay.DisplayNumber(turnCount);
         }
     }
 }
