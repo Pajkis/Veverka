@@ -24,7 +24,7 @@ public class LevelFinishedMenu : MonoBehaviour
         // hide button on max level finished
         buttonNextLevel = GameObject.Find("ButtonNextLevel");
         
-        if (levelDatabase.CurrentLevelIndex == 10)
+        if (levelDatabase.CurrentLevelIndex == 9)
         {
             buttonNextLevel.SetActive(false);
         }
