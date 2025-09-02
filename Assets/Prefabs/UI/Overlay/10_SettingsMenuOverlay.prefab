@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
+  logButtonProcessing: 0
 --- !u!114 &3211403757700227233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,11 +481,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 265
+      value: 375
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 140
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_LocalPosition.x
@@ -516,11 +517,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 813
+      value: 665
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -476
+      value: -445
       objectReference: {fileID: 0}
     - target: {fileID: 3433106842293436488, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
