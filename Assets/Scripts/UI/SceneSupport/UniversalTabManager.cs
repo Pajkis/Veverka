@@ -17,17 +17,11 @@ public class UniversalTabManager : MonoBehaviour
         [Tooltip("Button that activates this tab")]
         public Button button;
 
-        [Tooltip("Tab name for debugging purposes")]
-        public string tabName;
-
-        [Tooltip("Integer value for this tab (optional, used for external mapping)")]
+        [Tooltip("Integer value for this tab (used for external mapping)")]
         public int tabValue;
 
         [Tooltip("Is this tab currently available/unlocked?")]
         public bool isAvailable = true;
-
-        [Tooltip("Custom data - can be any ScriptableObject or component")]
-        public UnityEngine.Object customData;
     }
 
     [Header("Tab Configuration")]
@@ -35,12 +29,11 @@ public class UniversalTabManager : MonoBehaviour
 
     [Header("Basic Settings")]
     [SerializeField] private int defaultTabIndex = 0;
-    [SerializeField] private bool deactivateOtherTabs = true;
 
     [Header("Visual Feedback - Sprite Swap")]
     [Tooltip("Which sprite state to use for active tab (Selected, Pressed, Highlighted, or Disabled)")]
     [SerializeField] private SpriteStateType activeTabSpriteType = SpriteStateType.Selected;
-    [SerializeField] private Sprite unavailableSprite; // Optional override for unavailable tabs
+    [SerializeField] private Sprite unavailableSprite; // Override for unavailable tabs
 
     [Header("Interactivity Settings")]
     [Tooltip("Allow hover effects on inactive tabs")]
@@ -77,7 +70,7 @@ public class UniversalTabManager : MonoBehaviour
         Debug.Log($"UniversalTabManager Start - Default tab: {defaultTabIndex}");
         InitializeTabs();
 
-        // Přidej delay pro případ, že ostatní komponenty ještě nejsou ready
+        // Add delay in case other components are not ready yet
         StartCoroutine(DelayedShowTab(defaultTabIndex));
     }
 
@@ -105,7 +98,8 @@ public class UniversalTabManager : MonoBehaviour
                 }
             }
 
-            if (tabs[i].content != null && deactivateOtherTabs)
+            // Always deactivate other tabs initially
+            if (tabs[i].content != null)
             {
                 tabs[i].content.SetActive(false);
             }
@@ -119,13 +113,13 @@ public class UniversalTabManager : MonoBehaviour
     /// <returns></returns>
     private System.Collections.IEnumerator DelayedShowTab(int tabIndex)
     {
-        yield return new WaitForEndOfFrame(); // Počkej do konce frame
+        yield return new WaitForEndOfFrame();
         Debug.Log($"Delayed showing tab: {tabIndex}");
         ShowTab(tabIndex);
     }
 
-     /// <summary>
-    /// Show tab by index - OPRAVENÁ VERZE
+    /// <summary>
+    /// Show tab by index
     /// </summary>
     /// <param name="tabIndex">Index of tab to show</param>
     public void ShowTab(int tabIndex)
@@ -134,18 +128,14 @@ public class UniversalTabManager : MonoBehaviour
         if (tabIndex < 0 || tabIndex >= tabs.Length) return;
         if (!tabs[tabIndex].isAvailable) return;
 
-
         // Refresh detection
         bool isRefresh = (currentTabIndex == tabIndex);
 
         // Deactivate other tabs
-        if (deactivateOtherTabs)
+        foreach (var tab in tabs)
         {
-            foreach (var tab in tabs)
-            {
-                if (tab.content != null)
-                    tab.content.SetActive(false);
-            }
+            if (tab.content != null)
+                tab.content.SetActive(false);
         }
 
         // Activate selected tab 
@@ -157,7 +147,7 @@ public class UniversalTabManager : MonoBehaviour
         currentTabIndex = tabIndex;
         UpdateButtonVisuals();
 
-        // Fire events - pouze pokud to není refresh
+        // Fire events - only if it's not a refresh
         if (!isRefresh)
         {
             onTabClicked?.Invoke(tabIndex);
@@ -165,11 +155,11 @@ public class UniversalTabManager : MonoBehaviour
             onTabChangedWithInfo?.Invoke(tabs[tabIndex]);
         }
 
-        Debug.Log($"Tab activated: {tabs[tabIndex].tabName} (index: {tabIndex}) {(isRefresh ? "[REFRESH]" : "")}");
+        Debug.Log($"Tab activated: {tabIndex} {(isRefresh ? "[REFRESH]" : "")}");
     }
 
     /// <summary>
-    /// Nová metoda pro force refresh current tabu
+    /// Force refresh current tab
     /// </summary>
     public void RefreshCurrentTab()
     {
@@ -178,7 +168,6 @@ public class UniversalTabManager : MonoBehaviour
             ShowTab(currentTabIndex);
         }
     }
-     
 
     /// <summary>
     /// Show tab by its assigned value
@@ -195,23 +184,6 @@ public class UniversalTabManager : MonoBehaviour
             }
         }
         Debug.LogWarning($"No tab found with value: {value}");
-    }
-
-    /// <summary>
-    /// Show tab by its name (case insensitive)
-    /// </summary>
-    /// <param name="name">Tab name to find and show</param>
-    public void ShowTabByName(string name)
-    {
-        for (int i = 0; i < tabs.Length; i++)
-        {
-            if (tabs[i].tabName.Equals(name, System.StringComparison.OrdinalIgnoreCase))
-            {
-                ShowTab(i);
-                return;
-            }
-        }
-        Debug.LogWarning($"No tab found with name: '{name}'");
     }
 
     /// <summary>
@@ -294,9 +266,6 @@ public class UniversalTabManager : MonoBehaviour
                 {
                     var spriteState = tabs[i].button.spriteState;
 
-                    // Debug log
-                    Debug.Log($"Updating button {i}: {tabs[i].tabName}, Current tab: {currentTabIndex}, Available: {tabs[i].isAvailable}");
-
                     // Set the main sprite based on state
                     if (!tabs[i].isAvailable)
                     {
@@ -304,17 +273,14 @@ public class UniversalTabManager : MonoBehaviour
                         if (unavailableSprite != null)
                         {
                             buttonImage.sprite = unavailableSprite;
-                            Debug.Log($"Button {i} set to unavailable sprite (override)");
                         }
                         else if (spriteState.disabledSprite != null)
                         {
                             buttonImage.sprite = spriteState.disabledSprite;
-                            Debug.Log($"Button {i} set to disabled sprite from button");
                         }
                         else
                         {
                             buttonImage.sprite = originalSprites[i];
-                            Debug.Log($"Button {i} set to original sprite (unavailable fallback)");
                         }
                     }
                     else if (i == currentTabIndex)
@@ -324,20 +290,17 @@ public class UniversalTabManager : MonoBehaviour
                         if (activeSprite != null)
                         {
                             buttonImage.sprite = activeSprite;
-                            Debug.Log($"Button {i} set to active sprite ({activeTabSpriteType})");
                         }
                         else
                         {
                             // Fallback to original if selected sprite not set
                             buttonImage.sprite = originalSprites[i];
-                            Debug.Log($"Button {i} set to original sprite (active fallback - no {activeTabSpriteType} sprite set)");
                         }
                     }
                     else
                     {
                         // Inactive tab uses original Source Image sprite
                         buttonImage.sprite = originalSprites[i];
-                        Debug.Log($"Button {i} set to original sprite (inactive)");
                     }
 
                     // Handle sprite state for interactions
@@ -397,29 +360,6 @@ public class UniversalTabManager : MonoBehaviour
         if (currentTabIndex >= 0 && currentTabIndex < tabs.Length)
             return tabs[currentTabIndex].tabValue;
         return -1;
-    }
-
-    /// <summary>
-    /// Get current tab name
-    /// </summary>
-    /// <returns>Current tab name or empty string</returns>
-    public string GetCurrentTabName()
-    {
-        if (currentTabIndex >= 0 && currentTabIndex < tabs.Length)
-            return tabs[currentTabIndex].tabName;
-        return "";
-    }
-
-    /// <summary>
-    /// Get current tab custom data of specified type
-    /// </summary>
-    /// <typeparam name="T">Type of custom data</typeparam>
-    /// <returns>Custom data or null</returns>
-    public T GetCurrentTabData<T>() where T : UnityEngine.Object
-    {
-        if (currentTabIndex >= 0 && currentTabIndex < tabs.Length)
-            return tabs[currentTabIndex].customData as T;
-        return null;
     }
 
     /// <summary>
@@ -484,7 +424,7 @@ public class UniversalTabManager : MonoBehaviour
             var tab = tabs[i];
             string status = i == currentTabIndex ? "[ACTIVE]" :
                            tab.isAvailable ? "[AVAILABLE]" : "[LOCKED]";
-            Debug.Log($"Index {i}: {tab.tabName} | Value: {tab.tabValue} | {status}");
+            Debug.Log($"Index {i}: Value {tab.tabValue} | {status}");
         }
     }
 
@@ -503,7 +443,6 @@ public class UniversalTabManager : MonoBehaviour
             }
         }
 
-        // This would need to be done in editor script to actually modify the serialized array
         Debug.Log($"Found {children.Count} potential tabs");
     }
 #endif
