@@ -7,6 +7,7 @@ public class BubbleMessageManager : MonoBehaviour
     [Header("Events")]
     [SerializeField] GoalResolvedEvent goalResolvedEvent;
     [SerializeField] CharacterMovedEvent veverkaMovedEvent;
+    [SerializeField] CharacterDataRequestEvent characterDataRequestEvent;
 
     [Header("Prefab bubble")]
     [SerializeField] GameObject prefabBubbleBox;
@@ -34,6 +35,12 @@ public class BubbleMessageManager : MonoBehaviour
     {
         goalResolvedEvent.AddListener(OnGoalResolved);
         veverkaMovedEvent.AddListener(UpdatePosition);
+        characterDataRequestEvent.AddListener(UpdatePosition);
+        characterDataRequestEvent.Raise(new CharacterBasicPayload
+        {
+            RequestData = true,
+            ResponseData = false
+        });
     }
 
     /// <summary>
@@ -42,7 +49,8 @@ public class BubbleMessageManager : MonoBehaviour
     private void OnDisable()
     {
         goalResolvedEvent.RemoveListener(OnGoalResolved);
-        veverkaMovedEvent.AddListener(UpdatePosition);
+        veverkaMovedEvent.RemoveListener(UpdatePosition);
+        characterDataRequestEvent.RemoveListener(UpdatePosition);
     }
 
     /// <summary>
@@ -69,9 +77,10 @@ public class BubbleMessageManager : MonoBehaviour
     /// update bubble box position on character moved event
     /// </summary>
     /// <param name="payload"></param>
-    private void UpdatePosition(CharacterMovedPayload payload)
+    private void UpdatePosition(CharacterBasicPayload payload)
     {
-        bubbleBoxPosition = payload.current;
+        if (payload.RequestData) return;
+        bubbleBoxPosition = payload.Current;
     }
 
     /// <summary>

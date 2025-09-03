@@ -136,7 +136,7 @@ public class GamePlay : MonoBehaviour
     /// On character moved method - counts number of moves and add each move into turn record
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCharacterMoved(CharacterMovedPayload payload)
+    private void OnCharacterMoved(CharacterBasicPayload payload)
     {
         turnCount++;
         turnsDisplay.DisplayNumber(turnCount);

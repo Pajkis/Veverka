@@ -14,7 +14,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
     protected float animationSpeed;
-    protected CharacterMovedPayload payload = new();
+    protected CharacterBasicPayload payload = new();
 
     protected SmoothMover smoothMover;
 
@@ -27,6 +27,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected PlaySfxEvent playSfxEvent;    
     [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
     [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] protected CharacterDataRequestEvent characterDataRequestEvent;
     #endregion
 
     #region Configs
@@ -131,12 +132,14 @@ public abstract class Character : MonoBehaviour
         float moveDuration = (duration * distance) / animationSpeed;
 
         // fill character moved payload for events - calling events in children classes 
-        payload = new CharacterMovedPayload
+        payload = new CharacterBasicPayload
         {
-            character = this,
-            current = targetPosVec2Int,
-            previous = gridPosition,
-            direction = direction,
+            Character = this,
+            Current = targetPosVec2Int,
+            Previous = gridPosition,
+            Direction = direction,
+            RequestData = false,
+            ResponseData = true,
         };
 
         // execute smooth movement
@@ -162,7 +165,7 @@ public abstract class Character : MonoBehaviour
        
         // register movement as action into turn record 
         TurnBuilder.Instance.AddAction(
-         new UndoCharacterAction(this, payload.current, payload.previous, payload.direction)
+         new UndoCharacterAction(this, payload.Current, payload.Previous, payload.Direction)
            );
 
         // inform turn builder, tht this component has registered an action into turn record

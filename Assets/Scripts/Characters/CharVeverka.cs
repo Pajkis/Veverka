@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor.U2D.Animation;
+using UnityEngine;
 
 /// <summary>
 /// Control of Veverka
@@ -22,7 +23,8 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.AddListener(HandleInput);
             settingDataBroadcastEvent.AddListener(OnSettingData);
-            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+            characterDataRequestEvent.AddListener(OnCharacterData);
+            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);            
         }
 
         /// <summary>
@@ -32,7 +34,29 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.RemoveListener(HandleInput);
             settingDataBroadcastEvent.RemoveListener(OnSettingData);
+            characterDataRequestEvent.RemoveListener(OnCharacterData);
         }
+
+        /// <summary>
+        /// on character data request - respond with character data
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnCharacterData(CharacterBasicPayload payload)
+        {
+            if (payload.RequestData)
+            { 
+                characterDataRequestEvent.Raise(new CharacterBasicPayload
+                {
+                    Character = this,
+                    Current = gridPosition,                 
+                    Direction = facingDirection,
+                    Duration = moveDuration,
+                    RequestData = false,
+                    ResponseData = true
+                });
+            }
+        }
+
         #endregion
 
         #region methods

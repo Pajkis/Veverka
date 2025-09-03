@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1847477145
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -104,10 +104,10 @@ MonoBehaviour:
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
   settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
   settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  characterDataRequestEvent: {fileID: 11400000, guid: dcb5393757cbf5142ad7f8f7645461bc, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   onArrowPressed: {fileID: 11400000, guid: 5934e5ff874e9fc48b7d5f329cfdc4b1, type: 2}
   veverkaMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
-  pushNutEvent: {fileID: 11400000, guid: eca2538f523e2524bb0a784244790d6b, type: 2}
   canPushQueryEvent: {fileID: 11400000, guid: 1f6653d05a638b14b94fcdfce724a1df, type: 2}
 --- !u!114 &-7049510064372506974
 MonoBehaviour:
