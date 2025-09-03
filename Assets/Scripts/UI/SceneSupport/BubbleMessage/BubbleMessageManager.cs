@@ -5,7 +5,7 @@ public class BubbleMessageManager : MonoBehaviour
 {
     #region Fields
     [Header("Events")]
-    [SerializeField] GoalRemovedEvent goalRemovedEvent;
+    [SerializeField] GoalResolvedEvent goalResolvedEvent;
     [SerializeField] CharacterMovedEvent veverkaMovedEvent;
 
     [Header("Prefab bubble")]
@@ -32,7 +32,7 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        goalRemovedEvent.AddListener(OnGoalRemoved);
+        goalResolvedEvent.AddListener(OnGoalResolved);
         veverkaMovedEvent.AddListener(UpdatePosition);
     }
 
@@ -41,7 +41,7 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        goalRemovedEvent.RemoveListener(OnGoalRemoved);
+        goalResolvedEvent.RemoveListener(OnGoalResolved);
         veverkaMovedEvent.AddListener(UpdatePosition);
     }
 
@@ -49,7 +49,7 @@ public class BubbleMessageManager : MonoBehaviour
     /// Instantiate message prefab on goal removed event
     /// </summary>
     /// <param name="payload"></param>
-    private void OnGoalRemoved(GoalBasicPayload payload)
+    private void OnGoalResolved(GoalBasicPayload payload)
     {
         Debug.Log("Veverka message: " + payload.VeverkaMessage.ToString());
         BubbleMsgBox bubbleBox;

@@ -26,7 +26,7 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private NutSetEvent nutSetEvent;
         [SerializeField] private NutRemovedEvent nutRemovedEvent;
         [SerializeField] private GoalSetEvent goalSetEvent;
-        [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+        [SerializeField] private GoalResolvedEvent goalResolvedEvent;
         [SerializeField] private TileQueryEvent tileQueryEvent;
         [SerializeField] private WallSetEvent wallSetEvent;
         [SerializeField] private RoadSetEvent roadSetEvent;
@@ -97,7 +97,7 @@ namespace Veverka.GridSystem.GameGrid
             nutSetEvent.AddListener(OnNutSet);
             nutRemovedEvent.AddListener(OnNutRemoved);
             goalSetEvent.AddListener(OnGoalSet);
-            goalRemovedEvent.AddListener(OnGoalRemoved);
+            goalResolvedEvent.AddListener(OnGoalResolved);
             wallSetEvent.AddListener(OnWallSet);
             roadSetEvent.AddListener(OnRoadSet);
         }
@@ -115,7 +115,7 @@ namespace Veverka.GridSystem.GameGrid
             nutSetEvent.RemoveListener(OnNutSet);
             nutRemovedEvent.RemoveListener(OnNutRemoved);
             goalSetEvent.RemoveListener(OnGoalSet);
-            goalRemovedEvent.RemoveListener(OnGoalRemoved);
+            goalResolvedEvent.RemoveListener(OnGoalResolved);
             wallSetEvent.RemoveListener(OnWallSet);
             roadSetEvent.RemoveListener(OnRoadSet);
         }
@@ -556,8 +556,13 @@ namespace Veverka.GridSystem.GameGrid
         /// Remove goal tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnGoalRemoved(GoalBasicPayload payload)
+        private void OnGoalResolved(GoalBasicPayload payload)
         {
+            if (!payload.GoalRemove)
+            {
+                return;
+            }
+
             if (!IsInGrid(payload.Position))
             {
                 Debug.LogError("Remove tile is outside the grid");

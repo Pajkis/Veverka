@@ -16,10 +16,11 @@ public class BasicGoalTile : GoalTile
             // Play goal reached sound effect
             playSfxEvent.Raise(SfxType.GoalReached);
             // Raise goal reached event
-            goalRemovedEvent.Raise(new GoalBasicPayload
+            goalResolvedEvent.Raise(new GoalBasicPayload
             {
                 Position = payload.Position,
                 GoalReduction = 1,
+                GoalRemove = true,
                 VeverkaMessage = BubbleMessageType.Yatta,
                 VeverkaMessageTime = 1f
             });

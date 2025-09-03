@@ -10,7 +10,7 @@ public abstract class GoalTile : TileObject
     #region events
     [SerializeField] protected NutInGoalEvent nutInGoalEvent;
     [SerializeField] protected GoalSetEvent goalSetEvent;
-    [SerializeField] protected GoalRemovedEvent goalRemovedEvent;
+    [SerializeField] protected GoalResolvedEvent goalResolvedEvent;
     [SerializeField] protected WallSetEvent wallSetEvent;
     [SerializeField] protected RoadSetEvent roadSetEvent;
     #endregion

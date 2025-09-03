@@ -17,7 +17,7 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private UniversalTextDisplay turnsDisplay;
 
     [Header("Events")]
-    [SerializeField] private GoalRemovedEvent goalRemovedEvent;   
+    [SerializeField] private GoalResolvedEvent goalResolvedEvent;   
     [SerializeField] private CharacterMovedEvent characterMoved;
     [SerializeField] private PlaySfxEvent playSfxEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
@@ -55,10 +55,18 @@ public class GamePlay : MonoBehaviour
     private void OnEnable()
     {
         // add listeners     
-        goalRemovedEvent.AddListener(UpdateGoalCount);     
+        goalResolvedEvent.AddListener(UpdateGoalCount);     
         characterMoved.AddListener(OnCharacterMoved);
 
        
+    }
+    /// <summary>
+    /// OnDisable method - called when object deactivate or before destroy
+    /// </summary>
+    private void OnDisable()
+    {
+        goalResolvedEvent.RemoveListener(UpdateGoalCount);
+        characterMoved.RemoveListener(OnCharacterMoved);
     }
 
     /// <summary>
@@ -80,15 +88,6 @@ public class GamePlay : MonoBehaviour
                 openOverlayEvent.Raise(OverlayType.PauseMenu);
             }
         }
-    }
-
-    /// <summary>
-    /// OnDisable method - called when object deactivate or before destroy
-    /// </summary>
-    private void OnDisable()
-    {
-        goalRemovedEvent.RemoveListener(UpdateGoalCount);     
-        characterMoved.RemoveListener(OnCharacterMoved);
     }
 
     /// <summary>

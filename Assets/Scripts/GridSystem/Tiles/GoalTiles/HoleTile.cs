@@ -18,10 +18,11 @@ public class HoleTile : GoalTile
             // Raise goal reached event
             if (payload.NutType == NutType.StoneNut)
             {
-                goalRemovedEvent.Raise(new GoalBasicPayload
+                goalResolvedEvent.Raise(new GoalBasicPayload
                 {
                     Position = payload.Position,
                     GoalReduction = 0,
+                    GoalRemove = true,
                     VeverkaMessage = BubbleMessageType.Yatta,
                     VeverkaMessageTime = 1f
                 });
@@ -37,12 +38,14 @@ public class HoleTile : GoalTile
             }
             else
             {
-                //goalRemovedEvent.Raise(new GoalBasicPayload
-                //{
-                //    Position = payload.Position,
-                //    VeverkaMessage = BubbleMessageType.Ooops,
-                //    VeverkaMessageTime = 0.5f
-                //});
+                // Display "Ooops" message if a non-stone nut falls into the hole
+                goalResolvedEvent.Raise(new GoalBasicPayload
+                {
+                    Position = payload.Position,
+                    GoalRemove = false,
+                    VeverkaMessage = BubbleMessageType.Ooops,
+                    VeverkaMessageTime = 1f                    
+                });
             }
                 
         }
