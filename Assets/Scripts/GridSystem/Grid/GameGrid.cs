@@ -432,8 +432,7 @@ namespace Veverka.GridSystem.GameGrid
                 if (!backgroundPool.Contains(child.gameObject))
                 {
                     Destroy(child.gameObject);
-                }
-                
+                }                
             }              
 
             foreach (var background in backgroundPool)

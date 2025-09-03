@@ -33,6 +33,7 @@ public class LevelFinishedMenu : MonoBehaviour
             buttonNextLevel.SetActive(true);
         }
 
+
         Time.timeScale = 0;
     }
 
