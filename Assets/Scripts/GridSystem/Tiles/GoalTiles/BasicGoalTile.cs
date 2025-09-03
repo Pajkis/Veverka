@@ -20,6 +20,8 @@ public class BasicGoalTile : GoalTile
             {
                 Position = payload.Position,
                 GoalReduction = 1,
+                VeverkaMessage = BubbleMessageType.Yatta,
+                VeverkaMessageTime = 1f
             });
             Destroy(gameObject);
 

@@ -1132,6 +1132,7 @@ GameObject:
   - component: {fileID: 988765905}
   - component: {fileID: 988765904}
   - component: {fileID: 988765907}
+  - component: {fileID: 988765908}
   m_Layer: 0
   m_Name: GamePlay
   m_TagString: Untagged
@@ -1201,6 +1202,21 @@ MonoBehaviour:
   audioConfig: {fileID: 11400000, guid: 05401f8670677d243812c794083e48d1, type: 2}
   settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
   settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+--- !u!114 &988765908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988765903}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f80fb7ac7c6c284da616ba110d48927, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalRemovedEvent: {fileID: 11400000, guid: f7f87259c5d74884f9b08fc74b09dacd, type: 2}
+  veverkaMovedEvent: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  prefabBubbleBox: {fileID: 3996216760852934602, guid: a94c537606948374cbc00726702464fd, type: 3}
 --- !u!1 &1013319274
 GameObject:
   m_ObjectHideFlags: 0
@@ -2020,7 +2036,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -5.6, y: 6.5}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1511047536

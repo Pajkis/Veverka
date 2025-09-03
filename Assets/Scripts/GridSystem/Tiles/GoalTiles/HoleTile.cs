@@ -13,17 +13,17 @@ public class HoleTile : GoalTile
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
         {
-
             // Play goal reached sound effect
             playSfxEvent.Raise(SfxType.GoalReached);
             // Raise goal reached event
-
             if (payload.NutType == NutType.StoneNut)
             {
                 goalRemovedEvent.Raise(new GoalBasicPayload
                 {
                     Position = payload.Position,
                     GoalReduction = 0,
+                    VeverkaMessage = BubbleMessageType.Yatta,
+                    VeverkaMessageTime = 1f
                 });
                 Destroy(gameObject);
 
@@ -34,7 +34,17 @@ public class HoleTile : GoalTile
                     RoadType = RoadType.StoneFilledHole,
                     instantiateTile = true,
                 });
-            }                    
+            }
+            else
+            {
+                //goalRemovedEvent.Raise(new GoalBasicPayload
+                //{
+                //    Position = payload.Position,
+                //    VeverkaMessage = BubbleMessageType.Ooops,
+                //    VeverkaMessageTime = 0.5f
+                //});
+            }
+                
         }
     }
     #endregion

@@ -9,4 +9,6 @@ public struct GoalBasicPayload
     public GoalType GoalType;
     public GoalTile GoalTile;
     public int GoalReduction;
+    public BubbleMessageType VeverkaMessage;
+    public float VeverkaMessageTime;
 }
