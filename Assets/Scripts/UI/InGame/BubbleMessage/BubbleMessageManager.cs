@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-///  bubble message manager - handle goal resolved and character data to show bubble messages
+/// Handles displaying bubble messages for character events and goal resolutions.
 /// </summary>
 public class BubbleMessageManager : MonoBehaviour
 {
@@ -9,207 +9,149 @@ public class BubbleMessageManager : MonoBehaviour
     [Header("Events")]
     [SerializeField] GoalResolvedEvent goalResolvedEvent;
     [SerializeField] CharacterDataRequestEvent characterDataRequestEvent;
+    [SerializeField] CharacterMovedEvent characterMovedEvent;
 
     [Header("Prefab bubble")]
     [SerializeField] GameObject prefabBubbleBox;
 
     Transform gridRoot;
     Vector2Int characterPosition;
-    Vector2Int goalPosition;
-    Vector2Int bubbleBoxPosition;
 
-    // Pending goal data - waiting for character position
-    private GoalBasicPayload pendingGoalPayload;
-    private BubbleMessageType characterMessage;
-    private bool waitingForCharacterData = false;
+    // Pending goal message shown after the character finishes moving
+    bool hasPendingGoal;
+    GoalBasicPayload pendingGoalPayload;
     #endregion
 
-    #region methods
-
+    #region Methods
+    /// <summary>
+    /// Finds the GridRoot in the scene.
+    /// </summary>
     private void Start()
     {
-        gridRoot = GameObject.Find("GridRoot").transform;
+        gridRoot = GameObject.Find("GridRoot")?.transform;
         if (gridRoot == null)
         {
             Debug.LogError("GridRoot not found in the scene. Please make sure there is a GameObject named 'GridRoot'.");
         }
-
-        // No need to request startup data - Veverka will send it automatically on scene load
     }
 
     /// <summary>
-    /// Add listeners to events
+    /// event subscriptions
     /// </summary>
     private void OnEnable()
     {
         goalResolvedEvent.AddListener(OnGoalResolved);
         characterDataRequestEvent.AddListener(OnCharacterDataReceived);
+        characterMovedEvent.AddListener(OnCharacterMoved);
     }
 
     /// <summary>
-    /// Remove listeners from events
+    /// event unsubscriptions
     /// </summary>
     private void OnDisable()
     {
         goalResolvedEvent.RemoveListener(OnGoalResolved);
         characterDataRequestEvent.RemoveListener(OnCharacterDataReceived);
+        characterMovedEvent.RemoveListener(OnCharacterMoved);
+    }
+    /// <summary>
+    /// Gets called when the character moves. Updates the character's position and shows any pending goal message.
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCharacterMoved(CharacterBasicPayload payload)
+    {
+        characterPosition = payload.Current;
+
+        if (hasPendingGoal)
+        {
+            ShowGoalMessage();
+        }
     }
 
     /// <summary>
-    /// Handle goal resolved event - get goal position and request character data
+    /// on goal resolved event handler
     /// </summary>
     /// <param name="payload"></param>
     private void OnGoalResolved(GoalBasicPayload payload)
     {
-        Debug.Log("Goal resolved at position: " + payload.Position.ToString());
-
-        // Store goal data and position
         pendingGoalPayload = payload;
-        goalPosition = payload.Position;
-        waitingForCharacterData = true;
-
-        // Wait a frame to ensure character has finished moving before requesting data
-        StartCoroutine(RequestCharacterDataWithDelay());
+        hasPendingGoal = true;
     }
 
     /// <summary>
-    /// Request character data with a small delay to ensure character has finished moving
+    /// Shows the goal message bubble at the appropriate position relative to the character.
     /// </summary>
-    private System.Collections.IEnumerator RequestCharacterDataWithDelay()
+    private void ShowGoalMessage()
     {
-        // Wait a frame to ensure all movement is complete
-        yield return new WaitForEndOfFrame();
+        hasPendingGoal = false;
 
-        // Request character data
-        characterDataRequestEvent.Raise(new CharacterBasicPayload
-        {
-            RequestData = true,
-            ResponseData = false
-        });
+        Vector2Int offset = CalculateBubbleOffset(pendingGoalPayload.Position, characterPosition);
+        Vector2Int bubblePos = characterPosition + offset;
+        CreateBubble(bubblePos, pendingGoalPayload.VeverkaMessage, pendingGoalPayload.VeverkaMessageTime);
     }
 
     /// <summary>
-    /// Handle character data response
+    ///  on character data received event handler
     /// </summary>
     /// <param name="payload"></param>
     private void OnCharacterDataReceived(CharacterBasicPayload payload)
     {
-        // Only process responses, not requests
         if (!payload.ResponseData) return;
 
-        Debug.Log($"Character data received - Message: {payload.CharacterBubbleMessage}, Position: {payload.Current}");
-
-        // Handle startup message (LetsStart) - separate from goal resolved logic
-        if (payload.CharacterBubbleMessage == BubbleMessageType.LetsStart)
-        {
-            // For startup message, we don't need goal position - just show above character
-            characterPosition = payload.Current;
-            goalPosition = characterPosition; // Set same position so bubble appears above
-            characterMessage = payload.CharacterBubbleMessage;
-
-            // Create fake goal payload for startup message
-            pendingGoalPayload = new GoalBasicPayload
-            {
-                VeverkaMessage = BubbleMessageType.LetsStart,
-                VeverkaMessageTime = payload.CharacterBubbleMessageTime,
-                Position = characterPosition
-            };
-
-            Debug.Log($"Processing startup message at position: {characterPosition}");
-            CalculateBubblePositionAndInstantiate();
-            return;
-        }
-
-        // Only process if we're waiting for character data (original logic for goal resolved)
-        if (!waitingForCharacterData) return;
-
-        // Get character position
         characterPosition = payload.Current;
-        characterMessage = payload.CharacterBubbleMessage;
-        waitingForCharacterData = false;
+        if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
 
-        Debug.Log($"Character position received: {characterPosition}, Goal position: {goalPosition}");
-
-        // Now we have both positions, calculate bubble position and instantiate
-        CalculateBubblePositionAndInstantiate();
+        Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
+        CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
     }
 
     /// <summary>
-    /// Calculate bubble position based on goal and character positions, then instantiate
+    /// creates a bubble message at the specified grid position with the given type and display time.
     /// </summary>
-    private void CalculateBubblePositionAndInstantiate()
+    /// <param name="position"></param>
+    /// <param name="type"></param>
+    /// <param name="time"></param>
+    private void CreateBubble(Vector2Int position, BubbleMessageType type, float time)
     {
-        Vector2Int bubbleOffset = CalculateBubbleOffset();
-        bubbleBoxPosition = characterPosition + bubbleOffset;
-
-        Debug.Log($"Bubble will be placed at: {bubbleBoxPosition} (Character: {characterPosition}, Offset: {bubbleOffset})");
-
-        // Instantiate bubble message
-        BubbleMsgBox bubbleBox = Instantiate(prefabBubbleBox, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<BubbleMsgBox>();
-        bubbleBox.transform.SetParent(gridRoot, false);
-        bubbleBox.transform.localPosition = GridUtils.GridToWorld(bubbleBoxPosition);
-
-        string message = GetMessage(pendingGoalPayload.VeverkaMessage);
-        bubbleBox.Init(message, pendingGoalPayload.VeverkaMessageTime);
+        BubbleMsgBox bubbleBox = Instantiate(prefabBubbleBox, Vector3.zero, Quaternion.identity, gridRoot)
+            .GetComponent<BubbleMsgBox>();
+        bubbleBox.transform.localPosition = GridUtils.GridToWorld(position);
+        bubbleBox.Init(GetMessage(type), time);
     }
 
     /// <summary>
-    /// Calculate bubble offset based on relative positions of goal and character
+    /// Calculates the offset for the bubble message based on the character's position relative to the goal.
     /// </summary>
-    /// <returns>Offset vector for bubble position</returns>
-    private Vector2Int CalculateBubbleOffset()
+    /// <param name="goalPos"></param>
+    /// <param name="charPos"></param>
+    /// <returns></returns>
+    private Vector2Int CalculateBubbleOffset(Vector2Int goalPos, Vector2Int charPos)
     {
-        Vector2Int offset;
+        Vector2Int relativePos = goalPos - charPos;
 
-        // Calculate relative position of goal to character
-        Vector2Int relativePos = goalPosition - characterPosition;
-
-        // Determine bubble position based on goal relative to character
-
-        if (relativePos.x != 0 && relativePos.y != 0 || characterMessage == BubbleMessageType.LetsStart) // Diagonal case
-        {
-            offset = new Vector2Int(0, 1); // Place bubble above
-        }
-        else if (relativePos.x < 0) // Goal is to the left
-        {
-            offset = new Vector2Int(1, 0); // Place bubble to the right
-        }
-        else if (relativePos.x > 0) // Goal is to the right
-        {
-            offset = new Vector2Int(-1, 0); // Place bubble to the left
-        }
-        else if (relativePos.y > 0) // Goal is above
-        {
-            offset = new Vector2Int(0, -1); // Place bubble below
-        }
-        else if (relativePos.y < 0) // Goal is below
-        {
-            offset = new Vector2Int(0, 1); // Place bubble above
-        }
-        else // Goal and character are at same position (shouldn't happen, but fallback)
-        {
-            offset = new Vector2Int(0, 1); // Default: place bubble above
-        }
-
-        Debug.Log($"Goal relative to character: {relativePos}, Bubble offset: {offset}");
-        return offset;
+        if (relativePos.x != 0 && relativePos.y != 0) return new Vector2Int(0, 1);
+        if (relativePos.x < 0) return new Vector2Int(1, 0);
+        if (relativePos.x > 0) return new Vector2Int(-1, 0);
+        if (relativePos.y > 0) return new Vector2Int(0, -1);
+        if (relativePos.y < 0) return new Vector2Int(0, 1);
+        return new Vector2Int(0, 1);
     }
 
     /// <summary>
-    /// Get message string based on message type
+    /// gets the message string corresponding to the given BubbleMessageType.
     /// </summary>
     /// <param name="messageType"></param>
+    /// <returns></returns>
     private string GetMessage(BubbleMessageType messageType)
     {
-        string message = messageType switch
+        return messageType switch
         {
             BubbleMessageType.LetsStart => "Ready!",
             BubbleMessageType.Yatta => "Yatta!",
             BubbleMessageType.Ooops => "Ooops!",
             _ => "error",
         };
-
-        return message;
     }
     #endregion
 }
+
