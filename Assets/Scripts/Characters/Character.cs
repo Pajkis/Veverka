@@ -139,7 +139,7 @@ public abstract class Character : MonoBehaviour
             Previous = gridPosition,
             Direction = direction,
             RequestData = false,
-            ResponseData = true,
+            ResponseData = false,
         };
 
         // execute smooth movement
@@ -147,7 +147,7 @@ public abstract class Character : MonoBehaviour
     }
 
     /// <summary>
-    /// On move start action
+    /// On move start actions
     /// </summary>
     protected virtual void OnMoveStart()
     { 

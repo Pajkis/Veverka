@@ -1,12 +1,13 @@
-﻿using UnityEditor.U2D.Animation;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 /// <summary>
 /// Control of Veverka
 /// </summary>
 /// 
 namespace Veverka.Characters.Veverka
- { 
+{
     public class CharVeverka : Character
     {
         #region events 
@@ -14,6 +15,10 @@ namespace Veverka.Characters.Veverka
         [SerializeField] CharacterMovedEvent veverkaMoved;
         [SerializeField] CanPushQueryEvent canPushQueryEvent;
         #endregion
+
+        // Queue for pending character data requests
+        private bool hasPendingDataRequest = false;
+        private bool hasShownStartupMessage = false;
 
         #region event handling
         /// <summary>
@@ -24,7 +29,10 @@ namespace Veverka.Characters.Veverka
             onArrowPressed.AddListener(HandleInput);
             settingDataBroadcastEvent.AddListener(OnSettingData);
             characterDataRequestEvent.AddListener(OnCharacterData);
-            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);            
+            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+
+            // Listen for scene changes
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         /// <summary>
@@ -35,6 +43,54 @@ namespace Veverka.Characters.Veverka
             onArrowPressed.RemoveListener(HandleInput);
             settingDataBroadcastEvent.RemoveListener(OnSettingData);
             characterDataRequestEvent.RemoveListener(OnCharacterData);
+
+            // Remove scene change listener
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        /// <summary>
+        /// Called when a new scene is loaded
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // Check if this is a game scene (you can adjust the condition as needed)
+            if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
+            {
+                Debug.Log($"Game scene loaded: {scene.name}, sending startup message");
+                hasShownStartupMessage = false; // Reset flag for new level
+                StartCoroutine(SendStartupMessageAfterDelay());
+            }
+        }
+
+        /// <summary>
+        /// Send startup message after a short delay to ensure all systems are ready
+        /// </summary>
+        private IEnumerator SendStartupMessageAfterDelay()
+        {
+            // Wait a few frames for everything to initialize
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            // Send startup message
+            if (!hasShownStartupMessage)
+            {
+                hasShownStartupMessage = true;
+                Debug.Log("Sending startup message from Veverka");
+
+                characterDataRequestEvent.Raise(new CharacterBasicPayload
+                {
+                    Character = this,
+                    Current = gridPosition,
+                    Direction = facingDirection,
+                    Duration = moveDuration,
+                    RequestData = false,
+                    ResponseData = true,
+                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                    CharacterBubbleMessageTime = 2.0f
+                });
+            }
         }
 
         /// <summary>
@@ -44,17 +100,35 @@ namespace Veverka.Characters.Veverka
         private void OnCharacterData(CharacterBasicPayload payload)
         {
             if (payload.RequestData)
-            { 
-                characterDataRequestEvent.Raise(new CharacterBasicPayload
+            {
+                // If character is currently moving, queue the request
+                if (smoothMover.IsMoving)
                 {
-                    Character = this,
-                    Current = gridPosition,                 
-                    Direction = facingDirection,
-                    Duration = moveDuration,
-                    RequestData = false,
-                    ResponseData = true
-                });
+                    hasPendingDataRequest = true;
+                    return;
+                }
+
+                // Send current position immediately if not moving
+                SendCharacterData();
             }
+        }
+
+        /// <summary>
+        /// Send character data response (for regular requests, not startup)
+        /// </summary>
+        private void SendCharacterData()
+        {
+            characterDataRequestEvent.Raise(new CharacterBasicPayload
+            {
+                Character = this,
+                Current = gridPosition,
+                Direction = facingDirection,
+                Duration = moveDuration,
+                RequestData = false,
+                ResponseData = true,
+                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+                CharacterBubbleMessageTime = 0f
+            });
         }
 
         #endregion
@@ -102,7 +176,7 @@ namespace Veverka.Characters.Veverka
                     if (pushQuery.CanBePushed)
                     {
                         // Move the character
-                        Move(inputDirection, distance, moveDuration);  
+                        Move(inputDirection, distance, moveDuration);
                     }
                     else
                     {
@@ -127,7 +201,7 @@ namespace Veverka.Characters.Veverka
                 playSfxEvent.Raise(SfxType.VeverkaRotate);
             }
         }
-        
+
         /// <summary>
         /// On Move start action
         /// </summary>
@@ -142,10 +216,17 @@ namespace Veverka.Characters.Veverka
         protected override void OnMoveComplete(Vector2Int targetPosition)
         {
             base.OnMoveComplete(targetPosition);
+
             // raise event, that character made a turn -> turn count
             veverkaMoved.Raise(payload);
+
+            // Handle any pending character data requests now that move is complete
+            if (hasPendingDataRequest)
+            {
+                hasPendingDataRequest = false;
+                SendCharacterData(); // Use default values for movement completion
+            }
         }
         #endregion
     }
-
 }

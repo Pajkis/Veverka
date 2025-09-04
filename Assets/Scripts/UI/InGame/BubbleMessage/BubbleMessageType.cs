@@ -3,6 +3,7 @@
 /// </summary>
 public enum BubbleMessageType
 {
+    NoMessage,
     LetsStart,
     Yatta,
     Ooops,   

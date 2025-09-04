@@ -15,6 +15,10 @@ public struct CharacterBasicPayload
     public Direction Direction;
     public float Duration;
 
+    // bubble message data
+    public BubbleMessageType CharacterBubbleMessage;
+    public float CharacterBubbleMessageTime;
+
     // data request and response flags
     public bool RequestData;
     public bool ResponseData;
