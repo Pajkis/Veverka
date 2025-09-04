@@ -98,16 +98,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a357827e8a4345444afd271de39d6463, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
+  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   moveDistance: 1
   moveDuration: 0.3
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
-  pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
-  pushableSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
-  pushableRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
+  nutInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
+  nutSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
+  nutRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
+  pushNutEvent: {fileID: 11400000, guid: eca2538f523e2524bb0a784244790d6b, type: 2}
+  canPushQueryEvent: {fileID: 11400000, guid: 1f6653d05a638b14b94fcdfce724a1df, type: 2}
 --- !u!114 &959817345349971074
 MonoBehaviour:
   m_ObjectHideFlags: 0

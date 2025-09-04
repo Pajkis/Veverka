@@ -2,25 +2,26 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Load data from levelX csv file and validates then
+/// Load data from level sets based on LevelDatabase configuration
 /// </summary>
-public class LevelLoader: MonoBehaviour
+public class LevelLoader : MonoBehaviour
 {
-
     #region fields
 
     // Serialized fields for events and level database
-    [SerializeField]  private LevelSelectEvent levelSelectEvent;   
-    [SerializeField]  private GoToSceneEvent goToSceneEvent;
-    [SerializeField]  private BuildGridEvent buildGridEvent;
-    [SerializeField]  private BuildGridDoneEvent buildGridDoneEvent;
-    [SerializeField]  private PlayMusicEvent playMusicEvent;
-    [SerializeField]  private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelectEvent levelSelectEvent;
+    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private BuildGridEvent buildGridEvent;
+    [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
+    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private LevelDatabase levelDatabase;
+
+    [Header("Level Management")]
+    [SerializeField] private LevelSetManager levelSetManager;
 
     private bool levelBuilt = false;
-        
-    #endregion
 
+    #endregion
 
     #region Methods       
 
@@ -29,7 +30,22 @@ public class LevelLoader: MonoBehaviour
     /// </summary>
     private void Start()
     {
-        //play music
+        // Validate required components
+        if (levelSetManager == null)
+        {
+            Debug.LogError("LevelSetManager is not assigned! Cannot load levels.");
+            goToSceneEvent.Raise(SceneType.LevelMenu);
+            return;
+        }
+
+        if (levelDatabase == null)
+        {
+            Debug.LogError("LevelDatabase is not assigned!");
+            goToSceneEvent.Raise(SceneType.LevelMenu);
+            return;
+        }
+
+        // play music
         playMusicEvent.Raise(MusicType.Game);
 
         // invoke level reset
@@ -44,8 +60,7 @@ public class LevelLoader: MonoBehaviour
     {
         // add listener
         levelSelectEvent.AddListener(LoadLevel);
-        buildGridDoneEvent.AddListener(onLevelBuilt);
-        
+        buildGridDoneEvent.AddListener(OnLevelBuilt);
     }
 
     /// <summary>
@@ -54,18 +69,15 @@ public class LevelLoader: MonoBehaviour
     private void OnDisable()
     {
         levelSelectEvent.RemoveListener(LoadLevel);
-        buildGridDoneEvent.RemoveListener(onLevelBuilt);
+        buildGridDoneEvent.RemoveListener(OnLevelBuilt);
     }
 
     /// <summary>
-    /// Get info that level built has finished
+    /// Get info that level build has finished
     /// </summary>
-    /// <remarks>This method sets the internal state to indicate that the level build process has
-    /// started.</remarks>
-    /// <param name="payload">The data required to initialize the level.</param>
-    private void onLevelBuilt()
+    private void OnLevelBuilt()
     {
-        levelBuilt = true;    
+        levelBuilt = true;
     }
 
     /// <summary>
@@ -81,7 +93,7 @@ public class LevelLoader: MonoBehaviour
     }
 
     /// <summary>
-    /// Load and validate level from file
+    /// Load and validate level from the configured level set
     /// </summary>
     /// <returns></returns>
     IEnumerator LoadLevelCoroutine()
@@ -91,23 +103,44 @@ public class LevelLoader: MonoBehaviour
         float minLoadingTime = 2f;
         float startTime = Time.time;
 
+        // Get level data from the level set system
+        LevelSetType currentSet = levelDatabase.LevelSetType;
+        int currentLevelIndex = levelDatabase.CurrentLevelIndex;
 
-        // selected level to grid   
-        string levelName = ((LevelEnum)levelDatabase.CurrentLevelIndex).ToString();
-        TileType[,] grid = LevelUtils.LoadGridFromCsv(levelName);
+        Debug.Log($"Loading level {currentLevelIndex} from set {currentSet}");
+
+        // Check if the level exists in the set
+        if (!levelSetManager.HasLevel(currentSet, currentLevelIndex))
+        {
+            Debug.LogError($"Level {currentLevelIndex} not found in set {currentSet}!");
+            goToSceneEvent.Raise(SceneType.LevelMenu);
+            yield break;
+        }
+
+        // Get the CSV data for the level
+        TextAsset levelCsv = levelSetManager.GetLevelCsv(currentSet, currentLevelIndex);
+        if (levelCsv == null)
+        {
+            Debug.LogError($"Failed to load CSV data for level {currentLevelIndex} in set {currentSet}!");
+            goToSceneEvent.Raise(SceneType.LevelMenu);
+            yield break;
+        }
+
+        // Parse the grid from the CSV data
+        TileType[,] grid = GridUtils.LoadGridFromTextAsset(levelCsv);
 
         // raise event to build grid
         if (grid == null)
         {
-            Debug.LogError("Grid is null, level loading failed!");
+            Debug.LogError($"Grid parsing failed for level {currentLevelIndex} in set {currentSet}!");
             goToSceneEvent.Raise(SceneType.LevelMenu);
             yield break;
         }
 
         // validate grid
-        if (!LevelUtils.ValidateGrid(grid))
+        if (!GridUtils.ValidateGrid(grid))
         {
-            Debug.LogWarning("Invalid level configuration!");
+            Debug.LogWarning($"Invalid level configuration for level {currentLevelIndex} in set {currentSet}!");
             goToSceneEvent.Raise(SceneType.LevelMenu);
             yield break;
         }
@@ -124,8 +157,53 @@ public class LevelLoader: MonoBehaviour
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
         }
 
+        Debug.Log($"Successfully loaded level {currentLevelIndex} from set {currentSet}");
         goToSceneEvent.Raise(SceneType.GamePlay);
     }
+
+    #endregion
+
+    #region Debug Methods (Editor only)
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Debug method to list all available levels in all sets
+    /// </summary>
+    [ContextMenu("Debug - List All Available Levels")]
+    private void DebugListAllLevels()
+    {
+        if (levelSetManager == null)
+        {
+            Debug.Log("LevelSetManager not assigned!");
+            return;
+        }
+
+        var allSets = levelSetManager.GetAllLevelSets();
+        foreach (var levelSet in allSets)
+        {
+            if (levelSet != null)
+            {
+                Debug.Log($"Set: {levelSet.setType} ({levelSet.setDisplayName}) - {levelSet.LevelCount} levels");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Debug method to validate current level selection
+    /// </summary>
+    [ContextMenu("Debug - Validate Current Selection")]
+    private void DebugValidateCurrentSelection()
+    {
+        if (levelDatabase == null || levelSetManager == null)
+        {
+            Debug.Log("Required components not assigned!");
+            return;
+        }
+
+        bool hasLevel = levelSetManager.HasLevel(levelDatabase.LevelSetType, levelDatabase.CurrentLevelIndex);
+        Debug.Log($"Current selection - Set: {levelDatabase.LevelSetType}, Level: {levelDatabase.CurrentLevelIndex} - Valid: {hasLevel}");
+    }
+#endif
 
     #endregion
 }

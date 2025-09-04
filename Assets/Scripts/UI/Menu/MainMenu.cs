@@ -1,37 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Veverka.GridSystem.GameGrid;
 
+/// <summary>
+/// Manages the main menu interactions
+/// </summary>
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private GoToSceneEvent goToSceneEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
+
     /// <summary>
     /// Handles the click on play button event
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
-        // play cool sound
-        // go to level menu
-        goToSceneEvent.Raise(SceneType.LevelMenu);
+      goToSceneEvent.Raise(SceneType.LevelMenu);
     }
 
     /// <summary>
-    /// WIP - Handles the click on player button event
+    ///handles the click on help button event
     /// </summary>
-    public void HandlePlayerButtonOnClickEvent()
-    {
-    
-       
+    public void HandleHelpButtonOnClickEvent()
+    {    
+        openOverlayEvent.Raise(OverlayType.GameHelp);
     }
 
     /// <summary>
-    /// WIP - Handles the click on high score button event
+    /// hndles the click on credits button event
     /// </summary>
-    public void HandleHighScoreButtonOnClickEvent()
+    public void HandleCreditsButtonOnClickEvent()
     { 
-        
+        openOverlayEvent.Raise(OverlayType.Credits);
     }
 
     /// <summary>

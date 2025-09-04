@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3149419950693609241}
   - component: {fileID: 8714559050590053425}
   - component: {fileID: -636044033625955510}
+  - component: {fileID: -192291133178817755}
   m_Layer: 0
   m_Name: Tile_Goal
   m_TagString: Untagged
@@ -72,10 +73,10 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1154779117
-  m_SortingLayer: 2
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 34a8ca0a90ba077418f44214e3304d4c, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.5019608}
+  m_Sprite: {fileID: 21300000, guid: 297c8ff59d6dcfd4e99bb11409f8a05b, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -97,9 +98,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11afa5beaf86d724a87584b065aaa33a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
+  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
-  gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
-  pushableInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
-  goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
-  goalRemovedEvent: {fileID: 11400000, guid: f7f87259c5d74884f9b08fc74b09dacd, type: 2}
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
+  gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
+  nutInGoalEvent: {fileID: 11400000, guid: 6ba9d2c050de4d4449cf8cf584f74138, type: 2}
+  goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
+  goalResolvedEvent: {fileID: 11400000, guid: f7f87259c5d74884f9b08fc74b09dacd, type: 2}
+  wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  roadSetEvent: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
+--- !u!114 &-192291133178817755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7474811582496385836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 355bee659d924a0408a8f91550a762b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pulseSpeed: 2
+  scaleMultiplier: 0.2
+  contrastMultiplier: 0.2

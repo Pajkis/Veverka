@@ -5,7 +5,7 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 **Key Features:**
 
 -   Grid-based movement and puzzle mechanics
--   10 challenging levels with progressive difficulty
+-   20 challenging levels with progressive difficulty
 -   Undo system for strategic gameplay
 -   Complete audio system with music and sound effects
 -   Multi-platform support (Windows & Android 12+)

@@ -10,6 +10,7 @@ TagManager:
   - PauseMenu
   - UIButton
   - UISlider
+  - MenuOverlay
   layers:
   - Default
   - TransparentFX
@@ -47,13 +48,16 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Background
+  - name: UI_Background
     uniqueID: 1458667267
     locked: 0
-  - name: StaticTiles
+  - name: UI_Frame
+    uniqueID: 1344883739
+    locked: 0
+  - name: IG_StaticTiles
     uniqueID: 1154779117
     locked: 0
-  - name: MovableTiles
+  - name: IG_MovableTiles
     uniqueID: 1847477145
     locked: 0
   - name: UI_Frame
