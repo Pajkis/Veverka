@@ -6,8 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Data/LevelDatabase")]
 public class LevelDatabase : ScriptableObject
 {
-    [Header("Level game data")]
+    [Header("Level selection")]
+    public LevelSetType LevelSetType;
     public int CurrentLevelIndex;
+
+    [Header("Level game data")]
     public int GoalsCount;
 
     [Header("Level grid data")]

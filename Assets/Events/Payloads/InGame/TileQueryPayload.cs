@@ -11,10 +11,13 @@ public class TileQueryPayload
     public Vector2Int Position;
 
     // results populated by GameGrid
-    public TileObject TileObject;
     public bool IsWalkable;
+    public bool IsPushable;
     public bool IsInGrid;
-    public bool IsObstacle;
-    public bool IsMovable;
-    public bool IsGoal;
+
+    public TileType TileType;
+    public GoalType GoalType;
+    public WallType WallType;
+    public NutType NutType;
+    public RoadType RoadType;
 }

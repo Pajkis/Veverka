@@ -10,13 +10,14 @@ public class GamePlay : MonoBehaviour
     int levelGoalCount = 0;
     int turnCount = 0;
 
-    [Header("UI display")]
-    [SerializeField] private SpriteNumberDisplay goalCountDisplay;
-    [SerializeField] private SpriteNumberDisplay turnCountDisplay;
-    [SerializeField] private SpriteNumberDisplay levelDisplay;
+    [Header("Display Components")]
+    [SerializeField] private UniversalTextDisplay levelTypeDisplay;
+    [SerializeField] private UniversalTextDisplay levelNumDisplay;
+    [SerializeField] private UniversalTextDisplay goalDisplay;
+    [SerializeField] private UniversalTextDisplay turnsDisplay;
 
     [Header("Events")]
-    [SerializeField] private PushableInGoalEvent pushableInGoalEvent;   
+    [SerializeField] private GoalResolvedEvent goalResolvedEvent;   
     [SerializeField] private CharacterMovedEvent characterMoved;
     [SerializeField] private PlaySfxEvent playSfxEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
@@ -35,8 +36,12 @@ public class GamePlay : MonoBehaviour
     {
         //undo manager initialization
         undoManager = new UndoManager(playSfxEvent);
-        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);
-          
+        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);         
+        
+    }
+
+    private void Start()
+    {
         // initialize level goal count and turn count
         LevelInit();
     }
@@ -50,11 +55,18 @@ public class GamePlay : MonoBehaviour
     private void OnEnable()
     {
         // add listeners     
-        pushableInGoalEvent.AddListener(UpdateGoalCount);
-      //  levelInitEvent.AddListener(LevelInit);
+        goalResolvedEvent.AddListener(UpdateGoalCount);     
         characterMoved.AddListener(OnCharacterMoved);
 
-        levelDisplay.SetNumber(levelDatabase.CurrentLevelIndex);
+       
+    }
+    /// <summary>
+    /// OnDisable method - called when object deactivate or before destroy
+    /// </summary>
+    private void OnDisable()
+    {
+        goalResolvedEvent.RemoveListener(UpdateGoalCount);
+        characterMoved.RemoveListener(OnCharacterMoved);
     }
 
     /// <summary>
@@ -62,8 +74,8 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // undo last turn
-        if (Input.GetKeyDown(KeyCode.B))
+        // undo last turn only if no object is currently moving
+        if (Input.GetKeyDown(KeyCode.B) && !SmoothMover.AnyMoving)
         {
             Undo();
         }
@@ -79,16 +91,6 @@ public class GamePlay : MonoBehaviour
     }
 
     /// <summary>
-    /// OnDisable method - called when object deactivate or before destroy
-    /// </summary>
-    private void OnDisable()
-    {
-        pushableInGoalEvent.RemoveListener(UpdateGoalCount);
-      //  levelInitEvent.RemoveListener(LevelInit);
-        characterMoved.RemoveListener(OnCharacterMoved);
-    }
-
-    /// <summary>
     /// Set level goal count for current level
     /// </summary>
     /// <param name="goalCount"></param>
@@ -96,26 +98,28 @@ public class GamePlay : MonoBehaviour
     {
         //Set turn count and goal count
         turnCount = 0;
-        turnCountDisplay.SetNumber(turnCount);
+        turnsDisplay.DisplayNumber(turnCount);
 
         if (levelDatabase == null || levelDatabase.GoalsCount == 0)
         {
             Debug.LogError("LevelDatabase is null or no goals set");
             return;
         }
-
+        
+        levelNumDisplay.DisplayNumber(levelDatabase.CurrentLevelIndex + 1);
+        levelTypeDisplay.DisplayEnum<LevelSetType>(levelDatabase.LevelSetType);
         levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
-        goalCountDisplay.SetNumber(levelGoalCount);
+        goalDisplay.DisplayNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
     }
 
     /// <summary>
     /// Update goal count, check for level complete condition
     /// </summary>
-    void UpdateGoalCount(PushableInGoalPayload payload)
+    void UpdateGoalCount(GoalBasicPayload payload)
     {        
         levelGoalCount -= payload.GoalReduction;
-        goalCountDisplay.SetNumber(levelGoalCount);
+        goalDisplay.DisplayNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");
         if (levelGoalCount <= 0) 
         {
@@ -132,10 +136,10 @@ public class GamePlay : MonoBehaviour
     /// On character moved method - counts number of moves and add each move into turn record
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCharacterMoved(CharacterMovedPayload payload)
+    private void OnCharacterMoved(CharacterBasicPayload payload)
     {
         turnCount++;
-        turnCountDisplay.SetNumber(turnCount);
+        turnsDisplay.DisplayNumber(turnCount);
     }
 
     /// <summary>
@@ -148,10 +152,7 @@ public class GamePlay : MonoBehaviour
         if (undoDone)
         {
             turnCount++;
-            turnCountDisplay.SetNumber(turnCount);
+            turnsDisplay.DisplayNumber(turnCount);
         }
     }
-   
-
-
 }

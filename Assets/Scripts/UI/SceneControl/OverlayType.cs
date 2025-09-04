@@ -7,5 +7,6 @@ public enum OverlayType
     LevelFinishedMenu,
     SettingsMenu,
     GameHelp,
+    Credits
 }
 

@@ -1,8 +1,10 @@
-﻿// Assets/Scripts/Display/DisplaySettings.cs
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Display settings manager - applies display settings from DisplayConfigSO
+/// </summary>
 public class DisplaySettings : MonoBehaviour
 {
     [Header("ConfigSO")]
@@ -11,12 +13,18 @@ public class DisplaySettings : MonoBehaviour
     // active profile
     private DisplayConfigPars _active;
 
+    /// <summary>
+    /// initialization - don't destroy on load and init display settings
+    /// </summary>
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
         Init();
     }
 
+    /// <summary>
+    /// on destroy remove scene loaded event handler
+    /// </summary>
     void OnDestroy()
     {
         if (_active != null && _active.autoApplyOnSceneLoaded)
@@ -26,19 +34,16 @@ public class DisplaySettings : MonoBehaviour
     }
 
     /// <summary>
-    /// Volej z GameInit.Awake() (jak už děláš) nebo se spolehni na Awake tady.
+    /// initialize display settings from config
     /// </summary>
     public void Init()
     {
         ResolveActiveProfile();
-
         ApplyPerformance();
-        ApplyOrientation();
-
-        // Aplikuj ihned pro aktuální scénu
+        ApplyOrientation();  
         ApplyDisplayToCurrentScene();
 
-        // Re-apply po každém načtení scény
+        // Re-apply after scene load
         if (_active.autoApplyOnSceneLoaded)
         {
             UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -46,12 +51,15 @@ public class DisplaySettings : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// resolve active profile from config
+    /// </summary>
     private void ResolveActiveProfile()
     {
         if (displayConfig == null)
         {
             Debug.LogWarning("[DisplaySettings] Missing DisplayConfigSO — using defaults.");
-            // nouzová konfigurace
+            // fallback defaults
             _active = new DisplayConfigPars
             {
                 referenceResolution = new Vector2Int(1920, 1080),
@@ -88,13 +96,18 @@ public class DisplaySettings : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// on scene loaded event handler
+    /// </summary>
+    /// <param name="s"></param>
+    /// <param name="m"></param>
     private void OnSceneLoaded(Scene s, LoadSceneMode m)
     {
         ApplyDisplayToCurrentScene();
     }
 
     /// <summary>
-    /// Hlavní “aplikace” po loadu scény: Kamera, UI, SafeArea.
+    ///main method to apply display settings to current scene
     /// </summary>
     public void ApplyDisplayToCurrentScene()
     {
@@ -107,7 +120,7 @@ public class DisplaySettings : MonoBehaviour
 
     private void ApplyPerformance()
     {
-        // VSync a targetFrameRate se navzájem ovlivňují
+        // VSync and targetFrameRate settings 
         QualitySettings.vSyncCount = Mathf.Clamp(_active.vSyncCount, 0, 4);
         if (QualitySettings.vSyncCount == 0 && _active.targetFrameRate > 0)
             Application.targetFrameRate = _active.targetFrameRate;
@@ -121,7 +134,7 @@ public class DisplaySettings : MonoBehaviour
     {
         if (!_active.forceOrientation) return;
 
-        // Povolit rozumné auto-rotate podle zvolené orientace
+        //rotation lock
         bool landscape = _active.orientation == ScreenOrientation.LandscapeLeft
                       || _active.orientation == ScreenOrientation.LandscapeRight;
 
@@ -136,7 +149,9 @@ public class DisplaySettings : MonoBehaviour
     #endregion
 
     #region Camera
-
+    /// <summary>
+    /// apply letterbox/pillarbox to main camera
+    /// </summary>
     private void ApplyCameraBars()
     {
         if (!_active.useLetterboxing) return;
@@ -150,12 +165,12 @@ public class DisplaySettings : MonoBehaviour
 
         if (scaleHeight < 1f)
         {
-            // Pillarbox (pruhy vlevo/vpravo)
+            // letterbox right/left 
             cam.rect = new Rect(0f, (1f - scaleHeight) * 0.5f, 1f, scaleHeight);
         }
         else
         {
-            // Letterbox (pruhy nahoře/dole)
+            // Letterbox up/down
             float scaleWidth = 1f / scaleHeight;
             cam.rect = new Rect((1f - scaleWidth) * 0.5f, 0f, scaleWidth, 1f);
         }
@@ -164,23 +179,21 @@ public class DisplaySettings : MonoBehaviour
     #endregion
 
     #region UI
-
+    /// <summary>
+    /// apply CanvasScaler settings to all CanvasScalers in the scene
+    /// </summary>
     private void ApplyCanvasScalers()
     {
         var scalers = FindObjectsOfType<CanvasScaler>(includeInactive: true);
         foreach (var s in scalers)
         {
-            // sjednoť režim
+            // Unified settings for all CanvasScalers in the scene
             s.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             s.referenceResolution = _active.referenceResolution;
             s.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
             s.matchWidthOrHeight = _active.uiMatchWidthOrHeight;
-
-            // Poznámka: u Overlay canvasu kamera pruhy neovlivní – je to správně.
-            // Pokud chceš, aby UI obsah držel 16:9 box, použij marker AspectBox (viz níže).
         }
 
-        // Volitelně sjednotit Pixel Perfect apod. (dle potřeby)
     }
 
     #endregion

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Veverka.CameraSystem;
+using UnityEngine.UIElements;
 using Veverka.Characters.Veverka;
 
 namespace Veverka.GridSystem.GameGrid
@@ -11,33 +11,42 @@ namespace Veverka.GridSystem.GameGrid
     public class GameGrid : MonoBehaviour
     {
         #region global vars
-
         // global grid - Singleton 
         public static GameGrid Instance { get; private set; }
-
         #endregion
 
         #region events
+        [Header("Events")]
         [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
         [SerializeField] private LevelSelectEvent levelSelectEvent;
         [SerializeField] private ResetGridEvent resetGridEvent;
         [SerializeField] private BuildGridEvent buildGridEvent;
         [SerializeField] private LevelDatabase levelDatabase;
 
-        [SerializeField] private PushableSetEvent pushableSetEvent;
-        [SerializeField] private PushableRemovedEvent pushableRemovedEvent;
+        [SerializeField] private NutSetEvent nutSetEvent;
+        [SerializeField] private NutRemovedEvent nutRemovedEvent;
         [SerializeField] private GoalSetEvent goalSetEvent;
-        [SerializeField] private GoalRemovedEvent goalRemovedEvent;
+        [SerializeField] private GoalResolvedEvent goalResolvedEvent;
         [SerializeField] private TileQueryEvent tileQueryEvent;
+        [SerializeField] private WallSetEvent wallSetEvent;
+        [SerializeField] private RoadSetEvent roadSetEvent;
         #endregion
 
         #region tile objects
+        [Header("Tile objects")]
         // Prefabs
-        [SerializeField] private GameObject veverkaPrefab;
-        [SerializeField] private GameObject liskacekPrefab;
         [SerializeField] private GameObject emptyPrefab;
+        [SerializeField] private GameObject roadPrefab;
+        [SerializeField] private GameObject stoneFilledHolePrefab;
+        [SerializeField] private GameObject veverkaPrefab;
+        [SerializeField] private GameObject nutPrefab;
+        [SerializeField] private GameObject nutStonePrefab;       
         [SerializeField] private GameObject wallPrefab;
+        [SerializeField] private GameObject wallStonePrefab;
+        [SerializeField] private GameObject holePrefab;
         [SerializeField] private GameObject goalPrefab;
+
+        [Header("Other objects")]
         [SerializeField] private GameObject backgroundPrefab;
         //Adjust screen for each level size
         [SerializeField] private Transform gridRoot;
@@ -46,54 +55,17 @@ namespace Veverka.GridSystem.GameGrid
         #region fields
         // grid variables       
         readonly Vector2Int maxScreenGridSize = new(15, 11);
-        private Vector2Int gridSize; 
-        private float tileSize = 1f;     
-      //  private Transform gridStartCenterTarget;
+        private Vector2Int gridSize;     
         private TileType[,] grid;
-        private Dictionary<Vector2Int, TileObject> pushables = new();
-        private Dictionary<Vector2Int, TileObject> goals = new();
+        private NutType[,] nutGrid;
+        private GoalType[,] goalGrid;
+        private WallType[,] wallGrid;
+        private RoadType[,] roadGrid;
         private readonly List<GameObject> backgroundPool = new();
         // pool for surrounding wall tiles to avoid repeated instantiation
         private readonly List<GameObject> surroundingWalls = new();
         #endregion
-
-        #region Properties      
-
-        /// <summary>
-        /// size of a grid
-        /// </summary>
-        public Vector2Int GridSize
-        { 
-            get { return gridSize; } 
-        }    
-
-        // tile size 
-        public float TileSize
-        {
-            get { return tileSize; }
-            // short version of exploiting get only property
-            //***
-            // public float TileSize => tileSize;
-            //***
-        }
-
-        /// <summary>
-        /// get movables position and objects
-        /// </summary>
-        public Dictionary<Vector2Int, TileObject> Pushables
-        {
-            get { return pushables; }
-        }
-
-        /// <summary>
-        /// get goals position and objects
-        /// </summary>
-        public Dictionary<Vector2Int, TileObject> Goals
-        {
-            get { return goals; }
-        }
-        #endregion
-
+           
         #region Awake
         /// <summary>
         /// init singleton and events
@@ -112,6 +84,9 @@ namespace Veverka.GridSystem.GameGrid
             }
         }
 
+        /// <summary>
+        /// On object enable
+        /// </summary>
         private void OnEnable()
         {
             // add listeners for events
@@ -119,11 +94,13 @@ namespace Veverka.GridSystem.GameGrid
             buildGridEvent.AddListener(InitializeGrid);
             resetGridEvent.AddListener(ResetGrid);           
             tileQueryEvent.AddListener(OnTileQuery);        
-            pushableSetEvent.AddListener(OnPushableSet);
-            pushableRemovedEvent.AddListener(OnPushableRemoved);
+            nutSetEvent.AddListener(OnNutSet);
+            nutRemovedEvent.AddListener(OnNutRemoved);
             goalSetEvent.AddListener(OnGoalSet);
-            goalRemovedEvent.AddListener(OnGoalRemoved);
-         }
+            goalResolvedEvent.AddListener(OnGoalResolved);
+            wallSetEvent.AddListener(OnWallSet);
+            roadSetEvent.AddListener(OnRoadSet);
+        }
 
         /// <summary>
         /// On object disable
@@ -135,10 +112,12 @@ namespace Veverka.GridSystem.GameGrid
             resetGridEvent.RemoveListener(ResetGrid);        
             buildGridEvent.RemoveListener(InitializeGrid);
             tileQueryEvent.RemoveListener(OnTileQuery);
-            pushableSetEvent.RemoveListener(OnPushableSet);
-            pushableRemovedEvent.RemoveListener(OnPushableRemoved);
+            nutSetEvent.RemoveListener(OnNutSet);
+            nutRemovedEvent.RemoveListener(OnNutRemoved);
             goalSetEvent.RemoveListener(OnGoalSet);
-            goalRemovedEvent.RemoveListener(OnGoalRemoved);
+            goalResolvedEvent.RemoveListener(OnGoalResolved);
+            wallSetEvent.RemoveListener(OnWallSet);
+            roadSetEvent.RemoveListener(OnRoadSet);
         }
 
         #endregion
@@ -152,6 +131,10 @@ namespace Veverka.GridSystem.GameGrid
         {
             //get new grid size
             this.grid = grid;
+            this.nutGrid = GridUtils.CachedNutGrid;
+            this.goalGrid = GridUtils.CachedGoalGrid;
+            this.wallGrid= GridUtils.CachedWallGrid;
+            this.roadGrid = GridUtils.CachedRoadGrid;
             this.gridSize.x = grid.GetLength(0);
             this.gridSize.y = grid.GetLength(1);
             
@@ -166,7 +149,18 @@ namespace Veverka.GridSystem.GameGrid
 
             //level database initialization
             levelDatabase.gridSize = gridSize;
-            levelDatabase.GoalsCount = goals.Count;
+            int goalCount = 0;
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    if (grid[x, y] == TileType.Goal && goalGrid[x, y] == GoalType.BasicGoal)
+                    {
+                        goalCount++;
+                    }
+                }
+            }
+            levelDatabase.GoalsCount = goalCount;
             levelDatabase.gridOrigin = transform;
 
             //raise event
@@ -219,19 +213,28 @@ namespace Veverka.GridSystem.GameGrid
                     // insert specific tiles
                     switch (tileType)
                     {
-                    case TileType.Empty:
+                        case TileType.Empty:
 
                             SetTileType(tilePos, TileType.Empty);
                             break;
 
-                    case TileType.Wall:
-                            var tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        case TileType.Wall:
+
+                            GameObject tile;
+                            if (wallGrid[x, y] == WallType.StoneWall)
+                            {
+                                tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            }
+                            else
+                            {
+                                tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            }
                             tile.transform.SetParent(gridRoot, false);
                             tile.transform.localPosition = worldTilePos;
                             SetTileType(tilePos, TileType.Wall);
                             break;
 
-                    case TileType.Veverka:
+                        case TileType.Veverka:
 
                             SetTileType(tilePos, TileType.Empty);
 
@@ -245,25 +248,43 @@ namespace Veverka.GridSystem.GameGrid
                             levelDatabase.gridCenterStartTarget = veverka.transform;
                             break;
 
-                    case TileType.Nut:
+                        case TileType.Nut:
 
-                            // generate nut
-                            NutTile nutTile = Instantiate(liskacekPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<NutTile>();
-                            nutTile.transform.SetParent(gridRoot, false);
-                            nutTile.transform.localPosition = worldTilePos;
-                            nutTile.Init(tileType, tilePos);
+                            if (nutGrid[x, y] == NutType.StoneNut)
+                            {
+                                StoneNutTile stoneNutTile = Instantiate(nutStonePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<StoneNutTile>();
+                                stoneNutTile.transform.SetParent(gridRoot, false);
+                                stoneNutTile.transform.localPosition = worldTilePos;
+                                stoneNutTile.Init(tileType, tilePos, NutType.StoneNut);
+                            }
+                            else
+                            {
+                                BasicNutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<BasicNutTile>();
+                                nutTile.transform.SetParent(gridRoot, false);
+                                nutTile.transform.localPosition = worldTilePos;
+                                nutTile.Init(tileType, tilePos, NutType.BasicNut);
+                            }
                             break;
 
-                    case TileType.Goal:
+                        case TileType.Goal:
 
-                            // generate goal
-                            GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
-                            goalTile.transform.SetParent(gridRoot, false);
-                            goalTile.transform.localPosition = worldTilePos;
-                            goalTile.Init(tileType, tilePos);
+                            if (goalGrid[x, y] == GoalType.HoleGoal)
+                            {
+                                HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
+                                holeTile.transform.SetParent(gridRoot, false);
+                                holeTile.transform.localPosition = worldTilePos;
+                                holeTile.Init(tileType, tilePos, GoalType.HoleGoal);
+                            }
+                            else
+                            {
+                                GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
+                                goalTile.transform.SetParent(gridRoot, false);
+                                goalTile.transform.localPosition = worldTilePos;
+                                goalTile.Init(tileType, tilePos, GoalType.BasicGoal);
+                            }
                             break;
 
-                    default: break;
+                        default: break;
                     }
                 }
             }
@@ -411,8 +432,7 @@ namespace Veverka.GridSystem.GameGrid
                 if (!backgroundPool.Contains(child.gameObject))
                 {
                     Destroy(child.gameObject);
-                }
-                
+                }                
             }              
 
             foreach (var background in backgroundPool)
@@ -420,9 +440,11 @@ namespace Veverka.GridSystem.GameGrid
                 background.SetActive(false);
             }
 
-            // clear dictionaries
-            if (pushables != null) pushables.Clear();
-            if (goals != null) goals.Clear();
+            // clear grids
+            nutGrid = null;
+            goalGrid = null;
+            wallGrid = null;
+            roadGrid = null;
 
             // clear level database
             if (levelDatabase != null)
@@ -436,29 +458,118 @@ namespace Veverka.GridSystem.GameGrid
         #endregion
 
         #region tile handling
-
-        private void OnPushableSet(PushableSetPayload payload)
+        /// <summary>
+        /// On wall set event - instantiate wall prefab and set tile type in grid
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnWallSet(WallBasicPayload payload)
         {
-            SetPushableAt(payload.Position, payload.Pushable);
-            SetTileType(payload.Position, payload.Pushable.PosTileType);
+            // instantiate wall prefab
+            if (payload.instantiateTile)
+            { 
+                GameObject tile;
+                if (payload.WallType == WallType.StoneWall)
+                {
+                    tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                }
+                else
+                {
+                    tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                }
+
+                tile.transform.SetParent(gridRoot, false);
+                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+            }
+            // set tile and wall type in grid
+            SetTileType(payload.Position, TileType.Wall);
+            wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
         }
 
-        private void OnPushableRemoved(PushableRemovedPayload payload)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnRoadSet(RoadBasicPayload payload)
         {
-            RemovePushableAt(payload.Position);
+            if (payload.instantiateTile) 
+            {
+                GameObject tile;
+                if (payload.RoadType == RoadType.StoneFilledHole)
+                {
+                    tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                }
+                else
+                {
+                    tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                }
+
+                tile.transform.SetParent(gridRoot, false);
+                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+            }
+
+            // set tile type and road type in grid
+            SetTileType(payload.Position, TileType.Road);
+            roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+        }
+
+        /// <summary>
+        /// Set nut tile on position and update tile type in the grid
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnNutSet(NutBasicPayload payload)
+        {
+            if (!IsInGrid(payload.Position))
+            {
+                Debug.LogError("Set tile is outside the grid");
+                return;
+            }
+            SetTileType(payload.Position, TileType.Nut);
+            nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
+        }
+
+        /// <summary>
+        /// Remove nut tile on position and update tile type in the grid
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnNutRemoved(NutBasicPayload payload)
+        {
+            if (!IsInGrid(payload.Position))
+            {
+                Debug.LogError("Remove tile is outside the grid");
+                return;
+            }
             SetTileType(payload.Position, TileType.Empty);
+            nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
         }
 
-        private void OnGoalSet(GoalSetPayload payload)
+        /// <summary>
+        /// Set goal tile on position and update tile type in the grid
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnGoalSet(GoalBasicPayload payload)
         {
-            goals[payload.Position] = payload.Goal;
-            SetTileType(payload.Position, payload.Goal.PosTileType);
+            SetTileType(payload.Position, TileType.Goal);
+            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
-        private void OnGoalRemoved(GoalRemovedPayload payload)
+        /// <summary>
+        /// Remove goal tile on position and update tile type in the grid
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnGoalResolved(GoalBasicPayload payload)
         {
-            RemoveGoalAt(payload.Position);
+            if (!payload.GoalRemove)
+            {
+                return;
+            }
+
+            if (!IsInGrid(payload.Position))
+            {
+                Debug.LogError("Remove tile is outside the grid");
+                return;
+            }
             SetTileType(payload.Position, TileType.Empty);
+            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>
@@ -470,11 +581,13 @@ namespace Veverka.GridSystem.GameGrid
             payload.IsInGrid = IsInGrid(payload.Position);
             if (!payload.IsInGrid) return;
 
-            payload.TileObject = GetPushableAt(payload.Position);
             payload.IsWalkable = IsWalkableAt(payload.Position);
-            payload.IsObstacle = IsObstacleAt(payload.Position);
-            payload.IsMovable = IsMovableAt(payload.Position);
-            payload.IsGoal = IsGoalAt(payload.Position);
+            payload.IsPushable = IsPushableAt(payload.Position);
+            payload.TileType = grid[payload.Position.x, payload.Position.y];
+            payload.GoalType = goalGrid[payload.Position.x, payload.Position.y];
+            payload.WallType = wallGrid[payload.Position.x, payload.Position.y];
+            payload.NutType = nutGrid[payload.Position.x, payload.Position.y];
+            payload.RoadType = roadGrid[payload.Position.x, payload.Position.y];
         }
 
         /// <summary>
@@ -498,55 +611,31 @@ namespace Veverka.GridSystem.GameGrid
         }
 
         /// <summary>
-        /// Checks whether tile at position is obstacle
+        /// Checks whether a tile at position can be walked on by a character.
         /// </summary>
-        /// <param name="position"> checked position for obstacle</param>
-        /// <returns></returns>
-        public bool IsObstacleAt(Vector2Int position)
-        {
-            return TileTypeExtensions.IsObstacle(grid[position.x, position.y]);
-        }
-    
-        /// <summary>
-        /// Checks whether tile at position is movable obstacle
-        /// </summary>
-        /// <param name="position"> checked position for movable obstacle</param>
-        /// <returns></returns>
-        public bool IsMovableAt(Vector2Int position)
-        {
-            return TileTypeExtensions.IsMovable(grid[position.x, position.y]);
-        }
-     
-        /// <summary>
-        /// Checkes whether tile at position can be walked on
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
         public bool IsWalkableAt(Vector2Int position)
         {
-            return TileTypeExtensions.IsWalkable(grid[position.x, position.y]);
-        }
-
-        public bool IsGoalAt(Vector2Int position)
-        {
-            //  Debug.Log($"isGoalat reached at position: {position}");
-            return TileTypeExtensions.IsGoal(grid[position.x, position.y]);
+            var tile = grid[position.x, position.y];
+            if (tile == TileType.Goal)
+            {
+                return goalGrid[position.x, position.y] != GoalType.HoleGoal;
+            }
+            return tile == TileType.Empty || tile == TileType.Road;
         }
 
         /// <summary>
-        /// Remove pushable in dictionary on pasiton
+        /// Checks whether a tile at position can be entered by a nut.
         /// </summary>
-        /// <param name="position">position to remove pushable</param>    
-        public void RemoveGoalAt(Vector2Int position)
+        public bool IsPushableAt(Vector2Int position)
         {
-            if (!IsInGrid(position))
+            var tile = grid[position.x, position.y];
+            if (tile == TileType.Goal)
             {
-                Debug.LogError("Remove tile is outside the grid");
-                return;
+                return true;
             }
-            goals.Remove(position);
+            return tile == TileType.Empty || tile == TileType.Road;
         }
-
+        
         /// <summary>
         /// Check whether position is in game grid
         /// </summary>
@@ -562,58 +651,8 @@ namespace Veverka.GridSystem.GameGrid
             else
             {              
                 return false;
-            }
-                 
-        }
-        
-        /// <summary>
-        /// Get movable object at a position
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        public TileObject GetPushableAt(Vector2Int position)
-        {
-            return pushables.GetValueOrDefault(position);
-        }
-
-
-        /// <summary>
-        /// Remove pushable in dictionary on pasiton
-        /// </summary>
-        /// <param name="position">position to remove pushable</param>    
-        public void RemovePushableAt(Vector2Int position)
-        {
-            if (!IsInGrid(position))
-            {
-                Debug.LogError("Remove tile is outside the grid");
-                return;
-            }
-            pushables.Remove(position);
-        }
-
-        /// <summary>
-        /// Sets Pushable in dictionary on position
-        /// </summary>
-        /// <param name="position"> position to add pushable</param>
-        /// <param name="tileObject">pushable tile object</param>
-        public void SetPushableAt(Vector2Int position, PushableTile tileObject)
-        { 
-            if (!IsInGrid(position))
-                {
-                Debug.LogError("Set tile is outside the grid");
-                return;
-                }   
-            pushables[position] = tileObject;
-        }
-
-        /// <summary>
-        /// Get positon log of movable objects position
-        /// </summary>
-        public void LogMovablePositions()
-        {       
-            Debug.Log("Pushable object count: " + pushables.Count);     
-        }
-
+            }                 
+        }        
         #endregion
     }
 }

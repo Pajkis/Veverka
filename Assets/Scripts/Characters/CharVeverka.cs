@@ -1,17 +1,24 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 /// <summary>
 /// Control of Veverka
 /// </summary>
 /// 
 namespace Veverka.Characters.Veverka
- { 
+{
     public class CharVeverka : Character
     {
-        #region events definition
+        #region events 
         [SerializeField] DirectionEvent onArrowPressed;
         [SerializeField] CharacterMovedEvent veverkaMoved;
+        [SerializeField] CanPushQueryEvent canPushQueryEvent;
         #endregion
+
+        // Queue for pending character data requests
+        private bool hasPendingDataRequest = false;
+        private bool hasShownStartupMessage = false;
 
         #region event handling
         /// <summary>
@@ -21,7 +28,11 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.AddListener(HandleInput);
             settingDataBroadcastEvent.AddListener(OnSettingData);
+            characterDataRequestEvent.AddListener(OnCharacterData);
             settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+
+            // Listen for scene changes
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         /// <summary>
@@ -31,7 +42,95 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.RemoveListener(HandleInput);
             settingDataBroadcastEvent.RemoveListener(OnSettingData);
+            characterDataRequestEvent.RemoveListener(OnCharacterData);
+
+            // Remove scene change listener
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
+
+        /// <summary>
+        /// Called when a new scene is loaded
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="mode"></param>
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // Check if this is a game scene (you can adjust the condition as needed)
+            if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
+            {
+                Debug.Log($"Game scene loaded: {scene.name}, sending startup message");
+                hasShownStartupMessage = false; // Reset flag for new level
+                StartCoroutine(SendStartupMessageAfterDelay());
+            }
+        }
+
+        /// <summary>
+        /// Send startup message after a short delay to ensure all systems are ready
+        /// </summary>
+        private IEnumerator SendStartupMessageAfterDelay()
+        {
+            // Wait a few frames for everything to initialize
+            yield return new WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
+
+            // Send startup message
+            if (!hasShownStartupMessage)
+            {
+                hasShownStartupMessage = true;
+                Debug.Log("Sending startup message from Veverka");
+
+                characterDataRequestEvent.Raise(new CharacterBasicPayload
+                {
+                    Character = this,
+                    Current = gridPosition,
+                    Direction = facingDirection,
+                    Duration = moveDuration,
+                    RequestData = false,
+                    ResponseData = true,
+                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                    CharacterBubbleMessageTime = 2.0f
+                });
+            }
+        }
+
+        /// <summary>
+        /// on character data request - respond with character data
+        /// </summary>
+        /// <param name="payload"></param>
+        private void OnCharacterData(CharacterBasicPayload payload)
+        {
+            if (payload.RequestData)
+            {
+                // If character is currently moving, queue the request
+                if (smoothMover.IsMoving)
+                {
+                    hasPendingDataRequest = true;
+                    return;
+                }
+
+                // Send current position immediately if not moving
+                SendCharacterData();
+            }
+        }
+
+        /// <summary>
+        /// Send character data response (for regular requests, not startup)
+        /// </summary>
+        private void SendCharacterData()
+        {
+            characterDataRequestEvent.Raise(new CharacterBasicPayload
+            {
+                Character = this,
+                Current = gridPosition,
+                Direction = facingDirection,
+                Duration = moveDuration,
+                RequestData = false,
+                ResponseData = true,
+                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+                CharacterBubbleMessageTime = 0f
+            });
+        }
+
         #endregion
 
         #region methods
@@ -50,53 +149,57 @@ namespace Veverka.Characters.Veverka
             {
                 int distance = moveDistance;
                 Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
-                Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y} ");
+                Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y}");
 
-                // check if target position is in grid and get tile query
-                var query = new TileQueryPayload { Position = targetPos };
-                tileQueryEvent.Raise(query);
-                if (!query.IsInGrid) return;
+                // Check if target position is in grid
+                var gridQuery = new TileQueryPayload { Position = targetPos };
+                tileQueryEvent.Raise(gridQuery);
+                if (!gridQuery.IsInGrid) return;
 
-                PushableTile pushableObject = query.TileObject as PushableTile;
-
-                if (pushableObject != null)
+                // Check if there's a pushable object at target position
+                if (gridQuery.TileType == TileType.Nut)
                 {
-                    //try to push
-                    if (pushableObject.CanBePushed(inputDirection))
+                    // Query if the nut can be pushed in this direction
+                    var pushQuery = new CanPushQueryPayload
                     {
+                        Position = targetPos,
+                        Direction = inputDirection,
+                        Distance = distance,
+                        Duration = moveDuration,
+                        CanBePushed = false,
+                    };
+
+                    // Push query and push if possible
+                    canPushQueryEvent.Raise(pushQuery);
+
+                    // If there's a nut and it can be pushed
+                    if (pushQuery.CanBePushed)
+                    {
+                        // Move the character
                         Move(inputDirection, distance, moveDuration);
-                        pushableObject.Move(inputDirection, distance, moveDuration);
                     }
                     else
                     {
-                        // Optionally animate failed push
+                        // Cannot push - optionally animate failed push
+                        Debug.Log("Cannot push nut in this direction");
                     }
                 }
-                // move character to empty tile
-                else if (query.IsWalkable)
+                // Move character to empty walkable tile
+                else if (gridQuery.IsWalkable)
                 {
                     Move(inputDirection, distance, moveDuration);
                 }
+                else
+                {
+                    Debug.Log("Cannot move - tile not walkable");
+                }
             }
-
-            // rotate to input arrow direction
+            // Rotate to input arrow direction
             else
-            {          
+            {
                 facingDirection = Rotate(inputDirection);
                 playSfxEvent.Raise(SfxType.VeverkaRotate);
             }
-        }
-
-        /// <summary>
-        /// Move update in character movement 
-        /// Add expect source to registrer, that object is going to move and this action will be registered via TurnBuilder into SingleTurnRecord
-       /// </summary>
-        /// <param name="direction">direction of movement</param>
-        /// <param name="distance">number of tiles to move</param>
-        /// <param name="duration">duration of movement</param>
-        protected override void Move(Direction direction, int distance, float duration = 0.15f)
-        {           
-            base.Move(direction, distance, duration);    
         }
 
         /// <summary>
@@ -113,10 +216,17 @@ namespace Veverka.Characters.Veverka
         protected override void OnMoveComplete(Vector2Int targetPosition)
         {
             base.OnMoveComplete(targetPosition);
+
             // raise event, that character made a turn -> turn count
             veverkaMoved.Raise(payload);
+
+            // Handle any pending character data requests now that move is complete
+            if (hasPendingDataRequest)
+            {
+                hasPendingDataRequest = false;
+                SendCharacterData(); // Use default values for movement completion
+            }
         }
         #endregion
     }
-
 }

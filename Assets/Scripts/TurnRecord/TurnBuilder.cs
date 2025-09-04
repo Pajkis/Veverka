@@ -31,17 +31,6 @@ public class TurnBuilder
         Debug.Log($"[TurnBuilder] recording is Active");
 
     }
-    /// <summary>
-    /// Start new turn - reset all actions and sources, sets active
-    /// </summary>
-    public void StartNewTurn()
-    {
-        isActive = true;
-        actions.Clear();
-        expectedSources.Clear();
-        completedSources.Clear();
-        Debug.Log("[TurnBuilder] start turn");
-    }
 
     /// <summary>
     /// Register an undoable action to be included in this turn.
@@ -54,10 +43,19 @@ public class TurnBuilder
 
     /// <summary>
     /// Mark an object (by ID) that will participate in this turn and must call NotifySourceComplete.
+    /// /// Starts a new turn automatically if recording was previously inactive.
     /// </summary>
     public void ExpectSource(string sourceId)
     {
-        if (!isActive) return;
+        if (!isActive)
+        {
+            isActive = true;
+            actions.Clear();
+            expectedSources.Clear();
+            completedSources.Clear();
+            Debug.Log("[TurnBuilder] start turn");
+        }     
+        
         expectedSources.Add(sourceId);
     }
 
