@@ -547,18 +547,13 @@ MonoBehaviour:
   tabs:
   - content: {fileID: 1032040360}
     button: {fileID: 1624424779}
-    tabName: BasicLevel
     tabValue: 0
     isAvailable: 1
-    customData: {fileID: 0}
   - content: {fileID: 1692535331}
     button: {fileID: 1825150932}
-    tabName: StoneLevel
     tabValue: 1
     isAvailable: 1
-    customData: {fileID: 0}
   defaultTabIndex: 0
-  deactivateOtherTabs: 1
   activeTabSpriteType: 0
   unavailableSprite: {fileID: 0}
   allowHoverOnInactive: 1
@@ -2428,7 +2423,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
