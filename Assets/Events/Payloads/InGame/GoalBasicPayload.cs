@@ -15,7 +15,9 @@ public struct GoalBasicPayload
     public bool GoalRemove;
 
     // Message for Veverka to display when goal is reached
-    public BubbleMessageType VeverkaMessage;
-    public float VeverkaMessageTime;
+    public BubbleMessageType GoalMessage;
+    public float GoalMessageTime;
 
 }
+
+

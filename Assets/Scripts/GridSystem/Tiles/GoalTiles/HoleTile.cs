@@ -23,8 +23,8 @@ public class HoleTile : GoalTile
                     Position = payload.Position,
                     GoalReduction = 0,
                     GoalRemove = true,
-                    VeverkaMessage = BubbleMessageType.Yatta,
-                    VeverkaMessageTime = 1f
+                    GoalMessage = BubbleMessageType.Yatta,
+                    GoalMessageTime = 1f
                 });
                 Destroy(gameObject);
 
@@ -43,8 +43,8 @@ public class HoleTile : GoalTile
                 {
                     Position = payload.Position,
                     GoalRemove = false,
-                    VeverkaMessage = BubbleMessageType.Ooops,
-                    VeverkaMessageTime = 1f                    
+                    GoalMessage = BubbleMessageType.Ooops,
+                    GoalMessageTime = 1f                    
                 });
             }
                 

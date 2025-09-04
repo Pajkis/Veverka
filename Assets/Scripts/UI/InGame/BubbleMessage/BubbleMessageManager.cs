@@ -87,7 +87,7 @@ public class BubbleMessageManager : MonoBehaviour
 
         Vector2Int offset = CalculateBubbleOffset(pendingGoalPayload.Position, characterPosition);
         Vector2Int bubblePos = characterPosition + offset;
-        CreateBubble(bubblePos, pendingGoalPayload.VeverkaMessage, pendingGoalPayload.VeverkaMessageTime);
+        CreateBubble(bubblePos, pendingGoalPayload.GoalMessage, pendingGoalPayload.GoalMessageTime);
     }
 
     /// <summary>
