@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// pulsates the sprite by changing its scale and contrast over time
+/// </summary>
 public class PulsatingSprite : MonoBehaviour
 {
     [Header("Pulse Settings")]
@@ -12,6 +15,9 @@ public class PulsatingSprite : MonoBehaviour
     private Material spriteMaterial;
     private Color originalColor;
 
+    /// <summary>
+    /// get original scale and color, create a copy of the material to avoid affecting other sprites
+    /// </summary>
     void Start()
     {
         // Ulož původní hodnoty
@@ -30,6 +36,9 @@ public class PulsatingSprite : MonoBehaviour
         originalColor = spriteRenderer.color;
     }
 
+    /// <summary>
+    /// change scale and contrast over time using a sine wave
+    /// </summary>
     void Update()
     {
         if (spriteRenderer == null) return;
@@ -48,6 +57,9 @@ public class PulsatingSprite : MonoBehaviour
         spriteRenderer.color = newColor;
     }
 
+    /// <summary>
+    /// destroy the created material to avoid memory leaks
+    /// </summary>
     void OnDestroy()
     {
         // Clean up material when object is destroyed
