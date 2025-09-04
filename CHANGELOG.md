@@ -1,3 +1,92 @@
+# Veverka Changelog v0.12.0
+
+### 📅 Date: `2025-09-04`
+
+### 🔖 Git Version: `v0.12.0`
+
+### 📦 Area: `[TileObjects / Prefabs / UI / Overlays / Levels / GridSystem / Payloads / TurnSystem / InGame]`
+
+### 📝 Description:
+
+> Major refactor of NutTile / GoalTile hierarchy, simplification of payloads
+Add new game mechanics, holes and stone nuts. Create stone set with 10 new levels.
+Unified visuals by universal UI prefabs, Unified background for Loadings screens and some menus.
+> 
+> 
+> Grid utilities consolidated and obsolete scripts removed.
+> 
+
+---
+
+### ➕ Added:
+
+- **Fonts**
+    - Google fonts: Piedra, KneWave, Sedgwick Ave, Syne Tactile
+- **UI / Overlays**
+    - `CreditsOverlay` accessible from `10_MainMenu`
+    - Added `How to Play` button on `10_MainMenu`
+    - Universal prefabs for buttons and labels:
+        - `ButtonMenuCommon` – standard menu button
+        - `ButtonMenuBack` – back button with automatic overlay closing (`CloseOverlay`)
+        - `ButtonLevelSelect` – redesigned level select button with in-game nut sprite
+        - Caption/label text prefabs with preset font & size
+    - `RandomTipsDisplay` prefab for displaying hints, tips and messages.
+- **TileObjects**
+    - `HoleTile` as child of `GoalTile`
+    - `StoneNutTile` as child of `NutTile`
+- **Levels**
+    - Created **10 levels for Stone Set**
+- **Scripts**
+    - `UniversalTextDisplay` – replaces sprite number display, supports numbers, strings, enums
+    - `RandomTipsDisplay` – rotating random tips/hints with fade in/out
+    - `UniversalTabManager` – unified tab system (used in GameHelp and LevelSelect)
+- **InGame**
+    - Bubble messages when game starts and after goal is hit
+    - **BubbleMsgBox** – prefab script for displaying and fading character speech bubbles.
+    - **BubbleMessageManager** – system for handling and positioning bubble messages.
+    - **PulsatingSprite** – pulsates scale & brightness using sine waves.
+    - **CharVeverka, GoalTiles -**  added event handle and logic for receiving requests and sending data for bubble boxes
+- **Events**
+    - **CharacterDataRequestEvent** – new event for requesting/returning character state.
+
+---
+
+### ♻️ Updated / Refactored:
+
+- **TileObject hierarchy**
+    - Removed `MovableTile`, `PushableTile`, `StaticTile`
+    - Introduced abstract `NutTile` and `GoalTile` classes (direct children of `TileObject`)
+    - `BasicNutTile` (former NutTile) and `StoneNutTile` as children of `NutTile`
+    - `BasicGoalTile` (former GoalTile) and `HoleTile` as children of `GoalTile`
+    - Renamed *Pushable/Movable* terminology to **Nut**
+- **Payloads**
+    - Unified nut payloads into `NutBasicPayload`
+    - Unified goal payloads into `GoalBasicPayload`
+    - Unified Character payloads into `CharacterBasicPay`load
+- **Overlays & Scenes**
+    - Updated all overlays with new prefabs
+    - Added support for new back button prefab integration
+    - Refactor HelpMenu - add several tabs
+    - Huge refactor of LevelSelectMenu, visualy and functionaly. Add tabs and selection of levels based on current tab and nut number.
+    - Huge refactor of visuals, unified backgrounds for all loading screens and navigation menus (main, pause etc.)
+    - Changed inGame level/Goal/turns sprites and sprite number display with TextMeshPro texts
+- **Turn System**
+    - Refactored `TurnBuilder` – removed `StartNewTurn`, turn start generalized beyond character movement
+- **GameGrid.cs & GridUtils.cs**
+    - Tile checks and queries from `TileTypeExtensions.cs` merged into `GameGrid`
+    - Level parsing from `LevelUtils` merged into `GridUtils`
+    - NutTiles and GoalTiles dictionaries replaced by `NutType[,]` and `GoalType[,]` arrays
+    - Simplified tile query logic (removed specialized methods like `IsObstacle`, `IsGoal`)
+
+---
+
+### 🔥 Removed:
+
+- Obsolete button and tile sprites, backgrounds, labels etc.
+- `TileTypeExtensions.cs`
+- `LevelUtils.cs`
+
+---
 
 # Veverka Changelog v0.11.0
 
