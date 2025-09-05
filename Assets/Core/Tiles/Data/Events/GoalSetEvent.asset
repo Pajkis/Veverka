@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 7c536283fdc345c68aff2ba9b1f09ce5, type: 3}
   m_Name: GoalSetEvent
-  m_EditorClassIdentifier: Assembly-CSharp::GoalSetEvent
+  m_EditorClassIdentifier: 
   onEvent:
     m_PersistentCalls:
       m_Calls: []
