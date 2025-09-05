@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89be30227db6543468522f453d568292, type: 3}
-  m_Name: BasicSet
+  m_Name: 00_BasicSet
   m_EditorClassIdentifier: 
   setType: 0
   setDisplayName: Basic
