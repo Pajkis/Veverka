@@ -9,8 +9,7 @@ public abstract class GoalTile : TileObject
 
     #region events
     [SerializeField] protected NutEvents nutEvents;
-    [SerializeField] protected GoalSetEvent goalSetEvent;
-    [SerializeField] protected GoalResolvedEvent goalResolvedEvent;
+    [SerializeField] protected GoalEvents goalEvents;
     [SerializeField] protected WallSetEvent wallSetEvent;
     [SerializeField] protected RoadSetEvent roadSetEvent;
     #endregion
@@ -26,8 +25,9 @@ public abstract class GoalTile : TileObject
     {
         base.Init(tileType, gridPosition);
         this.goalType = goalType;
-        goalSetEvent.Raise(new GoalBasicPayload
+        goalEvents.Raise(new GoalEventPayload
         {
+            EventType = GoalEventsType.GoalSet,
             Position = gridPosition,
             GoalType = goalType,
             GoalTile = this,

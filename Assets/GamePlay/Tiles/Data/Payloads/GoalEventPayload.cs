@@ -1,23 +1,24 @@
 using UnityEngine;
 
 /// <summary>
-/// Payload for set and remove a goal tile from the grid.
+/// Unified payload for goal events.
 /// </summary>
-public struct GoalBasicPayload
+[System.Serializable]
+public class GoalEventPayload
 {
-    // Position of the goal tile on the grid
+    public GoalEventsType EventType;
+
+    // Basic goal data
     public Vector2Int Position;
     public GoalType GoalType;
     public GoalTile GoalTile;
 
-    // goal handled in the event 
+    // Goal handling data
     public int GoalReduction;
     public bool GoalRemove;
 
     // Message for Veverka to display when goal is reached
     public BubbleMessageType GoalMessage;
     public float GoalMessageTime;
-
 }
-
 

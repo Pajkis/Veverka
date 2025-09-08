@@ -17,9 +17,9 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private UniversalTextDisplay turnsDisplay;
 
     [Header("Events")]
-      [SerializeField] private GoalResolvedEvent goalResolvedEvent;
-      [SerializeField] private CharacterEvents characterEvents;
-      [SerializeField] private PlaySfxEvent playSfxEvent;
+    [SerializeField] private GoalEvents goalEvents;
+    [SerializeField] private CharacterEvents characterEvents;
+    [SerializeField] private PlaySfxEvent playSfxEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
 
     [Header("Level Data")]
@@ -49,24 +49,22 @@ public class GamePlay : MonoBehaviour
     /// <summary>
     /// Subscribes to relevant events and initializes the level display when the object is enabled.
     /// </summary>
-      /// <remarks>This method adds listeners to the <see cref="goalResolvedEvent"/>, <see
-      /// cref="characterEvents"/>,  and other relevant events to handle game logic. It also updates the level display to
-      /// reflect the  current level index.</remarks>
+    /// <remarks>This method adds listeners to the <see cref="goalEvents"/>, <see
+    /// cref="characterEvents"/>, and other relevant events to handle game logic. It also updates the level display to
+    /// reflect the current level index.</remarks>
     private void OnEnable()
     {
-        // add listeners     
-          goalResolvedEvent.AddListener(UpdateGoalCount);
-          characterEvents.AddListener(OnCharacterEvent);
-
-       
+        // add listeners
+        goalEvents.AddListener(UpdateGoalCount);
+        characterEvents.AddListener(OnCharacterEvent);
     }
     /// <summary>
     /// OnDisable method - called when object deactivate or before destroy
     /// </summary>
     private void OnDisable()
     {
-          goalResolvedEvent.RemoveListener(UpdateGoalCount);
-          characterEvents.RemoveListener(OnCharacterEvent);
+        goalEvents.RemoveListener(UpdateGoalCount);
+        characterEvents.RemoveListener(OnCharacterEvent);
     }
 
     /// <summary>
@@ -116,8 +114,9 @@ public class GamePlay : MonoBehaviour
     /// <summary>
     /// Update goal count, check for level complete condition
     /// </summary>
-    void UpdateGoalCount(GoalBasicPayload payload)
-    {        
+    void UpdateGoalCount(GoalEventPayload payload)
+    {
+        if (payload.EventType != GoalEventsType.GoalResolved) return;
         levelGoalCount -= payload.GoalReduction;
         goalDisplay.DisplayNumber(levelGoalCount);
         Debug.Log($"Left goals: {levelGoalCount}");

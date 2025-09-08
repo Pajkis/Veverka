@@ -104,8 +104,7 @@ MonoBehaviour:
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
-  goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
-  goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
+  goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
   roadSetEvent: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
 --- !u!114 &-192291133178817755

@@ -18,8 +18,9 @@ public class HoleTile : GoalTile
             // Raise goal reached event
             if (payload.NutType == NutType.StoneNut)
             {
-                goalResolvedEvent.Raise(new GoalBasicPayload
+                goalEvents.Raise(new GoalEventPayload
                 {
+                    EventType = GoalEventsType.GoalResolved,
                     Position = payload.Position,
                     GoalReduction = 0,
                     GoalRemove = true,
@@ -39,12 +40,13 @@ public class HoleTile : GoalTile
             else
             {
                 // Display "Ooops" message if a non-stone nut falls into the hole
-                goalResolvedEvent.Raise(new GoalBasicPayload
+                goalEvents.Raise(new GoalEventPayload
                 {
+                    EventType = GoalEventsType.GoalResolved,
                     Position = payload.Position,
                     GoalRemove = false,
                     GoalMessage = BubbleMessageType.Ooops,
-                    GoalMessageTime = 1f                    
+                    GoalMessageTime = 1f
                 });
             }
                 

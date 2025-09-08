@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Veverka.Characters.Veverka;
 
 namespace Veverka.GridSystem.GameGrid
@@ -22,8 +21,7 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private LevelDatabase levelDatabase;
 
         [SerializeField] private NutEvents nutEvents;
-        [SerializeField] private GoalSetEvent goalSetEvent;
-        [SerializeField] private GoalResolvedEvent goalResolvedEvent;
+        [SerializeField] private GoalEvents goalEvents;
         [SerializeField] private WallSetEvent wallSetEvent;
         [SerializeField] private RoadSetEvent roadSetEvent;
         #endregion
@@ -89,8 +87,7 @@ namespace Veverka.GridSystem.GameGrid
             levelSelectEvent.AddListener(OnLevelSelected);
             gridEvents.AddListener(OnGridEvent);
             nutEvents.AddListener(OnNutEvent);
-            goalSetEvent.AddListener(OnGoalSet);
-            goalResolvedEvent.AddListener(OnGoalResolved);
+            goalEvents.AddListener(OnGoalEvent);
             wallSetEvent.AddListener(OnWallSet);
             roadSetEvent.AddListener(OnRoadSet);
         }
@@ -104,8 +101,7 @@ namespace Veverka.GridSystem.GameGrid
             levelSelectEvent.RemoveListener(OnLevelSelected);
             gridEvents.RemoveListener(OnGridEvent);
             nutEvents.RemoveListener(OnNutEvent);
-            goalSetEvent.RemoveListener(OnGoalSet);
-            goalResolvedEvent.RemoveListener(OnGoalResolved);
+            goalEvents.RemoveListener(OnGoalEvent);
             wallSetEvent.RemoveListener(OnWallSet);
             roadSetEvent.RemoveListener(OnRoadSet);
         }
@@ -568,30 +564,29 @@ namespace Veverka.GridSystem.GameGrid
         /// Set goal tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnGoalSet(GoalBasicPayload payload)
+        private void OnGoalEvent(GoalEventPayload payload)
         {
-            SetTileType(payload.Position, TileType.Goal);
-            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-        }
-
-        /// <summary>
-        /// Remove goal tile on position and update tile type in the grid
-        /// </summary>
-        /// <param name="payload"></param>
-        private void OnGoalResolved(GoalBasicPayload payload)
-        {
-            if (!payload.GoalRemove)
+            switch (payload.EventType)
             {
-                return;
-            }
+                case GoalEventsType.GoalSet:
+                    SetTileType(payload.Position, TileType.Goal);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    break;
+                case GoalEventsType.GoalResolved:
+                    if (!payload.GoalRemove)
+                    {
+                        return;
+                    }
 
-            if (!IsInGrid(payload.Position))
-            {
-                Debug.LogError("Remove tile is outside the grid");
-                return;
+                    if (!IsInGrid(payload.Position))
+                    {
+                        Debug.LogError("Remove tile is outside the grid");
+                        return;
+                    }
+                    SetTileType(payload.Position, TileType.Empty);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    break;
             }
-            SetTileType(payload.Position, TileType.Empty);
-            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>

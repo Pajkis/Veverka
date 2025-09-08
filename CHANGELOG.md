@@ -77,8 +77,6 @@ Unified visuals by universal UI prefabs, Unified background for Loadings screens
     - Level parsing from `LevelUtils` merged into `GridUtils`
     - NutTiles and GoalTiles dictionaries replaced by `NutType[,]` and `GoalType[,]` arrays
     - Simplified tile query logic (removed specialized methods like `IsObstacle`, `IsGoal`)
-- **Events**
-    - Merged `BuildGrid` and `BuildGridDone` into a single `BuildGrid` event with `BuildDone` flag.
 
 ---
 
