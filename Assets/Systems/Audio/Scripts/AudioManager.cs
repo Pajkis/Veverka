@@ -12,8 +12,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private PlayUiEvent playUiEvent;
     [SerializeField] private PlayMusicEvent playMusicEvent;
     [SerializeField] private AudioInitEvent audioInitEvent;
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private SettingEvents settingEvents;
     #endregion
 
     #region sound input
@@ -73,7 +72,7 @@ public class AudioManager : MonoBehaviour
         playSfxEvent?.AddListener(PlaySfx);
         playUiEvent?.AddListener(PlayUi);
         playMusicEvent?.AddListener(PlayRandomMusic);
-        settingDataBroadcastEvent?.AddListener(OnSettingsData);
+          settingEvents?.AddListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -85,7 +84,7 @@ public class AudioManager : MonoBehaviour
         playSfxEvent?.RemoveListener(PlaySfx);
         playUiEvent?.RemoveListener(PlayUi);
         playMusicEvent?.RemoveListener(PlayRandomMusic);
-        settingDataBroadcastEvent?.RemoveListener(OnSettingsData);
+          settingEvents?.RemoveListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -142,10 +141,10 @@ public class AudioManager : MonoBehaviour
         }
       
         // Request volume values at init
-        settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.MusicVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.MenuVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed); // to set pitch for sound effects
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.EffectVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.MusicVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.MenuVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.AnimationSpeed }); // to set pitch for sound effects
 
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
@@ -309,8 +308,11 @@ public class AudioManager : MonoBehaviour
     /// Change volume or pitch based on requested change
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingsData(SettingDataPayload payload)
+    private void OnSettingsEvent(SettingEventPayload payload)
     {
+        if (payload.EventType != SettingsEventType.DataBroadcast)
+            return;
+
         switch (payload.Setting)
         {
             case GameSettingsEnum.EffectVolume:

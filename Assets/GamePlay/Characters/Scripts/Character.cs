@@ -25,8 +25,7 @@ public abstract class Character : MonoBehaviour
     [Header("Events")]
     [SerializeField] protected GridEvents gridEvents;
     [SerializeField] protected PlaySfxEvent playSfxEvent;    
-    [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] protected SettingEvents settingEvents;
       [SerializeField] protected CharacterEvents characterEvents;
     #endregion
 
@@ -52,9 +51,10 @@ public abstract class Character : MonoBehaviour
     /// Get animation speed from settings
     /// </summary>
     /// <param name="payload"></param>
-    protected void OnSettingData(SettingDataPayload payload)
+    protected void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
+        if (payload.EventType == SettingsEventType.DataBroadcast &&
+            payload.Setting == GameSettingsEnum.AnimationSpeed)
         {
             animationSpeed = payload.Value;
         }

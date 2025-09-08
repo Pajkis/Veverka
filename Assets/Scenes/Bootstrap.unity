@@ -444,8 +444,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: db6cd4c4041d60a45a132f07bfc4f122, type: 2}
-  settingDataBroadcast: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
-  settingDataRequest: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!114 &862168028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,8 +604,7 @@ MonoBehaviour:
   playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
   playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
   audioInitEvent: {fileID: 11400000, guid: 3adef766108b4d05816450a3a75c9120, type: 2}
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   veverkaMove: {fileID: 8300000, guid: 786703596d5398742b0546fb2a51f1d9, type: 3}
   nutMove: {fileID: 8300000, guid: 2ea1a876dd39bf64ca740b7b653b94d6, type: 3}
   goalReached: {fileID: 8300000, guid: c1e21b8b0192f6443b7eff4486a30ab0, type: 3}

@@ -16,7 +16,7 @@ public abstract class NutTile : TileObject
     #endregion
 
     #region  nut events
-    [SerializeField] protected NutEvents nutEvents;
+      [SerializeField] protected NutEvents nutEvents;
     #endregion
 
     #region Event handling
@@ -25,8 +25,12 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        settingDataBroadcastEvent.AddListener(OnSettingData);
-        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+          settingEvents.AddListener(OnSettingEvent);
+          settingEvents.Raise(new SettingEventPayload
+          {
+              EventType = SettingsEventType.DataRequest,
+              Setting = GameSettingsEnum.AnimationSpeed
+          });
         nutEvents.AddListener(OnNutEvent);
     }
     /// <summary>
@@ -34,7 +38,7 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnDisable()
     {
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+          settingEvents.RemoveListener(OnSettingEvent);
         nutEvents.RemoveListener(OnNutEvent);
     }
 
@@ -42,13 +46,14 @@ public abstract class NutTile : TileObject
     /// get animation speed from settings
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingData(SettingDataPayload payload)
-    {
-        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            animationSpeed = payload.Value;
-        }
-    }
+      private void OnSettingEvent(SettingEventPayload payload)
+      {
+          if (payload.EventType == SettingsEventType.DataBroadcast &&
+              payload.Setting == GameSettingsEnum.AnimationSpeed)
+          {
+              animationSpeed = payload.Value;
+          }
+      }
     #endregion
 
     #region Initialization

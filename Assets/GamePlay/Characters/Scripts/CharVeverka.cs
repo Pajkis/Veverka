@@ -26,9 +26,13 @@ namespace Veverka.Characters.Veverka
         private void OnEnable()
         {
             onArrowPressed.AddListener(HandleInput);
-            settingDataBroadcastEvent.AddListener(OnSettingData);
-              characterEvents.AddListener(OnCharacterEvent);
-            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+              settingEvents.AddListener(OnSettingEvent);
+                characterEvents.AddListener(OnCharacterEvent);
+              settingEvents.Raise(new SettingEventPayload
+              {
+                  EventType = SettingsEventType.DataRequest,
+                  Setting = GameSettingsEnum.AnimationSpeed
+              });
 
             // Listen for scene changes
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -40,7 +44,7 @@ namespace Veverka.Characters.Veverka
         private void OnDisable()
         {
             onArrowPressed.RemoveListener(HandleInput);
-            settingDataBroadcastEvent.RemoveListener(OnSettingData);
+              settingEvents.RemoveListener(OnSettingEvent);
               characterEvents.RemoveListener(OnCharacterEvent);
 
             // Remove scene change listener

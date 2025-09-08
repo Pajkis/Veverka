@@ -1200,8 +1200,7 @@ MonoBehaviour:
   minDelay: 0
   maxDelay: 0
   audioConfig: {fileID: 11400000, guid: 05401f8670677d243812c794083e48d1, type: 2}
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!114 &988765908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1370,8 +1369,7 @@ MonoBehaviour:
   buttonDown: {fileID: 1322785196}
   undo: {fileID: 1118781770}
   action: {fileID: 1392477493}
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   inGameDisplayConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
 --- !u!1001 &1118781768
 PrefabInstance:

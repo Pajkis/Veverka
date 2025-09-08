@@ -27,8 +27,7 @@ public class GameSettings: MonoBehaviour
     #region events
     [Header("Configs and events")]
     [SerializeField] private GameSettingsConfig config;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcast;
-    [SerializeField] private SettingDataRequestEvent settingDataRequest;
+    [SerializeField] private SettingEvents settingEvents;
     #endregion
       
     #region Init methods
@@ -54,8 +53,7 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        settingDataRequest.AddListener(OnSettingDataRequest);
-        settingDataBroadcast.AddListener(OnSettingDataBroadcast);
+        settingEvents.AddListener(OnSettingEvent);
     }
 
     /// <summary>
@@ -63,8 +61,7 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        settingDataRequest.RemoveListener(OnSettingDataRequest);
-        settingDataBroadcast.RemoveListener(OnSettingDataBroadcast);
+        settingEvents.RemoveListener(OnSettingEvent);
     }
 
 
@@ -111,30 +108,35 @@ public class GameSettings: MonoBehaviour
     /// <summary>
     /// On setting data request event handler
     /// </summary>
-    /// <param name="key"></param>
-    private void OnSettingDataRequest(GameSettingsEnum key)
-    {
-        if (!gameSettings.TryGetValue(key, out int value))
-        {
-            Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
-            value = config != null ? config.GetDefault(key) : 0;
-        }
-        settingDataBroadcast.Raise(new SettingDataPayload { Setting = key, Value = value });
-    }
-
-    /// <summary>
-    /// on setting data broadcast event handler
-    /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingDataBroadcast(SettingDataPayload payload)
+    private void OnSettingEvent(SettingEventPayload payload)
     {
-        int intValue = Mathf.RoundToInt(payload.Value);
-        if (gameSettings.TryGetValue(payload.Setting, out int current) && current == intValue)
-            return;
+        switch (payload.EventType)
+        {
+            case SettingsEventType.DataRequest:
+                var key = payload.Setting;
+                if (!gameSettings.TryGetValue(key, out int value))
+                {
+                    Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
+                    value = config != null ? config.GetDefault(key) : 0;
+                }
+                settingEvents.Raise(new SettingEventPayload
+                {
+                    EventType = SettingsEventType.DataBroadcast,
+                    Setting = key,
+                    Value = value
+                });
+                break;
+            case SettingsEventType.DataBroadcast:
+                int intValue = Mathf.RoundToInt(payload.Value);
+                if (gameSettings.TryGetValue(payload.Setting, out int current) && current == intValue)
+                    return;
 
-        gameSettings[payload.Setting] = intValue;
-        GameSettingsUtils.Set(payload.Setting, intValue);
-        PlayerPrefs.Save();
+                gameSettings[payload.Setting] = intValue;
+                GameSettingsUtils.Set(payload.Setting, intValue);
+                PlayerPrefs.Save();
+                break;
+        }
     }
     #endregion
 }

@@ -13,8 +13,7 @@ public class SliderSettingItem : MonoBehaviour
     [SerializeField] private int minValue;
     [SerializeField] private int maxValue;
 
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private SettingEvents settingEvents;
 
     private Slider slider;
     private TextMeshProUGUI nameLabel;
@@ -68,9 +67,13 @@ public class SliderSettingItem : MonoBehaviour
     private void OnEnable()
     {
         slider.onValueChanged.AddListener(OnSliderChanged);
-        settingDataBroadcastEvent.AddListener(OnSettingData);
+        settingEvents.AddListener(OnSettingEvent);
         nameLabel.text = SplitCamelCase(settingType.ToString());
-        settingDataRequestEvent.Raise(settingType);
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = settingType
+        });
     }
 
 
@@ -80,7 +83,7 @@ public class SliderSettingItem : MonoBehaviour
     private void OnDisable()
     {
         slider.onValueChanged.RemoveListener(OnSliderChanged);
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        settingEvents.RemoveListener(OnSettingEvent);
     }
 
 
@@ -90,8 +93,9 @@ public class SliderSettingItem : MonoBehaviour
     /// <param name="value"></param>
     private void OnSliderChanged(float value)
     {
-        settingDataBroadcastEvent.Raise(new SettingDataPayload
+        settingEvents.Raise(new SettingEventPayload
         {
+            EventType = SettingsEventType.DataBroadcast,
             Setting = settingType,
             Value = Mathf.RoundToInt(value)
         });
@@ -113,9 +117,10 @@ public class SliderSettingItem : MonoBehaviour
     }
 
     
-    private void OnSettingData(SettingDataPayload payload)
+    private void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting != settingType)
+        if (payload.EventType != SettingsEventType.DataBroadcast ||
+            payload.Setting != settingType)
             return;
 
         float value = Mathf.Clamp(payload.Value, minValue, maxValue);
