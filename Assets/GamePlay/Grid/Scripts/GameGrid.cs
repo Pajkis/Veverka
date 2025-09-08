@@ -17,17 +17,14 @@ namespace Veverka.GridSystem.GameGrid
 
         #region events
         [Header("Events")]
-        [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
+        [SerializeField] private GridEvents gridEvents;
         [SerializeField] private LevelSelectEvent levelSelectEvent;
-        [SerializeField] private ResetGridEvent resetGridEvent;
-        [SerializeField] private BuildGridEvent buildGridEvent;
         [SerializeField] private LevelDatabase levelDatabase;
 
         [SerializeField] private NutSetEvent nutSetEvent;
         [SerializeField] private NutRemovedEvent nutRemovedEvent;
         [SerializeField] private GoalSetEvent goalSetEvent;
         [SerializeField] private GoalResolvedEvent goalResolvedEvent;
-        [SerializeField] private TileQueryEvent tileQueryEvent;
         [SerializeField] private WallSetEvent wallSetEvent;
         [SerializeField] private RoadSetEvent roadSetEvent;
         #endregion
@@ -91,9 +88,7 @@ namespace Veverka.GridSystem.GameGrid
         {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
-            buildGridEvent.AddListener(InitializeGrid);
-            resetGridEvent.AddListener(ResetGrid);           
-            tileQueryEvent.AddListener(OnTileQuery);        
+            gridEvents.AddListener(OnGridEvent);
             nutSetEvent.AddListener(OnNutSet);
             nutRemovedEvent.AddListener(OnNutRemoved);
             goalSetEvent.AddListener(OnGoalSet);
@@ -109,15 +104,29 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);        
-            buildGridEvent.RemoveListener(InitializeGrid);
-            tileQueryEvent.RemoveListener(OnTileQuery);
+            gridEvents.RemoveListener(OnGridEvent);
             nutSetEvent.RemoveListener(OnNutSet);
             nutRemovedEvent.RemoveListener(OnNutRemoved);
             goalSetEvent.RemoveListener(OnGoalSet);
             goalResolvedEvent.RemoveListener(OnGoalResolved);
             wallSetEvent.RemoveListener(OnWallSet);
             roadSetEvent.RemoveListener(OnRoadSet);
+        }
+
+        private void OnGridEvent(GridEventPayload payload)
+        {
+            switch (payload.EventType)
+            {
+                case GridEventType.BuildGrid:
+                    InitializeGrid(payload.Grid);
+                    break;
+                case GridEventType.ResetGrid:
+                    ResetGrid();
+                    break;
+                case GridEventType.TileQuery:
+                    OnTileQuery(payload.Query);
+                    break;
+            }
         }
 
         #endregion
@@ -164,7 +173,7 @@ namespace Veverka.GridSystem.GameGrid
             levelDatabase.gridOrigin = transform;
 
             //raise event
-            buildGridDoneEvent.Raise();
+            gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGridDone });
         }
 
         /// <summary>

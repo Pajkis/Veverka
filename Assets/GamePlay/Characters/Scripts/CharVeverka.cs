@@ -154,7 +154,11 @@ namespace Veverka.Characters.Veverka
 
                 // Check if target position is in grid
                 var gridQuery = new TileQueryPayload { Position = targetPos };
-                tileQueryEvent.Raise(gridQuery);
+                gridEvents.Raise(new GridEventPayload
+                {
+                    EventType = GridEventType.TileQuery,
+                    Query = gridQuery
+                });
                 if (!gridQuery.IsInGrid) return;
 
                 // Check if there's a pushable object at target position

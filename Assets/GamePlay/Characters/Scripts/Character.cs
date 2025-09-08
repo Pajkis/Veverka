@@ -23,7 +23,7 @@ public abstract class Character : MonoBehaviour
 
     #region Events
     [Header("Events")]
-    [SerializeField] protected TileQueryEvent tileQueryEvent;
+    [SerializeField] protected GridEvents gridEvents;
     [SerializeField] protected PlaySfxEvent playSfxEvent;    
     [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
     [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;

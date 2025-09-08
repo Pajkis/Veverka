@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class LevelUnloader : MonoBehaviour
 {
-    [SerializeField] private ResetGridEvent resetGridEvent;
+    [SerializeField] private GridEvents gridEvents;
 
     [SerializeField] private GoToSceneEvent goToSceneEvent;
 
@@ -15,7 +15,7 @@ public class LevelUnloader : MonoBehaviour
     void Start()
     {
         // raise reset event
-        resetGridEvent.Raise();
+        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.ResetGrid });
         playMusicEvent.Raise(MusicType.Menu);
         StartCoroutine(UnloadLevelCoroutine());
     }

@@ -11,8 +11,7 @@ public class LevelLoader : MonoBehaviour
     // Serialized fields for events and level database
     [SerializeField] private LevelSelectEvent levelSelectEvent;
     [SerializeField] private GoToSceneEvent goToSceneEvent;
-    [SerializeField] private BuildGridEvent buildGridEvent;
-    [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
+    [SerializeField] private GridEvents gridEvents;
     [SerializeField] private PlayMusicEvent playMusicEvent;
     [SerializeField] private LevelDatabase levelDatabase;
 
@@ -60,7 +59,7 @@ public class LevelLoader : MonoBehaviour
     {
         // add listener
         levelSelectEvent.AddListener(LoadLevel);
-        buildGridDoneEvent.AddListener(OnLevelBuilt);
+        gridEvents.AddListener(OnGridEvent);
     }
 
     /// <summary>
@@ -69,15 +68,18 @@ public class LevelLoader : MonoBehaviour
     private void OnDisable()
     {
         levelSelectEvent.RemoveListener(LoadLevel);
-        buildGridDoneEvent.RemoveListener(OnLevelBuilt);
+        gridEvents.RemoveListener(OnGridEvent);
     }
 
     /// <summary>
-    /// Get info that level build has finished
+    /// Handle grid events.
     /// </summary>
-    private void OnLevelBuilt()
+    private void OnGridEvent(GridEventPayload payload)
     {
-        levelBuilt = true;
+        if (payload.EventType == GridEventType.BuildGridDone)
+        {
+            levelBuilt = true;
+        }
     }
 
     /// <summary>
@@ -147,7 +149,11 @@ public class LevelLoader : MonoBehaviour
 
         // wait for the level to be built
         levelBuilt = false;
-        buildGridEvent.Raise(grid);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.BuildGrid,
+            Grid = grid
+        });
         yield return new WaitUntil(() => levelBuilt);
 
         //keep track of the time elapsed and ensure a minimum loading time

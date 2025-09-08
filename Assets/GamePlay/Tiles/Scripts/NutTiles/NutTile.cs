@@ -120,7 +120,11 @@ public abstract class NutTile : TileObject
         Vector2Int targetPosition = GridUtils.GetPositionInDir(GridPosition, direction);
 
         TileQueryPayload query = new() { Position = targetPosition };
-        tileQueryEvent.Raise(query);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.TileQuery,
+            Query = query
+        });
         if (!query.IsInGrid) return false;
         return query.IsPushable;
     }
@@ -182,7 +186,11 @@ public abstract class NutTile : TileObject
 
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
-        tileQueryEvent.Raise(query);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.TileQuery,
+            Query = query
+        });
         if (query.TileType != TileType.Goal)
         {
             nutSetEvent.Raise(new NutBasicPayload
