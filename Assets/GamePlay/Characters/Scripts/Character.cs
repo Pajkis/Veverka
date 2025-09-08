@@ -136,8 +136,8 @@ public abstract class Character : MonoBehaviour
           {
               Character = this,
               EventType = CharacterEventType.MoveStarted,
-              Current = targetPosVec2Int,
-              Previous = gridPosition,
+              CurrentPosition = targetPosVec2Int,
+              PreviousPosition = gridPosition,
               Direction = direction,
               RequestData = false,
               ResponseData = false,
@@ -166,7 +166,7 @@ public abstract class Character : MonoBehaviour
        
         // register movement as action into turn record 
         TurnBuilder.Instance.AddAction(
-         new UndoCharacterAction(this, payload.Current, payload.Previous, payload.Direction)
+         new UndoCharacterAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Direction)
            );
 
         // inform turn builder, tht this component has registered an action into turn record

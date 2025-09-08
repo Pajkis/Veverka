@@ -9,8 +9,8 @@ public struct CharacterEventPayload
     [Header("Core Character Data")]
     public Character Character;
     public CharacterEventType EventType;
-    public Vector2Int Current;
-    public Vector2Int Previous;
+    public Vector2Int CurrentPosition;
+    public Vector2Int PreviousPosition;
     public Direction Direction;
     public float Duration;
 

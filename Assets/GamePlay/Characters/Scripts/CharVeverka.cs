@@ -78,18 +78,18 @@ namespace Veverka.Characters.Veverka
                 hasShownStartupMessage = true;
                 Debug.Log("Sending startup message from Veverka");
 
-                  characterEvents.Raise(new CharacterEventPayload
-                  {
-                      Character = this,
-                      EventType = CharacterEventType.DataResponse,
-                      Current = gridPosition,
-                      Direction = facingDirection,
-                      Duration = moveDuration,
-                      RequestData = false,
-                      ResponseData = true,
-                      CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                      CharacterBubbleMessageTime = 2.0f
-                  });
+                    characterEvents.Raise(new CharacterEventPayload
+                    {
+                        Character = this,
+                        EventType = CharacterEventType.DataResponse,
+                        CurrentPosition = gridPosition,
+                        Direction = facingDirection,
+                        Duration = moveDuration,
+                        RequestData = false,
+                        ResponseData = true,
+                        CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                        CharacterBubbleMessageTime = 2.0f
+                    });
             }
         }
 
@@ -118,18 +118,18 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         private void SendCharacterData()
         {
-              characterEvents.Raise(new CharacterEventPayload
-              {
-                  Character = this,
-                  EventType = CharacterEventType.DataResponse,
-                  Current = gridPosition,
-                  Direction = facingDirection,
-                  Duration = moveDuration,
-                  RequestData = false,
-                  ResponseData = true,
-                  CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
-                  CharacterBubbleMessageTime = 0f
-              });
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    Character = this,
+                    EventType = CharacterEventType.DataResponse,
+                    CurrentPosition = gridPosition,
+                    Direction = facingDirection,
+                    Duration = moveDuration,
+                    RequestData = false,
+                    ResponseData = true,
+                    CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+                    CharacterBubbleMessageTime = 0f
+                });
         }
 
         #endregion

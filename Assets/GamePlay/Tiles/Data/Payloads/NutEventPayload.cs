@@ -13,6 +13,10 @@ public class NutEventPayload
     public NutType NutType;
     public NutTile NutTile;
 
+    // Movement data
+    public Vector2Int CurrentPosition;
+    public Vector2Int PreviousPosition;
+
     // Push query data
     public Direction Direction;
     public int Distance;

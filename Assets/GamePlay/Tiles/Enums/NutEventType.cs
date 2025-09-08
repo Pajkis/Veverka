@@ -6,5 +6,6 @@ public enum NutEventType
     CanPushQuery,
     NutSet,
     NutRemoved,
-    NutInGoal
+    NutInGoal,
+    NutMoved
 }

@@ -59,7 +59,7 @@ public class BubbleMessageManager : MonoBehaviour
       {
           if (payload.EventType == CharacterEventType.MoveCompleted)
           {
-              characterPosition = payload.Current;
+              characterPosition = payload.CurrentPosition;
 
               if (hasPendingGoal)
               {
@@ -68,7 +68,7 @@ public class BubbleMessageManager : MonoBehaviour
           }
           else if (payload.EventType == CharacterEventType.DataResponse)
           {
-              characterPosition = payload.Current;
+              characterPosition = payload.CurrentPosition;
               if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
 
               Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);

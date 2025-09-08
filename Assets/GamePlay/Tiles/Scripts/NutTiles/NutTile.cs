@@ -10,7 +10,7 @@ public abstract class NutTile : TileObject
     [SerializeField] protected float moveDuration = 0.15f;
     protected float animationSpeed;
 
-    protected NutMovedPayload payload = new();
+    protected NutEventPayload payload = new();
     protected SmoothMover smoothMover;
     protected NutType nutType;
     #endregion
@@ -153,13 +153,13 @@ public abstract class NutTile : TileObject
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        // fill character moved payload for turn records
-        payload = new NutMovedPayload
+        // prepare movement payload for events and turn records
+        payload = new NutEventPayload
         {
             NutType = this.nutType,
             NutTile = this,
-            Current = targetPosVec2Int,
-            Previous = GridPosition,
+            CurrentPosition = targetPosVec2Int,
+            PreviousPosition = GridPosition,
             Duration = moveDuration,
         };
 
@@ -222,6 +222,11 @@ public abstract class NutTile : TileObject
 
         //Complete turn record
         TurnRecordAddandComplete();
+
+        // notify listeners about nut movement
+        payload.EventType = NutEventType.NutMoved;
+        payload.Position = targetPosition;
+        nutEvents.Raise(payload);
     }
     #endregion
 
@@ -277,9 +282,9 @@ public abstract class NutTile : TileObject
     /// </summary>   
     protected void TurnRecordAddandComplete()
     {
-        // register movement as action into turn record 
+        // register movement as action into turn record
         TurnBuilder.Instance.AddAction(
-         new UndoMovableAction(this, payload.Current, payload.Previous, moveDuration)
+         new UndoMovableAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Duration)
            );
 
         // inform turn builder, tht this component has registered an action into turn record
