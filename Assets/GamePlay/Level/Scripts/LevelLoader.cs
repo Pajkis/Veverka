@@ -76,7 +76,7 @@ public class LevelLoader : MonoBehaviour
     /// </summary>
     private void OnGridEvent(GridEventPayload payload)
     {
-        if (payload.EventType == GridEventType.BuildGridDone)
+        if (payload.EventType == GridEventType.BuildGrid && payload.BuildDone)
         {
             levelBuilt = true;
         }
@@ -152,7 +152,8 @@ public class LevelLoader : MonoBehaviour
         gridEvents.Raise(new GridEventPayload
         {
             EventType = GridEventType.BuildGrid,
-            Grid = grid
+            Grid = grid,
+            BuildDone = false
         });
         yield return new WaitUntil(() => levelBuilt);
 

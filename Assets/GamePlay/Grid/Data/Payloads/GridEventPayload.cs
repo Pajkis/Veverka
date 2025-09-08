@@ -9,4 +9,5 @@ public struct GridEventPayload
     public GridEventType EventType;
     public TileType[,] Grid;
     public TileQueryPayload Query;
+    public bool BuildDone;
 }

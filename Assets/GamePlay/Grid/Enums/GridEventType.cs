@@ -4,7 +4,6 @@
 public enum GridEventType
 {
     BuildGrid,
-    BuildGridDone,
     ResetGrid,
     TileQuery,
 }

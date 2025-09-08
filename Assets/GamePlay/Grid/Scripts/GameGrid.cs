@@ -118,7 +118,10 @@ namespace Veverka.GridSystem.GameGrid
             switch (payload.EventType)
             {
                 case GridEventType.BuildGrid:
-                    InitializeGrid(payload.Grid);
+                    if (!payload.BuildDone)
+                    {
+                        InitializeGrid(payload.Grid);
+                    }
                     break;
                 case GridEventType.ResetGrid:
                     ResetGrid();
@@ -172,8 +175,8 @@ namespace Veverka.GridSystem.GameGrid
             levelDatabase.GoalsCount = goalCount;
             levelDatabase.gridOrigin = transform;
 
-            //raise event
-            gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGridDone });
+            // raise event to notify build completion
+            gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
         }
 
         /// <summary>
