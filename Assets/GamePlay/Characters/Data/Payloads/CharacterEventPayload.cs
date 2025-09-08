@@ -4,12 +4,12 @@ using UnityEngine;
 /// Character basic payload - for register turn records and undo logic
 /// </summary>
 [System.Serializable]
-public struct CharacterBasicPayload
+public struct CharacterEventPayload
 {
-    // character data
+    #region Core Character Data
+    [Header("Core Character Data")]
     public Character Character;
-
-    // position and velocity data
+    public CharacterEventType EventType;
     public Vector2Int Current;
     public Vector2Int Previous;
     public Direction Direction;
@@ -20,6 +20,7 @@ public struct CharacterBasicPayload
     public float CharacterBubbleMessageTime;
 
     // data request and response flags
+    [Header("Request/response system")]
     public bool RequestData;
     public bool ResponseData;
 }
