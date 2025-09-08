@@ -14,7 +14,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
     protected float animationSpeed;
-    protected CharacterBasicPayload payload = new();
+      protected CharacterEventPayload payload = new();
 
     protected SmoothMover smoothMover;
 
@@ -27,7 +27,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected PlaySfxEvent playSfxEvent;    
     [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
     [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;
-    [SerializeField] protected CharacterDataRequestEvent characterDataRequestEvent;
+      [SerializeField] protected CharacterEvents characterEvents;
     #endregion
 
     #region Configs
@@ -131,16 +131,17 @@ public abstract class Character : MonoBehaviour
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        // fill character moved payload for events - calling events in children classes 
-        payload = new CharacterBasicPayload
-        {
-            Character = this,
-            Current = targetPosVec2Int,
-            Previous = gridPosition,
-            Direction = direction,
-            RequestData = false,
-            ResponseData = false,
-        };
+          // fill character moved payload for events - calling events in children classes
+          payload = new CharacterEventPayload
+          {
+              Character = this,
+              EventType = CharacterEventType.MoveStarted,
+              Current = targetPosVec2Int,
+              Previous = gridPosition,
+              Direction = direction,
+              RequestData = false,
+              ResponseData = false,
+          };
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));

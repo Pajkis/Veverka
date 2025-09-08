@@ -17,9 +17,9 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private UniversalTextDisplay turnsDisplay;
 
     [Header("Events")]
-    [SerializeField] private GoalResolvedEvent goalResolvedEvent;   
-    [SerializeField] private CharacterMovedEvent characterMoved;
-    [SerializeField] private PlaySfxEvent playSfxEvent;
+      [SerializeField] private GoalResolvedEvent goalResolvedEvent;
+      [SerializeField] private CharacterEvents characterEvents;
+      [SerializeField] private PlaySfxEvent playSfxEvent;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
 
     [Header("Level Data")]
@@ -49,14 +49,14 @@ public class GamePlay : MonoBehaviour
     /// <summary>
     /// Subscribes to relevant events and initializes the level display when the object is enabled.
     /// </summary>
-    /// <remarks>This method adds listeners to the <see cref="pushableInGoalEvent"/>, <see
-    /// cref="characterMoved"/>,  and other relevant events to handle game logic. It also updates the level display to
-    /// reflect the  current level index.</remarks>
+      /// <remarks>This method adds listeners to the <see cref="goalResolvedEvent"/>, <see
+      /// cref="characterEvents"/>,  and other relevant events to handle game logic. It also updates the level display to
+      /// reflect the  current level index.</remarks>
     private void OnEnable()
     {
         // add listeners     
-        goalResolvedEvent.AddListener(UpdateGoalCount);     
-        characterMoved.AddListener(OnCharacterMoved);
+          goalResolvedEvent.AddListener(UpdateGoalCount);
+          characterEvents.AddListener(OnCharacterEvent);
 
        
     }
@@ -65,8 +65,8 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        goalResolvedEvent.RemoveListener(UpdateGoalCount);
-        characterMoved.RemoveListener(OnCharacterMoved);
+          goalResolvedEvent.RemoveListener(UpdateGoalCount);
+          characterEvents.RemoveListener(OnCharacterEvent);
     }
 
     /// <summary>
@@ -132,15 +132,18 @@ public class GamePlay : MonoBehaviour
         undoManager.ClearHistory();
     }
 
-    /// <summary>
-    /// On character moved method - counts number of moves and add each move into turn record
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnCharacterMoved(CharacterBasicPayload payload)
-    {
-        turnCount++;
-        turnsDisplay.DisplayNumber(turnCount);
-    }
+      /// <summary>
+      /// Handles character events and counts completed moves.
+      /// </summary>
+      /// <param name="payload"></param>
+        private void OnCharacterEvent(CharacterEventPayload payload)
+        {
+            if (payload.EventType == CharacterEventType.MoveCompleted)
+            {
+                turnCount++;
+                turnsDisplay.DisplayNumber(turnCount);
+            }
+        }
 
     /// <summary>
     /// Reverts the last recorded turn and updates the turn counter.

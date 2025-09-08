@@ -1157,7 +1157,7 @@ MonoBehaviour:
   goalDisplay: {fileID: 1809535419}
   turnsDisplay: {fileID: 1842311954}
   goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
-  characterMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
   openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
@@ -1215,8 +1215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
-  characterDataRequestEvent: {fileID: 11400000, guid: dcb5393757cbf5142ad7f8f7645461bc, type: 2}
-  characterMovedEvent: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   prefabBubbleBox: {fileID: 3996216760852934602, guid: a94c537606948374cbc00726702464fd, type: 3}
 --- !u!1 &1013319274
 GameObject:

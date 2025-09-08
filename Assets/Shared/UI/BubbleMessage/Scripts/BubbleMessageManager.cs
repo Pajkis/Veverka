@@ -6,10 +6,9 @@ using UnityEngine;
 public class BubbleMessageManager : MonoBehaviour
 {
     #region Fields
-    [Header("Events")]
-    [SerializeField] GoalResolvedEvent goalResolvedEvent;
-    [SerializeField] CharacterDataRequestEvent characterDataRequestEvent;
-    [SerializeField] CharacterMovedEvent characterMovedEvent;
+      [Header("Events")]
+      [SerializeField] GoalResolvedEvent goalResolvedEvent;
+      [SerializeField] CharacterEvents characterEvents;
 
     [Header("Prefab bubble")]
     [SerializeField] GameObject prefabBubbleBox;
@@ -40,9 +39,8 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        goalResolvedEvent.AddListener(OnGoalResolved);
-        characterDataRequestEvent.AddListener(OnCharacterDataReceived);
-        characterMovedEvent.AddListener(OnCharacterMoved);
+          goalResolvedEvent.AddListener(OnGoalResolved);
+          characterEvents.AddListener(OnCharacterEvent);
     }
 
     /// <summary>
@@ -50,60 +48,55 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        goalResolvedEvent.RemoveListener(OnGoalResolved);
-        characterDataRequestEvent.RemoveListener(OnCharacterDataReceived);
-        characterMovedEvent.RemoveListener(OnCharacterMoved);
+          goalResolvedEvent.RemoveListener(OnGoalResolved);
+          characterEvents.RemoveListener(OnCharacterEvent);
     }
-    /// <summary>
-    /// Gets called when the character moves. Updates the character's position and shows any pending goal message.
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnCharacterMoved(CharacterBasicPayload payload)
-    {
-        characterPosition = payload.Current;
+      /// <summary>
+      /// Handles character events for movement and data responses.
+      /// </summary>
+      /// <param name="payload"></param>
+      private void OnCharacterEvent(CharacterEventPayload payload)
+      {
+          if (payload.EventType == CharacterEventType.MoveCompleted)
+          {
+              characterPosition = payload.Current;
 
-        if (hasPendingGoal)
-        {
-            ShowGoalMessage();
-        }
-    }
+              if (hasPendingGoal)
+              {
+                  ShowGoalMessage();
+              }
+          }
+          else if (payload.EventType == CharacterEventType.DataResponse)
+          {
+              characterPosition = payload.Current;
+              if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
 
-    /// <summary>
-    /// on goal resolved event handler
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnGoalResolved(GoalBasicPayload payload)
-    {
-        pendingGoalPayload = payload;
-        hasPendingGoal = true;
-    }
+              Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
+              CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
+          }
+      }
 
-    /// <summary>
-    /// Shows the goal message bubble at the appropriate position relative to the character.
-    /// </summary>
-    private void ShowGoalMessage()
-    {
-        hasPendingGoal = false;
+      /// <summary>
+      /// on goal resolved event handler
+      /// </summary>
+      /// <param name="payload"></param>
+      private void OnGoalResolved(GoalBasicPayload payload)
+      {
+          pendingGoalPayload = payload;
+          hasPendingGoal = true;
+      }
 
-        Vector2Int offset = CalculateBubbleOffset(pendingGoalPayload.Position, characterPosition);
-        Vector2Int bubblePos = characterPosition + offset;
-        CreateBubble(bubblePos, pendingGoalPayload.GoalMessage, pendingGoalPayload.GoalMessageTime);
-    }
+      /// <summary>
+      /// Shows the goal message bubble at the appropriate position relative to the character.
+      /// </summary>
+      private void ShowGoalMessage()
+      {
+          hasPendingGoal = false;
 
-    /// <summary>
-    ///  on character data received event handler
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnCharacterDataReceived(CharacterBasicPayload payload)
-    {
-        if (!payload.ResponseData) return;
-
-        characterPosition = payload.Current;
-        if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
-
-        Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
-        CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
-    }
+          Vector2Int offset = CalculateBubbleOffset(pendingGoalPayload.Position, characterPosition);
+          Vector2Int bubblePos = characterPosition + offset;
+          CreateBubble(bubblePos, pendingGoalPayload.GoalMessage, pendingGoalPayload.GoalMessageTime);
+      }
 
     /// <summary>
     /// creates a bubble message at the specified grid position with the given type and display time.

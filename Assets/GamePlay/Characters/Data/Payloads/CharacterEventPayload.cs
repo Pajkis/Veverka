@@ -5,8 +5,7 @@ using UnityEngine;
 /// </summary>
 [System.Serializable]
 public struct CharacterEventPayload
-{
-    #region Core Character Data
+{  
     [Header("Core Character Data")]
     public Character Character;
     public CharacterEventType EventType;

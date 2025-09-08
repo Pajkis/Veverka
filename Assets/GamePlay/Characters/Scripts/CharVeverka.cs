@@ -12,8 +12,7 @@ namespace Veverka.Characters.Veverka
     {
         #region events 
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;
-        [SerializeField] CanPushQueryEvent canPushQueryEvent;
+          [SerializeField] CanPushQueryEvent canPushQueryEvent;
         #endregion
 
         // Queue for pending character data requests
@@ -28,7 +27,7 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.AddListener(HandleInput);
             settingDataBroadcastEvent.AddListener(OnSettingData);
-            characterDataRequestEvent.AddListener(OnCharacterData);
+              characterEvents.AddListener(OnCharacterEvent);
             settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
 
             // Listen for scene changes
@@ -42,7 +41,7 @@ namespace Veverka.Characters.Veverka
         {
             onArrowPressed.RemoveListener(HandleInput);
             settingDataBroadcastEvent.RemoveListener(OnSettingData);
-            characterDataRequestEvent.RemoveListener(OnCharacterData);
+              characterEvents.RemoveListener(OnCharacterEvent);
 
             // Remove scene change listener
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -79,17 +78,18 @@ namespace Veverka.Characters.Veverka
                 hasShownStartupMessage = true;
                 Debug.Log("Sending startup message from Veverka");
 
-                characterDataRequestEvent.Raise(new CharacterBasicPayload
-                {
-                    Character = this,
-                    Current = gridPosition,
-                    Direction = facingDirection,
-                    Duration = moveDuration,
-                    RequestData = false,
-                    ResponseData = true,
-                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                    CharacterBubbleMessageTime = 2.0f
-                });
+                  characterEvents.Raise(new CharacterEventPayload
+                  {
+                      Character = this,
+                      EventType = CharacterEventType.DataResponse,
+                      Current = gridPosition,
+                      Direction = facingDirection,
+                      Duration = moveDuration,
+                      RequestData = false,
+                      ResponseData = true,
+                      CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                      CharacterBubbleMessageTime = 2.0f
+                  });
             }
         }
 
@@ -97,38 +97,39 @@ namespace Veverka.Characters.Veverka
         /// on character data request - respond with character data
         /// </summary>
         /// <param name="payload"></param>
-        private void OnCharacterData(CharacterBasicPayload payload)
-        {
-            if (payload.RequestData)
-            {
-                // If character is currently moving, queue the request
-                if (smoothMover.IsMoving)
-                {
-                    hasPendingDataRequest = true;
-                    return;
-                }
+          private void OnCharacterEvent(CharacterEventPayload payload)
+          {
+              if (payload.EventType == CharacterEventType.DataRequest)
+              {
+                  // If character is currently moving, queue the request
+                  if (smoothMover.IsMoving)
+                  {
+                      hasPendingDataRequest = true;
+                      return;
+                  }
 
-                // Send current position immediately if not moving
-                SendCharacterData();
-            }
-        }
+                  // Send current position immediately if not moving
+                  SendCharacterData();
+              }
+          }
 
         /// <summary>
         /// Send character data response (for regular requests, not startup)
         /// </summary>
         private void SendCharacterData()
         {
-            characterDataRequestEvent.Raise(new CharacterBasicPayload
-            {
-                Character = this,
-                Current = gridPosition,
-                Direction = facingDirection,
-                Duration = moveDuration,
-                RequestData = false,
-                ResponseData = true,
-                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
-                CharacterBubbleMessageTime = 0f
-            });
+              characterEvents.Raise(new CharacterEventPayload
+              {
+                  Character = this,
+                  EventType = CharacterEventType.DataResponse,
+                  Current = gridPosition,
+                  Direction = facingDirection,
+                  Duration = moveDuration,
+                  RequestData = false,
+                  ResponseData = true,
+                  CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+                  CharacterBubbleMessageTime = 0f
+              });
         }
 
         #endregion
@@ -218,7 +219,8 @@ namespace Veverka.Characters.Veverka
             base.OnMoveComplete(targetPosition);
 
             // raise event, that character made a turn -> turn count
-            veverkaMoved.Raise(payload);
+              payload.EventType = CharacterEventType.MoveCompleted;
+              characterEvents.Raise(payload);
 
             // Handle any pending character data requests now that move is complete
             if (hasPendingDataRequest)

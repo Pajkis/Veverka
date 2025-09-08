@@ -46,4 +46,3 @@ public class CharacterEvents : GameEventSO<CharacterEventPayload>
     }
     #endregion
 }
-}
