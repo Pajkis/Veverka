@@ -12,7 +12,7 @@ namespace Veverka.Characters.Veverka
     {
         #region events 
         [SerializeField] DirectionEvent onArrowPressed;
-          [SerializeField] CanPushQueryEvent canPushQueryEvent;
+          [SerializeField] NutEvents nutEvents;
         #endregion
 
         // Queue for pending character data requests
@@ -165,8 +165,9 @@ namespace Veverka.Characters.Veverka
                 if (gridQuery.TileType == TileType.Nut)
                 {
                     // Query if the nut can be pushed in this direction
-                    var pushQuery = new CanPushQueryPayload
+                    var pushQuery = new NutEventPayload
                     {
+                        EventType = NutEventType.CanPushQuery,
                         Position = targetPos,
                         Direction = inputDirection,
                         Distance = distance,
@@ -175,7 +176,7 @@ namespace Veverka.Characters.Veverka
                     };
 
                     // Push query and push if possible
-                    canPushQueryEvent.Raise(pushQuery);
+                    nutEvents.Raise(pushQuery);
 
                     // If there's a nut and it can be pushed
                     if (pushQuery.CanBePushed)

@@ -107,7 +107,7 @@ MonoBehaviour:
   characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   onArrowPressed: {fileID: 11400000, guid: 5934e5ff874e9fc48b7d5f329cfdc4b1, type: 2}
-  canPushQueryEvent: {fileID: 11400000, guid: 1f6653d05a638b14b94fcdfce724a1df, type: 2}
+  nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
 --- !u!114 &-7049510064372506974
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,10 +16,7 @@ public abstract class NutTile : TileObject
     #endregion
 
     #region  nut events
-    [SerializeField]  protected NutInGoalEvent nutInGoalEvent;
-    [SerializeField]  protected NutSetEvent nutSetEvent;
-    [SerializeField]  protected NutRemovedEvent nutRemovedEvent;   
-    [SerializeField] protected CanPushQueryEvent canPushQueryEvent;
+    [SerializeField] protected NutEvents nutEvents;
     #endregion
 
     #region Event handling
@@ -29,16 +26,16 @@ public abstract class NutTile : TileObject
     protected void OnEnable()
     {
         settingDataBroadcastEvent.AddListener(OnSettingData);
-        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);   
-        canPushQueryEvent.AddListener(OnCanPushQuery);
+        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+        nutEvents.AddListener(OnNutEvent);
     }
     /// <summary>
     /// remove listeners
     /// </summary>
     protected void OnDisable()
     {
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);     
-        canPushQueryEvent.RemoveListener(OnCanPushQuery);
+        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        nutEvents.RemoveListener(OnNutEvent);
     }
 
     /// <summary>
@@ -79,8 +76,9 @@ public abstract class NutTile : TileObject
         this.nutType = nutType;
 
         // raise event to register nut tile in the GameGrid
-        nutSetEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutSet,
             Position = gridPosition,
             NutType = nutType,
             NutTile = this,
@@ -94,9 +92,14 @@ public abstract class NutTile : TileObject
     /// Handle can push query - only respond if it's for this nut's position
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCanPushQuery(CanPushQueryPayload payload)
+    private void OnNutEvent(NutEventPayload payload)
     {
-        // Check if this nut matches with positon in payload
+        if (payload.EventType != NutEventType.CanPushQuery)
+        {
+            return;
+        }
+
+        // Check if this nut matches with position in payload
         if (GridPosition != payload.Position)
         {
             return;
@@ -107,7 +110,7 @@ public abstract class NutTile : TileObject
         if (payload.CanBePushed)
         {
             Move(payload.Direction, payload.Distance, payload.Duration);
-        }        
+        }
      }
 
     /// <summary>
@@ -179,8 +182,9 @@ public abstract class NutTile : TileObject
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
         // remove nut from previous position
-        nutRemovedEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutRemoved,
             Position = GridPosition,
         });
 
@@ -193,8 +197,9 @@ public abstract class NutTile : TileObject
         });
         if (query.TileType != TileType.Goal)
         {
-            nutSetEvent.Raise(new NutBasicPayload
+            nutEvents.Raise(new NutEventPayload
             {
+                EventType = NutEventType.NutSet,
                 Position = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
@@ -203,8 +208,9 @@ public abstract class NutTile : TileObject
         else
         {
             // nut enters goal event raise
-            nutInGoalEvent.Raise(new NutBasicPayload
+            nutEvents.Raise(new NutEventPayload
             {
+                EventType = NutEventType.NutInGoal,
                 Position = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
@@ -240,13 +246,15 @@ public abstract class NutTile : TileObject
         Debug.Log($"Undo movable tile:  {previous} → {current}");
         GridPosition = previous;
 
-        nutRemovedEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutRemoved,
             Position = current
         });
 
-        nutSetEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutSet,
             NutType = this.nutType,
             NutTile = this,
             Position = previous

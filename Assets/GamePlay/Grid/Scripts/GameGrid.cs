@@ -21,8 +21,7 @@ namespace Veverka.GridSystem.GameGrid
         [SerializeField] private LevelSelectEvent levelSelectEvent;
         [SerializeField] private LevelDatabase levelDatabase;
 
-        [SerializeField] private NutSetEvent nutSetEvent;
-        [SerializeField] private NutRemovedEvent nutRemovedEvent;
+        [SerializeField] private NutEvents nutEvents;
         [SerializeField] private GoalSetEvent goalSetEvent;
         [SerializeField] private GoalResolvedEvent goalResolvedEvent;
         [SerializeField] private WallSetEvent wallSetEvent;
@@ -89,8 +88,7 @@ namespace Veverka.GridSystem.GameGrid
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
             gridEvents.AddListener(OnGridEvent);
-            nutSetEvent.AddListener(OnNutSet);
-            nutRemovedEvent.AddListener(OnNutRemoved);
+            nutEvents.AddListener(OnNutEvent);
             goalSetEvent.AddListener(OnGoalSet);
             goalResolvedEvent.AddListener(OnGoalResolved);
             wallSetEvent.AddListener(OnWallSet);
@@ -105,8 +103,7 @@ namespace Veverka.GridSystem.GameGrid
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
             gridEvents.RemoveListener(OnGridEvent);
-            nutSetEvent.RemoveListener(OnNutSet);
-            nutRemovedEvent.RemoveListener(OnNutRemoved);
+            nutEvents.RemoveListener(OnNutEvent);
             goalSetEvent.RemoveListener(OnGoalSet);
             goalResolvedEvent.RemoveListener(OnGoalResolved);
             wallSetEvent.RemoveListener(OnWallSet);
@@ -524,11 +521,24 @@ namespace Veverka.GridSystem.GameGrid
             roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
         }
 
+        private void OnNutEvent(NutEventPayload payload)
+        {
+            switch (payload.EventType)
+            {
+                case NutEventType.NutSet:
+                    OnNutSet(payload);
+                    break;
+                case NutEventType.NutRemoved:
+                    OnNutRemoved(payload);
+                    break;
+            }
+        }
+
         /// <summary>
         /// Set nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnNutSet(NutBasicPayload payload)
+        private void OnNutSet(NutEventPayload payload)
         {
             if (!IsInGrid(payload.Position))
             {
@@ -543,7 +553,7 @@ namespace Veverka.GridSystem.GameGrid
         /// Remove nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnNutRemoved(NutBasicPayload payload)
+        private void OnNutRemoved(NutEventPayload payload)
         {
             if (!IsInGrid(payload.Position))
             {

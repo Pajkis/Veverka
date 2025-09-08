@@ -8,7 +8,7 @@ public class BasicGoalTile : GoalTile
     /// On nut in goal event settlement
     /// </summary>
     /// <param name="payload"></param>
-    protected override void OnNutInGoal(NutBasicPayload payload)
+    protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)

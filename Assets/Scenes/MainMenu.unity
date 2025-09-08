@@ -936,8 +936,7 @@ MonoBehaviour:
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
-  nutSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
-  nutRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
+  nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
   goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
   wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}

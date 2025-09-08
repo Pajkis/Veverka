@@ -8,7 +8,7 @@ public abstract class GoalTile : TileObject
     protected GoalType goalType;
 
     #region events
-    [SerializeField] protected NutInGoalEvent nutInGoalEvent;
+    [SerializeField] protected NutEvents nutEvents;
     [SerializeField] protected GoalSetEvent goalSetEvent;
     [SerializeField] protected GoalResolvedEvent goalResolvedEvent;
     [SerializeField] protected WallSetEvent wallSetEvent;
@@ -39,7 +39,7 @@ public abstract class GoalTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        nutInGoalEvent.AddListener(OnNutInGoal);
+        nutEvents.AddListener(OnNutEvent);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public abstract class GoalTile : TileObject
     /// </summary>
     protected void OnDisable()
     {
-        nutInGoalEvent.RemoveListener(OnNutInGoal);
+        nutEvents.RemoveListener(OnNutEvent);
     }
     #endregion
 
@@ -56,7 +56,15 @@ public abstract class GoalTile : TileObject
     /// Recaction on nut reaching the goal
     /// </summary>
     /// <param name="payload"></param>
-    protected virtual void OnNutInGoal(NutBasicPayload payload)
+    private void OnNutEvent(NutEventPayload payload)
+    {
+        if (payload.EventType == NutEventType.NutInGoal)
+        {
+            OnNutInGoal(payload);
+        }
+    }
+
+    protected virtual void OnNutInGoal(NutEventPayload payload)
     { }
     #endregion
 }

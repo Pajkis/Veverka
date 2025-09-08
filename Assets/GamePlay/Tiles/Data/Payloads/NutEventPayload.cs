@@ -1,17 +1,21 @@
 using UnityEngine;
 
 /// <summary>
-/// Payload for querying if a nut can be pushed in a specific direction
+/// Unified payload for nut events.
 /// </summary>
 [System.Serializable]
-public class CanPushQueryPayload
+public class NutEventPayload
 {
-    // Input parameters
+    public NutEventType EventType;
+
+    // Basic nut data
     public Vector2Int Position;
+    public NutType NutType;
+    public NutTile NutTile;
+
+    // Push query data
     public Direction Direction;
     public int Distance;
     public float Duration;
-
-    // Result - filled by the nut tile that responds
     public bool CanBePushed;
 }
