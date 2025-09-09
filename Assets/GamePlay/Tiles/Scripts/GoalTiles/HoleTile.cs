@@ -30,11 +30,12 @@ public class HoleTile : GoalTile
                 Destroy(gameObject);
 
                 // Set wall in the position of the hole
-                roadSetEvent.Raise(new RoadBasicPayload
+                roadEvents.Raise(new RoadEventPayload
                 {
+                    EventType = RoadEventType.RoadSet,
                     Position = payload.Position,
                     RoadType = RoadType.StoneFilledHole,
-                    instantiateTile = true,
+                    InstantiateTile = true,
                 });
             }
             else

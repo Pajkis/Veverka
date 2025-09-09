@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13eb10dc340e94342a4d8e5ff94b1fe7, type: 3}
-  m_Name: RoadSetEvent
+  m_Script: {fileID: 11500000, guid: a34a9bc3e96e64a45b9552adde4dadcc, type: 3}
+  m_Name: WallEvents
   m_EditorClassIdentifier: 
   onEvent:
     m_PersistentCalls:

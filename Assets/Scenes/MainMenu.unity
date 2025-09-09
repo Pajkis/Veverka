@@ -938,8 +938,8 @@ MonoBehaviour:
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
-  wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
-  roadSetEvent: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
+  wallEvents: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}

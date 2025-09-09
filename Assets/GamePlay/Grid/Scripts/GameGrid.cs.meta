@@ -12,8 +12,8 @@ MonoImporter:
   - nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   - goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   - tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
-  - wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
-  - roadSetEvent: {instanceID: 0}
+  - wallEvents: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  - roadEvents: {instanceID: 0}
   - emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   - roadPrefab: {instanceID: 0}
   - roadStonePrefab: {instanceID: 0}

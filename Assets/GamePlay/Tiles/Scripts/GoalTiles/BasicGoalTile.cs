@@ -30,11 +30,12 @@ public class BasicGoalTile : GoalTile
             // Build wall if stone nut reached the goal
             if (payload.NutType == NutType.StoneNut)
             {
-                wallSetEvent.Raise(new WallBasicPayload
+                wallEvents.Raise(new WallEventPayload
                 {
+                    EventType = WallEventType.WallSet,
                     Position = payload.Position,
                     WallType = WallType.StoneWall,
-                    instantiateTile = true,
+                    InstantiateTile = true,
                 });
             }
         }        

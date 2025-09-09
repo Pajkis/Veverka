@@ -22,8 +22,8 @@ namespace Veverka.GridSystem.GameGrid
 
         [SerializeField] private NutEvents nutEvents;
         [SerializeField] private GoalEvents goalEvents;
-        [SerializeField] private WallSetEvent wallSetEvent;
-        [SerializeField] private RoadSetEvent roadSetEvent;
+        [SerializeField] private WallEvents wallEvents;
+        [SerializeField] private RoadEvents roadEvents;
         #endregion
 
         #region tile objects
@@ -88,8 +88,8 @@ namespace Veverka.GridSystem.GameGrid
             gridEvents.AddListener(OnGridEvent);
             nutEvents.AddListener(OnNutEvent);
             goalEvents.AddListener(OnGoalEvent);
-            wallSetEvent.AddListener(OnWallSet);
-            roadSetEvent.AddListener(OnRoadSet);
+            wallEvents.AddListener(OnWallEvent);
+            roadEvents.AddListener(OnRoadEvent);
         }
 
         /// <summary>
@@ -102,8 +102,8 @@ namespace Veverka.GridSystem.GameGrid
             gridEvents.RemoveListener(OnGridEvent);
             nutEvents.RemoveListener(OnNutEvent);
             goalEvents.RemoveListener(OnGoalEvent);
-            wallSetEvent.RemoveListener(OnWallSet);
-            roadSetEvent.RemoveListener(OnRoadSet);
+            wallEvents.RemoveListener(OnWallEvent);
+            roadEvents.RemoveListener(OnRoadEvent);
         }
 
         private void OnGridEvent(GridEventPayload payload)
@@ -463,58 +463,68 @@ namespace Veverka.GridSystem.GameGrid
         #endregion
 
         #region tile handling
+        
         /// <summary>
-        /// On wall set event - instantiate wall prefab and set tile type in grid
+        /// Handles wall-related events.
         /// </summary>
         /// <param name="payload"></param>
-        private void OnWallSet(WallBasicPayload payload)
+        private void OnWallEvent(WallEventPayload payload)
         {
-            // instantiate wall prefab
-            if (payload.instantiateTile)
-            { 
-                GameObject tile;
-                if (payload.WallType == WallType.StoneWall)
-                {
-                    tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
-                else
-                {
-                    tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
+            switch (payload.EventType)
+            {
+                case WallEventType.WallSet:
+                    if (payload.InstantiateTile)
+                    {
+                        GameObject tile;
+                        if (payload.WallType == WallType.StoneWall)
+                        {
+                            tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
+                        else
+                        {
+                            tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
 
-                tile.transform.SetParent(gridRoot, false);
-                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                        tile.transform.SetParent(gridRoot, false);
+                        tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    }
+                    // set tile and wall type in grid
+                    SetTileType(payload.Position, TileType.Wall);
+                    wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
+                    break;
             }
-            // set tile and wall type in grid
-            SetTileType(payload.Position, TileType.Wall);
-            wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
         }
 
         /// <summary>
-        /// 
+        /// Handles road-related events.
         /// </summary>
         /// <param name="payload"></param>
-        private void OnRoadSet(RoadBasicPayload payload)
+        private void OnRoadEvent(RoadEventPayload payload)
         {
-            if (payload.instantiateTile) 
+            switch (payload.EventType)
             {
-                GameObject tile;
-                if (payload.RoadType == RoadType.StoneFilledHole)
-                {
-                    tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
-                else
-                {
-                    tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
+                case RoadEventType.RoadSet:
+                    if (payload.InstantiateTile)
+                    {
+                        GameObject tile;
+                        if (payload.RoadType == RoadType.StoneFilledHole)
+                        {
+                            tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
+                        else
+                        {
+                            tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
 
-                tile.transform.SetParent(gridRoot, false);
-                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                        tile.transform.SetParent(gridRoot, false);
+                        tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    }
+
+                    // set tile type and road type in grid
+                    SetTileType(payload.Position, TileType.Road);
+                    roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+                    break;
             }
-
-            // set tile type and road type in grid
-            SetTileType(payload.Position, TileType.Road);
-            roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
         }
 
         private void OnNutEvent(NutEventPayload payload)
