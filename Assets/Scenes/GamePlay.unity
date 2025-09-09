@@ -1158,7 +1158,7 @@ MonoBehaviour:
   turnsDisplay: {fileID: 1842311954}
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
-  playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
 --- !u!4 &988765905
@@ -1349,7 +1349,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   logButtonProcessing: 0
 --- !u!114 &1013319281
 MonoBehaviour:

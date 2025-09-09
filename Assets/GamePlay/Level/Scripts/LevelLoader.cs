@@ -12,7 +12,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelSelectEvent levelSelectEvent;
     [SerializeField] private GoToSceneEvent goToSceneEvent;
     [SerializeField] private GridEvents gridEvents;
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private LevelDatabase levelDatabase;
 
     [Header("Level Management")]
@@ -45,7 +45,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         // play music
-        playMusicEvent.Raise(MusicType.Game);
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Game });
 
         // invoke level reset
         levelSelectEvent.Raise(new LevelSelectPayload

@@ -14,7 +14,7 @@ public class BasicGoalTile : GoalTile
         if (GridPosition == payload.Position)
         {
             // Play goal reached sound effect
-            playSfxEvent.Raise(SfxType.GoalReached);
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
             // Raise goal reached event
             goalEvents.Raise(new GoalEventPayload
             {

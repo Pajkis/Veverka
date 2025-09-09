@@ -13,7 +13,7 @@ public abstract class TileObject : MonoBehaviour
     [Header("Events")]
     [SerializeField] protected SettingEvents settingEvents;
     [SerializeField] protected GridEvents gridEvents;
-    [SerializeField] protected PlaySfxEvent playSfxEvent;
+    [SerializeField] protected AudioEvents audioEvents;
     #endregion
 
     #region Configs

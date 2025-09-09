@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class GameInit : MonoBehaviour
 {
-    [SerializeField] private AudioInitEvent audioInitEvent;
+    [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private GoToSceneEvent goToSceneEvent;
 
     /// <summary>
@@ -21,7 +21,7 @@ public class GameInit : MonoBehaviour
     {
         // call game settings init
         GameSettings.Instance.InitGameSettings();
-        audioInitEvent.Raise();
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.Init });
 
         // Game start delay
         StartCoroutine(GameStartDelayCoroutine());

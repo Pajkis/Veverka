@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2afbdd2404ff4abfa5e8aab19488f05d, type: 3}
-  m_Name: AudioInitEvent
+  m_Script: {fileID: 11500000, guid: 8e0a83b483164f7fb208a21918f399a9, type: 3}
+  m_Name: AudioEvents
   m_EditorClassIdentifier:
   onEvent:
     m_PersistentCalls:

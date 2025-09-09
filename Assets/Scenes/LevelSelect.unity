@@ -1998,7 +1998,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   logButtonProcessing: 0
 --- !u!1001 &1624424778
 PrefabInstance:

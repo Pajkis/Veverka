@@ -19,7 +19,7 @@ public class GamePlay : MonoBehaviour
     [Header("Events")]
     [SerializeField] private GoalEvents goalEvents;
     [SerializeField] private CharacterEvents characterEvents;
-    [SerializeField] private PlaySfxEvent playSfxEvent;
+    [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private OpenOverlayEvent openOverlayEvent;
 
     [Header("Level Data")]
@@ -35,7 +35,7 @@ public class GamePlay : MonoBehaviour
     void Awake()
     {
         //undo manager initialization
-        undoManager = new UndoManager(playSfxEvent);
+        undoManager = new UndoManager(audioEvents);
         TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);         
         
     }

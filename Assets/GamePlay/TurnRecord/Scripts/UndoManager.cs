@@ -8,11 +8,11 @@ public class UndoManager
 {
     // stack of turn records
     private Stack<SingleTurnRecord> history = new();
-    private readonly PlaySfxEvent playSfxEvent;
+    private readonly AudioEvents audioEvents;
 
-    public UndoManager(PlaySfxEvent playSfxEvent)
+    public UndoManager(AudioEvents audioEvents)
     {
-        this.playSfxEvent = playSfxEvent;
+        this.audioEvents = audioEvents;
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class UndoManager
             return false;
         }
 
-        playSfxEvent?.Raise(SfxType.Undo);
+        audioEvents?.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Undo });
         var turn = history.Pop();
         turn.Undo();
         return true;

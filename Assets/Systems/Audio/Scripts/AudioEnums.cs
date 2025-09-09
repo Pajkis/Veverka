@@ -35,9 +35,20 @@ public enum MusicType
 /// sound of UI
 /// </summary>
 public enum UiType
-{ 
+{
   ButtonClick,
   ButtonHover,
   Slider
+}
+
+/// <summary>
+/// Types of audio events handled by <see cref="AudioEvents"/>.
+/// </summary>
+public enum AudioEventType
+{
+    Init,
+    PlayMusic,
+    PlaySfx,
+    PlayUi
 }
 

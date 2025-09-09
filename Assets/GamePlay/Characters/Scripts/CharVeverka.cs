@@ -208,7 +208,7 @@ namespace Veverka.Characters.Veverka
             else
             {
                 facingDirection = Rotate(inputDirection);
-                playSfxEvent.Raise(SfxType.VeverkaRotate);
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
             }
         }
 
@@ -217,7 +217,7 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         protected override void OnMoveStart()
         {
-            playSfxEvent.Raise(SfxType.VeverkaMove);
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
         }
 
         /// <summary>

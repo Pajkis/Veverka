@@ -169,7 +169,7 @@ MonoBehaviour:
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
-  playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
   levelSetManager: {fileID: 11400000, guid: a23fa7146678e6f4d8f4bad900248039, type: 2}
 --- !u!1 &827205070

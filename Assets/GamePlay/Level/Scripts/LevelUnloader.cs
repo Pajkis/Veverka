@@ -10,13 +10,13 @@ public class LevelUnloader : MonoBehaviour
 
     [SerializeField] private GoToSceneEvent goToSceneEvent;
 
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private AudioEvents audioEvents;
 
     void Start()
     {
         // raise reset event
         gridEvents.Raise(new GridEventPayload { EventType = GridEventType.ResetGrid });
-        playMusicEvent.Raise(MusicType.Menu);
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Menu });
         StartCoroutine(UnloadLevelCoroutine());
     }
 

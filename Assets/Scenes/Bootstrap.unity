@@ -414,7 +414,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f2e51527c527b14490f55b1c5b1f1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioInitEvent: {fileID: 11400000, guid: 3adef766108b4d05816450a3a75c9120, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
 --- !u!4 &862168025
 Transform:
@@ -600,10 +600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioConfig: {fileID: 11400000, guid: 05401f8670677d243812c794083e48d1, type: 2}
-  playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
-  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
-  playMusicEvent: {fileID: 11400000, guid: eff137fc63a2423bbe6f4efbac84f4ff, type: 2}
-  audioInitEvent: {fileID: 11400000, guid: 3adef766108b4d05816450a3a75c9120, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   veverkaMove: {fileID: 8300000, guid: 786703596d5398742b0546fb2a51f1d9, type: 3}
   nutMove: {fileID: 8300000, guid: 2ea1a876dd39bf64ca740b7b653b94d6, type: 3}

@@ -8,10 +8,7 @@ public class AudioManager : MonoBehaviour
 
     #region events
     [Header("Events")]
-    [SerializeField] private PlaySfxEvent playSfxEvent;
-    [SerializeField] private PlayUiEvent playUiEvent;
-    [SerializeField] private PlayMusicEvent playMusicEvent;
-    [SerializeField] private AudioInitEvent audioInitEvent;
+    [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private SettingEvents settingEvents;
     #endregion
 
@@ -68,11 +65,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        audioInitEvent?.AddListener(Initialize);
-        playSfxEvent?.AddListener(PlaySfx);
-        playUiEvent?.AddListener(PlayUi);
-        playMusicEvent?.AddListener(PlayRandomMusic);
-          settingEvents?.AddListener(OnSettingsEvent);
+        audioEvents?.AddListener(OnAudioEvent);
+        settingEvents?.AddListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -80,11 +74,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        audioInitEvent?.RemoveListener(Initialize);
-        playSfxEvent?.RemoveListener(PlaySfx);
-        playUiEvent?.RemoveListener(PlayUi);
-        playMusicEvent?.RemoveListener(PlayRandomMusic);
-          settingEvents?.RemoveListener(OnSettingsEvent);
+        audioEvents?.RemoveListener(OnAudioEvent);
+        settingEvents?.RemoveListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -96,6 +87,28 @@ public class AudioManager : MonoBehaviour
         if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
         {
             PlayRandomMusic(currentMusicType);
+        }
+    }
+
+    /// <summary>
+    /// Handles all audio related events and routes them to appropriate methods.
+    /// </summary>
+    private void OnAudioEvent(AudioEventPayload payload)
+    {
+        switch (payload.EventType)
+        {
+            case AudioEventType.Init:
+                Initialize();
+                break;
+            case AudioEventType.PlayMusic:
+                PlayRandomMusic(payload.Music);
+                break;
+            case AudioEventType.PlaySfx:
+                PlaySfx(payload.Sfx);
+                break;
+            case AudioEventType.PlayUi:
+                PlayUi(payload.Ui);
+                break;
         }
     }
 

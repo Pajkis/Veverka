@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// </summary>
 public class UIButtonAudioHook : MonoBehaviour
 {
-    [SerializeField] private PlayUiEvent playUiEvent;
+    [SerializeField] private AudioEvents audioEvents;
 
     [Header("Debug")]
     [SerializeField] private bool logButtonProcessing = false;
@@ -65,8 +65,7 @@ public class UIButtonAudioHook : MonoBehaviour
         {            
             button.onClick.AddListener(() =>
             {
-                if (playUiEvent != null)
-                    playUiEvent.Raise(UiType.ButtonClick);
+                audioEvents?.Raise(new AudioEventPayload { EventType = AudioEventType.PlayUi, Ui = UiType.ButtonClick });
             });
 
             if (logButtonProcessing)
@@ -107,8 +106,7 @@ public class UIButtonAudioHook : MonoBehaviour
         };
         entryHover.callback.AddListener((data) =>
         {
-            if (playUiEvent != null)
-                playUiEvent.Raise(UiType.ButtonHover);
+            audioEvents?.Raise(new AudioEventPayload { EventType = AudioEventType.PlayUi, Ui = UiType.ButtonHover });
         });
 
         trigger.triggers.Add(entryHover);

@@ -24,7 +24,7 @@ public abstract class Character : MonoBehaviour
     #region Events
     [Header("Events")]
     [SerializeField] protected GridEvents gridEvents;
-    [SerializeField] protected PlaySfxEvent playSfxEvent;    
+    [SerializeField] protected AudioEvents audioEvents;
     [SerializeField] protected SettingEvents settingEvents;
       [SerializeField] protected CharacterEvents characterEvents;
     #endregion

@@ -14,7 +14,7 @@ public class HoleTile : GoalTile
         if (GridPosition == payload.Position)
         {
             // Play goal reached sound effect
-            playSfxEvent.Raise(SfxType.GoalReached);
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
             // Raise goal reached event
             if (payload.NutType == NutType.StoneNut)
             {
