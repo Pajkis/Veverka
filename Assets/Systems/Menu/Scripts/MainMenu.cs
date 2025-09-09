@@ -5,15 +5,18 @@ using UnityEngine;
 /// </summary>
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
-    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     /// <summary>
     /// Handles the click on play button event
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
-      goToSceneEvent.Raise(SceneType.LevelMenu);
+      sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+      {
+          EventType = SceneNavigationEventType.GoToScene,
+          Scene = SceneType.LevelMenu
+      });
     }
 
     /// <summary>
@@ -21,7 +24,11 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
     {    
-        openOverlayEvent.Raise(OverlayType.GameHelp);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.OpenOverlay,
+            Overlay = OverlayType.GameHelp
+        });
     }
 
     /// <summary>
@@ -29,7 +36,11 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleCreditsButtonOnClickEvent()
     { 
-        openOverlayEvent.Raise(OverlayType.Credits);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.OpenOverlay,
+            Overlay = OverlayType.Credits
+        });
     }
 
     /// <summary>
@@ -37,7 +48,11 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-       openOverlayEvent.Raise(OverlayType.SettingsMenu);
+       sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+       {
+           EventType = SceneNavigationEventType.OpenOverlay,
+           Overlay = OverlayType.SettingsMenu
+       });
     }
 
     /// <summary>

@@ -8,7 +8,7 @@ public class LevelUnloader : MonoBehaviour
 {
     [SerializeField] private GridEvents gridEvents;
 
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     [SerializeField] private AudioEvents audioEvents;
 
@@ -36,7 +36,11 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        goToSceneEvent.Raise(SceneType.MainMenu);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.MainMenu
+        });
      }
 
 

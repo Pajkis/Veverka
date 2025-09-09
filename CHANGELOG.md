@@ -212,8 +212,7 @@ Audio handling has been reworked with `AudioManager` subscribing to dedicated ev
     - `PlayMusicEvent`
     - `PlaySfxEvent`
     - `PlayUiEvent`
-    - `GoToSceneEvent`
-    - `OpenOverlayEvent`
+    - `SceneNavigationEvent`
 - **Payload Documentation**
     - `AudioVolumePayload` (volume adjustment).
 - **Enum Documentation**
@@ -226,7 +225,7 @@ Audio handling has been reworked with `AudioManager` subscribing to dedicated ev
 - **SceneFlow System**
     - Replaced hardcoded string-based loading with **Addressable `AssetReference`** via `SceneRefProvider`.
     - Overlays are now instantiated through `OverlayPrefabProvider` instead of `Resources.Load`.
-    - `SceneFlowManager` rewritten as a `MonoBehaviour` with event listeners (`GoToSceneEvent`, `OpenOverlayEvent`) instead of static methods.
+    - `SceneFlowManager` rewritten as a `MonoBehaviour` with event listener (`SceneNavigationEvent`) instead of static methods.
 - **Audio System**
     - `AudioManager` upgraded:
         - Subscribes to `PlaySfxEvent`, `PlayUiEvent`, `PlayMusicEvent`, `AudioInitEvent`, and `AudioVolumeEvent`.

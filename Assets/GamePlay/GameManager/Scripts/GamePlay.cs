@@ -20,7 +20,7 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private GoalEvents goalEvents;
     [SerializeField] private CharacterEvents characterEvents;
     [SerializeField] private AudioEvents audioEvents;
-    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     [Header("Level Data")]
     [SerializeField] private LevelDatabase levelDatabase;
@@ -83,7 +83,11 @@ public class GamePlay : MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
-                openOverlayEvent.Raise(OverlayType.PauseMenu);
+                sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+                {
+                    EventType = SceneNavigationEventType.OpenOverlay,
+                    Overlay = OverlayType.PauseMenu
+                });
             }
         }
     }
@@ -123,7 +127,11 @@ public class GamePlay : MonoBehaviour
         if (levelGoalCount <= 0) 
         {
             Debug.Log("Level completed");
-            openOverlayEvent.Raise(OverlayType.LevelFinishedMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.OpenOverlay,
+                Overlay = OverlayType.LevelFinishedMenu
+            });
         }
 
         // reset history recording

@@ -415,7 +415,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!4 &862168025
 Transform:
   m_ObjectHideFlags: 0
@@ -568,8 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e85abd43fb99a04c975220600647898, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
-  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!1 &1640321002
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,7 +4,7 @@ using UnityEngine;
 public class GameInit : MonoBehaviour
 {
     [SerializeField] private AudioEvents audioEvents;
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     /// <summary>
     /// Ensures the initializer persists across scene loads.
@@ -38,7 +38,11 @@ public class GameInit : MonoBehaviour
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
-        goToSceneEvent.Raise(SceneType.MainMenu);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.MainMenu
+        });
     }
 
 
