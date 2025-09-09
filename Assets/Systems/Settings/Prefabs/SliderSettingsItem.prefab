@@ -158,8 +158,7 @@ MonoBehaviour:
   settingType: 3
   minValue: 1
   maxValue: 10
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!222 &7539452457846179150
 CanvasRenderer:
   m_ObjectHideFlags: 0

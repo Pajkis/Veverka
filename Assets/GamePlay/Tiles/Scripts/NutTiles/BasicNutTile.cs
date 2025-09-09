@@ -12,7 +12,7 @@ public class BasicNutTile : NutTile
     protected override void OnMoveStart()
     {        
         base.OnMoveStart();
-        playSfxEvent.Raise(SfxType.NutMove);
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.NutMove });
     }
  
     #endregion

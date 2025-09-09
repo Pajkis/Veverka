@@ -8,11 +8,10 @@ public abstract class GoalTile : TileObject
     protected GoalType goalType;
 
     #region events
-    [SerializeField] protected NutInGoalEvent nutInGoalEvent;
-    [SerializeField] protected GoalSetEvent goalSetEvent;
-    [SerializeField] protected GoalResolvedEvent goalResolvedEvent;
-    [SerializeField] protected WallSetEvent wallSetEvent;
-    [SerializeField] protected RoadSetEvent roadSetEvent;
+    [SerializeField] protected NutEvents nutEvents;
+    [SerializeField] protected GoalEvents goalEvents;
+    [SerializeField] protected WallEvents wallEvents;
+    [SerializeField] protected RoadEvents roadEvents;
     #endregion
     
     #region Init
@@ -26,8 +25,9 @@ public abstract class GoalTile : TileObject
     {
         base.Init(tileType, gridPosition);
         this.goalType = goalType;
-        goalSetEvent.Raise(new GoalBasicPayload
+        goalEvents.Raise(new GoalEventPayload
         {
+            EventType = GoalEventsType.GoalSet,
             Position = gridPosition,
             GoalType = goalType,
             GoalTile = this,
@@ -39,7 +39,7 @@ public abstract class GoalTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        nutInGoalEvent.AddListener(OnNutInGoal);
+        nutEvents.AddListener(OnNutEvent);
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public abstract class GoalTile : TileObject
     /// </summary>
     protected void OnDisable()
     {
-        nutInGoalEvent.RemoveListener(OnNutInGoal);
+        nutEvents.RemoveListener(OnNutEvent);
     }
     #endregion
 
@@ -56,7 +56,15 @@ public abstract class GoalTile : TileObject
     /// Recaction on nut reaching the goal
     /// </summary>
     /// <param name="payload"></param>
-    protected virtual void OnNutInGoal(NutBasicPayload payload)
+    private void OnNutEvent(NutEventPayload payload)
+    {
+        if (payload.EventType == NutEventType.NutInGoal)
+        {
+            OnNutInGoal(payload);
+        }
+    }
+
+    protected virtual void OnNutInGoal(NutEventPayload payload)
     { }
     #endregion
 }

@@ -7,8 +7,7 @@ using UnityEngine.AddressableAssets;
 public class SceneFlowManager : MonoBehaviour
 {
     [Header("Events")]
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
-    [SerializeField] private OpenOverlayEvent openOverlayEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     void Awake()
     {
@@ -17,14 +16,25 @@ public class SceneFlowManager : MonoBehaviour
 
     private void OnEnable()
     {
-        goToSceneEvent?.AddListener(GoToScene);
-        openOverlayEvent?.AddListener(OpenOverlay);
+        sceneNavigationEvents?.AddListener(OnSceneNavigationEvent);
     }
 
     private void OnDisable()
     {
-        goToSceneEvent?.RemoveListener(GoToScene);
-        openOverlayEvent?.RemoveListener(OpenOverlay);
+        sceneNavigationEvents?.RemoveListener(OnSceneNavigationEvent);
+    }
+
+    private void OnSceneNavigationEvent(SceneNavigationEventPayload payload)
+    {
+        switch (payload.EventType)
+        {
+            case SceneNavigationEventType.GoToScene:
+                GoToScene(payload.Scene);
+                break;
+            case SceneNavigationEventType.OpenOverlay:
+                OpenOverlay(payload.Overlay);
+                break;
+        }
     }
 
     /// <summary>

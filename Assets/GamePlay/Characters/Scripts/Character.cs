@@ -14,7 +14,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
     protected float animationSpeed;
-    protected CharacterBasicPayload payload = new();
+      protected CharacterEventPayload payload = new();
 
     protected SmoothMover smoothMover;
 
@@ -23,11 +23,10 @@ public abstract class Character : MonoBehaviour
 
     #region Events
     [Header("Events")]
-    [SerializeField] protected TileQueryEvent tileQueryEvent;
-    [SerializeField] protected PlaySfxEvent playSfxEvent;    
-    [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;
-    [SerializeField] protected CharacterDataRequestEvent characterDataRequestEvent;
+    [SerializeField] protected GridEvents gridEvents;
+    [SerializeField] protected AudioEvents audioEvents;
+    [SerializeField] protected SettingEvents settingEvents;
+      [SerializeField] protected CharacterEvents characterEvents;
     #endregion
 
     #region Configs
@@ -52,9 +51,10 @@ public abstract class Character : MonoBehaviour
     /// Get animation speed from settings
     /// </summary>
     /// <param name="payload"></param>
-    protected void OnSettingData(SettingDataPayload payload)
+    protected void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
+        if (payload.EventType == SettingsEventType.DataBroadcast &&
+            payload.Setting == GameSettingsEnum.AnimationSpeed)
         {
             animationSpeed = payload.Value;
         }
@@ -131,16 +131,17 @@ public abstract class Character : MonoBehaviour
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        // fill character moved payload for events - calling events in children classes 
-        payload = new CharacterBasicPayload
-        {
-            Character = this,
-            Current = targetPosVec2Int,
-            Previous = gridPosition,
-            Direction = direction,
-            RequestData = false,
-            ResponseData = false,
-        };
+          // fill character moved payload for events - calling events in children classes
+          payload = new CharacterEventPayload
+          {
+              Character = this,
+              EventType = CharacterEventType.MoveStarted,
+              CurrentPosition = targetPosVec2Int,
+              PreviousPosition = gridPosition,
+              Direction = direction,
+              RequestData = false,
+              ResponseData = false,
+          };
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
@@ -165,7 +166,7 @@ public abstract class Character : MonoBehaviour
        
         // register movement as action into turn record 
         TurnBuilder.Instance.AddAction(
-         new UndoCharacterAction(this, payload.Current, payload.Previous, payload.Direction)
+         new UndoCharacterAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Direction)
            );
 
         // inform turn builder, tht this component has registered an action into turn record

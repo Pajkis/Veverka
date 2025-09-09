@@ -1156,10 +1156,10 @@ MonoBehaviour:
   levelNumDisplay: {fileID: 1119662885}
   goalDisplay: {fileID: 1809535419}
   turnsDisplay: {fileID: 1842311954}
-  goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
-  characterMoved: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
-  playSfxEvent: {fileID: 11400000, guid: ff3b14a9270546e28b8cd511e04004b6, type: 2}
-  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
+  goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
+  characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
 --- !u!4 &988765905
 Transform:
@@ -1200,8 +1200,7 @@ MonoBehaviour:
   minDelay: 0
   maxDelay: 0
   audioConfig: {fileID: 11400000, guid: 05401f8670677d243812c794083e48d1, type: 2}
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
 --- !u!114 &988765908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1214,9 +1213,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f80fb7ac7c6c284da616ba110d48927, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
-  characterDataRequestEvent: {fileID: 11400000, guid: dcb5393757cbf5142ad7f8f7645461bc, type: 2}
-  characterMovedEvent: {fileID: 11400000, guid: 77c18906ef4747e48877e3adbb32206e, type: 2}
+  goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
+  characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   prefabBubbleBox: {fileID: 3996216760852934602, guid: a94c537606948374cbc00726702464fd, type: 3}
 --- !u!1 &1013319274
 GameObject:
@@ -1337,8 +1335,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8807dcdee4e9a44eb0013066c9d6491, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
-  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!114 &1013319280
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1351,7 +1348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   logButtonProcessing: 0
 --- !u!114 &1013319281
 MonoBehaviour:
@@ -1371,8 +1368,7 @@ MonoBehaviour:
   buttonDown: {fileID: 1322785196}
   undo: {fileID: 1118781770}
   action: {fileID: 1392477493}
-  settingDataRequestEvent: {fileID: 11400000, guid: 9a5f534c2365da3458f87038465becda, type: 2}
-  settingDataBroadcastEvent: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
+  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   inGameDisplayConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
 --- !u!1001 &1118781768
 PrefabInstance:

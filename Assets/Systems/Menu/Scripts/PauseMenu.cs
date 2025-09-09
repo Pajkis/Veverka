@@ -8,10 +8,7 @@ public class PauseMenu : MonoBehaviour
     #region fields
 
      [SerializeField]
-    private GoToSceneEvent goToSceneEvent;
-
-    [SerializeField]
-    private OpenOverlayEvent openOverlayEvent;
+    private SceneNavigationEvents sceneNavigationEvent;
     #endregion
 
     #region methods
@@ -37,7 +34,11 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         Time.timeScale = 1;
-       goToSceneEvent.Raise(SceneType.LoadLevel);
+        sceneNavigationEvent.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.LoadLevel
+        });
        // Destroy(gameObject);
     }
 
@@ -46,7 +47,11 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
-        openOverlayEvent.Raise(OverlayType.SettingsMenu);
+        sceneNavigationEvent.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.OpenOverlay,
+            Overlay = OverlayType.SettingsMenu
+        });
     }
 
     /// <summary>
@@ -56,7 +61,11 @@ public class PauseMenu : MonoBehaviour
     
     {       
         Time.timeScale = 1;       
-        goToSceneEvent.Raise(SceneType.UnloadLevel);
+        sceneNavigationEvent.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.UnloadLevel
+        });
        
       //  Destroy(gameObject);
     }

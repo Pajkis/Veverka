@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Veverka.Characters.Veverka;
 
 namespace Veverka.GridSystem.GameGrid
@@ -17,19 +16,14 @@ namespace Veverka.GridSystem.GameGrid
 
         #region events
         [Header("Events")]
-        [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
+        [SerializeField] private GridEvents gridEvents;
         [SerializeField] private LevelSelectEvent levelSelectEvent;
-        [SerializeField] private ResetGridEvent resetGridEvent;
-        [SerializeField] private BuildGridEvent buildGridEvent;
         [SerializeField] private LevelDatabase levelDatabase;
 
-        [SerializeField] private NutSetEvent nutSetEvent;
-        [SerializeField] private NutRemovedEvent nutRemovedEvent;
-        [SerializeField] private GoalSetEvent goalSetEvent;
-        [SerializeField] private GoalResolvedEvent goalResolvedEvent;
-        [SerializeField] private TileQueryEvent tileQueryEvent;
-        [SerializeField] private WallSetEvent wallSetEvent;
-        [SerializeField] private RoadSetEvent roadSetEvent;
+        [SerializeField] private NutEvents nutEvents;
+        [SerializeField] private GoalEvents goalEvents;
+        [SerializeField] private WallEvents wallEvents;
+        [SerializeField] private RoadEvents roadEvents;
         #endregion
 
         #region tile objects
@@ -91,15 +85,11 @@ namespace Veverka.GridSystem.GameGrid
         {
             // add listeners for events
             levelSelectEvent.AddListener(OnLevelSelected);
-            buildGridEvent.AddListener(InitializeGrid);
-            resetGridEvent.AddListener(ResetGrid);           
-            tileQueryEvent.AddListener(OnTileQuery);        
-            nutSetEvent.AddListener(OnNutSet);
-            nutRemovedEvent.AddListener(OnNutRemoved);
-            goalSetEvent.AddListener(OnGoalSet);
-            goalResolvedEvent.AddListener(OnGoalResolved);
-            wallSetEvent.AddListener(OnWallSet);
-            roadSetEvent.AddListener(OnRoadSet);
+            gridEvents.AddListener(OnGridEvent);
+            nutEvents.AddListener(OnNutEvent);
+            goalEvents.AddListener(OnGoalEvent);
+            wallEvents.AddListener(OnWallEvent);
+            roadEvents.AddListener(OnRoadEvent);
         }
 
         /// <summary>
@@ -109,15 +99,30 @@ namespace Veverka.GridSystem.GameGrid
         {
             // remove listeners for events
             levelSelectEvent.RemoveListener(OnLevelSelected);
-            resetGridEvent.RemoveListener(ResetGrid);        
-            buildGridEvent.RemoveListener(InitializeGrid);
-            tileQueryEvent.RemoveListener(OnTileQuery);
-            nutSetEvent.RemoveListener(OnNutSet);
-            nutRemovedEvent.RemoveListener(OnNutRemoved);
-            goalSetEvent.RemoveListener(OnGoalSet);
-            goalResolvedEvent.RemoveListener(OnGoalResolved);
-            wallSetEvent.RemoveListener(OnWallSet);
-            roadSetEvent.RemoveListener(OnRoadSet);
+            gridEvents.RemoveListener(OnGridEvent);
+            nutEvents.RemoveListener(OnNutEvent);
+            goalEvents.RemoveListener(OnGoalEvent);
+            wallEvents.RemoveListener(OnWallEvent);
+            roadEvents.RemoveListener(OnRoadEvent);
+        }
+
+        private void OnGridEvent(GridEventPayload payload)
+        {
+            switch (payload.EventType)
+            {
+                case GridEventType.BuildGrid:
+                    if (!payload.BuildDone)
+                    {
+                        InitializeGrid(payload.Grid);
+                    }
+                    break;
+                case GridEventType.ResetGrid:
+                    ResetGrid();
+                    break;
+                case GridEventType.TileQuery:
+                    OnTileQuery(payload.Query);
+                    break;
+            }
         }
 
         #endregion
@@ -163,8 +168,8 @@ namespace Veverka.GridSystem.GameGrid
             levelDatabase.GoalsCount = goalCount;
             levelDatabase.gridOrigin = transform;
 
-            //raise event
-            buildGridDoneEvent.Raise();
+            // raise event to notify build completion
+            gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
         }
 
         /// <summary>
@@ -458,65 +463,88 @@ namespace Veverka.GridSystem.GameGrid
         #endregion
 
         #region tile handling
+        
         /// <summary>
-        /// On wall set event - instantiate wall prefab and set tile type in grid
+        /// Handles wall-related events.
         /// </summary>
         /// <param name="payload"></param>
-        private void OnWallSet(WallBasicPayload payload)
+        private void OnWallEvent(WallEventPayload payload)
         {
-            // instantiate wall prefab
-            if (payload.instantiateTile)
-            { 
-                GameObject tile;
-                if (payload.WallType == WallType.StoneWall)
-                {
-                    tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
-                else
-                {
-                    tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
+            switch (payload.EventType)
+            {
+                case WallEventType.WallSet:
+                    if (payload.InstantiateTile)
+                    {
+                        GameObject tile;
+                        if (payload.WallType == WallType.StoneWall)
+                        {
+                            tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
+                        else
+                        {
+                            tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
 
-                tile.transform.SetParent(gridRoot, false);
-                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                        tile.transform.SetParent(gridRoot, false);
+                        tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    }
+                    // set tile and wall type in grid
+                    SetTileType(payload.Position, TileType.Wall);
+                    wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
+                    break;
             }
-            // set tile and wall type in grid
-            SetTileType(payload.Position, TileType.Wall);
-            wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
         }
 
         /// <summary>
-        /// 
+        /// Handles road-related events.
         /// </summary>
         /// <param name="payload"></param>
-        private void OnRoadSet(RoadBasicPayload payload)
+        private void OnRoadEvent(RoadEventPayload payload)
         {
-            if (payload.instantiateTile) 
+            switch (payload.EventType)
             {
-                GameObject tile;
-                if (payload.RoadType == RoadType.StoneFilledHole)
-                {
-                    tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
-                else
-                {
-                    tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                }
+                case RoadEventType.RoadSet:
+                    if (payload.InstantiateTile)
+                    {
+                        GameObject tile;
+                        if (payload.RoadType == RoadType.StoneFilledHole)
+                        {
+                            tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
+                        else
+                        {
+                            tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                        }
 
-                tile.transform.SetParent(gridRoot, false);
-                tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                        tile.transform.SetParent(gridRoot, false);
+                        tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    }
+
+                    // set tile type and road type in grid
+                    SetTileType(payload.Position, TileType.Road);
+                    roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+                    break;
             }
+        }
 
-            // set tile type and road type in grid
-            SetTileType(payload.Position, TileType.Road);
-            roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+        private void OnNutEvent(NutEventPayload payload)
+        {
+            switch (payload.EventType)
+            {
+                case NutEventType.NutSet:
+                    OnNutSet(payload);
+                    break;
+                case NutEventType.NutRemoved:
+                    OnNutRemoved(payload);
+                    break;
+            }
         }
 
         /// <summary>
         /// Set nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnNutSet(NutBasicPayload payload)
+        private void OnNutSet(NutEventPayload payload)
         {
             if (!IsInGrid(payload.Position))
             {
@@ -531,7 +559,7 @@ namespace Veverka.GridSystem.GameGrid
         /// Remove nut tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnNutRemoved(NutBasicPayload payload)
+        private void OnNutRemoved(NutEventPayload payload)
         {
             if (!IsInGrid(payload.Position))
             {
@@ -546,30 +574,29 @@ namespace Veverka.GridSystem.GameGrid
         /// Set goal tile on position and update tile type in the grid
         /// </summary>
         /// <param name="payload"></param>
-        private void OnGoalSet(GoalBasicPayload payload)
+        private void OnGoalEvent(GoalEventPayload payload)
         {
-            SetTileType(payload.Position, TileType.Goal);
-            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-        }
-
-        /// <summary>
-        /// Remove goal tile on position and update tile type in the grid
-        /// </summary>
-        /// <param name="payload"></param>
-        private void OnGoalResolved(GoalBasicPayload payload)
-        {
-            if (!payload.GoalRemove)
+            switch (payload.EventType)
             {
-                return;
-            }
+                case GoalEventsType.GoalSet:
+                    SetTileType(payload.Position, TileType.Goal);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    break;
+                case GoalEventsType.GoalResolved:
+                    if (!payload.GoalRemove)
+                    {
+                        return;
+                    }
 
-            if (!IsInGrid(payload.Position))
-            {
-                Debug.LogError("Remove tile is outside the grid");
-                return;
+                    if (!IsInGrid(payload.Position))
+                    {
+                        Debug.LogError("Remove tile is outside the grid");
+                        return;
+                    }
+                    SetTileType(payload.Position, TileType.Empty);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    break;
             }
-            SetTileType(payload.Position, TileType.Empty);
-            goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
         }
 
         /// <summary>

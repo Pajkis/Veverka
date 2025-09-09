@@ -10,10 +10,9 @@ public class LevelLoader : MonoBehaviour
 
     // Serialized fields for events and level database
     [SerializeField] private LevelSelectEvent levelSelectEvent;
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
-    [SerializeField] private BuildGridEvent buildGridEvent;
-    [SerializeField] private BuildGridDoneEvent buildGridDoneEvent;
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
+    [SerializeField] private GridEvents gridEvents;
+    [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private LevelDatabase levelDatabase;
 
     [Header("Level Management")]
@@ -34,19 +33,27 @@ public class LevelLoader : MonoBehaviour
         if (levelSetManager == null)
         {
             Debug.LogError("LevelSetManager is not assigned! Cannot load levels.");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             return;
         }
 
         if (levelDatabase == null)
         {
             Debug.LogError("LevelDatabase is not assigned!");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             return;
         }
 
         // play music
-        playMusicEvent.Raise(MusicType.Game);
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Game });
 
         // invoke level reset
         levelSelectEvent.Raise(new LevelSelectPayload
@@ -60,7 +67,7 @@ public class LevelLoader : MonoBehaviour
     {
         // add listener
         levelSelectEvent.AddListener(LoadLevel);
-        buildGridDoneEvent.AddListener(OnLevelBuilt);
+        gridEvents.AddListener(OnGridEvent);
     }
 
     /// <summary>
@@ -69,15 +76,18 @@ public class LevelLoader : MonoBehaviour
     private void OnDisable()
     {
         levelSelectEvent.RemoveListener(LoadLevel);
-        buildGridDoneEvent.RemoveListener(OnLevelBuilt);
+        gridEvents.RemoveListener(OnGridEvent);
     }
 
     /// <summary>
-    /// Get info that level build has finished
+    /// Handle grid events.
     /// </summary>
-    private void OnLevelBuilt()
+    private void OnGridEvent(GridEventPayload payload)
     {
-        levelBuilt = true;
+        if (payload.EventType == GridEventType.BuildGrid && payload.BuildDone)
+        {
+            levelBuilt = true;
+        }
     }
 
     /// <summary>
@@ -113,7 +123,11 @@ public class LevelLoader : MonoBehaviour
         if (!levelSetManager.HasLevel(currentSet, currentLevelIndex))
         {
             Debug.LogError($"Level {currentLevelIndex} not found in set {currentSet}!");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             yield break;
         }
 
@@ -122,7 +136,11 @@ public class LevelLoader : MonoBehaviour
         if (levelCsv == null)
         {
             Debug.LogError($"Failed to load CSV data for level {currentLevelIndex} in set {currentSet}!");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             yield break;
         }
 
@@ -133,7 +151,11 @@ public class LevelLoader : MonoBehaviour
         if (grid == null)
         {
             Debug.LogError($"Grid parsing failed for level {currentLevelIndex} in set {currentSet}!");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             yield break;
         }
 
@@ -141,13 +163,22 @@ public class LevelLoader : MonoBehaviour
         if (!GridUtils.ValidateGrid(grid))
         {
             Debug.LogWarning($"Invalid level configuration for level {currentLevelIndex} in set {currentSet}!");
-            goToSceneEvent.Raise(SceneType.LevelMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LevelMenu
+            });
             yield break;
         }
 
         // wait for the level to be built
         levelBuilt = false;
-        buildGridEvent.Raise(grid);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.BuildGrid,
+            Grid = grid,
+            BuildDone = false
+        });
         yield return new WaitUntil(() => levelBuilt);
 
         //keep track of the time elapsed and ensure a minimum loading time
@@ -158,7 +189,11 @@ public class LevelLoader : MonoBehaviour
         }
 
         Debug.Log($"Successfully loaded level {currentLevelIndex} from set {currentSet}");
-        goToSceneEvent.Raise(SceneType.GamePlay);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.GamePlay
+        });
     }
 
     #endregion

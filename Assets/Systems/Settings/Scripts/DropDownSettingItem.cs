@@ -17,8 +17,7 @@ public class DropDownSettingItem : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameLabel;
 
     [Header("Events")]
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private SettingEvents settingEvents;
     #endregion
 
     #region Unity Lifecycle
@@ -63,8 +62,12 @@ public class DropDownSettingItem : MonoBehaviour
         if (dropdown != null)
         {
             dropdown.onValueChanged.AddListener(OnDropDownValueChanged);
-            settingDataBroadcastEvent.AddListener(OnSettingData);
-            settingDataRequestEvent.Raise(settingType);
+              settingEvents.AddListener(OnSettingEvent);
+              settingEvents.Raise(new SettingEventPayload
+              {
+                  EventType = SettingsEventType.DataRequest,
+                  Setting = settingType
+              });
         }
     }
 
@@ -73,7 +76,7 @@ public class DropDownSettingItem : MonoBehaviour
         if (dropdown != null)
         {
             dropdown.onValueChanged.RemoveListener(OnDropDownValueChanged);
-            settingDataBroadcastEvent.RemoveListener(OnSettingData);
+              settingEvents.RemoveListener(OnSettingEvent);
         }
     }
     #endregion
@@ -84,9 +87,10 @@ public class DropDownSettingItem : MonoBehaviour
     /// Gets setting data from broadcast event and updates dropdown and label
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingData(SettingDataPayload payload)
+    private void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting != settingType)
+        if (payload.EventType != SettingsEventType.DataBroadcast ||
+            payload.Setting != settingType)
             return;
 
         int settingValue = Mathf.RoundToInt(payload.Value);
@@ -152,11 +156,12 @@ public class DropDownSettingItem : MonoBehaviour
         Debug.Log($"[{nameof(DropDownSettingItem)}] {settingType} changed to {selectedEnumValue} (value: {enumIntValue})");
 
         // Update game settings       
-        settingDataBroadcastEvent.Raise(new SettingDataPayload
-        {
-            Setting = settingType,
-            Value = enumIntValue
-        });
+          settingEvents.Raise(new SettingEventPayload
+          {
+              EventType = SettingsEventType.DataBroadcast,
+              Setting = settingType,
+              Value = enumIntValue
+          });
     }
     #endregion
 

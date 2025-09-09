@@ -6,17 +6,17 @@ using UnityEngine;
 /// </summary>
 public class LevelUnloader : MonoBehaviour
 {
-    [SerializeField] private ResetGridEvent resetGridEvent;
+    [SerializeField] private GridEvents gridEvents;
 
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
-    [SerializeField] private PlayMusicEvent playMusicEvent;
+    [SerializeField] private AudioEvents audioEvents;
 
     void Start()
     {
         // raise reset event
-        resetGridEvent.Raise();
-        playMusicEvent.Raise(MusicType.Menu);
+        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.ResetGrid });
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Menu });
         StartCoroutine(UnloadLevelCoroutine());
     }
 
@@ -36,7 +36,11 @@ public class LevelUnloader : MonoBehaviour
         if (timeElapsed < minLoadingTime)
             yield return new WaitForSeconds(minLoadingTime - timeElapsed);
 
-        goToSceneEvent.Raise(SceneType.MainMenu);
+        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.MainMenu
+        });
      }
 
 

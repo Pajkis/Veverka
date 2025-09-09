@@ -10,7 +10,7 @@ public class LevelSelectMenu : MonoBehaviour
     [Header("Components")]
     [SerializeField] private UniversalTabManager tabManager;
     [SerializeField] private LevelDatabase levelDatabase;
-    [SerializeField] private GoToSceneEvent goToSceneEvent;
+    [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     [Header("Level Set Mapping")]
     [SerializeField] private LevelSetMapping[] levelSetMappings;
@@ -119,16 +119,20 @@ public class LevelSelectMenu : MonoBehaviour
     /// <param name="levelNumber">Level number to load (0-based index)</param>
     public void HandleLevelButtonClick(int levelNumber)
     {
-        if (levelDatabase != null && goToSceneEvent != null)
+        if (levelDatabase != null && sceneNavigationEvents != null)
         {
             levelDatabase.CurrentLevelIndex = levelNumber;
-            goToSceneEvent.Raise(SceneType.LoadLevel);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.LoadLevel
+            });
 
             Debug.Log($"Loading level {levelNumber} from set {levelDatabase.LevelSetType}");
         }
         else
         {
-            Debug.LogError("LevelDatabase or GoToSceneEvent not assigned to LevelSetAdapter!");
+            Debug.LogError("LevelDatabase or SceneNavigationEvent not assigned to LevelSetAdapter!");
         }
     }
 
@@ -137,13 +141,17 @@ public class LevelSelectMenu : MonoBehaviour
     /// </summary>
     public void HandleBackButton()
     {
-        if (goToSceneEvent != null)
+        if (sceneNavigationEvents != null)
         {
-            goToSceneEvent.Raise(SceneType.MainMenu);
+            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
+            {
+                EventType = SceneNavigationEventType.GoToScene,
+                Scene = SceneType.MainMenu
+            });
         }
         else
         {
-            Debug.LogError("GoToSceneEvent not assigned to LevelSetAdapter!");
+            Debug.LogError("SceneNavigationEvent not assigned to LevelSetAdapter!");
         }
     }
 

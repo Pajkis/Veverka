@@ -11,10 +11,9 @@ public abstract class TileObject : MonoBehaviour
     #region Events  
     
     [Header("Events")]
-    [SerializeField] protected SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] protected SettingDataBroadcastEvent settingDataBroadcastEvent;    
-    [SerializeField] protected TileQueryEvent tileQueryEvent;
-    [SerializeField] protected PlaySfxEvent playSfxEvent;
+    [SerializeField] protected SettingEvents settingEvents;
+    [SerializeField] protected GridEvents gridEvents;
+    [SerializeField] protected AudioEvents audioEvents;
     #endregion
 
     #region Configs

@@ -8,12 +8,8 @@ public class AudioManager : MonoBehaviour
 
     #region events
     [Header("Events")]
-    [SerializeField] private PlaySfxEvent playSfxEvent;
-    [SerializeField] private PlayUiEvent playUiEvent;
-    [SerializeField] private PlayMusicEvent playMusicEvent;
-    [SerializeField] private AudioInitEvent audioInitEvent;
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private AudioEvents audioEvents;
+    [SerializeField] private SettingEvents settingEvents;
     #endregion
 
     #region sound input
@@ -69,11 +65,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        audioInitEvent?.AddListener(Initialize);
-        playSfxEvent?.AddListener(PlaySfx);
-        playUiEvent?.AddListener(PlayUi);
-        playMusicEvent?.AddListener(PlayRandomMusic);
-        settingDataBroadcastEvent?.AddListener(OnSettingsData);
+        audioEvents?.AddListener(OnAudioEvent);
+        settingEvents?.AddListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -81,11 +74,8 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        audioInitEvent?.RemoveListener(Initialize);
-        playSfxEvent?.RemoveListener(PlaySfx);
-        playUiEvent?.RemoveListener(PlayUi);
-        playMusicEvent?.RemoveListener(PlayRandomMusic);
-        settingDataBroadcastEvent?.RemoveListener(OnSettingsData);
+        audioEvents?.RemoveListener(OnAudioEvent);
+        settingEvents?.RemoveListener(OnSettingsEvent);
     }
 
     /// <summary>
@@ -97,6 +87,28 @@ public class AudioManager : MonoBehaviour
         if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
         {
             PlayRandomMusic(currentMusicType);
+        }
+    }
+
+    /// <summary>
+    /// Handles all audio related events and routes them to appropriate methods.
+    /// </summary>
+    private void OnAudioEvent(AudioEventPayload payload)
+    {
+        switch (payload.EventType)
+        {
+            case AudioEventType.Init:
+                Initialize();
+                break;
+            case AudioEventType.PlayMusic:
+                PlayRandomMusic(payload.Music);
+                break;
+            case AudioEventType.PlaySfx:
+                PlaySfx(payload.Sfx);
+                break;
+            case AudioEventType.PlayUi:
+                PlayUi(payload.Ui);
+                break;
         }
     }
 
@@ -142,10 +154,10 @@ public class AudioManager : MonoBehaviour
         }
       
         // Request volume values at init
-        settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.MusicVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.MenuVolume);
-        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed); // to set pitch for sound effects
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.EffectVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.MusicVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.MenuVolume });
+        settingEvents.Raise(new SettingEventPayload { EventType = SettingsEventType.DataRequest, Setting = GameSettingsEnum.AnimationSpeed }); // to set pitch for sound effects
 
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
@@ -309,8 +321,11 @@ public class AudioManager : MonoBehaviour
     /// Change volume or pitch based on requested change
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingsData(SettingDataPayload payload)
+    private void OnSettingsEvent(SettingEventPayload payload)
     {
+        if (payload.EventType != SettingsEventType.DataBroadcast)
+            return;
+
         switch (payload.Setting)
         {
             case GameSettingsEnum.EffectVolume:

@@ -7,9 +7,8 @@ public class BubbleMessageManager : MonoBehaviour
 {
     #region Fields
     [Header("Events")]
-    [SerializeField] GoalResolvedEvent goalResolvedEvent;
-    [SerializeField] CharacterDataRequestEvent characterDataRequestEvent;
-    [SerializeField] CharacterMovedEvent characterMovedEvent;
+    [SerializeField] GoalEvents goalEvents;
+    [SerializeField] CharacterEvents characterEvents;
 
     [Header("Prefab bubble")]
     [SerializeField] GameObject prefabBubbleBox;
@@ -19,7 +18,7 @@ public class BubbleMessageManager : MonoBehaviour
 
     // Pending goal message shown after the character finishes moving
     bool hasPendingGoal;
-    GoalBasicPayload pendingGoalPayload;
+    GoalEventPayload pendingGoalPayload;
     #endregion
 
     #region Methods
@@ -40,9 +39,8 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
-        goalResolvedEvent.AddListener(OnGoalResolved);
-        characterDataRequestEvent.AddListener(OnCharacterDataReceived);
-        characterMovedEvent.AddListener(OnCharacterMoved);
+        goalEvents.AddListener(OnGoalEvent);
+        characterEvents.AddListener(OnCharacterEvent);
     }
 
     /// <summary>
@@ -50,21 +48,32 @@ public class BubbleMessageManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-        goalResolvedEvent.RemoveListener(OnGoalResolved);
-        characterDataRequestEvent.RemoveListener(OnCharacterDataReceived);
-        characterMovedEvent.RemoveListener(OnCharacterMoved);
+        goalEvents.RemoveListener(OnGoalEvent);
+        characterEvents.RemoveListener(OnCharacterEvent);
     }
+
     /// <summary>
-    /// Gets called when the character moves. Updates the character's position and shows any pending goal message.
+    /// Handles character events for movement and data responses.
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCharacterMoved(CharacterBasicPayload payload)
+    private void OnCharacterEvent(CharacterEventPayload payload)
     {
-        characterPosition = payload.Current;
-
-        if (hasPendingGoal)
+        if (payload.EventType == CharacterEventType.MoveCompleted)
         {
-            ShowGoalMessage();
+            characterPosition = payload.CurrentPosition;
+
+            if (hasPendingGoal)
+            {
+                ShowGoalMessage();
+            }
+        }
+        else if (payload.EventType == CharacterEventType.DataResponse)
+        {
+            characterPosition = payload.CurrentPosition;
+            if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
+
+            Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
+            CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
         }
     }
 
@@ -72,8 +81,9 @@ public class BubbleMessageManager : MonoBehaviour
     /// on goal resolved event handler
     /// </summary>
     /// <param name="payload"></param>
-    private void OnGoalResolved(GoalBasicPayload payload)
+    private void OnGoalEvent(GoalEventPayload payload)
     {
+        if (payload.EventType != GoalEventsType.GoalResolved) return;
         pendingGoalPayload = payload;
         hasPendingGoal = true;
     }
@@ -88,21 +98,6 @@ public class BubbleMessageManager : MonoBehaviour
         Vector2Int offset = CalculateBubbleOffset(pendingGoalPayload.Position, characterPosition);
         Vector2Int bubblePos = characterPosition + offset;
         CreateBubble(bubblePos, pendingGoalPayload.GoalMessage, pendingGoalPayload.GoalMessageTime);
-    }
-
-    /// <summary>
-    ///  on character data received event handler
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnCharacterDataReceived(CharacterBasicPayload payload)
-    {
-        if (!payload.ResponseData) return;
-
-        characterPosition = payload.Current;
-        if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
-
-        Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
-        CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
     }
 
     /// <summary>

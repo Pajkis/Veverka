@@ -17,8 +17,7 @@ public class EnvironmentSounds : MonoBehaviour
 
     [Header("Audio Config")]
     [SerializeField] private AudioConfig audioConfig;
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private SettingEvents settingEvents;
 
     private float effectVolume;
     private AudioSource audioSource;
@@ -47,14 +46,18 @@ public class EnvironmentSounds : MonoBehaviour
        
     private void OnEnable()
     {
-        settingDataBroadcastEvent.AddListener(OnSettingData);
-        settingDataRequestEvent.Raise(GameSettingsEnum.EffectVolume);
+        settingEvents.AddListener(OnSettingEvent);
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = GameSettingsEnum.EffectVolume
+        });
         StartCoroutine(PlayAmbientLoop());
     }
 
     private void OnDisable()
     {
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);
+        settingEvents.RemoveListener(OnSettingEvent);
         StopAllCoroutines();
     }
 
@@ -88,9 +91,10 @@ public class EnvironmentSounds : MonoBehaviour
     /// Setting data event handler
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingData(SettingDataPayload payload)
+    private void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting == GameSettingsEnum.EffectVolume)
+        if (payload.EventType == SettingsEventType.DataBroadcast &&
+            payload.Setting == GameSettingsEnum.EffectVolume)
         {
             effectVolume = payload.Value;
         }

@@ -12,7 +12,7 @@ public class LevelFinishedMenu : MonoBehaviour
     private LevelDatabase levelDatabase;   
 
     [SerializeField]
-    private GoToSceneEvent goToSceneEvent;
+    private SceneNavigationEvents sceneNavigationEvent;
 
     #endregion
 
@@ -46,7 +46,11 @@ public class LevelFinishedMenu : MonoBehaviour
         
         //Set next level
         levelDatabase.CurrentLevelIndex++;
-        goToSceneEvent.Raise(SceneType.LoadLevel);
+        sceneNavigationEvent.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.LoadLevel
+        });
         // Destroy(gameObject);
     }
 
@@ -57,7 +61,11 @@ public class LevelFinishedMenu : MonoBehaviour
     {
         Time.timeScale = 1;                        
       
-        goToSceneEvent.Raise(SceneType.UnloadLevel);
+        sceneNavigationEvent.Raise(new SceneNavigationEventPayload
+        {
+            EventType = SceneNavigationEventType.GoToScene,
+            Scene = SceneType.UnloadLevel
+        });
       //  Destroy(gameObject);
     }
 

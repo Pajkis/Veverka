@@ -12,8 +12,7 @@ namespace Veverka.Characters.Veverka
     {
         #region events 
         [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] CharacterMovedEvent veverkaMoved;
-        [SerializeField] CanPushQueryEvent canPushQueryEvent;
+          [SerializeField] NutEvents nutEvents;
         #endregion
 
         // Queue for pending character data requests
@@ -27,9 +26,13 @@ namespace Veverka.Characters.Veverka
         private void OnEnable()
         {
             onArrowPressed.AddListener(HandleInput);
-            settingDataBroadcastEvent.AddListener(OnSettingData);
-            characterDataRequestEvent.AddListener(OnCharacterData);
-            settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);
+              settingEvents.AddListener(OnSettingEvent);
+                characterEvents.AddListener(OnCharacterEvent);
+              settingEvents.Raise(new SettingEventPayload
+              {
+                  EventType = SettingsEventType.DataRequest,
+                  Setting = GameSettingsEnum.AnimationSpeed
+              });
 
             // Listen for scene changes
             SceneManager.sceneLoaded += OnSceneLoaded;
@@ -41,8 +44,8 @@ namespace Veverka.Characters.Veverka
         private void OnDisable()
         {
             onArrowPressed.RemoveListener(HandleInput);
-            settingDataBroadcastEvent.RemoveListener(OnSettingData);
-            characterDataRequestEvent.RemoveListener(OnCharacterData);
+              settingEvents.RemoveListener(OnSettingEvent);
+              characterEvents.RemoveListener(OnCharacterEvent);
 
             // Remove scene change listener
             SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -79,17 +82,18 @@ namespace Veverka.Characters.Veverka
                 hasShownStartupMessage = true;
                 Debug.Log("Sending startup message from Veverka");
 
-                characterDataRequestEvent.Raise(new CharacterBasicPayload
-                {
-                    Character = this,
-                    Current = gridPosition,
-                    Direction = facingDirection,
-                    Duration = moveDuration,
-                    RequestData = false,
-                    ResponseData = true,
-                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                    CharacterBubbleMessageTime = 2.0f
-                });
+                    characterEvents.Raise(new CharacterEventPayload
+                    {
+                        Character = this,
+                        EventType = CharacterEventType.DataResponse,
+                        CurrentPosition = gridPosition,
+                        Direction = facingDirection,
+                        Duration = moveDuration,
+                        RequestData = false,
+                        ResponseData = true,
+                        CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                        CharacterBubbleMessageTime = 2.0f
+                    });
             }
         }
 
@@ -97,38 +101,39 @@ namespace Veverka.Characters.Veverka
         /// on character data request - respond with character data
         /// </summary>
         /// <param name="payload"></param>
-        private void OnCharacterData(CharacterBasicPayload payload)
-        {
-            if (payload.RequestData)
-            {
-                // If character is currently moving, queue the request
-                if (smoothMover.IsMoving)
-                {
-                    hasPendingDataRequest = true;
-                    return;
-                }
+          private void OnCharacterEvent(CharacterEventPayload payload)
+          {
+              if (payload.EventType == CharacterEventType.DataRequest)
+              {
+                  // If character is currently moving, queue the request
+                  if (smoothMover.IsMoving)
+                  {
+                      hasPendingDataRequest = true;
+                      return;
+                  }
 
-                // Send current position immediately if not moving
-                SendCharacterData();
-            }
-        }
+                  // Send current position immediately if not moving
+                  SendCharacterData();
+              }
+          }
 
         /// <summary>
         /// Send character data response (for regular requests, not startup)
         /// </summary>
         private void SendCharacterData()
         {
-            characterDataRequestEvent.Raise(new CharacterBasicPayload
-            {
-                Character = this,
-                Current = gridPosition,
-                Direction = facingDirection,
-                Duration = moveDuration,
-                RequestData = false,
-                ResponseData = true,
-                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
-                CharacterBubbleMessageTime = 0f
-            });
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    Character = this,
+                    EventType = CharacterEventType.DataResponse,
+                    CurrentPosition = gridPosition,
+                    Direction = facingDirection,
+                    Duration = moveDuration,
+                    RequestData = false,
+                    ResponseData = true,
+                    CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+                    CharacterBubbleMessageTime = 0f
+                });
         }
 
         #endregion
@@ -153,15 +158,20 @@ namespace Veverka.Characters.Veverka
 
                 // Check if target position is in grid
                 var gridQuery = new TileQueryPayload { Position = targetPos };
-                tileQueryEvent.Raise(gridQuery);
+                gridEvents.Raise(new GridEventPayload
+                {
+                    EventType = GridEventType.TileQuery,
+                    Query = gridQuery
+                });
                 if (!gridQuery.IsInGrid) return;
 
                 // Check if there's a pushable object at target position
                 if (gridQuery.TileType == TileType.Nut)
                 {
                     // Query if the nut can be pushed in this direction
-                    var pushQuery = new CanPushQueryPayload
+                    var pushQuery = new NutEventPayload
                     {
+                        EventType = NutEventType.CanPushQuery,
                         Position = targetPos,
                         Direction = inputDirection,
                         Distance = distance,
@@ -170,7 +180,7 @@ namespace Veverka.Characters.Veverka
                     };
 
                     // Push query and push if possible
-                    canPushQueryEvent.Raise(pushQuery);
+                    nutEvents.Raise(pushQuery);
 
                     // If there's a nut and it can be pushed
                     if (pushQuery.CanBePushed)
@@ -198,7 +208,7 @@ namespace Veverka.Characters.Veverka
             else
             {
                 facingDirection = Rotate(inputDirection);
-                playSfxEvent.Raise(SfxType.VeverkaRotate);
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
             }
         }
 
@@ -207,7 +217,7 @@ namespace Veverka.Characters.Veverka
         /// </summary>
         protected override void OnMoveStart()
         {
-            playSfxEvent.Raise(SfxType.VeverkaMove);
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
         }
 
         /// <summary>
@@ -218,7 +228,8 @@ namespace Veverka.Characters.Veverka
             base.OnMoveComplete(targetPosition);
 
             // raise event, that character made a turn -> turn count
-            veverkaMoved.Raise(payload);
+              payload.EventType = CharacterEventType.MoveCompleted;
+              characterEvents.Raise(payload);
 
             // Handle any pending character data requests now that move is complete
             if (hasPendingDataRequest)

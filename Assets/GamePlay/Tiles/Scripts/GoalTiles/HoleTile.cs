@@ -8,18 +8,19 @@ public class HoleTile : GoalTile
     /// On Nut in hole event settlement
     /// </summary>
     /// <param name="payload"></param>
-    protected override void OnNutInGoal(NutBasicPayload payload)
+    protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
         if (GridPosition == payload.Position)
         {
             // Play goal reached sound effect
-            playSfxEvent.Raise(SfxType.GoalReached);
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
             // Raise goal reached event
             if (payload.NutType == NutType.StoneNut)
             {
-                goalResolvedEvent.Raise(new GoalBasicPayload
+                goalEvents.Raise(new GoalEventPayload
                 {
+                    EventType = GoalEventsType.GoalResolved,
                     Position = payload.Position,
                     GoalReduction = 0,
                     GoalRemove = true,
@@ -29,22 +30,24 @@ public class HoleTile : GoalTile
                 Destroy(gameObject);
 
                 // Set wall in the position of the hole
-                roadSetEvent.Raise(new RoadBasicPayload
+                roadEvents.Raise(new RoadEventPayload
                 {
+                    EventType = RoadEventType.RoadSet,
                     Position = payload.Position,
                     RoadType = RoadType.StoneFilledHole,
-                    instantiateTile = true,
+                    InstantiateTile = true,
                 });
             }
             else
             {
                 // Display "Ooops" message if a non-stone nut falls into the hole
-                goalResolvedEvent.Raise(new GoalBasicPayload
+                goalEvents.Raise(new GoalEventPayload
                 {
+                    EventType = GoalEventsType.GoalResolved,
                     Position = payload.Position,
                     GoalRemove = false,
                     GoalMessage = BubbleMessageType.Ooops,
-                    GoalMessageTime = 1f                    
+                    GoalMessageTime = 1f
                 });
             }
                 

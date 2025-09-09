@@ -17,8 +17,7 @@ public class LayoutStyleManager : MonoBehaviour
     [SerializeField] private Button action;
 
     [Header("Events ")]   
-    [SerializeField] private SettingDataRequestEvent settingDataRequestEvent;
-    [SerializeField] private SettingDataBroadcastEvent settingDataBroadcastEvent;
+    [SerializeField] private SettingEvents settingEvents;
 
 
     [Header("Configs ")]
@@ -65,8 +64,12 @@ public class LayoutStyleManager : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {     
-        settingDataBroadcastEvent.AddListener(OnSettingData);
-        settingDataRequestEvent.Raise(GameSettingsEnum.LayoutStyle);
+        settingEvents.AddListener(OnSettingEvent);
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = GameSettingsEnum.LayoutStyle
+        });
     }
 
     /// <summary>
@@ -74,14 +77,15 @@ public class LayoutStyleManager : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
-      settingDataBroadcastEvent.RemoveListener(OnSettingData);
+       settingEvents.RemoveListener(OnSettingEvent);
     }
 
     #endregion
 
-    private void OnSettingData(SettingDataPayload payload)
+    private void OnSettingEvent(SettingEventPayload payload)
     {
-        if (payload.Setting != GameSettingsEnum.LayoutStyle)
+        if (payload.EventType != SettingsEventType.DataBroadcast ||
+            payload.Setting != GameSettingsEnum.LayoutStyle)
             return;
 
         currentLayoutStyle = (LayoutStyleTypes)payload.Value;

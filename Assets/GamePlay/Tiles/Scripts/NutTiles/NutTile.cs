@@ -10,16 +10,13 @@ public abstract class NutTile : TileObject
     [SerializeField] protected float moveDuration = 0.15f;
     protected float animationSpeed;
 
-    protected NutMovedPayload payload = new();
+    protected NutEventPayload payload = new();
     protected SmoothMover smoothMover;
     protected NutType nutType;
     #endregion
 
     #region  nut events
-    [SerializeField]  protected NutInGoalEvent nutInGoalEvent;
-    [SerializeField]  protected NutSetEvent nutSetEvent;
-    [SerializeField]  protected NutRemovedEvent nutRemovedEvent;   
-    [SerializeField] protected CanPushQueryEvent canPushQueryEvent;
+      [SerializeField] protected NutEvents nutEvents;
     #endregion
 
     #region Event handling
@@ -28,30 +25,35 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        settingDataBroadcastEvent.AddListener(OnSettingData);
-        settingDataRequestEvent.Raise(GameSettingsEnum.AnimationSpeed);   
-        canPushQueryEvent.AddListener(OnCanPushQuery);
+          settingEvents.AddListener(OnSettingEvent);
+          settingEvents.Raise(new SettingEventPayload
+          {
+              EventType = SettingsEventType.DataRequest,
+              Setting = GameSettingsEnum.AnimationSpeed
+          });
+        nutEvents.AddListener(OnNutEvent);
     }
     /// <summary>
     /// remove listeners
     /// </summary>
     protected void OnDisable()
     {
-        settingDataBroadcastEvent.RemoveListener(OnSettingData);     
-        canPushQueryEvent.RemoveListener(OnCanPushQuery);
+          settingEvents.RemoveListener(OnSettingEvent);
+        nutEvents.RemoveListener(OnNutEvent);
     }
 
     /// <summary>
     /// get animation speed from settings
     /// </summary>
     /// <param name="payload"></param>
-    private void OnSettingData(SettingDataPayload payload)
-    {
-        if (payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            animationSpeed = payload.Value;
-        }
-    }
+      private void OnSettingEvent(SettingEventPayload payload)
+      {
+          if (payload.EventType == SettingsEventType.DataBroadcast &&
+              payload.Setting == GameSettingsEnum.AnimationSpeed)
+          {
+              animationSpeed = payload.Value;
+          }
+      }
     #endregion
 
     #region Initialization
@@ -79,8 +81,9 @@ public abstract class NutTile : TileObject
         this.nutType = nutType;
 
         // raise event to register nut tile in the GameGrid
-        nutSetEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutSet,
             Position = gridPosition,
             NutType = nutType,
             NutTile = this,
@@ -94,9 +97,14 @@ public abstract class NutTile : TileObject
     /// Handle can push query - only respond if it's for this nut's position
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCanPushQuery(CanPushQueryPayload payload)
+    private void OnNutEvent(NutEventPayload payload)
     {
-        // Check if this nut matches with positon in payload
+        if (payload.EventType != NutEventType.CanPushQuery)
+        {
+            return;
+        }
+
+        // Check if this nut matches with position in payload
         if (GridPosition != payload.Position)
         {
             return;
@@ -107,7 +115,7 @@ public abstract class NutTile : TileObject
         if (payload.CanBePushed)
         {
             Move(payload.Direction, payload.Distance, payload.Duration);
-        }        
+        }
      }
 
     /// <summary>
@@ -120,7 +128,11 @@ public abstract class NutTile : TileObject
         Vector2Int targetPosition = GridUtils.GetPositionInDir(GridPosition, direction);
 
         TileQueryPayload query = new() { Position = targetPosition };
-        tileQueryEvent.Raise(query);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.TileQuery,
+            Query = query
+        });
         if (!query.IsInGrid) return false;
         return query.IsPushable;
     }
@@ -146,13 +158,13 @@ public abstract class NutTile : TileObject
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        // fill character moved payload for turn records
-        payload = new NutMovedPayload
+        // prepare movement payload for events and turn records
+        payload = new NutEventPayload
         {
             NutType = this.nutType,
             NutTile = this,
-            Current = targetPosVec2Int,
-            Previous = GridPosition,
+            CurrentPosition = targetPosVec2Int,
+            PreviousPosition = GridPosition,
             Duration = moveDuration,
         };
 
@@ -175,18 +187,24 @@ public abstract class NutTile : TileObject
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
         // remove nut from previous position
-        nutRemovedEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutRemoved,
             Position = GridPosition,
         });
 
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
-        tileQueryEvent.Raise(query);
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.TileQuery,
+            Query = query
+        });
         if (query.TileType != TileType.Goal)
         {
-            nutSetEvent.Raise(new NutBasicPayload
+            nutEvents.Raise(new NutEventPayload
             {
+                EventType = NutEventType.NutSet,
                 Position = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
@@ -195,8 +213,9 @@ public abstract class NutTile : TileObject
         else
         {
             // nut enters goal event raise
-            nutInGoalEvent.Raise(new NutBasicPayload
+            nutEvents.Raise(new NutEventPayload
             {
+                EventType = NutEventType.NutInGoal,
                 Position = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
@@ -208,6 +227,11 @@ public abstract class NutTile : TileObject
 
         //Complete turn record
         TurnRecordAddandComplete();
+
+        // notify listeners about nut movement
+        payload.EventType = NutEventType.NutMoved;
+        payload.Position = targetPosition;
+        nutEvents.Raise(payload);
     }
     #endregion
 
@@ -232,13 +256,15 @@ public abstract class NutTile : TileObject
         Debug.Log($"Undo movable tile:  {previous} → {current}");
         GridPosition = previous;
 
-        nutRemovedEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutRemoved,
             Position = current
         });
 
-        nutSetEvent.Raise(new NutBasicPayload
+        nutEvents.Raise(new NutEventPayload
         {
+            EventType = NutEventType.NutSet,
             NutType = this.nutType,
             NutTile = this,
             Position = previous
@@ -261,9 +287,9 @@ public abstract class NutTile : TileObject
     /// </summary>   
     protected void TurnRecordAddandComplete()
     {
-        // register movement as action into turn record 
+        // register movement as action into turn record
         TurnBuilder.Instance.AddAction(
-         new UndoMovableAction(this, payload.Current, payload.Previous, moveDuration)
+         new UndoMovableAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Duration)
            );
 
         // inform turn builder, tht this component has registered an action into turn record
