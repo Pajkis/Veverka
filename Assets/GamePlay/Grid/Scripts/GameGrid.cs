@@ -591,6 +591,7 @@ public class GameGrid : MonoBehaviour
                 SetTileType(payload.Position, TileType.Goal);
                 goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
                 break;
+
             case GoalEventsType.GoalResolved:
                 if (!payload.GoalRemove)
                 {

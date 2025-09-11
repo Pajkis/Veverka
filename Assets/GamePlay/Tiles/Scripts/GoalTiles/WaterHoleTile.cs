@@ -1,8 +1,16 @@
+using UnityEngine;
+
 /// <summary>
 /// Hole tile class
 /// </summary>
-public class HoleTile : GoalTile
+public class WaterHoleTile : GoalTile, INutInteractive
 {
+    #region INutInteractive
+    public Vector2Int GridPos => base.GridPosition;
+    public NutEvents NutEvents => nutEvents;
+    public GridEvents GridEvents => gridEvents;
+    #endregion
+
     #region methods
     /// <summary>
     /// On Nut in hole event settlement
@@ -15,7 +23,8 @@ public class HoleTile : GoalTile
         {
             // Play goal reached sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
-            // Raise goal reached event
+
+            // stone nut falls into the hole, splash around and fills it with road
             if (payload.NutType == NutType.StoneNut)
             {
                 goalEvents.Raise(new GoalEventPayload
@@ -24,10 +33,13 @@ public class HoleTile : GoalTile
                     Position = payload.Position,
                     GoalReduction = 0,
                     GoalRemove = true,
-                    GoalMessage = BubbleMessageType.Yatta,
+                    GoalMessage = BubbleMessageType.Splash,
                     GoalMessageTime = 1f
                 });
                 Destroy(gameObject);
+
+                // splash water to move nuts around
+                this.SplashWater();
 
                 // Set wall in the position of the hole
                 roadEvents.Raise(new RoadEventPayload
@@ -38,6 +50,8 @@ public class HoleTile : GoalTile
                     InstantiateTile = true,
                 });
             }
+
+            // basic nut falls into the hole with no effect
             else if (payload.NutType == NutType.BasicNut)
             {
                 // Display "Ooops" message if a non-stone nut falls into the hole
@@ -51,32 +65,23 @@ public class HoleTile : GoalTile
                 });
             }
 
-            // water nut falls into the hole, create splash effect and water hole
+            // Water nut splashes and moves other nuts around
             else if (payload.NutType == NutType.WaterNut)
             {
-                // remove the hole goal
                 goalEvents.Raise(new GoalEventPayload
                 {
                     EventType = GoalEventsType.GoalResolved,
                     Position = payload.Position,
                     GoalReduction = 0,
-                    GoalRemove = true,
-                    GoalMessage = BubbleMessageType.Yatta,
+                    GoalRemove = false,
+                    GoalMessage = BubbleMessageType.Splash,
                     GoalMessageTime = 1f
                 });
-                Destroy(gameObject);
 
-                // Create water hole goal instead
-                goalEvents.Raise(new GoalEventPayload
-                {
-                    EventType =  GoalEventsType.GoalSet,
-                    Position = payload.Position,
-                    GoalType = GoalType.WaterHoleGoal,
-                    InstantiateTile = true,
-                });
+                // splash water to move nuts around
+                this.SplashWater();
             }
-                
         }
     }
-    #endregion
+    #endregion    
 }

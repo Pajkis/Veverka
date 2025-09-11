@@ -1,8 +1,16 @@
+using UnityEngine;
+
 /// <summary>
 /// Basic Goal type class
 /// </summary>
-public class BasicGoalTile : GoalTile
-{ 
+public class BasicGoalTile : GoalTile, INutInteractive
+{
+    #region INutInteractive
+    public Vector2Int GridPos => base.GridPosition;
+    public NutEvents NutEvents => nutEvents;
+    public GridEvents GridEvents => gridEvents;
+    #endregion
+
     #region methods
     /// <summary>
     /// On nut in goal event settlement
@@ -37,6 +45,13 @@ public class BasicGoalTile : GoalTile
                     WallType = WallType.StoneWall,
                     InstantiateTile = true,
                 });
+            }
+
+            // water nut falls into the goal, create splash effect and splash around
+            else if (payload.NutType == NutType.WaterNut)
+            {
+                // splash water to move nuts around
+                this.SplashWater();
             }
         }        
     }

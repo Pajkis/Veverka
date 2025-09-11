@@ -6,14 +6,15 @@ using UnityEngine;
 public abstract class GoalTile : TileObject
 {
     protected GoalType goalType;
-
+    
     #region events
     [SerializeField] protected NutEvents nutEvents;
     [SerializeField] protected GoalEvents goalEvents;
     [SerializeField] protected WallEvents wallEvents;
     [SerializeField] protected RoadEvents roadEvents;
+
     #endregion
-    
+
     #region Init
     /// <summary>
     /// Init goals and register them in GameGrid
@@ -39,7 +40,7 @@ public abstract class GoalTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        nutEvents.AddListener(OnNutEvent);
+        nutEvents.AddListener(OnNutEvent);        
     }
 
     /// <summary>
