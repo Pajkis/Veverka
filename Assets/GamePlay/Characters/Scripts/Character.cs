@@ -2,6 +2,7 @@
 
 /// <summary>
 /// Character Control anstract class 
+/// gameplay/Characters/Scripts/Character
 /// </summary>
 public abstract class Character : MonoBehaviour
 {
@@ -26,7 +27,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected GridEvents gridEvents;
     [SerializeField] protected AudioEvents audioEvents;
     [SerializeField] protected SettingEvents settingEvents;
-      [SerializeField] protected CharacterEvents characterEvents;
+    [SerializeField] protected CharacterEvents characterEvents;
     #endregion
 
     #region Configs
@@ -85,7 +86,6 @@ public abstract class Character : MonoBehaviour
         Debug.Log($"[Character INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
     }
   
-
     /// <summary>
     /// Undo move of character, set direction
     /// </summary>
@@ -107,7 +107,6 @@ public abstract class Character : MonoBehaviour
         Debug.Log($"Undo character: {previous} → {current}");
         gridPosition = previous;
     }
-
 
     /// <summary>
     /// Move of a character over a distance in set direction

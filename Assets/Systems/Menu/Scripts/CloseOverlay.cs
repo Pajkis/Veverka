@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BackOnlyMenu : MonoBehaviour
+public class CloseOverlay : MonoBehaviour
 {
     /// <summary>
     /// Handle on click quit button event
