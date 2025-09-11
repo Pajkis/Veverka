@@ -38,6 +38,8 @@ public class HoleTile : GoalTile
                     InstantiateTile = true,
                 });
             }
+
+            // basic nut falls into the hole, display "Ooops" message
             else if (payload.NutType == NutType.BasicNut)
             {
                 // Display "Ooops" message if a non-stone nut falls into the hole

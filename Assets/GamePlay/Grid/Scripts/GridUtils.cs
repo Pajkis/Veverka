@@ -66,6 +66,10 @@ public static class GridUtils
                 result.TileType = TileType.Nut;
                 result.NutType = NutType.StoneNut;
                 break;
+            case "NW":
+                result.TileType = TileType.Nut;
+                result.NutType = NutType.WaterNut;
+                break;
             case "G":
                 result.TileType = TileType.Goal;
                 result.GoalType = GoalType.BasicGoal;
@@ -73,6 +77,10 @@ public static class GridUtils
             case "H":
                 result.TileType = TileType.Goal;
                 result.GoalType = GoalType.HoleGoal;
+                break;
+            case "HW":
+                result.TileType = TileType.Goal;
+                result.GoalType = GoalType.WaterHoleGoal;
                 break;
             case "R":
                 result.TileType = TileType.Road;
