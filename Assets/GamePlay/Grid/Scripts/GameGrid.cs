@@ -618,11 +618,11 @@ public class GameGrid : MonoBehaviour
                     WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
                     holeTile.transform.SetParent(gridRoot, false);
                     holeTile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
-                    holeTile.Init(TileType.Goal, payload.Position, GoalType.WaterHoleGoal);
+                    holeTile.Init(TileType.Goal, payload.Position, payload.GoalType);
                     
                     // Set tile type and goal type in grid
                     SetTileType(payload.Position, TileType.Goal);
-                    goalGrid[payload.Position.x, payload.Position.y] = GoalType.WaterHoleGoal;
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
 
                     Debug.Log($"Water hole goal set at {payload.Position.x}, {payload.Position.y}");
                 }              
