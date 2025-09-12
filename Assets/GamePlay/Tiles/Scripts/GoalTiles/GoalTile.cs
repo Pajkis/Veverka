@@ -66,6 +66,15 @@ public abstract class GoalTile : TileObject
     }
 
     protected virtual void OnNutInGoal(NutEventPayload payload)
-    { }
+    {
+        // Raise nut in goal done event to notify that all interaction with goal are complete
+        goalEvents.Raise(new GoalEventPayload
+        {
+            EventType = GoalEventsType.NutInGoalDone,
+            Position = payload.Position,
+            GoalReduction = 0,
+            GoalRemove = false,
+        });
+    }
     #endregion
 }

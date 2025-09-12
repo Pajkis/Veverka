@@ -11,74 +11,76 @@ public class HoleTile : GoalTile
     protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
-        if (GridPosition == payload.Position)
+        if (GridPosition != payload.Position) return;
+        
+        // Play goal reached sound effect
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
+        // Raise goal reached event
+        if (payload.NutType == NutType.StoneNut)
         {
-            // Play goal reached sound effect
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
-            // Raise goal reached event
-            if (payload.NutType == NutType.StoneNut)
+            goalEvents.Raise(new GoalEventPayload
             {
-                goalEvents.Raise(new GoalEventPayload
-                {
-                    EventType = GoalEventsType.GoalResolved,
-                    Position = payload.Position,
-                    GoalReduction = 0,
-                    GoalRemove = true,
-                    GoalMessage = BubbleMessageType.Yatta,
-                    GoalMessageTime = 1f
-                });
-                Destroy(gameObject);
+                EventType = GoalEventsType.GoalResolved,
+                Position = payload.Position,
+                GoalReduction = 0,
+                GoalRemove = true,
+                GoalMessage = BubbleMessageType.Yatta,
+                GoalMessageTime = 1f
+            });
+            Destroy(gameObject);
 
-                // Set wall in the position of the hole
-                roadEvents.Raise(new RoadEventPayload
-                {
-                    EventType = RoadEventType.RoadSet,
-                    Position = payload.Position,
-                    RoadType = RoadType.StoneFilledHole,
-                    InstantiateTile = true,
-                });
-            }
-
-            // basic nut falls into the hole, display "Ooops" message
-            else if (payload.NutType == NutType.BasicNut)
+            // Set wall in the position of the hole
+            roadEvents.Raise(new RoadEventPayload
             {
-                // Display "Ooops" message if a non-stone nut falls into the hole
-                goalEvents.Raise(new GoalEventPayload
-                {
-                    EventType = GoalEventsType.GoalResolved,
-                    Position = payload.Position,
-                    GoalRemove = false,
-                    GoalMessage = BubbleMessageType.Ooops,
-                    GoalMessageTime = 1f
-                });
-            }
-
-            // water nut falls into the hole, create splash effect and water hole
-            else if (payload.NutType == NutType.WaterNut)
-            {
-                // remove the hole goal
-                goalEvents.Raise(new GoalEventPayload
-                {
-                    EventType = GoalEventsType.GoalResolved,
-                    Position = payload.Position,
-                    GoalReduction = 0,
-                    GoalRemove = true,
-                    GoalMessage = BubbleMessageType.Yatta,
-                    GoalMessageTime = 1f
-                });
-                Destroy(gameObject);
-
-                // Create water hole goal instead
-                goalEvents.Raise(new GoalEventPayload
-                {
-                    EventType =  GoalEventsType.GoalSet,
-                    Position = payload.Position,
-                    GoalType = GoalType.WaterHoleGoal,
-                    InstantiateTile = true,
-                });
-            }
-                
+                EventType = RoadEventType.RoadSet,
+                Position = payload.Position,
+                RoadType = RoadType.StoneFilledHole,
+                InstantiateTile = true,
+            });
         }
+
+        // basic nut falls into the hole, display "Ooops" message
+        else if (payload.NutType == NutType.BasicNut)
+        {
+            // Display "Ooops" message if a non-stone nut falls into the hole
+            goalEvents.Raise(new GoalEventPayload
+            {
+                EventType = GoalEventsType.GoalResolved,
+                Position = payload.Position,
+                GoalRemove = false,
+                GoalMessage = BubbleMessageType.Ooops,
+                GoalMessageTime = 1f
+            });
+        }
+
+        // water nut falls into the hole, create water hole
+        else if (payload.NutType == NutType.WaterNut)
+        {
+            // remove the hole goal
+            goalEvents.Raise(new GoalEventPayload
+            {
+                EventType = GoalEventsType.GoalResolved,
+                Position = payload.Position,
+                GoalReduction = 0,
+                GoalRemove = true,
+                GoalMessage = BubbleMessageType.Yatta,
+                GoalMessageTime = 1f
+            });
+            Destroy(gameObject);
+
+            // Create water hole goal instead
+            goalEvents.Raise(new GoalEventPayload
+            {
+                EventType =  GoalEventsType.GoalSet,
+                Position = payload.Position,
+                GoalType = GoalType.WaterHoleGoal,
+                InstantiateTile = true,
+            });
+        }
+
+        //Call base - all goal actions settleted
+        base.OnNutInGoal(payload);
+        
     }
     #endregion
 }
