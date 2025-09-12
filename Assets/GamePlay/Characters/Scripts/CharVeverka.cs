@@ -216,6 +216,9 @@ public class CharVeverka : Character
     /// </summary>
     protected override void OnMoveStart()
     {
+        //Reset  pending data request flag
+        hasPendingDataRequest = false;
+        // play move sound
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
     }
 
@@ -227,8 +230,8 @@ public class CharVeverka : Character
         base.OnMoveComplete(targetPosition);
 
         // raise event, that character made a turn -> turn count
-            payload.EventType = CharacterEventType.MoveCompleted;
-            characterEvents.Raise(payload);
+        payload.EventType = CharacterEventType.MoveCompleted;
+        characterEvents.Raise(payload);
 
         // Handle any pending character data requests now that move is complete
         if (hasPendingDataRequest)

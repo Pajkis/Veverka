@@ -7,16 +7,10 @@ public enum CharacterEventType
     DataRequest,
     DataResponse,
 
-    // Movement events  
-    Moved,
+    // Movement events    
     MoveStarted,
     MoveCompleted,
 
     // Rotation events
   //  Rotated,
-
-    // Interaction events
- //   PushAttempt,
- //   PushSuccessful,
- //   PushFailed,   
 }

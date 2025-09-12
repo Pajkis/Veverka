@@ -44,6 +44,11 @@ public abstract class Character : MonoBehaviour
     {
         get { return facingDirection; }      
     }
+
+    public Vector2Int GridPosition
+    {
+        get { return gridPosition; }
+    }
     #endregion
 
 
@@ -118,7 +123,7 @@ public abstract class Character : MonoBehaviour
     {
         //do not execute move when already moving
         if (smoothMover.IsMoving) return;
-
+        
         // UndoID for turn history record
         UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
         // inform turn builder, that this component is going to register a action into turn record
@@ -141,6 +146,9 @@ public abstract class Character : MonoBehaviour
               RequestData = false,
               ResponseData = false,
           };
+
+        //Raise move started event
+        characterEvents.Raise(payload);
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
