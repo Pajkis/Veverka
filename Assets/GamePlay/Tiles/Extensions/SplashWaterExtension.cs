@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 /// <summary>
 /// Static extension methods for ISplashWater interface
@@ -15,9 +16,10 @@ public static class SplashWaterExtension
         for (int i = 0; i < directionCount; i++)
         {
             // Check each direction around the splash position
+            Vector2Int NutQueryPosition = GridUtils.GetPositionInDir(splasher.GridPos, (Direction)i);
             TileQueryPayload queryPayload = new TileQueryPayload
             {
-                Position = GridUtils.GetPositionInDir(splasher.GridPos, (Direction)i)
+                Position = NutQueryPosition
             };
 
             // Query the tile at the position
@@ -30,14 +32,26 @@ public static class SplashWaterExtension
             // Check if there is a basic nut that can be pushed away
             if (queryPayload.TileType == TileType.Nut && queryPayload.NutType == NutType.BasicNut)
             {
+                //check if the tile in the direction is pushable
+               Vector2Int PushQueryPosition = GridUtils.GetPositionInDir(queryPayload.Position, (Direction)i);
+               queryPayload.Position = PushQueryPosition;
+
+                splasher.GridEvents.Raise(new GridEventPayload
+                {
+                    EventType = GridEventType.TileQuery,
+                    Query = queryPayload,
+                });
+
+                if (!queryPayload.IsPushable) return;
+
                 // Raise event to push the nut away from the splash
                 splasher.NutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,
-                    Position = queryPayload.Position,
+                    Position = NutQueryPosition,
                     Direction = (Direction)i,
                     Distance = 1,
-                    Duration = 0.5f, // Add some duration for the movement animation
+                    Duration = 0.5f, 
                 });
             }
         }
