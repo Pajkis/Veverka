@@ -23,6 +23,7 @@ public static class SplashWaterExtension
             // Query the tile at the position
             splasher.GridEvents.Raise(new GridEventPayload
             {
+                EventType = GridEventType.TileQuery,
                 Query = queryPayload,
             });
 
@@ -35,6 +36,8 @@ public static class SplashWaterExtension
                     EventType = NutEventType.CanPushQuery,
                     Position = queryPayload.Position,
                     Direction = (Direction)i,
+                    Distance = 1,
+                    Duration = 0.5f, // Add some duration for the movement animation
                 });
             }
         }

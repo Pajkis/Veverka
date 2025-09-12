@@ -36,8 +36,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
                     GoalMessage = BubbleMessageType.Splash,
                     GoalMessageTime = 1f
                 });
-                Destroy(gameObject);
-
+               
                 // splash water to move nuts around
                 this.SplashWater();
 
@@ -49,6 +48,9 @@ public class WaterHoleTile : GoalTile, INutInteractive
                     RoadType = RoadType.StoneFilledHole,
                     InstantiateTile = true,
                 });
+
+                // Destroy with small delay to ensure all operations complete
+                StartCoroutine(DestroyAfterDelay());
             }
 
             // basic nut falls into the hole with no effect
@@ -82,6 +84,15 @@ public class WaterHoleTile : GoalTile, INutInteractive
                 this.SplashWater();
             }
         }
+    }
+
+    /// <summary>
+    /// Coroutine to destroy the waterhole after a small delay
+    /// </summary>
+    private System.Collections.IEnumerator DestroyAfterDelay()
+    {
+        yield return null; // Wait one frame
+        Destroy(gameObject);
     }
     #endregion    
 }

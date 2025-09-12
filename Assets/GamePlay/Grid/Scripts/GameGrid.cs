@@ -611,17 +611,21 @@ public class GameGrid : MonoBehaviour
                     goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
                     return;
                 }
+
                 // Instantiate new tile on goal position
                 if ( payload.GoalType == GoalType.WaterHoleGoal)
-                {
+                {                   
                     WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
                     holeTile.transform.SetParent(gridRoot, false);
-                    holeTile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    holeTile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
                     holeTile.Init(TileType.Goal, payload.Position, GoalType.WaterHoleGoal);
+                    
+                    // Set tile type and goal type in grid
                     SetTileType(payload.Position, TileType.Goal);
-                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-                }
-              
+                    goalGrid[payload.Position.x, payload.Position.y] = GoalType.WaterHoleGoal;
+
+                    Debug.Log($"Water hole goal set at {payload.Position.x}, {payload.Position.y}");
+                }              
                 break;
 
             case GoalEventsType.GoalResolved:
@@ -693,7 +697,7 @@ public class GameGrid : MonoBehaviour
         var tile = grid[position.x, position.y];
         if (tile == TileType.Goal)
         {
-            return goalGrid[position.x, position.y] != GoalType.HoleGoal;
+            return goalGrid[position.x, position.y] != GoalType.HoleGoal && goalGrid[position.x, position.y] != GoalType.WaterHoleGoal;
         }
         return tile == TileType.Empty || tile == TileType.Road;
     }
