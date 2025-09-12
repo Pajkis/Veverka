@@ -104,14 +104,14 @@ public class CharVeverka : Character
         {
             if (payload.EventType == CharacterEventType.DataRequest)
             {
-                // If character is currently moving, queue the request
-                if (smoothMover.IsMoving)
+                // If turn is active, queue the request
+                if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked)
                 {
                     hasPendingDataRequest = true;
                     return;
                 }
 
-                // Send current position immediately if not moving
+                // Send current position immediately if turn not active
                 SendCharacterData();
             }
         }
@@ -146,7 +146,11 @@ public class CharVeverka : Character
     /// <param name="direction"></param>
     void HandleInput(Direction inputDirection)
     {
-        if (smoothMover.IsMoving) return;
+        // Use TurnControl instead of SmoothMover for input locking
+        if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked) return;
+        
+        // Notify TurnControl that input was triggered
+        TurnControl.Instance?.OnInputTriggered();
 
         // Try to move in input arrow direction
         if (inputDirection == facingDirection)
@@ -181,11 +185,11 @@ public class CharVeverka : Character
             // Query if the nut can be pushed in this direction
             Vector2Int targetPushPos = GridUtils.GetPositionInDir(targetPos, inputDirection, distance);
             var pushQuery = new TileQueryPayload
-            {             
-                Position = targetPushPos,               
+            {
+                Position = targetPushPos,
             };
             Debug.Log($"Querying pushable nut at (x,y): {pushQuery.Position.x}, {pushQuery.Position.y}, is pushable: {pushQuery.IsPushable}");
-           
+
             gridEvents.Raise(new GridEventPayload
             {
                 EventType = GridEventType.TileQuery,
@@ -202,7 +206,7 @@ public class CharVeverka : Character
                 {
                     EventType = NutEventType.NutPush,
                     Position = targetPos,
-                    CurrentPosition = targetPos,                  
+                    CurrentPosition = targetPos,
                     Direction = inputDirection,
                     Distance = distance,
                     Duration = moveDuration
@@ -213,13 +217,24 @@ public class CharVeverka : Character
             {
                 // Cannot push - optionally animate failed push
                 Debug.Log("Cannot push nut in this direction");
-            }           
+            }
         }
         // Rotate to input arrow direction
         else
         {
+
+            characterEvents.Raise(new CharacterEventPayload
+            {
+                EventType = CharacterEventType.MoveStarted
+            });
+            
             facingDirection = Rotate(inputDirection);
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
+
+            characterEvents.Raise(new CharacterEventPayload
+            {
+                EventType = CharacterEventType.MoveCompleted
+            });
         }
     }
 

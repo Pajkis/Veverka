@@ -72,8 +72,8 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // undo last turn only if no object is currently moving
-        if (Input.GetKeyDown(KeyCode.B) && !SmoothMover.AnyMoving)
+        // undo last turn only if turn is not active
+        if (Input.GetKeyDown(KeyCode.B) && (TurnControl.Instance == null || !TurnControl.Instance.IsInputLocked))
         {
             Undo();
         }

@@ -9,17 +9,6 @@ public class SmoothMover : MonoBehaviour
 {
     #region propeties
     public bool IsMoving { get; private set; }
-
-    /// <summary>
-    /// Counts active movement animations across all SmoothMover instances.
-    /// Used to block new undo requests until previous movement finishes.
-    /// </summary>
-    private static int activeMovers = 0;
-
-    /// <summary>
-    /// Returns true if any SmoothMover is currently animating movement.
-    /// </summary>
-    public static bool AnyMoving => activeMovers > 0;
     #endregion
 
     #region methods
@@ -49,7 +38,6 @@ public class SmoothMover : MonoBehaviour
     private IEnumerator MoveRoutine(Vector3 currentPosition, Vector3 targetPosition, float duration, Action onStart, Action onComplete)
     {
         IsMoving = true;
-        activeMovers++;
 
         onStart?.Invoke();
 
@@ -69,7 +57,6 @@ public class SmoothMover : MonoBehaviour
         onComplete?.Invoke();
 
         IsMoving = false;
-        activeMovers--;
     }
 }
 #endregion
