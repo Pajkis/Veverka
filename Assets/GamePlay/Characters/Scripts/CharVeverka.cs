@@ -153,6 +153,7 @@ public class CharVeverka : Character
         {
             int distance = moveDistance;
             Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
+            Debug.Log($"current position (x,y): {gridPosition.x}, {gridPosition.y}");
             Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y}");
 
             // Check if target position is in grid
@@ -164,44 +165,55 @@ public class CharVeverka : Character
             });
             if (!gridQuery.IsInGrid) return;
 
-            // Check if there's a pushable object at target position
-            if (gridQuery.TileType == TileType.Nut)
-            {
-                // Query if the nut can be pushed in this direction
-                var pushQuery = new NutEventPayload
-                {
-                    EventType = NutEventType.CanPushQuery,
-                    Position = targetPos,
-                    Direction = inputDirection,
-                    Distance = distance,
-                    Duration = moveDuration,
-                    CanBePushed = false,
-                };
-
-                // Push query and push if possible
-                nutEvents.Raise(pushQuery);
-
-                // If there's a nut and it can be pushed
-                if (pushQuery.CanBePushed)
-                {
-                    // Move the character
-                    Move(inputDirection, distance, moveDuration);
-                }
-                else
-                {
-                    // Cannot push - optionally animate failed push
-                    Debug.Log("Cannot push nut in this direction");
-                }
-            }
-            // Move character to empty walkable tile
-            else if (gridQuery.IsWalkable)
+            // If tile is walkable, move character
+            if (gridQuery.IsWalkable)
             {
                 Move(inputDirection, distance, moveDuration);
+                return;
+            }
+
+            // Check if tile is pushable (only push nuts)
+            if (gridQuery.TileType != TileType.Nut)
+            {
+                return;
+            }
+
+            // Query if the nut can be pushed in this direction
+            Vector2Int targetPushPos = GridUtils.GetPositionInDir(targetPos, inputDirection, distance);
+            var pushQuery = new TileQueryPayload
+            {             
+                Position = targetPushPos,               
+            };
+            Debug.Log($"Querying pushable nut at (x,y): {pushQuery.Position.x}, {pushQuery.Position.y}, is pushable: {pushQuery.IsPushable}");
+           
+            gridEvents.Raise(new GridEventPayload
+            {
+                EventType = GridEventType.TileQuery,
+                Query = pushQuery
+            });
+
+            if (!pushQuery.IsInGrid) return;
+
+            // If the nut can be pushed, move both the nut and the character
+            if (pushQuery.IsPushable)
+            {
+                Move(inputDirection, distance, moveDuration);
+                nutEvents.Raise(new NutEventPayload
+                {
+                    EventType = NutEventType.NutPush,
+                    Position = targetPos,
+                    CurrentPosition = targetPos,                  
+                    Direction = inputDirection,
+                    Distance = distance,
+                    Duration = moveDuration
+                });
+
             }
             else
             {
-                Debug.Log("Cannot move - tile not walkable");
-            }
+                // Cannot push - optionally animate failed push
+                Debug.Log("Cannot push nut in this direction");
+            }           
         }
         // Rotate to input arrow direction
         else
@@ -218,6 +230,7 @@ public class CharVeverka : Character
     {
         //Reset  pending data request flag
         hasPendingDataRequest = false;
+
         // play move sound
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
     }

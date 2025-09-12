@@ -122,7 +122,7 @@ public abstract class Character : MonoBehaviour
     protected virtual void Move(Direction direction, int distance, float duration)
     {
         //do not execute move when already moving
-        if (smoothMover.IsMoving) return;
+      //  if (smoothMover.IsMoving) return;
         
         // UndoID for turn history record
         UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";

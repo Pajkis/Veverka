@@ -99,7 +99,7 @@ public abstract class NutTile : TileObject
     /// <param name="payload"></param>
     private void OnNutEvent(NutEventPayload payload)
     {
-        if (payload.EventType != NutEventType.CanPushQuery)
+        if (payload.EventType != NutEventType.NutPush)
         {
             return;
         }
@@ -111,11 +111,11 @@ public abstract class NutTile : TileObject
         }
 
         // check if nut can be pushed
-        payload.CanBePushed = CanBePushed(payload.Direction);
-        if (payload.CanBePushed)
-        {
+       // payload.CanBePushed = CanBePushed(payload.Direction);
+      //  if (payload.CanBePushed)
+      //  {
             Move(payload.Direction, payload.Distance, payload.Duration);
-        }
+      //  }
      }
 
     /// <summary>
@@ -147,7 +147,7 @@ public abstract class NutTile : TileObject
     /// <param name="duration">duration of movement</param>
     public virtual void Move(Direction direction, int distance, float duration)
     {
-        if (smoothMover.IsMoving) return;
+       // if (smoothMover.IsMoving) return;
 
         //Register turn record
         TurnRecordExpectSource();

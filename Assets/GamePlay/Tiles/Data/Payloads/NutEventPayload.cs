@@ -20,6 +20,5 @@ public class NutEventPayload
     // Push query data
     public Direction Direction;
     public int Distance;
-    public float Duration;
-    public bool CanBePushed;
+    public float Duration;    
 }

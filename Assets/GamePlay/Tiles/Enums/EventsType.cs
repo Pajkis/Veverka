@@ -12,7 +12,7 @@ public enum GoalEventsType
 /// </summary>
 public enum NutEventType
 {
-    CanPushQuery,
+    NutPush,
     NutSet,
     NutRemoved,
     NutInGoal,

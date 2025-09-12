@@ -33,7 +33,7 @@ public static class SplashWaterExtension
                 // Raise event to push the nut away from the splash
                 splasher.NutEvents.Raise(new NutEventPayload
                 {
-                    EventType = NutEventType.CanPushQuery,
+                    EventType = NutEventType.NutPush,
                     Position = queryPayload.Position,
                     Direction = (Direction)i,
                     Distance = 1,

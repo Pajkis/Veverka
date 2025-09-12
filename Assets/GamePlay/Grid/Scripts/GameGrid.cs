@@ -660,6 +660,7 @@ public class GameGrid : MonoBehaviour
         payload.IsInGrid = IsInGrid(payload.Position);
         if (!payload.IsInGrid) return;
 
+        Debug.Log($"[GameGrid] Tile query at position: {payload.Position.x}, {payload.Position.y}");
         payload.IsWalkable = IsWalkableAt(payload.Position);
         payload.IsPushable = IsPushableAt(payload.Position);
         payload.TileType = grid[payload.Position.x, payload.Position.y];
@@ -707,12 +708,8 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     public bool IsPushableAt(Vector2Int position)
     {
-        var tile = grid[position.x, position.y];
-        if (tile == TileType.Goal)
-        {
-            return true;
-        }
-        return tile == TileType.Empty || tile == TileType.Road;
+        var tile = grid[position.x, position.y];       
+        return tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal;
     }
         
     /// <summary>
