@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using UnityEditor.Build;
 
 /// <summary>
 /// Control of Veverka
@@ -11,7 +12,7 @@ public class CharVeverka : Character
 {
     #region events 
     [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] NutEvents nutEvents;
+    [SerializeField] NutEvents nutEvents;
     #endregion
 
     // Queue for pending character data requests
@@ -81,46 +82,6 @@ public class CharVeverka : Character
             hasShownStartupMessage = true;
             Debug.Log("Sending startup message from Veverka");
 
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    Character = this,
-                    EventType = CharacterEventType.DataResponse,
-                    CurrentPosition = gridPosition,
-                    Direction = facingDirection,
-                    Duration = moveDuration,
-                    RequestData = false,
-                    ResponseData = true,
-                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                    CharacterBubbleMessageTime = 2.0f
-                });
-        }
-    }
-
-    /// <summary>
-    /// on character data request - respond with character data
-    /// </summary>
-    /// <param name="payload"></param>
-        private void OnCharacterEvent(CharacterEventPayload payload)
-        {
-            if (payload.EventType == CharacterEventType.DataRequest)
-            {
-                // If turn is active, queue the request
-                if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked)
-                {
-                    hasPendingDataRequest = true;
-                    return;
-                }
-
-                // Send current position immediately if turn not active
-                SendCharacterData();
-            }
-        }
-
-    /// <summary>
-    /// Send character data response (for regular requests, not startup)
-    /// </summary>
-    private void SendCharacterData()
-    {
             characterEvents.Raise(new CharacterEventPayload
             {
                 Character = this,
@@ -130,9 +91,49 @@ public class CharVeverka : Character
                 Duration = moveDuration,
                 RequestData = false,
                 ResponseData = true,
-                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
-                CharacterBubbleMessageTime = 0f
+                CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                CharacterBubbleMessageTime = 2.0f
             });
+        }
+    }
+
+    /// <summary>
+    /// on character data request - respond with character data
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCharacterEvent(CharacterEventPayload payload)
+    {
+        if (payload.EventType == CharacterEventType.DataRequest)
+        {
+            // If turn is active, queue the request
+            if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked)
+            {
+                hasPendingDataRequest = true;
+                return;
+            }
+
+            // Send current position immediately if turn not active
+            SendCharacterData();
+        }
+    }
+
+    /// <summary>
+    /// Send character data response (for regular requests, not startup)
+    /// </summary>
+    private void SendCharacterData()
+    {
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            Character = this,
+            EventType = CharacterEventType.DataResponse,
+            CurrentPosition = gridPosition,
+            Direction = facingDirection,
+            Duration = moveDuration,
+            RequestData = false,
+            ResponseData = true,
+            CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+            CharacterBubbleMessageTime = 0f
+        });
     }
 
     #endregion
@@ -146,9 +147,16 @@ public class CharVeverka : Character
     /// <param name="direction"></param>
     void HandleInput(Direction inputDirection)
     {
-        // Use TurnControl instead of SmoothMover for input locking
-        if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked) return;
+        Debug.Log($"[CharVeverka DEBUG] HandleInput called with direction: {inputDirection}");
         
+        // Use TurnControl instead of SmoothMover for input locking
+        if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked) 
+        {
+            Debug.Log("[CharVeverka DEBUG] Input is locked by TurnControl, ignoring");
+            return;
+        }
+
+        Debug.Log("[CharVeverka DEBUG] Calling TurnControl.OnInputTriggered()");
         // Notify TurnControl that input was triggered
         TurnControl.Instance?.OnInputTriggered();
 
@@ -167,11 +175,23 @@ public class CharVeverka : Character
                 EventType = GridEventType.TileQuery,
                 Query = gridQuery
             });
-            if (!gridQuery.IsInGrid) return;
+            if (!gridQuery.IsInGrid) 
+            {
+                Debug.Log("[CharVeverka DEBUG] Target not in grid - sending MoveFailed event");
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                return;
+            }
 
             // If tile is walkable, move character
             if (gridQuery.IsWalkable)
             {
+                Debug.Log("[CharVeverka DEBUG] Tile is walkable - calling Move() which will send MoveStarted event");
                 Move(inputDirection, distance, moveDuration);
                 return;
             }
@@ -179,6 +199,14 @@ public class CharVeverka : Character
             // Check if tile is pushable (only push nuts)
             if (gridQuery.TileType != TileType.Nut)
             {
+                Debug.Log("[CharVeverka DEBUG] Tile is not a nut - sending MoveFailed event");
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
                 return;
             }
 
@@ -196,11 +224,23 @@ public class CharVeverka : Character
                 Query = pushQuery
             });
 
-            if (!pushQuery.IsInGrid) return;
+            if (!pushQuery.IsInGrid) 
+            {
+                Debug.Log("[CharVeverka DEBUG] Push target not in grid - sending MoveFailed event");
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                return;
+            }
 
             // If the nut can be pushed, move both the nut and the character
             if (pushQuery.IsPushable)
             {
+                Debug.Log("[CharVeverka DEBUG] Nut is pushable - calling Move() which will send MoveStarted event");
                 Move(inputDirection, distance, moveDuration);
                 nutEvents.Raise(new NutEventPayload
                 {
@@ -211,10 +251,19 @@ public class CharVeverka : Character
                     Distance = distance,
                     Duration = moveDuration
                 });
-
             }
             else
             {
+                Debug.Log("[CharVeverka DEBUG] Nut cannot be pushed - sending MoveFailed event");
+                // move failed
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+
                 // Cannot push - optionally animate failed push
                 Debug.Log("Cannot push nut in this direction");
             }
@@ -222,19 +271,9 @@ public class CharVeverka : Character
         // Rotate to input arrow direction
         else
         {
-
-            characterEvents.Raise(new CharacterEventPayload
-            {
-                EventType = CharacterEventType.MoveStarted
-            });
-            
-            facingDirection = Rotate(inputDirection);
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
-
-            characterEvents.Raise(new CharacterEventPayload
-            {
-                EventType = CharacterEventType.MoveCompleted
-            });
+            Debug.Log("[CharVeverka DEBUG] Need to rotate - calling Rotate() which will send RotateStarted event");
+            // Rotate character to input arrow direction
+            Rotate(facingDirection, inputDirection, moveDuration);            
         }
     }
 
@@ -268,5 +307,59 @@ public class CharVeverka : Character
             SendCharacterData(); // Use default values for movement completion
         }
     }
+
+    #endregion
+
+    #region rotate
+
+    /// <summary>
+    /// rotation of object to the direction
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    protected override void Rotate(Direction currentDirection, Direction targetDirection, float duration)
+    {
+        Debug.Log($"[CharVeverka DEBUG] Rotate called: {currentDirection} -> {targetDirection}");
+        // start rotate
+        Debug.Log("[CharVeverka DEBUG] Sending RotateStarted event");
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            EventType = CharacterEventType.RotateStarted,           
+        });
+        Debug.Log("[CharVeverka DEBUG] RotateStarted event sent");
+
+        // Update facing direction immediately since this is the new direction
+        facingDirection = targetDirection;
+
+        smoothRotate.Rotate(gridPosition, currentDirection, targetDirection, duration, OnRotateStart, () => OnRotateComplete(gridPosition));
+    }
+
+    /// <summary>
+    /// Handles the start of a rotation event.
+    /// </summary>
+    /// <remarks>This method raises an audio event to play a sound effect associated with the rotation action.
+    /// Override this method to customize behavior when a rotation starts.</remarks>
+    protected override void OnRotateStart()
+    {
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
+    }
+
+    /// <summary>
+    /// Handles the completion of a rotation operation.
+    /// </summary>
+    /// <param name="targetTransform">The grid position (unchanged during rotation).</param>
+    protected override void OnRotateComplete(Vector2Int targetTransform)
+    {
+       // Grid position doesn't change during rotation, only facing direction changes
+       // The facing direction should be updated here to match the target direction
+       
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            EventType = CharacterEventType.RotateCompleted,
+            CurrentPosition = gridPosition,
+            Direction = facingDirection,
+        });
+    }
+
     #endregion
 }

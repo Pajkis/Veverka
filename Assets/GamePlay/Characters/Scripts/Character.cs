@@ -18,6 +18,7 @@ public abstract class Character : MonoBehaviour
       protected CharacterEventPayload payload = new();
 
     protected SmoothMover smoothMover;
+    protected SmoothRotate smoothRotate;
 
     protected string UndoId;
     #endregion
@@ -87,8 +88,25 @@ public abstract class Character : MonoBehaviour
         moveDuration = gameplayConfig.moveTime;
      
         smoothMover = GetComponent<SmoothMover>();
-        Rotate(facingDirection);
+        if (smoothMover == null)
+        {
+            Debug.LogError($"[Character Init] SmoothMover component missing on {gameObject.name}");
+            return;
+        }
+        smoothRotate = GetComponent<SmoothRotate>();
+        if (smoothRotate == null)
+        {
+            Debug.LogError($"[Character Init] SmoothRotate component missing on {gameObject.name}");
+            return;
+        }
+        smoothRotate.Rotate(gridPosition, facingDirection, facingDirection, 0f,
+            onStart: null, onComplete: null);    
+        // Rotate(facingDirection);
+
         Debug.Log($"[Character INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
+  
+    
+    
     }
   
     /// <summary>
@@ -105,12 +123,14 @@ public abstract class Character : MonoBehaviour
         Vector3 fromWorld = GridUtils.GridToWorld(current);
         Vector3 toWorld = GridUtils.GridToWorld(previous);
 
-        Rotate(direction);
+        
         smoothMover.Move(fromWorld, toWorld, duration,
             onStart: null, onComplete: null);
-
-        Debug.Log($"Undo character: {previous} → {current}");
+        
         gridPosition = previous;
+        smoothRotate.Rotate(gridPosition, facingDirection, direction, 0f, 
+            onStart: null, onComplete: null);
+        Debug.Log($"Undo character: {previous} → {current}");
     }
 
     /// <summary>
@@ -148,7 +168,9 @@ public abstract class Character : MonoBehaviour
           };
 
         //Raise move started event
+        Debug.Log($"[Character DEBUG] Sending MoveStarted event for {GetType().Name}");
         characterEvents.Raise(payload);
+        Debug.Log($"[Character DEBUG] MoveStarted event sent for {GetType().Name}");
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
@@ -181,28 +203,29 @@ public abstract class Character : MonoBehaviour
         Debug.Log($"[{this.GetType().Name} move Complete] Added + Notified {UndoId}");
 
     }
+    #endregion
 
+    #region Rotate
+    protected virtual void OnRotateStart()
+    {
+        //Default: nothing
+    }
+
+    protected virtual void OnRotateComplete(Vector2Int targetTransform)
+    {
+        //Default: nothing
+    }
+
+    #endregion
     /// <summary>
     /// rotation of object to the direction
     /// </summary>
     /// <param name="direction"></param>
     /// <returns></returns>
-    protected virtual Direction Rotate(Direction direction)
+    protected virtual void Rotate(Direction currentDirection, Direction targetDirection, float duration)
     {
-        facingDirection = direction;
-        Vector3 rotate = transform.eulerAngles;
-
-        switch (direction)
-        {
-            case Direction.Up: rotate.z = 180; break;
-            case Direction.Left: rotate.z = 270; break;
-            case Direction.Right: rotate.z = 90; break;
-            case Direction.Down: rotate.z = 0; break;
-        }
-
-        transform.eulerAngles = rotate;
-        return direction;
+        //Default: nothing
     }
-    #endregion
+
 
 }
