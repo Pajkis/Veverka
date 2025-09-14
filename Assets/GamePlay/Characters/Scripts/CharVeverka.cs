@@ -247,7 +247,8 @@ public class CharVeverka : Character
                 nutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,
-                    CurrentPosition = targetPos,
+                    PreviousPosition = targetPos,
+                    CurrentPosition = targetPushPos,
                     Direction = inputDirection,
                     Distance = distance,
                     Duration = moveDuration

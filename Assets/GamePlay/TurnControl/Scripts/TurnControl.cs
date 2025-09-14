@@ -229,14 +229,6 @@ public class TurnControl : MonoBehaviour
             UnlockInput();
         }
     }
-
-    /// <summary>
-    /// Create unique action identifier with position coordinates
-    /// </summary>
-    private string CreateActionId(string actionType, Vector2Int position)
-    {
-        return $"{actionType} ({position.x},{position.y})";
-    }
     #endregion
 
     #region Event Handlers
@@ -256,7 +248,7 @@ public class TurnControl : MonoBehaviour
                 {
                     DebugLogger.Log(DebugLogCategory.TurnControl, "MoveStarted: Stopping timeout and starting action", this);
                     StopWaitingForCharacterTrigger();
-                    StartAction(CreateActionId("Character Move", payload.CurrentPosition));
+                    StartAction($"Character Move ({payload.PreviousPosition.x},{payload.PreviousPosition.y})");
                 }
                 else
                 {
@@ -266,7 +258,14 @@ public class TurnControl : MonoBehaviour
 
             case CharacterEventType.MoveCompleted:
                 DebugLogger.Log(DebugLogCategory.TurnControl, "Processing MoveCompleted event", this);
-                CompleteAction(CreateActionId("Character Move", payload.CurrentPosition));
+                if (payload.PreviousPosition == payload.CurrentPosition)
+                {
+                    CompleteAction($"Character Move ({payload.PreviousPosition.x},{payload.PreviousPosition.y})");
+                }
+                else
+                {
+                    CompleteAction($"Character Move ({payload.PreviousPosition.x},{payload.PreviousPosition.y}) → ({payload.CurrentPosition.x},{payload.CurrentPosition.y})");
+                }
                 break;
                 
             case CharacterEventType.RotateStarted:
@@ -275,7 +274,7 @@ public class TurnControl : MonoBehaviour
                 {
                     DebugLogger.Log(DebugLogCategory.TurnControl, "RotateStarted: Stopping timeout and starting action", this);
                     StopWaitingForCharacterTrigger();
-                    StartAction(CreateActionId("Character Rotate", payload.CurrentPosition));
+                    StartAction($"Character Rotate ({payload.CurrentPosition.x},{payload.CurrentPosition.y})");
                 }
                 else
                 {
@@ -285,7 +284,7 @@ public class TurnControl : MonoBehaviour
 
             case CharacterEventType.RotateCompleted:
                 DebugLogger.Log(DebugLogCategory.TurnControl, "Processing RotateCompleted event", this);
-                CompleteAction(CreateActionId("Character Rotate", payload.CurrentPosition));
+                CompleteAction($"Character Rotate ({payload.CurrentPosition.x},{payload.CurrentPosition.y})");
                 break;
                 
             case CharacterEventType.MoveFailed:
@@ -317,13 +316,23 @@ public class TurnControl : MonoBehaviour
         switch (payload.EventType)
         {
             case NutEventType.NutPush:
-                StartAction(CreateActionId("Nut Push", payload.CurrentPosition));
+                StartAction($"Nut Push ({payload.PreviousPosition.x},{payload.PreviousPosition.y})");
                 break;
             case NutEventType.NutMoved:
-                CompleteAction(CreateActionId("Nut Push", payload.CurrentPosition));
+                if (payload.PreviousPosition == payload.CurrentPosition)
+                {
+                    CompleteAction($"Nut Push ({payload.PreviousPosition.x},{payload.PreviousPosition.y})");
+                }
+                else
+                {
+                    CompleteAction($"Nut Push ({payload.PreviousPosition.x},{payload.PreviousPosition.y}) → ({payload.CurrentPosition.x},{payload.CurrentPosition.y})");
+                }
+                break;
+            case NutEventType.NutEnteringGoal:
+                StartAction($"Goal Action ({payload.CurrentPosition.x},{payload.CurrentPosition.y})");
                 break;
             case NutEventType.NutInGoal:
-                StartAction(CreateActionId("Goal Action", payload.CurrentPosition));
+                // NutInGoal is processed by GoalTile, no action needed in TurnControl
                 break;
         }
     }
@@ -336,7 +345,7 @@ public class TurnControl : MonoBehaviour
         switch (payload.EventType)
         {
             case GoalEventsType.NutInGoalDone:
-                CompleteAction(CreateActionId("Goal Action", payload.Position));
+                CompleteAction($"Goal Action ({payload.Position.x},{payload.Position.y})");
                 break;
         }
     }

@@ -16,6 +16,7 @@ public enum NutEventType
     NutPush,
     NutSet,
     NutRemoved,
+    NutEnteringGoal,
     NutInGoal,
     NutMoved
 }

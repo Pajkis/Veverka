@@ -48,10 +48,11 @@ public static class SplashWaterExtension
                 splasher.NutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,
-                    CurrentPosition = NutQueryPosition,
+                    PreviousPosition = NutQueryPosition,
+                    CurrentPosition = PushQueryPosition,
                     Direction = (Direction)i,
                     Distance = 1,
-                    Duration = 0.5f, 
+                    Duration = 0.5f,
                 });
             }
         }

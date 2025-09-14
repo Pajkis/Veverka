@@ -105,7 +105,7 @@ public abstract class NutTile : TileObject
         }
 
         // Check if this nut matches with position in payload
-        if (GridPosition != payload.CurrentPosition)
+        if (GridPosition != payload.PreviousPosition)
         {
             return;
         }
@@ -212,7 +212,17 @@ public abstract class NutTile : TileObject
         }
         else
         {
-            // nut enters goal event raise
+            // First send NutEnteringGoal event for TurnControl to start goal action
+            nutEvents.Raise(new NutEventPayload
+            {
+                EventType = NutEventType.NutEnteringGoal,
+                CurrentPosition = targetPosition,
+                PreviousPosition = GridPosition,
+                NutType = this.nutType,
+                NutTile = this,
+            });
+
+            // Then send NutInGoal event for GoalTile to process
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutInGoal,
