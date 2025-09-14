@@ -8,29 +8,18 @@ using System.Collections;
 /// </summary>
 public class TurnControl : MonoBehaviour
 {
-    #region Singleton
-    private static TurnControl instance;
-    public static TurnControl Instance => instance;
-
     private void Awake()
     {
         if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-        
-        DebugLogger.Log(DebugLogCategory.TurnControl, "Awake called", this);
-        if (instance == null)
-        {
-            DebugLogger.Log(DebugLogCategory.TurnControl, "Setting up singleton instance", this);
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-            DebugLogger.Log(DebugLogCategory.TurnControl, "TurnControl singleton created successfully", this);
-        }
-        else
-        {
-            DebugLogger.Log(DebugLogCategory.TurnControl, "Instance already exists, destroying duplicate", this);
-            Destroy(gameObject);
-        }
+
+        // Reset state for fresh level start
+        activeActionCount = 0;
+        inputLocked = false;
+        waitingForCharacterTrigger = false;
+        timeoutCoroutine = null;
+
+        DebugLogger.Log(DebugLogCategory.TurnControl, "TurnControl initialized with clean state", this);
     }
-    #endregion
 
     #region Fields
     private int activeActionCount = 0;
@@ -76,27 +65,6 @@ public class TurnControl : MonoBehaviour
         goalEvents?.RemoveListener(OnGoalEvent);
     }
 
-    /// <summary>
-    /// Refresh event listeners - call this after event references are assigned
-    /// </summary>
-    public void RefreshEventListeners()
-    {
-        DebugLogger.Log(DebugLogCategory.TurnControl, "RefreshEventListeners called", this);
-        DebugLogger.Log(DebugLogCategory.TurnControl, 
-            $"After assignment: characterEvents={characterEvents != null}, nutEvents={nutEvents != null}, goalEvents={goalEvents != null}", this);
-        
-        // Remove any existing listeners first
-        characterEvents?.RemoveListener(OnCharacterEvent);
-        nutEvents?.RemoveListener(OnNutEvent);
-        goalEvents?.RemoveListener(OnGoalEvent);
-        
-        // Add listeners with the new event references
-        characterEvents?.AddListener(OnCharacterEvent);
-        nutEvents?.AddListener(OnNutEvent);
-        goalEvents?.AddListener(OnGoalEvent);
-        
-        DebugLogger.Log(DebugLogCategory.TurnControl, "Event listeners refreshed successfully", this);
-    }
     #endregion
 
     #region Input Control

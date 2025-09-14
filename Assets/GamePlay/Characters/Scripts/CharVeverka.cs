@@ -108,7 +108,7 @@ public class CharVeverka : Character
         if (payload.EventType == CharacterEventType.DataRequest)
         {
             // If turn is active, queue the request
-            if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked)
+            if (FindObjectOfType<TurnControl>()?.IsInputLocked == true)
             {
                 hasPendingDataRequest = true;
                 return;
@@ -152,7 +152,7 @@ public class CharVeverka : Character
         DebugLogger.Log(DebugLogCategory.Input, $"HandleInput called with direction: {inputDirection}", this);
         
         // Use TurnControl instead of SmoothMover for input locking
-        if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked) 
+        if (FindObjectOfType<TurnControl>()?.IsInputLocked == true) 
         {
             DebugLogger.Log(DebugLogCategory.Input, "Input is locked by TurnControl, ignoring", this);
             return;
@@ -160,7 +160,7 @@ public class CharVeverka : Character
 
         DebugLogger.Log(DebugLogCategory.Input, "Calling TurnControl.OnInputTriggered()", this);
         // Notify TurnControl that input was triggered
-        TurnControl.Instance?.OnInputTriggered();
+        FindObjectOfType<TurnControl>()?.OnInputTriggered();
 
         // Try to move in input arrow direction
         if (inputDirection == facingDirection)

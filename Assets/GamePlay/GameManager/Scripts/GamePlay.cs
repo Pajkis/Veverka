@@ -73,7 +73,7 @@ public class GamePlay : MonoBehaviour
     void Update()
     {
         // undo last turn only if turn is not active
-        if (Input.GetKeyDown(KeyCode.B) && (TurnControl.Instance == null || !TurnControl.Instance.IsInputLocked))
+        if (Input.GetKeyDown(KeyCode.B) && FindObjectOfType<TurnControl>()?.IsInputLocked != true)
         {
             Undo();
         }
