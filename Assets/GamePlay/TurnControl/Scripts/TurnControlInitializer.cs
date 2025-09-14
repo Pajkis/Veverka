@@ -25,6 +25,9 @@ public class TurnControlInitializer : MonoBehaviour
             turnControl.nutEvents = nutEvents;
             turnControl.goalEvents = goalEvents;
 
+            // Force TurnControl to refresh its event listeners since they were NULL during OnEnable
+            turnControl.RefreshEventListeners();
+
             Debug.Log("[TurnControlInitializer] TurnControl system initialized");
         }
         else
