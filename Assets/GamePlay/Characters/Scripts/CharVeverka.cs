@@ -15,6 +15,11 @@ public class CharVeverka : Character
     [SerializeField] NutEvents nutEvents;
     #endregion
 
+    #region Debug
+    [Header("Debug")]
+    [SerializeField] private DebugLogConfig debugConfig;
+    #endregion
+
     // Queue for pending character data requests
     private bool hasPendingDataRequest = false;
     private bool hasShownStartupMessage = false;
@@ -25,6 +30,9 @@ public class CharVeverka : Character
     /// </summary>
     private void OnEnable()
     {
+        // Initialize debug logger if config is available
+        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
+        
         onArrowPressed.AddListener(HandleInput);
         settingEvents.AddListener(OnSettingEvent);
         characterEvents.AddListener(OnCharacterEvent);
@@ -147,16 +155,16 @@ public class CharVeverka : Character
     /// <param name="direction"></param>
     void HandleInput(Direction inputDirection)
     {
-        Debug.Log($"[CharVeverka DEBUG] HandleInput called with direction: {inputDirection}");
+        DebugLogger.Log(DebugLogCategory.Input, $"HandleInput called with direction: {inputDirection}", this);
         
         // Use TurnControl instead of SmoothMover for input locking
         if (TurnControl.Instance != null && TurnControl.Instance.IsInputLocked) 
         {
-            Debug.Log("[CharVeverka DEBUG] Input is locked by TurnControl, ignoring");
+            DebugLogger.Log(DebugLogCategory.Input, "Input is locked by TurnControl, ignoring", this);
             return;
         }
 
-        Debug.Log("[CharVeverka DEBUG] Calling TurnControl.OnInputTriggered()");
+        DebugLogger.Log(DebugLogCategory.Input, "Calling TurnControl.OnInputTriggered()", this);
         // Notify TurnControl that input was triggered
         TurnControl.Instance?.OnInputTriggered();
 
@@ -177,21 +185,21 @@ public class CharVeverka : Character
             });
             if (!gridQuery.IsInGrid) 
             {
-                Debug.Log("[CharVeverka DEBUG] Target not in grid - sending MoveFailed event");
+                DebugLogger.Log(DebugLogCategory.CharacterMovement, "Target not in grid - sending MoveFailed event", this);
                 characterEvents.Raise(new CharacterEventPayload
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
                     Direction = inputDirection,
                 });
-                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
             }
 
             // If tile is walkable, move character
             if (gridQuery.IsWalkable)
             {
-                Debug.Log("[CharVeverka DEBUG] Tile is walkable - calling Move() which will send MoveStarted event");
+                DebugLogger.Log(DebugLogCategory.CharacterMovement, "Tile is walkable - calling Move() which will send MoveStarted event", this);
                 Move(inputDirection, distance, moveDuration);
                 return;
             }
@@ -199,14 +207,14 @@ public class CharVeverka : Character
             // Check if tile is pushable (only push nuts)
             if (gridQuery.TileType != TileType.Nut)
             {
-                Debug.Log("[CharVeverka DEBUG] Tile is not a nut - sending MoveFailed event");
+                DebugLogger.Log(DebugLogCategory.TileInteraction, "Tile is not a nut - sending MoveFailed event", this);
                 characterEvents.Raise(new CharacterEventPayload
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
                     Direction = inputDirection,
                 });
-                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
             }
 
@@ -226,21 +234,21 @@ public class CharVeverka : Character
 
             if (!pushQuery.IsInGrid) 
             {
-                Debug.Log("[CharVeverka DEBUG] Push target not in grid - sending MoveFailed event");
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Push target not in grid - sending MoveFailed event", this);
                 characterEvents.Raise(new CharacterEventPayload
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
                     Direction = inputDirection,
                 });
-                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
             }
 
             // If the nut can be pushed, move both the nut and the character
             if (pushQuery.IsPushable)
             {
-                Debug.Log("[CharVeverka DEBUG] Nut is pushable - calling Move() which will send MoveStarted event");
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Nut is pushable - calling Move() which will send MoveStarted event", this);
                 Move(inputDirection, distance, moveDuration);
                 nutEvents.Raise(new NutEventPayload
                 {
@@ -254,7 +262,7 @@ public class CharVeverka : Character
             }
             else
             {
-                Debug.Log("[CharVeverka DEBUG] Nut cannot be pushed - sending MoveFailed event");
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Nut cannot be pushed - sending MoveFailed event", this);
                 // move failed
                 characterEvents.Raise(new CharacterEventPayload
                 {
@@ -262,16 +270,16 @@ public class CharVeverka : Character
                     CurrentPosition = gridPosition,
                     Direction = inputDirection,
                 });
-                Debug.Log("[CharVeverka DEBUG] MoveFailed event sent");
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
 
                 // Cannot push - optionally animate failed push
-                Debug.Log("Cannot push nut in this direction");
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Cannot push nut in this direction", this);
             }
         }
         // Rotate to input arrow direction
         else
         {
-            Debug.Log("[CharVeverka DEBUG] Need to rotate - calling Rotate() which will send RotateStarted event");
+            DebugLogger.Log(DebugLogCategory.Rotation, "Need to rotate - calling Rotate() which will send RotateStarted event", this);
             // Rotate character to input arrow direction
             Rotate(facingDirection, inputDirection, moveDuration);            
         }
@@ -319,14 +327,14 @@ public class CharVeverka : Character
     /// <returns></returns>
     protected override void Rotate(Direction currentDirection, Direction targetDirection, float duration)
     {
-        Debug.Log($"[CharVeverka DEBUG] Rotate called: {currentDirection} -> {targetDirection}");
+        DebugLogger.Log(DebugLogCategory.Rotation, $"Rotate called: {currentDirection} -> {targetDirection}", this);
         // start rotate
-        Debug.Log("[CharVeverka DEBUG] Sending RotateStarted event");
+        DebugLogger.Log(DebugLogCategory.EventSystem, "Sending RotateStarted event", this);
         characterEvents.Raise(new CharacterEventPayload
         {
             EventType = CharacterEventType.RotateStarted,           
         });
-        Debug.Log("[CharVeverka DEBUG] RotateStarted event sent");
+        DebugLogger.Log(DebugLogCategory.EventSystem, "RotateStarted event sent", this);
 
         // Update facing direction immediately since this is the new direction
         facingDirection = targetDirection;

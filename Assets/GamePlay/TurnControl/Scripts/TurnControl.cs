@@ -14,17 +14,19 @@ public class TurnControl : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("[TurnControl DEBUG] Awake called");
+        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
+        
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Awake called", this);
         if (instance == null)
         {
-            Debug.Log("[TurnControl DEBUG] Setting up singleton instance");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Setting up singleton instance", this);
             instance = this;
             DontDestroyOnLoad(gameObject);
-            Debug.Log("[TurnControl DEBUG] TurnControl singleton created successfully");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "TurnControl singleton created successfully", this);
         }
         else
         {
-            Debug.Log("[TurnControl DEBUG] Instance already exists, destroying duplicate");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Instance already exists, destroying duplicate", this);
             Destroy(gameObject);
         }
     }
@@ -41,6 +43,9 @@ public class TurnControl : MonoBehaviour
     [SerializeField] public NutEvents nutEvents;
     [SerializeField] public GoalEvents goalEvents;
     
+    [Header("Debug")]
+    [SerializeField] private DebugLogConfig debugConfig;
+    
     [Header("Settings")]
     [SerializeField] private float characterTriggerTimeout = 0.5f;
     #endregion
@@ -53,14 +58,15 @@ public class TurnControl : MonoBehaviour
     #region Unity Lifecycle
     private void OnEnable()
     {
-        Debug.Log("[TurnControl DEBUG] OnEnable called - registering event listeners");
-        Debug.Log($"[TurnControl DEBUG] characterEvents={characterEvents != null}, nutEvents={nutEvents != null}, goalEvents={goalEvents != null}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "OnEnable called - registering event listeners", this);
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"characterEvents={characterEvents != null}, nutEvents={nutEvents != null}, goalEvents={goalEvents != null}", this);
         
         characterEvents?.AddListener(OnCharacterEvent);
         nutEvents?.AddListener(OnNutEvent);
         goalEvents?.AddListener(OnGoalEvent);
         
-        Debug.Log("[TurnControl DEBUG] Event listeners registered");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Event listeners registered", this);
     }
 
     private void OnDisable()
@@ -75,8 +81,9 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     public void RefreshEventListeners()
     {
-        Debug.Log("[TurnControl DEBUG] RefreshEventListeners called");
-        Debug.Log($"[TurnControl DEBUG] After assignment: characterEvents={characterEvents != null}, nutEvents={nutEvents != null}, goalEvents={goalEvents != null}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "RefreshEventListeners called", this);
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"After assignment: characterEvents={characterEvents != null}, nutEvents={nutEvents != null}, goalEvents={goalEvents != null}", this);
         
         // Remove any existing listeners first
         characterEvents?.RemoveListener(OnCharacterEvent);
@@ -88,7 +95,7 @@ public class TurnControl : MonoBehaviour
         nutEvents?.AddListener(OnNutEvent);
         goalEvents?.AddListener(OnGoalEvent);
         
-        Debug.Log("[TurnControl DEBUG] Event listeners refreshed successfully");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Event listeners refreshed successfully", this);
     }
     #endregion
 
@@ -98,18 +105,19 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     public void OnInputTriggered()
     {
-        Debug.Log($"[TurnControl DEBUG] OnInputTriggered called. Current state: inputLocked={inputLocked}, waitingForTrigger={waitingForCharacterTrigger}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"OnInputTriggered called. Current state: inputLocked={inputLocked}, waitingForTrigger={waitingForCharacterTrigger}", this);
         
         if (inputLocked) 
         {
-            Debug.Log("[TurnControl DEBUG] Input already locked, ignoring trigger");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Input already locked, ignoring trigger", this);
             return;
         }
 
-        Debug.Log("[TurnControl DEBUG] Locking input and starting timeout...");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Locking input and starting timeout...", this);
         LockInput();
         StartWaitingForCharacterTrigger();
-        Debug.Log("[TurnControl] Input locked - waiting for character action trigger");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Input locked - waiting for character action trigger", this);
     }
 
     /// <summary>
@@ -134,7 +142,7 @@ public class TurnControl : MonoBehaviour
             timeoutCoroutine = null;
         }
         
-        Debug.Log("[TurnControl] Input unlocked - turn complete");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked - turn complete", this);
     }
     #endregion
 
@@ -144,10 +152,11 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     private void StartWaitingForCharacterTrigger()
     {
-        Debug.Log("[TurnControl DEBUG] StartWaitingForCharacterTrigger called");
+        DebugLogger.Log(DebugLogCategory.TurnControl, "StartWaitingForCharacterTrigger called", this);
         waitingForCharacterTrigger = true;
         timeoutCoroutine = StartCoroutine(CharacterTriggerTimeoutCoroutine());
-        Debug.Log($"[TurnControl DEBUG] Timeout coroutine started. waitingForTrigger={waitingForCharacterTrigger}, timeoutCoroutine={timeoutCoroutine != null}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"Timeout coroutine started. waitingForTrigger={waitingForCharacterTrigger}, timeoutCoroutine={timeoutCoroutine != null}", this);
     }
 
     /// <summary>
@@ -155,20 +164,21 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     private void StopWaitingForCharacterTrigger()
     {
-        Debug.Log($"[TurnControl DEBUG] StopWaitingForCharacterTrigger called. Current state: waitingForTrigger={waitingForCharacterTrigger}, timeoutCoroutine={timeoutCoroutine != null}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"StopWaitingForCharacterTrigger called. Current state: waitingForTrigger={waitingForCharacterTrigger}, timeoutCoroutine={timeoutCoroutine != null}", this);
         
         waitingForCharacterTrigger = false;
         
         if (timeoutCoroutine != null)
         {
-            Debug.Log("[TurnControl DEBUG] Stopping timeout coroutine");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Stopping timeout coroutine", this);
             StopCoroutine(timeoutCoroutine);
             timeoutCoroutine = null;
-            Debug.Log("[TurnControl DEBUG] Timeout coroutine stopped successfully");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Timeout coroutine stopped successfully", this);
         }
         else
         {
-            Debug.Log("[TurnControl DEBUG] No timeout coroutine to stop");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "No timeout coroutine to stop", this);
         }
     }
 
@@ -177,19 +187,20 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     private IEnumerator CharacterTriggerTimeoutCoroutine()
     {
-        Debug.Log($"[TurnControl DEBUG] Timeout coroutine started, waiting {characterTriggerTimeout}s...");
+        DebugLogger.Log(DebugLogCategory.TurnControl, $"Timeout coroutine started, waiting {characterTriggerTimeout}s...", this);
         yield return new WaitForSeconds(characterTriggerTimeout);
         
-        Debug.Log($"[TurnControl DEBUG] Timeout coroutine finished waiting. Current state: waitingForTrigger={waitingForCharacterTrigger}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"Timeout coroutine finished waiting. Current state: waitingForTrigger={waitingForCharacterTrigger}", this);
         
         if (waitingForCharacterTrigger)
         {
-            Debug.LogWarning("[TurnControl DEBUG] TIMEOUT TRIGGERED! No character action trigger received, unlocking input");
+            DebugLogger.LogWarning(DebugLogCategory.TurnControl, "TIMEOUT TRIGGERED! No character action trigger received, unlocking input", this);
             UnlockInput();
         }
         else
         {
-            Debug.Log("[TurnControl DEBUG] Timeout coroutine finished but waitingForCharacterTrigger=false, so no timeout action taken");
+            DebugLogger.Log(DebugLogCategory.TurnControl, "Timeout coroutine finished but waitingForCharacterTrigger=false, so no timeout action taken", this);
         }
     }
     #endregion
@@ -201,7 +212,7 @@ public class TurnControl : MonoBehaviour
     private void StartAction(string actionType)
     {
         activeActionCount++;
-        Debug.Log($"[TurnControl] Action started: {actionType} (Active: {activeActionCount})");
+        DebugLogger.Log(DebugLogCategory.TurnControl, $"Action started: {actionType} (Active: {activeActionCount})", this);
     }
 
     /// <summary>
@@ -210,7 +221,7 @@ public class TurnControl : MonoBehaviour
     private void CompleteAction(string actionType)
     {
         activeActionCount--;
-        Debug.Log($"[TurnControl] Action completed: {actionType} (Active: {activeActionCount})");
+        DebugLogger.Log(DebugLogCategory.TurnControl, $"Action completed: {actionType} (Active: {activeActionCount})", this);
 
         if (activeActionCount <= 0)
         {
@@ -226,65 +237,66 @@ public class TurnControl : MonoBehaviour
     /// </summary>
     private void OnCharacterEvent(CharacterEventPayload payload)
     {
-        Debug.Log($"[TurnControl DEBUG] OnCharacterEvent called! EventType={payload.EventType}, waitingForTrigger={waitingForCharacterTrigger}");
+        DebugLogger.Log(DebugLogCategory.TurnControl, 
+            $"OnCharacterEvent called! EventType={payload.EventType}, waitingForTrigger={waitingForCharacterTrigger}", this);
         
         switch (payload.EventType)
         {
             case CharacterEventType.MoveStarted:
-                Debug.Log("[TurnControl DEBUG] Processing MoveStarted event");
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Processing MoveStarted event", this);
                 if (waitingForCharacterTrigger)
                 {
-                    Debug.Log("[TurnControl DEBUG] MoveStarted: Stopping timeout and starting action");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "MoveStarted: Stopping timeout and starting action", this);
                     StopWaitingForCharacterTrigger();
                     StartAction("Character Move");
                 }
                 else
                 {
-                    Debug.Log("[TurnControl DEBUG] MoveStarted: Not waiting for trigger, ignoring");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "MoveStarted: Not waiting for trigger, ignoring", this);
                 }
                 break;
                 
             case CharacterEventType.MoveCompleted:
-                Debug.Log("[TurnControl DEBUG] Processing MoveCompleted event");
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Processing MoveCompleted event", this);
                 CompleteAction("Character Move");
                 break;
                 
             case CharacterEventType.RotateStarted:
-                Debug.Log("[TurnControl DEBUG] Processing RotateStarted event");
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Processing RotateStarted event", this);
                 if (waitingForCharacterTrigger)
                 {
-                    Debug.Log("[TurnControl DEBUG] RotateStarted: Stopping timeout and starting action");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "RotateStarted: Stopping timeout and starting action", this);
                     StopWaitingForCharacterTrigger();
                     StartAction("Character Rotate");
                 }
                 else
                 {
-                    Debug.Log("[TurnControl DEBUG] RotateStarted: Not waiting for trigger, ignoring");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "RotateStarted: Not waiting for trigger, ignoring", this);
                 }
                 break;
                 
             case CharacterEventType.RotateCompleted:
-                Debug.Log("[TurnControl DEBUG] Processing RotateCompleted event");
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Processing RotateCompleted event", this);
                 CompleteAction("Character Rotate");
                 break;
                 
             case CharacterEventType.MoveFailed:
-                Debug.Log("[TurnControl DEBUG] Processing MoveFailed event");
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Processing MoveFailed event", this);
                 if (waitingForCharacterTrigger)
                 {
-                    Debug.Log("[TurnControl DEBUG] MoveFailed: Stopping timeout and unlocking input");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "MoveFailed: Stopping timeout and unlocking input", this);
                     StopWaitingForCharacterTrigger();
-                    Debug.Log("[TurnControl] Character move failed - immediately unlocking input");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "Character move failed - immediately unlocking input", this);
                     UnlockInput();
                 }
                 else
                 {
-                    Debug.Log("[TurnControl DEBUG] MoveFailed: Not waiting for trigger, ignoring");
+                    DebugLogger.Log(DebugLogCategory.TurnControl, "MoveFailed: Not waiting for trigger, ignoring", this);
                 }
                 break;
                 
             default:
-                Debug.Log($"[TurnControl DEBUG] Unknown event type: {payload.EventType}");
+                DebugLogger.Log(DebugLogCategory.TurnControl, $"Unknown event type: {payload.EventType}", this);
                 break;
         }
     }

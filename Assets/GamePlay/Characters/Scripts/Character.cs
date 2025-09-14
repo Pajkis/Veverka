@@ -34,6 +34,9 @@ public abstract class Character : MonoBehaviour
     #region Configs
     [Header("Configs")]
     [SerializeField] protected GameplayConfig gameplayConfig;
+    
+    [Header("Debug")]
+    [SerializeField] protected DebugLogConfig debugConfig;
     #endregion
 
 
@@ -168,9 +171,9 @@ public abstract class Character : MonoBehaviour
           };
 
         //Raise move started event
-        Debug.Log($"[Character DEBUG] Sending MoveStarted event for {GetType().Name}");
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Sending MoveStarted event for {GetType().Name}", this);
         characterEvents.Raise(payload);
-        Debug.Log($"[Character DEBUG] MoveStarted event sent for {GetType().Name}");
+        DebugLogger.Log(DebugLogCategory.EventSystem, $"MoveStarted event sent for {GetType().Name}", this);
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
