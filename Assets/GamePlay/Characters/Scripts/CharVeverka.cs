@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using UnityEditor.Build;
 
 /// <summary>
 /// Control of Veverka
@@ -14,12 +13,7 @@ public class CharVeverka : Character
     [SerializeField] DirectionEvent onArrowPressed;
     [SerializeField] NutEvents nutEvents;
     #endregion
-
-    #region Debug
-    [Header("Debug")]
-    [SerializeField] private DebugLogConfig debugConfig;
-    #endregion
-
+       
     // Queue for pending character data requests
     private bool hasPendingDataRequest = false;
     private bool hasShownStartupMessage = false;
@@ -253,7 +247,6 @@ public class CharVeverka : Character
                 nutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,
-                    Position = targetPos,
                     CurrentPosition = targetPos,
                     Direction = inputDirection,
                     Distance = distance,

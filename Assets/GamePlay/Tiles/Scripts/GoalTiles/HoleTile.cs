@@ -11,7 +11,7 @@ public class HoleTile : GoalTile
     protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
-        if (GridPosition != payload.Position) return;
+        if (GridPosition != payload.CurrentPosition) return;
         
         // Play goal reached sound effect
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
@@ -21,7 +21,7 @@ public class HoleTile : GoalTile
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Yatta,
@@ -33,7 +33,7 @@ public class HoleTile : GoalTile
             roadEvents.Raise(new RoadEventPayload
             {
                 EventType = RoadEventType.RoadSet,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 RoadType = RoadType.StoneFilledHole,
                 InstantiateTile = true,
             });
@@ -46,7 +46,7 @@ public class HoleTile : GoalTile
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Ooops,
                 GoalMessageTime = 1f
@@ -60,7 +60,7 @@ public class HoleTile : GoalTile
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Yatta,
@@ -72,7 +72,7 @@ public class HoleTile : GoalTile
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType =  GoalEventsType.GoalSet,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalType = GoalType.WaterHoleGoal,
                 InstantiateTile = true,
             });

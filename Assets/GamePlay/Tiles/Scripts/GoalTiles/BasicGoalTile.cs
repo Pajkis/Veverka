@@ -19,7 +19,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
     protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
-        if (GridPosition != payload.Position) return;
+        if (GridPosition != payload.CurrentPosition) return;
          
         // Play goal reached sound effect
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
@@ -30,7 +30,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
             wallEvents.Raise(new WallEventPayload
             {
                 EventType = WallEventType.WallSet,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 WallType = WallType.StoneWall,
                 InstantiateTile = true,
             });
@@ -47,7 +47,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
         goalEvents.Raise(new GoalEventPayload
         {
             EventType = GoalEventsType.GoalResolved,
-            Position = payload.Position,
+            Position = payload.CurrentPosition,
             GoalReduction = 1,
             GoalRemove = true,
             GoalMessage = BubbleMessageType.Yatta,

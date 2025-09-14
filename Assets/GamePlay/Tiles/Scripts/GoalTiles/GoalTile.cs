@@ -71,7 +71,7 @@ public abstract class GoalTile : TileObject
         goalEvents.Raise(new GoalEventPayload
         {
             EventType = GoalEventsType.NutInGoalDone,
-            Position = payload.Position,
+            Position = payload.CurrentPosition,
             GoalReduction = 0,
             GoalRemove = false,
         });

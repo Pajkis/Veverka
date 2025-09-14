@@ -571,13 +571,13 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnNutSet(NutEventPayload payload)
     {
-        if (!IsInGrid(payload.Position))
+        if (!IsInGrid(payload.CurrentPosition))
         {
             Debug.LogError("Set tile is outside the grid");
             return;
         }
-        SetTileType(payload.Position, TileType.Nut);
-        nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
+        SetTileType(payload.CurrentPosition, TileType.Nut);
+        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
     }
 
     /// <summary>
@@ -586,13 +586,13 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnNutRemoved(NutEventPayload payload)
     {
-        if (!IsInGrid(payload.Position))
+        if (!IsInGrid(payload.CurrentPosition))
         {
             Debug.LogError("Remove tile is outside the grid");
             return;
         }
-        SetTileType(payload.Position, TileType.Empty);
-        nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
+        SetTileType(payload.CurrentPosition, TileType.Empty);
+        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
     }
 
     /// <summary>

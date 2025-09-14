@@ -84,7 +84,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutSet,
-            Position = gridPosition,
+            CurrentPosition = gridPosition,
             NutType = nutType,
             NutTile = this,
         });
@@ -105,7 +105,7 @@ public abstract class NutTile : TileObject
         }
 
         // Check if this nut matches with position in payload
-        if (GridPosition != payload.Position)
+        if (GridPosition != payload.CurrentPosition)
         {
             return;
         }
@@ -190,7 +190,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            Position = GridPosition,
+            CurrentPosition = GridPosition,
         });
 
         // Check if the nut reached the goal
@@ -205,7 +205,7 @@ public abstract class NutTile : TileObject
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutSet,
-                Position = targetPosition,
+                CurrentPosition = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
             });
@@ -216,7 +216,8 @@ public abstract class NutTile : TileObject
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutInGoal,
-                Position = targetPosition,
+                CurrentPosition = targetPosition,
+                PreviousPosition = GridPosition,
                 NutType = this.nutType,
                 NutTile = this,
             });
@@ -230,7 +231,7 @@ public abstract class NutTile : TileObject
 
         // notify listeners about nut movement
         payload.EventType = NutEventType.NutMoved;
-        payload.Position = targetPosition;
+        payload.CurrentPosition = targetPosition;
         nutEvents.Raise(payload);
     }
     #endregion
@@ -259,7 +260,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            Position = current
+            CurrentPosition = current
         });
 
         nutEvents.Raise(new NutEventPayload
@@ -267,7 +268,7 @@ public abstract class NutTile : TileObject
             EventType = NutEventType.NutSet,
             NutType = this.nutType,
             NutTile = this,
-            Position = previous
+            CurrentPosition = previous
         });
     }
 

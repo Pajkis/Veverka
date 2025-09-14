@@ -323,7 +323,7 @@ public class TurnControl : MonoBehaviour
                 CompleteAction(CreateActionId("Nut Push", payload.CurrentPosition));
                 break;
             case NutEventType.NutInGoal:
-                StartAction(CreateActionId("Goal Action", payload.Position));
+                StartAction(CreateActionId("Goal Action", payload.CurrentPosition));
                 break;
         }
     }

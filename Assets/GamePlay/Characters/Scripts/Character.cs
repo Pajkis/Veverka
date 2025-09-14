@@ -21,6 +21,7 @@ public abstract class Character : MonoBehaviour
     protected SmoothRotate smoothRotate;
 
     protected string UndoId;
+   
     #endregion
 
     #region Events

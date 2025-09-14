@@ -19,7 +19,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
     protected override void OnNutInGoal(NutEventPayload payload)
     {
         // Check if the pushable is in the goal position
-        if (GridPosition != payload.Position) return;
+        if (GridPosition != payload.CurrentPosition) return;
        
         // Play goal reached sound effect
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
@@ -30,7 +30,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Splash,
@@ -44,7 +44,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             roadEvents.Raise(new RoadEventPayload
             {
                 EventType = RoadEventType.RoadSet,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 RoadType = RoadType.StoneFilledHole,
                 InstantiateTile = true,
             });
@@ -60,7 +60,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Ooops,
                 GoalMessageTime = 1f
@@ -73,7 +73,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
-                Position = payload.Position,
+                Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Splash,

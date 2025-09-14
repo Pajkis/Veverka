@@ -6,14 +6,14 @@ using UnityEngine;
 [System.Serializable]
 public class NutEventPayload
 {
+    // Basic nut data 
+    [Header("Basic nut data")]
     public NutEventType EventType;
-
-    // Basic nut data
-    public Vector2Int Position;
     public NutType NutType;
     public NutTile NutTile;
 
     // Movement data
+    [Header("Nut movement data")]
     public Vector2Int CurrentPosition;
     public Vector2Int PreviousPosition;
 
