@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventBasedUndoController : MonoBehaviour
+public class UndoController : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField] private EventBasedTurnRecorder turnRecorder;
+    [SerializeField] private TurnRecorder turnRecorder;
     [SerializeField] private TurnControl turnControl;
 
     [Header("Events")]
@@ -93,8 +93,8 @@ public class EventBasedUndoController : MonoBehaviour
         // Play undo sound
         audioEvents?.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Undo });
 
-        // Lock input during undo
-        turnControl.OnInputTriggered(); // This will lock input and start waiting for actions
+        // Lock input during undo without timeout mechanism
+        turnControl.LockInputForUndo();
 
         // Send undo events for all data in reverse order
         for (int i = turnData.Count - 1; i >= 0; i--)
@@ -151,6 +151,9 @@ public class EventBasedUndoController : MonoBehaviour
     {
         isUndoInProgress = false;
         expectedUndoCompletions.Clear();
+
+        // Unlock input after undo completion
+        turnControl.UnlockInputAfterUndo();
 
         DebugLogger.Log(DebugLogCategory.UndoLogic, "Undo process completed", this);
     }

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EventBasedTurnRecorder : MonoBehaviour
+public class TurnRecorder : MonoBehaviour
 {
     [Header("Events")]
     [SerializeField] private CharacterEvents characterEvents;
@@ -131,13 +131,19 @@ public class EventBasedTurnRecorder : MonoBehaviour
         switch (payload.EventType)
         {
             case CharacterEventType.MoveStarted:
+                // Use PreviousPosition (start position) for consistent tracking
+                var moveSourceId = $"Character-{payload.PreviousPosition.x}x{payload.PreviousPosition.y}";
+                ExpectSource(moveSourceId);
+                break;
+
             case CharacterEventType.RotateStarted:
-                var sourceId = $"Character-{payload.CurrentPosition.x}x{payload.CurrentPosition.y}";
-                ExpectSource(sourceId);
+                // Use CurrentPosition for rotation (position doesn't change)
+                var rotateSourceId = $"Character-{payload.CurrentPosition.x}x{payload.CurrentPosition.y}";
+                ExpectSource(rotateSourceId);
                 break;
 
             case CharacterEventType.MoveCompleted:
-                var moveData = UndoData.CreateCharacterMove(payload.Character, payload.CurrentPosition, payload.PreviousPosition, payload.Direction);
+                var moveData = UndoData.CreateCharacterMove(payload.Character, payload.CurrentPosition, payload.PreviousPosition, payload.CurrentDirection);
                 AddUndoData(moveData);
 
                 var completedSourceId = $"Character-{payload.PreviousPosition.x}x{payload.PreviousPosition.y}";
@@ -145,7 +151,7 @@ public class EventBasedTurnRecorder : MonoBehaviour
                 break;
 
             case CharacterEventType.RotateCompleted:
-                var rotationData = UndoData.CreateCharacterRotation(payload.Character, payload.CurrentPosition, payload.Direction, payload.PreviousDirection);
+                var rotationData = UndoData.CreateCharacterRotation(payload.Character, payload.CurrentPosition, payload.CurrentDirection, payload.PreviousDirection);
                 AddUndoData(rotationData);
 
                 var rotationSourceId = $"Character-{payload.CurrentPosition.x}x{payload.CurrentPosition.y}";

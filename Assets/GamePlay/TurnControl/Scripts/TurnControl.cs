@@ -103,14 +103,38 @@ public class TurnControl : MonoBehaviour
     {
         inputLocked = false;
         waitingForCharacterTrigger = false;
-        
+
         if (timeoutCoroutine != null)
         {
             StopCoroutine(timeoutCoroutine);
             timeoutCoroutine = null;
         }
-        
+
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked - turn complete", this);
+    }
+
+    /// <summary>
+    /// Lock input for undo operations without timeout mechanism
+    /// </summary>
+    public void LockInputForUndo()
+    {
+        inputLocked = true;
+        waitingForCharacterTrigger = false; // No waiting for triggers during undo
+
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Input locked for undo operation", this);
+    }
+
+    /// <summary>
+    /// Unlock input after undo operations complete
+    /// </summary>
+    public void UnlockInputAfterUndo()
+    {
+        inputLocked = false;
+        waitingForCharacterTrigger = false;
+
+        // No need to stop timeout coroutine as it's not started during undo
+
+        DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked after undo operation", this);
     }
     #endregion
 

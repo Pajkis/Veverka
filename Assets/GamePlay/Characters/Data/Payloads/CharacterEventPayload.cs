@@ -11,7 +11,8 @@ public struct CharacterEventPayload
     public CharacterEventType EventType;
     public Vector2Int CurrentPosition;
     public Vector2Int PreviousPosition;
-    public Direction Direction;
+    public Direction CurrentDirection;
+    public Direction PreviousDirection;
     public float Duration;
 
     // bubble message data

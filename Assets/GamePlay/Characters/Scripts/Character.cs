@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-
 /// <summary>
 /// Character Control anstract class 
 /// gameplay/Characters/Scripts/Character
@@ -289,7 +288,8 @@ public abstract class Character : MonoBehaviour
               EventType = CharacterEventType.MoveStarted,
               CurrentPosition = targetPosVec2Int,
               PreviousPosition = gridPosition,
-              Direction = direction,
+              CurrentDirection = direction,
+              PreviousDirection = facingDirection, // Store current facing as previous for undo
               RequestData = false,
               ResponseData = false,
           };
@@ -316,13 +316,17 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
-    { 
+    {
         this.gridPosition = targetPosition;
-         Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
-       
+        // Update facing direction to the movement direction
+        this.facingDirection = payload.CurrentDirection;
+
+        Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
+
         // Update payload for MoveCompleted event
         payload.EventType = CharacterEventType.MoveCompleted;
         payload.CurrentPosition = targetPosition;
+        // CurrentDirection and PreviousDirection are already set from MoveStarted
 
         // Raise move completed event - this will be handled by EventBasedTurnRecorder
         DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Sending MoveCompleted event for {GetType().Name}", this);

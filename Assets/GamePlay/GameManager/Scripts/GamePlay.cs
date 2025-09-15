@@ -26,7 +26,7 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private LevelDatabase levelDatabase;
 
     [Header("Turn Undo Logic")]
-    [SerializeField] private EventBasedUndoController undoController;
+    [SerializeField] private UndoController undoController;
     #endregion   
 
     /// <summary>
