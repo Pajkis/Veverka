@@ -7,27 +7,24 @@
 public class CameraFollow : MonoBehaviour
 {
     [Header("Config (SO)")]
-    [SerializeField] private InGameDisplayConfig inGameConfig;
+    [SerializeField] private DisplayConfig displayConfig;
     [SerializeField] private LevelDatabase levelDatabase;
 
     #region fields
     [Header("Follow Settings")]
     [SerializeField] private Transform target;
-    // camera smooth follow time -> smoothspeed = tilesize / smoothmovetime
-    [SerializeField] private float smoothMoveTime = 0.2f; 
-    // adjust camera follow of character when it crosses over half the screen
-    [SerializeField] private Vector3 FollowOffset = new Vector3(2.6666f, 0, -10f);
-    // offset to switch center of the scene in the center of the left screen window
-    [SerializeField] private Vector3 ScreenToPlayScreenOffset = new Vector3(2.1666f, -0.5f, -10f);
-                
-    [Header("Tile Settings")]
-    [SerializeField] private float tileSize = 1f;
-    [SerializeField] private Vector2Int maxStaticTileSize = new Vector2Int(15, 11);
 
     [Header("Camera bounds")]
     [SerializeField] private Vector2 minBounds;
     [SerializeField] private Vector2 maxBounds;
-    [SerializeField] private float evenTilesOffset = 0.5f;
+
+    // Config values loaded from DisplayConfig
+    private float smoothMoveTime;
+    private Vector3 FollowOffset;
+    private Vector3 ScreenToPlayScreenOffset;
+    private float tileSize;
+    private Vector2Int maxStaticTileSize;
+    private float evenTilesOffset;
 
     private bool initialized = false;
 
@@ -43,7 +40,7 @@ public class CameraFollow : MonoBehaviour
     {
         ApplyConfig();
 
-        if (levelDatabase == null || levelDatabase.gridOrigin == null || 
+        if (levelDatabase == null || levelDatabase.gridOrigin == null ||
             levelDatabase.gridCenterStartTarget == null || levelDatabase.gridSize == null)
         {
             Debug.LogError("LevelDatabase or its paramateres is not set in CameraFollow. Please assign it or set values.");
@@ -64,17 +61,30 @@ public class CameraFollow : MonoBehaviour
     }
 #endif
     /// <summary>
-    /// apply configuration from InGameDisplayConfigSO
+    /// apply configuration from DisplayConfig
     /// </summary>
     private void ApplyConfig()
     {
-        if (inGameConfig == null) return;
+        if (displayConfig == null)
+        {
+            Debug.LogError("DisplayConfig is not assigned in CameraFollow!");
+            return;
+        }
 
-        smoothMoveTime = inGameConfig.smoothMoveTime;
-        FollowOffset = inGameConfig.FollowOffset;
-        ScreenToPlayScreenOffset = inGameConfig.ScreenToPlayScreenOffset;
-        tileSize = inGameConfig.tileSize;
-        maxStaticTileSize = inGameConfig.MaxStatisScreenSize;
+        var profile = displayConfig.ResolveProfile();
+        if (profile == null)
+        {
+            Debug.LogError("No suitable display profile found!");
+            return;
+        }
+
+        // Load camera settings from unified DisplayConfig
+        smoothMoveTime = profile.cameraFollowTime;
+        FollowOffset = profile.cameraFollowOffset;
+        ScreenToPlayScreenOffset = profile.screenToPlayOffset;
+        tileSize = profile.tileSize;
+        maxStaticTileSize = profile.maxStaticScreenSize;
+        evenTilesOffset = profile.evenTilesOffset;
     }
 
     /// <summary>

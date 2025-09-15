@@ -667,17 +667,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97b6add7abf5e74bbafcca169cf92f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inGameConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
+  displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
   target: {fileID: 0}
-  smoothMoveTime: 0.2
-  FollowOffset: {x: 2.6666, y: 0, z: -10}
-  ScreenToPlayScreenOffset: {x: 2.1666, y: -0.5, z: -10}
-  tileSize: 1
-  maxStaticTileSize: {x: 15, y: 11}
   minBounds: {x: 0, y: 0}
   maxBounds: {x: 0, y: 0}
-  evenTilesOffset: 0.5
 --- !u!1001 &566082851
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1325,7 +1319,7 @@ MonoBehaviour:
   undo: {fileID: 1118781770}
   action: {fileID: 1392477493}
   settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
-  inGameDisplayConfig: {fileID: 11400000, guid: 25f1bc357ddbd88448f49ad6055e49a6, type: 2}
+  displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
 --- !u!1001 &1118781768
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1738,7 +1732,7 @@ MonoBehaviour:
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   debugConfig: {fileID: 11400000, guid: eee286a70396c2543b86897540c600a1, type: 2}
   characterTriggerTimeout: 0.5
-  gameplayConfig: {fileID: 0}
+  gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
 --- !u!114 &1289957213
 MonoBehaviour:
   m_ObjectHideFlags: 0

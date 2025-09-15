@@ -45,6 +45,43 @@ public class DisplayConfigPars
     [Header("Auto-Apply")]
     [Tooltip("re-apply after new screen is loaded")]
     public bool autoApplyOnSceneLoaded = true;
+
+    // === GAME CAMERA SETTINGS ===
+    [Header("Camera Settings")]
+    [Tooltip("Camera smooth follow time")]
+    public float cameraFollowTime = 0.2f;
+    [Tooltip("Camera follow offset when character moves")]
+    public Vector3 cameraFollowOffset = new Vector3(2.6666f, 0, -10f);
+    [Tooltip("Screen offset for dual-screen layout")]
+    public Vector3 screenToPlayOffset = new Vector3(2.1666f, -0.5f, -10f);
+    [Tooltip("Offset for even tile count grids")]
+    public float evenTilesOffset = 0.5f;
+
+    // === GRID & TILE SETTINGS ===
+    [Header("Grid Settings")]
+    [Tooltip("Size of each tile in world units")]
+    public float tileSize = 1f;
+    [Tooltip("Max grid size before camera becomes static")]
+    public Vector2Int maxStaticScreenSize = new Vector2Int(15, 11);
+
+    // === UI LAYOUT POSITIONS ===
+    [Header("UI Layout - Button Columns")]
+    [Tooltip("Left column button X position for this platform")]
+    public float leftColumnButtonX = 585f;
+    [Tooltip("Middle column button X position for this platform")]
+    public float middleColumnButtonX = 720f;
+    [Tooltip("Right column button X position for this platform")]
+    public float rightColumnButtonX = 855f;
+
+    [Header("UI Layout - Button Rows")]
+    [Tooltip("Top row button Y position for this platform")]
+    public float topRowButtonY = -155f;
+    [Tooltip("Middle row button Y position for this platform")]
+    public float middleRowButtonY = -290f;
+    [Tooltip("Bottom row button Y position for this platform")]
+    public float bottomRowButtonY = -425f;
+    [Tooltip("Android specific middle row position")]
+    public float androidMiddleRowButtonY = -225f;
 }
 
 [CreateAssetMenu(menuName = "Configs/DisplayConfig")]
