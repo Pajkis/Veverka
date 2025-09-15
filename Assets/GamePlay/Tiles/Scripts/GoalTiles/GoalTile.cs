@@ -12,9 +12,8 @@ public abstract class GoalTile : TileObject
     [SerializeField] protected GoalEvents goalEvents;
     [SerializeField] protected WallEvents wallEvents;
     [SerializeField] protected RoadEvents roadEvents;
-
     #endregion
-
+   
     #region Init
     /// <summary>
     /// Init goals and register them in GameGrid

@@ -18,6 +18,12 @@ public class TurnControl : MonoBehaviour
         waitingForCharacterTrigger = false;
         timeoutCoroutine = null;
 
+        // Apply config values
+        if (gameplayConfig != null)
+        {
+            characterTriggerTimeout = gameplayConfig.characterTriggerTimeout;
+        }
+
         DebugLogger.Log(DebugLogCategory.TurnControl, "TurnControl initialized with clean state", this);
     }
 
@@ -37,6 +43,9 @@ public class TurnControl : MonoBehaviour
     
     [Header("Settings")]
     [SerializeField] private float characterTriggerTimeout = 0.5f;
+
+    [Header("Config")]
+    [SerializeField] private GameplayConfig gameplayConfig;
     #endregion
 
     #region Properties

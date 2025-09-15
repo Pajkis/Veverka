@@ -85,7 +85,7 @@ public class CharVeverka : Character
                 RequestData = false,
                 ResponseData = true,
                 CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                CharacterBubbleMessageTime = 2.0f
+                CharacterBubbleMessageTime = gameplayConfig.characterBubbleTime
             });
         }
     }
@@ -266,7 +266,7 @@ public class CharVeverka : Character
         {
             DebugLogger.Log(DebugLogCategory.Rotation, "Need to rotate - calling Rotate() which will send RotateStarted event", this);
             // Rotate character to input arrow direction
-            Rotate(facingDirection, inputDirection, moveDuration);            
+            Rotate(facingDirection, inputDirection, rotationDuration);            
         }
     }
 
