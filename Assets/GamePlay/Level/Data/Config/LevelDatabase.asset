@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b7aeddc9c17a7b428d11b652daa70a2, type: 3}
   m_Name: LevelDatabase
   m_EditorClassIdentifier: 
-  CurrentLevelIndex: 2
+  LevelSetType: 0
+  CurrentLevelIndex: 0
+  GoalsCount: 2
+  gridSize: {x: 5, y: 7}
+  gridCenterStartTarget: {fileID: 0}
+  gridOrigin: {fileID: 0}
