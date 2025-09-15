@@ -25,8 +25,8 @@ public class GamePlay : MonoBehaviour
     [Header("Level Data")]
     [SerializeField] private LevelDatabase levelDatabase;
 
-    [Header("turn undo logic")]
-    private UndoManager undoManager;
+    [Header("Turn Undo Logic")]
+    [SerializeField] private EventBasedUndoController undoController;
     #endregion   
 
     /// <summary>
@@ -34,9 +34,7 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        //undo manager initialization
-        undoManager = new UndoManager(audioEvents);
-        TurnBuilder.Instance.SetFinalizeCallback(undoManager.RegisterTurn);         
+        // Undo controller will be set via inspector         
         
     }
 
@@ -72,8 +70,8 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void Update()
     {
-        // undo last turn only if turn is not active
-        if (Input.GetKeyDown(KeyCode.B) && FindObjectOfType<TurnControl>()?.IsInputLocked != true)
+        // undo last turn only if undo is available
+        if (Input.GetKeyDown(KeyCode.B) && undoController != null && undoController.CanUndo())
         {
             Undo();
         }
@@ -135,8 +133,10 @@ public class GamePlay : MonoBehaviour
         }
 
         // reset history recording
-        TurnBuilder.Instance.CancelTurn();     
-        undoManager.ClearHistory();
+        if (undoController != null)
+        {
+            undoController.ClearHistory();
+        }
     }
 
       /// <summary>
@@ -157,12 +157,15 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     public void Undo()
     {
-        bool undoDone = undoManager.Undo();
-
-        if (undoDone)
+        if (undoController != null && undoController.CanUndo())
         {
+            undoController.RequestUndo();
             turnCount++;
             turnsDisplay.DisplayNumber(turnCount);
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.UndoLogic, "Cannot undo - no controller or undo not available", this);
         }
     }
 }

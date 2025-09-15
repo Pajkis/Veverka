@@ -10,6 +10,7 @@ using System.Collections;
 public class CharVeverka : Character
 {
     #region events 
+    [Header("Character basic Veverka events")]
     [SerializeField] DirectionEvent onArrowPressed;
     [SerializeField] NutEvents nutEvents;
     #endregion
@@ -22,35 +23,20 @@ public class CharVeverka : Character
     /// <summary>
     /// on enable - add listeners
     /// </summary>
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        // Initialize debug logger if config is available
-        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-        
-        onArrowPressed.AddListener(HandleInput);
-        settingEvents.AddListener(OnSettingEvent);
-        characterEvents.AddListener(OnCharacterEvent);
-        settingEvents.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
+        base.OnEnable();
 
-        // Listen for scene changes
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // Add listener for handle input
+        onArrowPressed.AddListener(HandleInput);
     }
 
     /// <summary>
     /// on disable - remove listeners
     /// </summary>
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        onArrowPressed.RemoveListener(HandleInput);
-        settingEvents.RemoveListener(OnSettingEvent);
-        characterEvents.RemoveListener(OnCharacterEvent);
-
-        // Remove scene change listener
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        onArrowPressed.RemoveListener(HandleInput);        
     }
 
     /// <summary>
@@ -58,7 +44,7 @@ public class CharVeverka : Character
     /// </summary>
     /// <param name="scene"></param>
     /// <param name="mode"></param>
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Check if this is a game scene (you can adjust the condition as needed)
         if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
@@ -103,7 +89,7 @@ public class CharVeverka : Character
     /// on character data request - respond with character data
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCharacterEvent(CharacterEventPayload payload)
+    protected override void OnCharacterEvent(CharacterEventPayload payload)
     {
         if (payload.EventType == CharacterEventType.DataRequest)
         {
