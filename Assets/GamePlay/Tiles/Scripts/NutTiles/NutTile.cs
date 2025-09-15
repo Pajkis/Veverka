@@ -15,8 +15,9 @@ public abstract class NutTile : TileObject
     protected NutType nutType;
     #endregion
 
-    #region  nut events
-      [SerializeField] protected NutEvents nutEvents;
+    #region  events
+    [SerializeField] protected NutEvents nutEvents;
+    [SerializeField] protected UndoEvents undoEvents;
     #endregion
 
     #region Event handling
@@ -25,35 +26,112 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-          settingEvents.AddListener(OnSettingEvent);
-          settingEvents.Raise(new SettingEventPayload
-          {
-              EventType = SettingsEventType.DataRequest,
-              Setting = GameSettingsEnum.AnimationSpeed
-          });
+        settingEvents.AddListener(OnSettingEvent);
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = GameSettingsEnum.AnimationSpeed
+        });
         nutEvents.AddListener(OnNutEvent);
+        undoEvents?.AddListener(OnUndoEvent);
     }
     /// <summary>
     /// remove listeners
     /// </summary>
     protected void OnDisable()
     {
-          settingEvents.RemoveListener(OnSettingEvent);
+        settingEvents.RemoveListener(OnSettingEvent);
         nutEvents.RemoveListener(OnNutEvent);
+        undoEvents?.RemoveListener(OnUndoEvent);
     }
 
     /// <summary>
     /// get animation speed from settings
     /// </summary>
     /// <param name="payload"></param>
-      private void OnSettingEvent(SettingEventPayload payload)
-      {
-          if (payload.EventType == SettingsEventType.DataBroadcast &&
-              payload.Setting == GameSettingsEnum.AnimationSpeed)
-          {
-              animationSpeed = payload.Value;
-          }
-      }
+    private void OnSettingEvent(SettingEventPayload payload)
+    {
+        if (payload.EventType == SettingsEventType.DataBroadcast &&
+            payload.Setting == GameSettingsEnum.AnimationSpeed)
+        {
+            animationSpeed = payload.Value;
+        }
+    }
+
+    /// <summary>
+    /// Handle undo events for this nut
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnUndoEvent(UndoEventPayload payload)
+    {
+        if (payload.EventType != UndoEventType.RequestNutUndo)
+            return;
+
+        // Check if this undo request is for this nut
+        var expectedObjectId = $"Nut-{GetInstanceID()}";
+        if (payload.UndoData.ObjectId != expectedObjectId)
+            return;
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Processing undo request {payload.RequestId} for nut move", this);
+
+        ExecuteUndoMove(payload.UndoData, payload.RequestId);
+    }
+
+    private void ExecuteUndoMove(UndoData undoData, string requestId)
+    {
+        if (smoothMover.IsMoving)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.UndoLogic, "Nut already moving, skipping undo", this);
+            CompleteUndoRequest(requestId);
+            return;
+        }
+
+        Vector3 fromWorld = GridUtils.GridToWorld(undoData.CurrentPosition);
+        Vector3 toWorld = GridUtils.GridToWorld(undoData.PreviousPosition);
+
+        smoothMover.Move(fromWorld, toWorld, undoData.Duration,
+            onStart: null,
+            onComplete: () => OnUndoMoveComplete(undoData, requestId));
+
+        // Update nut events for grid system
+        nutEvents.Raise(new NutEventPayload
+        {
+            EventType = NutEventType.NutRemoved,
+            CurrentPosition = undoData.CurrentPosition
+        });
+
+        nutEvents.Raise(new NutEventPayload
+        {
+            EventType = NutEventType.NutSet,
+            NutType = this.nutType,
+            NutTile = this,
+            CurrentPosition = undoData.PreviousPosition
+        });
+
+        GridPosition = undoData.PreviousPosition;
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Started undo nut move from {undoData.CurrentPosition} to {undoData.PreviousPosition}", this);
+    }
+
+    private void OnUndoMoveComplete(UndoData undoData, string requestId)
+    {
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Undo nut move completed: {undoData.CurrentPosition} → {undoData.PreviousPosition}", this);
+        CompleteUndoRequest(requestId);
+    }
+
+    private void CompleteUndoRequest(string requestId)
+    {
+        undoEvents?.Raise(new UndoEventPayload
+        {
+            EventType = UndoEventType.UndoCompleted,
+            RequestId = requestId
+        });
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic, $"Undo request {requestId} completed", this);
+    }
     #endregion
 
     #region Initialization
@@ -149,8 +227,6 @@ public abstract class NutTile : TileObject
     {
        // if (smoothMover.IsMoving) return;
 
-        //Register turn record
-        TurnRecordExpectSource();
 
         // calculate movement positions
         Vector3 currentPosition = transform.localPosition;
@@ -236,8 +312,6 @@ public abstract class NutTile : TileObject
 
         GridPosition = targetPosition;
 
-        //Complete turn record
-        TurnRecordAddandComplete();
 
         // notify listeners about nut movement
         payload.EventType = NutEventType.NutMoved;
@@ -246,67 +320,4 @@ public abstract class NutTile : TileObject
     }
     #endregion
 
-    #region Undo record
-    /// <summary>
-    /// Undo move of movable tile
-    /// </summary>
-    /// <param name="previous"> previous position</param>
-    /// <param name="current">current position</param>  
-    /// <param name="duration"> duration of movement</param>
-    public virtual void UndoAction(Vector2Int current, Vector2Int previous, float duration)
-    {
-        if (smoothMover.IsMoving) return;
-
-        Vector3 fromWorld = GridUtils.GridToWorld(current);
-        Vector3 toWorld = GridUtils.GridToWorld(previous);
-
-        //Rotate(direction);
-        smoothMover.Move(fromWorld, toWorld, duration,
-            onStart: null, onComplete: null);
-
-        Debug.Log($"Undo movable tile:  {previous} → {current}");
-        GridPosition = previous;
-
-        nutEvents.Raise(new NutEventPayload
-        {
-            EventType = NutEventType.NutRemoved,
-            CurrentPosition = current
-        });
-
-        nutEvents.Raise(new NutEventPayload
-        {
-            EventType = NutEventType.NutSet,
-            NutType = this.nutType,
-            NutTile = this,
-            CurrentPosition = previous
-        });
-    }
-
-    /// <summary>
-    /// inform TurnBuilder, that this source will provide data for this turn record
-    /// </summary>
-    protected void TurnRecordExpectSource()
-    {
-        // UndoID for turn history record
-        UndoId = $"{GetType().Name}-{GridPosition.x}x{GridPosition.y}";
-        // inform turn builder, that this component is going to register a action into turn record
-        TurnBuilder.Instance.ExpectSource(UndoId);
-    }
-
-    /// <summary>
-    /// add action into the turn record and complete source for turn builder
-    /// </summary>   
-    protected void TurnRecordAddandComplete()
-    {
-        // register movement as action into turn record
-        TurnBuilder.Instance.AddAction(
-         new UndoMovableAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Duration)
-           );
-
-        // inform turn builder, tht this component has registered an action into turn record
-        TurnBuilder.Instance.NotifySourceComplete(UndoId);
-        Debug.Log($"[{this.GetType().Name} move Complete] Added + Notified {UndoId}");
-    }
-
-    #endregion
 }

@@ -10,6 +10,7 @@ using System.Collections;
 public class CharVeverka : Character
 {
     #region events 
+    [Header("Character basic Veverka events")]
     [SerializeField] DirectionEvent onArrowPressed;
     [SerializeField] NutEvents nutEvents;
     #endregion
@@ -18,39 +19,29 @@ public class CharVeverka : Character
     private bool hasPendingDataRequest = false;
     private bool hasShownStartupMessage = false;
 
+    // Store previous direction for rotation undo
+    private Direction rotationPreviousDirection;
+
     #region event handling
     /// <summary>
     /// on enable - add listeners
     /// </summary>
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        // Initialize debug logger if config is available
-        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-        
-        onArrowPressed.AddListener(HandleInput);
-        settingEvents.AddListener(OnSettingEvent);
-        characterEvents.AddListener(OnCharacterEvent);
-        settingEvents.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
+        base.OnEnable();
 
-        // Listen for scene changes
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // Add listener for handle input
+        onArrowPressed.AddListener(HandleInput);
     }
 
     /// <summary>
     /// on disable - remove listeners
     /// </summary>
-    private void OnDisable()
+    protected override void OnDisable()
     {
-        onArrowPressed.RemoveListener(HandleInput);
-        settingEvents.RemoveListener(OnSettingEvent);
-        characterEvents.RemoveListener(OnCharacterEvent);
+        base.OnDisable();
 
-        // Remove scene change listener
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        onArrowPressed.RemoveListener(HandleInput);        
     }
 
     /// <summary>
@@ -58,7 +49,7 @@ public class CharVeverka : Character
     /// </summary>
     /// <param name="scene"></param>
     /// <param name="mode"></param>
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         // Check if this is a game scene (you can adjust the condition as needed)
         if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
@@ -89,7 +80,7 @@ public class CharVeverka : Character
                 Character = this,
                 EventType = CharacterEventType.DataResponse,
                 CurrentPosition = gridPosition,
-                Direction = facingDirection,
+                CurrentDirection = facingDirection,
                 Duration = moveDuration,
                 RequestData = false,
                 ResponseData = true,
@@ -103,7 +94,7 @@ public class CharVeverka : Character
     /// on character data request - respond with character data
     /// </summary>
     /// <param name="payload"></param>
-    private void OnCharacterEvent(CharacterEventPayload payload)
+    protected override void OnCharacterEvent(CharacterEventPayload payload)
     {
         if (payload.EventType == CharacterEventType.DataRequest)
         {
@@ -129,7 +120,7 @@ public class CharVeverka : Character
             Character = this,
             EventType = CharacterEventType.DataResponse,
             CurrentPosition = gridPosition,
-            Direction = facingDirection,
+            CurrentDirection = facingDirection,
             Duration = moveDuration,
             RequestData = false,
             ResponseData = true,
@@ -184,7 +175,7 @@ public class CharVeverka : Character
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
-                    Direction = inputDirection,
+                    CurrentDirection = inputDirection,
                 });
                 DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
@@ -206,7 +197,7 @@ public class CharVeverka : Character
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
-                    Direction = inputDirection,
+                    CurrentDirection = inputDirection,
                 });
                 DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
@@ -233,7 +224,7 @@ public class CharVeverka : Character
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
-                    Direction = inputDirection,
+                    CurrentDirection = inputDirection,
                 });
                 DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
                 return;
@@ -262,7 +253,7 @@ public class CharVeverka : Character
                 {
                     EventType = CharacterEventType.MoveFailed,
                     CurrentPosition = gridPosition,
-                    Direction = inputDirection,
+                    CurrentDirection = inputDirection,
                 });
                 DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
 
@@ -298,9 +289,8 @@ public class CharVeverka : Character
     {
         base.OnMoveComplete(targetPosition);
 
-        // raise event, that character made a turn -> turn count
-        payload.EventType = CharacterEventType.MoveCompleted;
-        characterEvents.Raise(payload);
+        // Note: MoveCompleted event is already raised in base.OnMoveComplete()
+        // No need to raise it again here
 
         // Handle any pending character data requests now that move is complete
         if (hasPendingDataRequest)
@@ -322,11 +312,19 @@ public class CharVeverka : Character
     protected override void Rotate(Direction currentDirection, Direction targetDirection, float duration)
     {
         DebugLogger.Log(DebugLogCategory.Rotation, $"Rotate called: {currentDirection} -> {targetDirection}", this);
+
+        // Store previous direction for completion event
+        rotationPreviousDirection = currentDirection;
+
         // start rotate
         DebugLogger.Log(DebugLogCategory.EventSystem, "Sending RotateStarted event", this);
         characterEvents.Raise(new CharacterEventPayload
         {
-            EventType = CharacterEventType.RotateStarted,           
+            Character = this,
+            EventType = CharacterEventType.RotateStarted,
+            CurrentPosition = gridPosition,
+            CurrentDirection = targetDirection,
+            PreviousDirection = currentDirection
         });
         DebugLogger.Log(DebugLogCategory.EventSystem, "RotateStarted event sent", this);
 
@@ -357,9 +355,11 @@ public class CharVeverka : Character
        
         characterEvents.Raise(new CharacterEventPayload
         {
+            Character = this,
             EventType = CharacterEventType.RotateCompleted,
             CurrentPosition = gridPosition,
-            Direction = facingDirection,
+            CurrentDirection = facingDirection,
+            PreviousDirection = rotationPreviousDirection
         });
     }
 

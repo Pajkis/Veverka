@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Character Control anstract class 
@@ -19,8 +20,6 @@ public abstract class Character : MonoBehaviour
 
     protected SmoothMover smoothMover;
     protected SmoothRotate smoothRotate;
-
-    protected string UndoId;
    
     #endregion
 
@@ -30,6 +29,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected AudioEvents audioEvents;
     [SerializeField] protected SettingEvents settingEvents;
     [SerializeField] protected CharacterEvents characterEvents;
+    [SerializeField] protected UndoEvents undoEvents;
     #endregion
 
     #region Configs
@@ -56,8 +56,61 @@ public abstract class Character : MonoBehaviour
     }
     #endregion
 
-
     #region event handling
+
+    /// <summary>
+    /// On enable event handling
+    /// </summary>
+    protected virtual void OnEnable()
+    {
+        // Initialize debug logger if config is available
+        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
+
+        // Register event listeners
+        settingEvents?.AddListener(OnSettingEvent);
+        undoEvents?.AddListener(OnUndoEvent);       
+        characterEvents.AddListener(OnCharacterEvent);
+
+        // Request initial animation speed setting
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = GameSettingsEnum.AnimationSpeed
+        });
+
+        // Listen for scene changes
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    /// <summary>
+    /// On disable event handling
+    /// </summary>
+    protected virtual void OnDisable()
+    {
+        settingEvents?.RemoveListener(OnSettingEvent);
+        undoEvents?.RemoveListener(OnUndoEvent);      
+        characterEvents.RemoveListener(OnCharacterEvent);
+
+        // Remove scene change listener
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+
+    /// <summary>
+    /// Called when a new scene is loaded
+    /// </summary>
+    /// <param name="scene"></param>
+    /// <param name="mode"></param>
+    protected virtual void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    { }
+
+    /// <summary>
+    /// On character event handler
+    /// </summary>
+    /// <param name="payload"></param>
+    protected virtual void OnCharacterEvent(CharacterEventPayload payload)
+    { }
+
     /// <summary>
     /// Get animation speed from settings
     /// </summary>
@@ -69,6 +122,102 @@ public abstract class Character : MonoBehaviour
         {
             animationSpeed = payload.Value;
         }
+    }
+
+    /// <summary>
+    /// Handle undo events for this character
+    /// </summary>
+    /// <param name="payload"></param>
+    protected void OnUndoEvent(UndoEventPayload payload)
+    {
+        if (payload.EventType != UndoEventType.RequestCharacterUndo)
+            return;
+
+        // Check if this undo request is for this character
+        var expectedObjectId = $"Character-{GetInstanceID()}";
+        if (payload.UndoData.ObjectId != expectedObjectId)
+            return;
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Processing undo request {payload.RequestId} for {payload.UndoData.ActionType}", this);
+
+        switch (payload.UndoData.ActionType)
+        {
+            case UndoActionType.CharacterMove:
+                ExecuteUndoMove(payload.UndoData, payload.RequestId);
+                break;
+            case UndoActionType.CharacterRotation:
+                ExecuteUndoRotation(payload.UndoData, payload.RequestId);
+                break;
+        }
+    }
+
+    private void ExecuteUndoMove(UndoData undoData, string requestId)
+    {
+        if (smoothMover.IsMoving)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.UndoLogic, "Character already moving, skipping undo", this);
+            CompleteUndoRequest(requestId);
+            return;
+        }
+
+        Vector3 fromWorld = GridUtils.GridToWorld(undoData.CurrentPosition);
+        Vector3 toWorld = GridUtils.GridToWorld(undoData.PreviousPosition);
+
+        smoothMover.Move(fromWorld, toWorld, undoData.Duration,
+            onStart: null,
+            onComplete: () => OnUndoMoveComplete(undoData, requestId));
+
+        gridPosition = undoData.PreviousPosition;
+        facingDirection = undoData.CurrentDirection;
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Started undo move from {undoData.CurrentPosition} to {undoData.PreviousPosition}", this);
+    }
+
+    private void ExecuteUndoRotation(UndoData undoData, string requestId)
+    {
+        if (smoothRotate != null)
+        {
+            smoothRotate.Rotate(undoData.CurrentPosition, undoData.CurrentDirection, undoData.PreviousDirection, undoData.Duration,
+                onStart: null,
+                onComplete: () => OnUndoRotationComplete(undoData, requestId));
+
+            facingDirection = undoData.PreviousDirection;
+
+            DebugLogger.Log(DebugLogCategory.UndoLogic,
+                $"Started undo rotation from {undoData.CurrentDirection} to {undoData.PreviousDirection}", this);
+        }
+        else
+        {
+            DebugLogger.LogError(DebugLogCategory.UndoLogic, "SmoothRotate component not found", this);
+            CompleteUndoRequest(requestId);
+        }
+    }
+
+    private void OnUndoMoveComplete(UndoData undoData, string requestId)
+    {
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Undo move completed: {undoData.CurrentPosition} → {undoData.PreviousPosition}", this);
+        CompleteUndoRequest(requestId);
+    }
+
+    private void OnUndoRotationComplete(UndoData undoData, string requestId)
+    {
+        DebugLogger.Log(DebugLogCategory.UndoLogic,
+            $"Undo rotation completed: {undoData.CurrentDirection} → {undoData.PreviousDirection}", this);
+        CompleteUndoRequest(requestId);
+    }
+
+    private void CompleteUndoRequest(string requestId)
+    {
+        undoEvents?.Raise(new UndoEventPayload
+        {
+            EventType = UndoEventType.UndoCompleted,
+            RequestId = requestId
+        });
+
+        DebugLogger.Log(DebugLogCategory.UndoLogic, $"Undo request {requestId} completed", this);
     }
     #endregion
 
@@ -113,29 +262,6 @@ public abstract class Character : MonoBehaviour
     
     }
   
-    /// <summary>
-    /// Undo move of character, set direction
-    /// </summary>
-    /// <param name="from"> current position</param>
-    /// <param name="to">previous position</param>
-    /// <param name="direction">direction of movement</param>
-    /// <param name="duration"> duration of movement</param>
-    public void UndoMove(Vector2Int current, Vector2Int previous, Direction direction, float duration = 0.15f)
-    {
-        if (smoothMover.IsMoving) return;
-
-        Vector3 fromWorld = GridUtils.GridToWorld(current);
-        Vector3 toWorld = GridUtils.GridToWorld(previous);
-
-        
-        smoothMover.Move(fromWorld, toWorld, duration,
-            onStart: null, onComplete: null);
-        
-        gridPosition = previous;
-        smoothRotate.Rotate(gridPosition, facingDirection, direction, 0f, 
-            onStart: null, onComplete: null);
-        Debug.Log($"Undo character: {previous} → {current}");
-    }
 
     /// <summary>
     /// Move of a character over a distance in set direction
@@ -148,10 +274,6 @@ public abstract class Character : MonoBehaviour
         //do not execute move when already moving
       //  if (smoothMover.IsMoving) return;
         
-        // UndoID for turn history record
-        UndoId = $"{GetType().Name}-{gridPosition.x}x{gridPosition.y}";
-        // inform turn builder, that this component is going to register a action into turn record
-        TurnBuilder.Instance.ExpectSource(UndoId);
 
         // decide position to move
         Vector3 currentPosition = transform.position;
@@ -166,7 +288,8 @@ public abstract class Character : MonoBehaviour
               EventType = CharacterEventType.MoveStarted,
               CurrentPosition = targetPosVec2Int,
               PreviousPosition = gridPosition,
-              Direction = direction,
+              CurrentDirection = direction,
+              PreviousDirection = facingDirection, // Store current facing as previous for undo
               RequestData = false,
               ResponseData = false,
           };
@@ -193,18 +316,22 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
-    { 
+    {
         this.gridPosition = targetPosition;
-         Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
-       
-        // register movement as action into turn record 
-        TurnBuilder.Instance.AddAction(
-         new UndoCharacterAction(this, payload.CurrentPosition, payload.PreviousPosition, payload.Direction)
-           );
+        // Update facing direction to the movement direction
+        this.facingDirection = payload.CurrentDirection;
 
-        // inform turn builder, tht this component has registered an action into turn record
-        TurnBuilder.Instance.NotifySourceComplete(UndoId);
-        Debug.Log($"[{this.GetType().Name} move Complete] Added + Notified {UndoId}");
+        Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
+
+        // Update payload for MoveCompleted event
+        payload.EventType = CharacterEventType.MoveCompleted;
+        payload.CurrentPosition = targetPosition;
+        // CurrentDirection and PreviousDirection are already set from MoveStarted
+
+        // Raise move completed event - this will be handled by EventBasedTurnRecorder
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Sending MoveCompleted event for {GetType().Name}", this);
+        characterEvents.Raise(payload);
+        DebugLogger.Log(DebugLogCategory.EventSystem, $"MoveCompleted event sent for {GetType().Name}", this);
 
     }
     #endregion
