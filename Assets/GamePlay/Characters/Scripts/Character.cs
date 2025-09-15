@@ -14,6 +14,7 @@ public abstract class Character : MonoBehaviour
     protected Direction facingDirection;
 
     [SerializeField] protected float moveDuration = 0.15f;
+    [SerializeField] protected float rotationDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
     protected float animationSpeed;
       protected CharacterEventPayload payload = new();
@@ -238,7 +239,8 @@ public abstract class Character : MonoBehaviour
         this.facingDirection = facingDirection;
 
         //set configs
-        moveDuration = gameplayConfig.moveTime;
+        moveDuration = gameplayConfig.characterMoveTime;
+        rotationDuration = gameplayConfig.characterRotateTime;
      
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)

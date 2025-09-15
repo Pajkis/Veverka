@@ -12,6 +12,9 @@ public class TurnRecorder : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private DebugLogConfig debugConfig;
 
+    [Header("Config")]
+    [SerializeField] private GameplayConfig gameplayConfig;
+
     private List<UndoData> currentTurnData;
     private HashSet<string> expectedSources = new();
     private HashSet<string> completedSources = new();
@@ -143,7 +146,7 @@ public class TurnRecorder : MonoBehaviour
                 break;
 
             case CharacterEventType.MoveCompleted:
-                var moveData = UndoData.CreateCharacterMove(payload.Character, payload.CurrentPosition, payload.PreviousPosition, payload.CurrentDirection);
+                var moveData = UndoData.CreateCharacterMove(payload.Character, payload.CurrentPosition, payload.PreviousPosition, payload.CurrentDirection, gameplayConfig.undoStepTime);
                 AddUndoData(moveData);
 
                 var completedSourceId = $"Character-{payload.PreviousPosition.x}x{payload.PreviousPosition.y}";
@@ -151,7 +154,7 @@ public class TurnRecorder : MonoBehaviour
                 break;
 
             case CharacterEventType.RotateCompleted:
-                var rotationData = UndoData.CreateCharacterRotation(payload.Character, payload.CurrentPosition, payload.CurrentDirection, payload.PreviousDirection);
+                var rotationData = UndoData.CreateCharacterRotation(payload.Character, payload.CurrentPosition, payload.CurrentDirection, payload.PreviousDirection, gameplayConfig.undoStepTime);
                 AddUndoData(rotationData);
 
                 var rotationSourceId = $"Character-{payload.CurrentPosition.x}x{payload.CurrentPosition.y}";

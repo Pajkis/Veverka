@@ -21,7 +21,7 @@ public class LayoutStyleManager : MonoBehaviour
 
 
     [Header("Configs ")]
-    [SerializeField] private InGameDisplayConfig inGameDisplayConfig;
+    [SerializeField] private DisplayConfig displayConfig;
 
     private LayoutStyleTypes currentLayoutStyle;
 
@@ -42,20 +42,27 @@ public class LayoutStyleManager : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        if (inGameDisplayConfig == null)
+        if (displayConfig == null)
         {
-            Debug.LogError($"[{nameof(LayoutStyleManager)}] InGameDisplayConfig not set in Inspector.");
+            Debug.LogError($"[{nameof(LayoutStyleManager)}] DisplayConfig not set in Inspector.");
             return;
         }
 
-        // Load button positions from config
-        leftColumnButtonPosX = inGameDisplayConfig.LeftColumnButtonPosX;
-        middleColumnButtonPosX = inGameDisplayConfig.MiddleColumnButtonPosX;
-        rightColumnButtonPosX = inGameDisplayConfig.RightColumnButtonPosX;
-        bottomRowButtonPosY = inGameDisplayConfig.BottomRowButtonPosY;
-        middleRowButtonPosY = inGameDisplayConfig.MiddleRowButtonPosY;
-        topRowButtonPosY = inGameDisplayConfig.TopRowButtonPosY;
-        androidMiddleRowButtonPosY = inGameDisplayConfig.AndroidMiddleRowButtonPosY;
+        var profile = displayConfig.ResolveProfile();
+        if (profile == null)
+        {
+            Debug.LogError($"[{nameof(LayoutStyleManager)}] No suitable display profile found!");
+            return;
+        }
+
+        // Load button positions from unified DisplayConfig
+        leftColumnButtonPosX = profile.leftColumnButtonX;
+        middleColumnButtonPosX = profile.middleColumnButtonX;
+        rightColumnButtonPosX = profile.rightColumnButtonX;
+        bottomRowButtonPosY = profile.bottomRowButtonY;
+        middleRowButtonPosY = profile.middleRowButtonY;
+        topRowButtonPosY = profile.topRowButtonY;
+        androidMiddleRowButtonPosY = profile.androidMiddleRowButtonY;
               
     }
     

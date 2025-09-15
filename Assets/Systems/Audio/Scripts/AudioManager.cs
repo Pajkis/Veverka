@@ -49,6 +49,9 @@ public class AudioManager : MonoBehaviour
     float musicVolume;
     float uiVolume;
     float pitchAdjust;
+
+    // Audio timing
+    private float musicUpdateTimer = 0f;
     #endregion
 
     #region Init methods
@@ -80,13 +83,23 @@ public class AudioManager : MonoBehaviour
 
     /// <summary>
     /// Checks if the current background track finished and starts a new one.
+    /// Uses configurable update interval to reduce CPU usage.
     /// </summary>
     void Update()
     {
-        // play next song after it ends
-        if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
+        // Update music check timer
+        musicUpdateTimer += Time.deltaTime;
+
+        // Check music status only at configured intervals
+        if (musicUpdateTimer >= audioConfig.musicUpdateInterval)
         {
-            PlayRandomMusic(currentMusicType);
+            musicUpdateTimer = 0f;
+
+            // play next song after it ends
+            if (backgroundMusicSource != null && !backgroundMusicSource.isPlaying)
+            {
+                PlayRandomMusic(currentMusicType);
+            }
         }
     }
 
@@ -162,9 +175,9 @@ public class AudioManager : MonoBehaviour
         // other init settings
         // sources[SoundChannel.SoundMusic].loop = true;
 
-        // play background sound
+        // play background sound with delay
         currentMusicType = MusicType.Menu;
-        PlayRandomMusic(MusicType.Menu);
+        StartCoroutine(PlayMusicAfterDelay(MusicType.Menu, audioConfig.musicStartDelay));
 
     }
 
@@ -259,11 +272,64 @@ public class AudioManager : MonoBehaviour
             newClip = playlist[newIndex];
         }
 
-        backgroundMusicSource.clip = newClip;
-        currentMusicType = musicType;
-        backgroundMusicSource.Play();
+        // If we're switching tracks and have fade time configured, use cross-fade
+        if (oldClip != null && oldClip != newClip && audioConfig.musicCrossFadeTime > 0)
+        {
+            StartCoroutine(CrossFadeMusic(newClip, musicType));
+        }
+        else
+        {
+            backgroundMusicSource.clip = newClip;
+            currentMusicType = musicType;
+            backgroundMusicSource.Play();
+        }
     }
 
+    /// <summary>
+    /// Cross-fade between current and new music track
+    /// </summary>
+    private System.Collections.IEnumerator CrossFadeMusic(AudioClip newClip, MusicType musicType)
+    {
+        float originalVolume = backgroundMusicSource.volume;
+        float fadeOutTime = audioConfig.musicFadeOutTime;
+        float fadeInTime = audioConfig.musicFadeInTime;
+
+        // Fade out current track
+        float timer = 0f;
+        while (timer < fadeOutTime && backgroundMusicSource.isPlaying)
+        {
+            timer += Time.deltaTime;
+            backgroundMusicSource.volume = originalVolume * (1f - timer / fadeOutTime);
+            yield return null;
+        }
+
+        // Switch to new track
+        backgroundMusicSource.clip = newClip;
+        currentMusicType = musicType;
+        backgroundMusicSource.volume = 0f;
+        backgroundMusicSource.Play();
+
+        // Fade in new track
+        timer = 0f;
+        while (timer < fadeInTime)
+        {
+            timer += Time.deltaTime;
+            backgroundMusicSource.volume = originalVolume * (timer / fadeInTime);
+            yield return null;
+        }
+
+        // Ensure final volume is set
+        backgroundMusicSource.volume = originalVolume;
+    }
+
+    /// <summary>
+    /// Play music after configured delay
+    /// </summary>
+    private System.Collections.IEnumerator PlayMusicAfterDelay(MusicType musicType, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        PlayRandomMusic(musicType);
+    }
 
     /// <summary>
     /// Play Ui click sound event handle

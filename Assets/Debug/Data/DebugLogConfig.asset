@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7024ed8b10f774e4ebc25da14e4d2fd8, type: 3}
   m_Name: DebugLogConfig
   m_EditorClassIdentifier: 
-  turnControlLog: 1
+  turnControlLog: 0
   turnRecordLog: 0
   undoLogicLog: 0
   characterMovementLog: 0

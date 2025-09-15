@@ -51,7 +51,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
             GoalReduction = 1,
             GoalRemove = true,
             GoalMessage = BubbleMessageType.Yatta,
-            GoalMessageTime = 1f
+            GoalMessageTime = gameplayConfig.goalBubbleTime
         });
         Destroy(gameObject);
 

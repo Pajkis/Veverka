@@ -152,7 +152,7 @@ public abstract class NutTile : TileObject
         }
 
         // set configs
-        moveDuration = gameplayConfig.moveTime;
+        moveDuration = gameplayConfig.nutMoveTime;
 
         // base initialization
         base.Init(tileType, gridPosition);
