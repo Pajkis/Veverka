@@ -18,7 +18,8 @@ public enum TileType
 public enum NutType
 {
     BasicNut,
-    StoneNut
+    StoneNut,
+    WaterNut
 }
 
 /// <summary>
@@ -27,7 +28,8 @@ public enum NutType
 public enum GoalType
 {
     BasicGoal,
-    HoleGoal
+    HoleGoal,
+    WaterHoleGoal
 }
 
 /// <summary>
@@ -46,5 +48,6 @@ public enum RoadType
 { 
  BasicRoad,
  StoneRoad,
- StoneFilledHole
+ StoneFilledHole,
+ BranchRoad
 }

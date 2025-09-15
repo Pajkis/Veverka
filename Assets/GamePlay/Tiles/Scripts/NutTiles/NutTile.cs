@@ -84,7 +84,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutSet,
-            Position = gridPosition,
+            CurrentPosition = gridPosition,
             NutType = nutType,
             NutTile = this,
         });
@@ -99,23 +99,23 @@ public abstract class NutTile : TileObject
     /// <param name="payload"></param>
     private void OnNutEvent(NutEventPayload payload)
     {
-        if (payload.EventType != NutEventType.CanPushQuery)
+        if (payload.EventType != NutEventType.NutPush)
         {
             return;
         }
 
         // Check if this nut matches with position in payload
-        if (GridPosition != payload.Position)
+        if (GridPosition != payload.PreviousPosition)
         {
             return;
         }
 
         // check if nut can be pushed
-        payload.CanBePushed = CanBePushed(payload.Direction);
-        if (payload.CanBePushed)
-        {
+       // payload.CanBePushed = CanBePushed(payload.Direction);
+      //  if (payload.CanBePushed)
+      //  {
             Move(payload.Direction, payload.Distance, payload.Duration);
-        }
+      //  }
      }
 
     /// <summary>
@@ -147,7 +147,7 @@ public abstract class NutTile : TileObject
     /// <param name="duration">duration of movement</param>
     public virtual void Move(Direction direction, int distance, float duration)
     {
-        if (smoothMover.IsMoving) return;
+       // if (smoothMover.IsMoving) return;
 
         //Register turn record
         TurnRecordExpectSource();
@@ -190,7 +190,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            Position = GridPosition,
+            CurrentPosition = GridPosition,
         });
 
         // Check if the nut reached the goal
@@ -205,18 +205,29 @@ public abstract class NutTile : TileObject
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutSet,
-                Position = targetPosition,
+                CurrentPosition = targetPosition,
                 NutType = this.nutType,
                 NutTile = this,
             });
         }
         else
         {
-            // nut enters goal event raise
+            // First send NutEnteringGoal event for TurnControl to start goal action
+            nutEvents.Raise(new NutEventPayload
+            {
+                EventType = NutEventType.NutEnteringGoal,
+                CurrentPosition = targetPosition,
+                PreviousPosition = GridPosition,
+                NutType = this.nutType,
+                NutTile = this,
+            });
+
+            // Then send NutInGoal event for GoalTile to process
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutInGoal,
-                Position = targetPosition,
+                CurrentPosition = targetPosition,
+                PreviousPosition = GridPosition,
                 NutType = this.nutType,
                 NutTile = this,
             });
@@ -230,7 +241,7 @@ public abstract class NutTile : TileObject
 
         // notify listeners about nut movement
         payload.EventType = NutEventType.NutMoved;
-        payload.Position = targetPosition;
+        payload.CurrentPosition = targetPosition;
         nutEvents.Raise(payload);
     }
     #endregion
@@ -259,7 +270,7 @@ public abstract class NutTile : TileObject
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            Position = current
+            CurrentPosition = current
         });
 
         nutEvents.Raise(new NutEventPayload
@@ -267,7 +278,7 @@ public abstract class NutTile : TileObject
             EventType = NutEventType.NutSet,
             NutType = this.nutType,
             NutTile = this,
-            Position = previous
+            CurrentPosition = previous
         });
     }
 

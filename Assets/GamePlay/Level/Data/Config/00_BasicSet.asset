@@ -15,7 +15,7 @@ MonoBehaviour:
   setType: 0
   setDisplayName: Basic
   levelCsvFiles:
-  - {fileID: 4900000, guid: d9fcfa0e2b5d0e241a9af0e51417e77d, type: 3}
+  - {fileID: 4900000, guid: 80f4e503065d00640a433e7b348593aa, type: 3}
   - {fileID: 4900000, guid: d1d392c88165db9488f28a6aa8ad698c, type: 3}
   - {fileID: 4900000, guid: 464f7f5bd9d8fae4d964c279ab470b55, type: 3}
   - {fileID: 4900000, guid: 1f41631ecd6887d499f9fc0b9027fc30, type: 3}

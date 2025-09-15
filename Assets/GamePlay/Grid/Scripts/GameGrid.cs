@@ -32,10 +32,12 @@ public class GameGrid : MonoBehaviour
     [SerializeField] private GameObject stoneFilledHolePrefab;
     [SerializeField] private GameObject veverkaPrefab;
     [SerializeField] private GameObject nutPrefab;
-    [SerializeField] private GameObject nutStonePrefab;       
+    [SerializeField] private GameObject nutStonePrefab;
+    [SerializeField] private GameObject nutWaterPrefab;
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject wallStonePrefab;
     [SerializeField] private GameObject holePrefab;
+    [SerializeField] private GameObject waterHolePrefab;
     [SerializeField] private GameObject goalPrefab;
 
     [Header("Other objects")]
@@ -271,12 +273,19 @@ public class GameGrid : MonoBehaviour
                             stoneNutTile.transform.localPosition = worldTilePos;
                             stoneNutTile.Init(tileType, tilePos, NutType.StoneNut);
                         }
-                        else
+                        else if (nutGrid[x, y] == NutType.BasicNut)
                         {
                             BasicNutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<BasicNutTile>();
                             nutTile.transform.SetParent(gridRoot, false);
                             nutTile.transform.localPosition = worldTilePos;
                             nutTile.Init(tileType, tilePos, NutType.BasicNut);
+                        }
+                        else if (nutGrid[x, y] == NutType.WaterNut)
+                        {
+                            WaterNutTile waterNutTile = Instantiate(nutWaterPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterNutTile>();
+                            waterNutTile.transform.SetParent(gridRoot, false);
+                            waterNutTile.transform.localPosition = worldTilePos;
+                            waterNutTile.Init(tileType, tilePos, NutType.WaterNut);
                         }
                         break;
 
@@ -288,6 +297,13 @@ public class GameGrid : MonoBehaviour
                             holeTile.transform.SetParent(gridRoot, false);
                             holeTile.transform.localPosition = worldTilePos;
                             holeTile.Init(tileType, tilePos, GoalType.HoleGoal);
+                        }
+                        else if (goalGrid[x, y] == GoalType.WaterHoleGoal)
+                        {
+                            WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
+                            holeTile.transform.SetParent(gridRoot, false);
+                            holeTile.transform.localPosition = worldTilePos;
+                            holeTile.Init(tileType, tilePos, GoalType.WaterHoleGoal);
                         }
                         else
                         {
@@ -555,13 +571,13 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnNutSet(NutEventPayload payload)
     {
-        if (!IsInGrid(payload.Position))
+        if (!IsInGrid(payload.CurrentPosition))
         {
             Debug.LogError("Set tile is outside the grid");
             return;
         }
-        SetTileType(payload.Position, TileType.Nut);
-        nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
+        SetTileType(payload.CurrentPosition, TileType.Nut);
+        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
     }
 
     /// <summary>
@@ -570,13 +586,13 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnNutRemoved(NutEventPayload payload)
     {
-        if (!IsInGrid(payload.Position))
+        if (!IsInGrid(payload.CurrentPosition))
         {
             Debug.LogError("Remove tile is outside the grid");
             return;
         }
-        SetTileType(payload.Position, TileType.Empty);
-        nutGrid[payload.Position.x, payload.Position.y] = payload.NutType;
+        SetTileType(payload.CurrentPosition, TileType.Empty);
+        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
     }
 
     /// <summary>
@@ -588,9 +604,30 @@ public class GameGrid : MonoBehaviour
         switch (payload.EventType)
         {
             case GoalEventsType.GoalSet:
-                SetTileType(payload.Position, TileType.Goal);
-                goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+
+                if(!payload.InstantiateTile)
+                {
+                    SetTileType(payload.Position, TileType.Goal);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    return;
+                }
+
+                // Instantiate new tile on goal position
+                if ( payload.GoalType == GoalType.WaterHoleGoal)
+                {                   
+                    WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
+                    holeTile.transform.SetParent(gridRoot, false);
+                    holeTile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
+                    holeTile.Init(TileType.Goal, payload.Position, payload.GoalType);
+                    
+                    // Set tile type and goal type in grid
+                    SetTileType(payload.Position, TileType.Goal);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+
+                    Debug.Log($"Water hole goal set at {payload.Position.x}, {payload.Position.y}");
+                }              
                 break;
+
             case GoalEventsType.GoalResolved:
                 if (!payload.GoalRemove)
                 {
@@ -602,8 +639,14 @@ public class GameGrid : MonoBehaviour
                     Debug.LogError("Remove tile is outside the grid");
                     return;
                 }
-                SetTileType(payload.Position, TileType.Empty);
-                goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+
+                if (!payload.InstantiateTile)
+                {
+                    SetTileType(payload.Position, TileType.Empty);
+                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    return;                    
+                }                               
+                
                 break;
         }
     }
@@ -617,6 +660,7 @@ public class GameGrid : MonoBehaviour
         payload.IsInGrid = IsInGrid(payload.Position);
         if (!payload.IsInGrid) return;
 
+        Debug.Log($"[GameGrid] Tile query at position: {payload.Position.x}, {payload.Position.y}");
         payload.IsWalkable = IsWalkableAt(payload.Position);
         payload.IsPushable = IsPushableAt(payload.Position);
         payload.TileType = grid[payload.Position.x, payload.Position.y];
@@ -654,7 +698,7 @@ public class GameGrid : MonoBehaviour
         var tile = grid[position.x, position.y];
         if (tile == TileType.Goal)
         {
-            return goalGrid[position.x, position.y] != GoalType.HoleGoal;
+            return goalGrid[position.x, position.y] != GoalType.HoleGoal && goalGrid[position.x, position.y] != GoalType.WaterHoleGoal;
         }
         return tile == TileType.Empty || tile == TileType.Road;
     }
@@ -664,12 +708,8 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     public bool IsPushableAt(Vector2Int position)
     {
-        var tile = grid[position.x, position.y];
-        if (tile == TileType.Goal)
-        {
-            return true;
-        }
-        return tile == TileType.Empty || tile == TileType.Road;
+        var tile = grid[position.x, position.y];       
+        return tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal;
     }
         
     /// <summary>

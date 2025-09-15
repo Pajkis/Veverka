@@ -11,9 +11,9 @@ public class CharVeverka : Character
 {
     #region events 
     [SerializeField] DirectionEvent onArrowPressed;
-        [SerializeField] NutEvents nutEvents;
+    [SerializeField] NutEvents nutEvents;
     #endregion
-
+       
     // Queue for pending character data requests
     private bool hasPendingDataRequest = false;
     private bool hasShownStartupMessage = false;
@@ -24,6 +24,9 @@ public class CharVeverka : Character
     /// </summary>
     private void OnEnable()
     {
+        // Initialize debug logger if config is available
+        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
+        
         onArrowPressed.AddListener(HandleInput);
         settingEvents.AddListener(OnSettingEvent);
         characterEvents.AddListener(OnCharacterEvent);
@@ -81,46 +84,6 @@ public class CharVeverka : Character
             hasShownStartupMessage = true;
             Debug.Log("Sending startup message from Veverka");
 
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    Character = this,
-                    EventType = CharacterEventType.DataResponse,
-                    CurrentPosition = gridPosition,
-                    Direction = facingDirection,
-                    Duration = moveDuration,
-                    RequestData = false,
-                    ResponseData = true,
-                    CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                    CharacterBubbleMessageTime = 2.0f
-                });
-        }
-    }
-
-    /// <summary>
-    /// on character data request - respond with character data
-    /// </summary>
-    /// <param name="payload"></param>
-        private void OnCharacterEvent(CharacterEventPayload payload)
-        {
-            if (payload.EventType == CharacterEventType.DataRequest)
-            {
-                // If character is currently moving, queue the request
-                if (smoothMover.IsMoving)
-                {
-                    hasPendingDataRequest = true;
-                    return;
-                }
-
-                // Send current position immediately if not moving
-                SendCharacterData();
-            }
-        }
-
-    /// <summary>
-    /// Send character data response (for regular requests, not startup)
-    /// </summary>
-    private void SendCharacterData()
-    {
             characterEvents.Raise(new CharacterEventPayload
             {
                 Character = this,
@@ -130,9 +93,49 @@ public class CharVeverka : Character
                 Duration = moveDuration,
                 RequestData = false,
                 ResponseData = true,
-                CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
-                CharacterBubbleMessageTime = 0f
+                CharacterBubbleMessage = BubbleMessageType.LetsStart,
+                CharacterBubbleMessageTime = 2.0f
             });
+        }
+    }
+
+    /// <summary>
+    /// on character data request - respond with character data
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCharacterEvent(CharacterEventPayload payload)
+    {
+        if (payload.EventType == CharacterEventType.DataRequest)
+        {
+            // If turn is active, queue the request
+            if (FindObjectOfType<TurnControl>()?.IsInputLocked == true)
+            {
+                hasPendingDataRequest = true;
+                return;
+            }
+
+            // Send current position immediately if turn not active
+            SendCharacterData();
+        }
+    }
+
+    /// <summary>
+    /// Send character data response (for regular requests, not startup)
+    /// </summary>
+    private void SendCharacterData()
+    {
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            Character = this,
+            EventType = CharacterEventType.DataResponse,
+            CurrentPosition = gridPosition,
+            Direction = facingDirection,
+            Duration = moveDuration,
+            RequestData = false,
+            ResponseData = true,
+            CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+            CharacterBubbleMessageTime = 0f
+        });
     }
 
     #endregion
@@ -146,13 +149,25 @@ public class CharVeverka : Character
     /// <param name="direction"></param>
     void HandleInput(Direction inputDirection)
     {
-        if (smoothMover.IsMoving) return;
+        DebugLogger.Log(DebugLogCategory.Input, $"HandleInput called with direction: {inputDirection}", this);
+        
+        // Use TurnControl instead of SmoothMover for input locking
+        if (FindObjectOfType<TurnControl>()?.IsInputLocked == true) 
+        {
+            DebugLogger.Log(DebugLogCategory.Input, "Input is locked by TurnControl, ignoring", this);
+            return;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Input, "Calling TurnControl.OnInputTriggered()", this);
+        // Notify TurnControl that input was triggered
+        FindObjectOfType<TurnControl>()?.OnInputTriggered();
 
         // Try to move in input arrow direction
         if (inputDirection == facingDirection)
         {
             int distance = moveDistance;
             Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
+            Debug.Log($"current position (x,y): {gridPosition.x}, {gridPosition.y}");
             Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y}");
 
             // Check if target position is in grid
@@ -162,52 +177,105 @@ public class CharVeverka : Character
                 EventType = GridEventType.TileQuery,
                 Query = gridQuery
             });
-            if (!gridQuery.IsInGrid) return;
-
-            // Check if there's a pushable object at target position
-            if (gridQuery.TileType == TileType.Nut)
+            if (!gridQuery.IsInGrid) 
             {
-                // Query if the nut can be pushed in this direction
-                var pushQuery = new NutEventPayload
+                DebugLogger.Log(DebugLogCategory.CharacterMovement, "Target not in grid - sending MoveFailed event", this);
+                characterEvents.Raise(new CharacterEventPayload
                 {
-                    EventType = NutEventType.CanPushQuery,
-                    Position = targetPos,
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
+                return;
+            }
+
+            // If tile is walkable, move character
+            if (gridQuery.IsWalkable)
+            {
+                DebugLogger.Log(DebugLogCategory.CharacterMovement, "Tile is walkable - calling Move() which will send MoveStarted event", this);
+                Move(inputDirection, distance, moveDuration);
+                return;
+            }
+
+            // Check if tile is pushable (only push nuts)
+            if (gridQuery.TileType != TileType.Nut)
+            {
+                DebugLogger.Log(DebugLogCategory.TileInteraction, "Tile is not a nut - sending MoveFailed event", this);
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
+                return;
+            }
+
+            // Query if the nut can be pushed in this direction
+            Vector2Int targetPushPos = GridUtils.GetPositionInDir(targetPos, inputDirection, distance);
+            var pushQuery = new TileQueryPayload
+            {
+                Position = targetPushPos,
+            };
+            Debug.Log($"Querying pushable nut at (x,y): {pushQuery.Position.x}, {pushQuery.Position.y}, is pushable: {pushQuery.IsPushable}");
+
+            gridEvents.Raise(new GridEventPayload
+            {
+                EventType = GridEventType.TileQuery,
+                Query = pushQuery
+            });
+
+            if (!pushQuery.IsInGrid) 
+            {
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Push target not in grid - sending MoveFailed event", this);
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
+                return;
+            }
+
+            // If the nut can be pushed, move both the nut and the character
+            if (pushQuery.IsPushable)
+            {
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Nut is pushable - calling Move() which will send MoveStarted event", this);
+                Move(inputDirection, distance, moveDuration);
+                nutEvents.Raise(new NutEventPayload
+                {
+                    EventType = NutEventType.NutPush,
+                    PreviousPosition = targetPos,
+                    CurrentPosition = targetPushPos,
                     Direction = inputDirection,
                     Distance = distance,
-                    Duration = moveDuration,
-                    CanBePushed = false,
-                };
-
-                // Push query and push if possible
-                nutEvents.Raise(pushQuery);
-
-                // If there's a nut and it can be pushed
-                if (pushQuery.CanBePushed)
-                {
-                    // Move the character
-                    Move(inputDirection, distance, moveDuration);
-                }
-                else
-                {
-                    // Cannot push - optionally animate failed push
-                    Debug.Log("Cannot push nut in this direction");
-                }
-            }
-            // Move character to empty walkable tile
-            else if (gridQuery.IsWalkable)
-            {
-                Move(inputDirection, distance, moveDuration);
+                    Duration = moveDuration
+                });
             }
             else
             {
-                Debug.Log("Cannot move - tile not walkable");
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Nut cannot be pushed - sending MoveFailed event", this);
+                // move failed
+                characterEvents.Raise(new CharacterEventPayload
+                {
+                    EventType = CharacterEventType.MoveFailed,
+                    CurrentPosition = gridPosition,
+                    Direction = inputDirection,
+                });
+                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
+
+                // Cannot push - optionally animate failed push
+                DebugLogger.Log(DebugLogCategory.NutMovement, "Cannot push nut in this direction", this);
             }
         }
         // Rotate to input arrow direction
         else
         {
-            facingDirection = Rotate(inputDirection);
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
+            DebugLogger.Log(DebugLogCategory.Rotation, "Need to rotate - calling Rotate() which will send RotateStarted event", this);
+            // Rotate character to input arrow direction
+            Rotate(facingDirection, inputDirection, moveDuration);            
         }
     }
 
@@ -216,6 +284,10 @@ public class CharVeverka : Character
     /// </summary>
     protected override void OnMoveStart()
     {
+        //Reset  pending data request flag
+        hasPendingDataRequest = false;
+
+        // play move sound
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
     }
 
@@ -227,8 +299,8 @@ public class CharVeverka : Character
         base.OnMoveComplete(targetPosition);
 
         // raise event, that character made a turn -> turn count
-            payload.EventType = CharacterEventType.MoveCompleted;
-            characterEvents.Raise(payload);
+        payload.EventType = CharacterEventType.MoveCompleted;
+        characterEvents.Raise(payload);
 
         // Handle any pending character data requests now that move is complete
         if (hasPendingDataRequest)
@@ -237,5 +309,59 @@ public class CharVeverka : Character
             SendCharacterData(); // Use default values for movement completion
         }
     }
+
+    #endregion
+
+    #region rotate
+
+    /// <summary>
+    /// rotation of object to the direction
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    protected override void Rotate(Direction currentDirection, Direction targetDirection, float duration)
+    {
+        DebugLogger.Log(DebugLogCategory.Rotation, $"Rotate called: {currentDirection} -> {targetDirection}", this);
+        // start rotate
+        DebugLogger.Log(DebugLogCategory.EventSystem, "Sending RotateStarted event", this);
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            EventType = CharacterEventType.RotateStarted,           
+        });
+        DebugLogger.Log(DebugLogCategory.EventSystem, "RotateStarted event sent", this);
+
+        // Update facing direction immediately since this is the new direction
+        facingDirection = targetDirection;
+
+        smoothRotate.Rotate(gridPosition, currentDirection, targetDirection, duration, OnRotateStart, () => OnRotateComplete(gridPosition));
+    }
+
+    /// <summary>
+    /// Handles the start of a rotation event.
+    /// </summary>
+    /// <remarks>This method raises an audio event to play a sound effect associated with the rotation action.
+    /// Override this method to customize behavior when a rotation starts.</remarks>
+    protected override void OnRotateStart()
+    {
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
+    }
+
+    /// <summary>
+    /// Handles the completion of a rotation operation.
+    /// </summary>
+    /// <param name="targetTransform">The grid position (unchanged during rotation).</param>
+    protected override void OnRotateComplete(Vector2Int targetTransform)
+    {
+       // Grid position doesn't change during rotation, only facing direction changes
+       // The facing direction should be updated here to match the target direction
+       
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            EventType = CharacterEventType.RotateCompleted,
+            CurrentPosition = gridPosition,
+            Direction = facingDirection,
+        });
+    }
+
     #endregion
 }

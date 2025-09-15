@@ -17,6 +17,9 @@ public class GoalEventPayload
     public int GoalReduction;
     public bool GoalRemove;
 
+    //Instantiate goal tile
+    public bool InstantiateTile;
+
     // Message for Veverka to display when goal is reached
     public BubbleMessageType GoalMessage;
     public float GoalMessageTime;

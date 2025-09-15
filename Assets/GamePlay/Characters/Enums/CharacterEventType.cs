@@ -3,20 +3,17 @@
 /// </summary>
 public enum CharacterEventType
 {
-    // Request/ Response events
-    DataRequest,
-    DataResponse,
+  // Request/ Response events
+  DataRequest,
+  DataResponse,
 
-    // Movement events  
-    Moved,
-    MoveStarted,
-    MoveCompleted,
+  // Movement events    
+  MoveStarted,
+  MoveCompleted,
+  MoveFailed,
 
-    // Rotation events
-  //  Rotated,
+  // Rotation events
+  RotateStarted,
+  RotateCompleted
 
-    // Interaction events
- //   PushAttempt,
- //   PushSuccessful,
- //   PushFailed,   
 }

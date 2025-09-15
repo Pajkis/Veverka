@@ -6,5 +6,6 @@ public enum BubbleMessageType
     NoMessage,
     LetsStart,
     Yatta,
-    Ooops,   
+    Ooops, 
+    Splash,
 }

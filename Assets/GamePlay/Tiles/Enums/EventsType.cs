@@ -4,7 +4,8 @@
 public enum GoalEventsType
 {
     GoalSet,
-    GoalResolved
+    GoalResolved,
+    NutInGoalDone
 }
 
 /// <summary>
@@ -12,9 +13,10 @@ public enum GoalEventsType
 /// </summary>
 public enum NutEventType
 {
-    CanPushQuery,
+    NutPush,
     NutSet,
     NutRemoved,
+    NutEnteringGoal,
     NutInGoal,
     NutMoved
 }
