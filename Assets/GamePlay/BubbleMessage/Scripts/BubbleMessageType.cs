@@ -8,4 +8,6 @@ public enum BubbleMessageType
     Yatta,
     Ooops, 
     Splash,
+    Lake,
+    Road,
 }

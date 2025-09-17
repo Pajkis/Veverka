@@ -136,6 +136,9 @@ public class BubbleMessageManager : MonoBehaviour
         {
             BubbleMessageType.LetsStart => "Ready!",
             BubbleMessageType.Yatta => "Yatta!",
+            BubbleMessageType.Road => "Road!",
+            BubbleMessageType.Splash => "Splash!",
+            BubbleMessageType.Lake => "Lake!",
             BubbleMessageType.Ooops => "Ooops!",
             _ => "error",
         };

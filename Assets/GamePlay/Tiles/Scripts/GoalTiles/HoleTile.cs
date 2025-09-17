@@ -24,7 +24,7 @@ public class HoleTile : GoalTile
                 Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = true,
-                GoalMessage = BubbleMessageType.Yatta,
+                GoalMessage = BubbleMessageType.Road,
                 GoalMessageTime = 1f
             });
             Destroy(gameObject);
@@ -63,7 +63,7 @@ public class HoleTile : GoalTile
                 Position = payload.CurrentPosition,
                 GoalReduction = 0,
                 GoalRemove = true,
-                GoalMessage = BubbleMessageType.Yatta,
+                GoalMessage = BubbleMessageType.Lake,
                 GoalMessageTime = 1f
             });
             Destroy(gameObject);
