@@ -21,12 +21,14 @@ public class WaterHoleTile : GoalTile, INutInteractive
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
        
-        // Play goal reached sound effect
-        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
-
         // stone nut falls into the hole, splash around and fills it with road
         if (payload.NutType == NutType.StoneNut)
         {
+            // Play build sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
+            // Play splash sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
+
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
@@ -56,6 +58,9 @@ public class WaterHoleTile : GoalTile, INutInteractive
         // basic nut falls into the hole with no effect
         else if (payload.NutType == NutType.BasicNut)
         {
+            // Play nut In Water sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.NutInWater });
+
             // Display "Ooops" message if a non-stone nut falls into the hole
             goalEvents.Raise(new GoalEventPayload
             {
@@ -70,6 +75,9 @@ public class WaterHoleTile : GoalTile, INutInteractive
         // Water nut splashes and moves other nuts around
         else if (payload.NutType == NutType.WaterNut)
         {
+            // Play splash sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
+
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,

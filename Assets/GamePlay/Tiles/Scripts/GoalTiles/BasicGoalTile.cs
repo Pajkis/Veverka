@@ -20,13 +20,13 @@ public class BasicGoalTile : GoalTile, INutInteractive
     {
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
-         
-        // Play goal reached sound effect
-        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
         // Build wall if stone nut reached the goal
         if (payload.NutType == NutType.StoneNut)
         {
+            // Play build sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
+
             wallEvents.Raise(new WallEventPayload
             {
                 EventType = WallEventType.WallSet,
@@ -39,8 +39,17 @@ public class BasicGoalTile : GoalTile, INutInteractive
         // water nut falls into the goal, create splash effect and splash around
         else if (payload.NutType == NutType.WaterNut)
         {
+            // Play build sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
+
             // splash water to move nuts around
             this.SplashWater();
+        }
+
+        else if (payload.NutType == NutType.BasicNut)
+        {
+            // Play goal reached sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
         }
 
         // Raise goal reached event
@@ -53,9 +62,11 @@ public class BasicGoalTile : GoalTile, INutInteractive
             GoalMessage = BubbleMessageType.Yatta,
             GoalMessageTime = gameplayConfig.goalBubbleTime
         });
+
+        // Destroy goal tile
         Destroy(gameObject);
 
-        //Call base - all goal actions settleted
+        //Call base - all goal actions settled
         base.OnNutInGoal(payload);
                
     }

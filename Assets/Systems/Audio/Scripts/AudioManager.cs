@@ -20,6 +20,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip levelFinished;
     [SerializeField] private AudioClip veverkaRotate;
     [SerializeField] private AudioClip Undo;
+    [SerializeField] private AudioClip WaterSplash;
+    [SerializeField] private AudioClip WaterFill;
+    [SerializeField] private AudioClip NutInWater;
+    [SerializeField] private AudioClip NutInHole;
+    [SerializeField] private AudioClip Oops;
+    [SerializeField] private AudioClip Build;
 
     [Header("UI")]
     [SerializeField] private AudioClip buttonClick;
@@ -147,6 +153,12 @@ public class AudioManager : MonoBehaviour
         clips[SfxType.LevelFinished] = levelFinished;
         clips[SfxType.VeverkaRotate] = veverkaRotate;
         clips[SfxType.Undo] = Undo;
+        clips[SfxType.WaterSplash] = WaterSplash;
+        clips[SfxType.WaterFill] = WaterFill;
+        clips[SfxType.NutInWater] = NutInWater;
+        clips[SfxType.NutInHole] = NutInHole;
+        clips[SfxType.Oops] = Oops;
+        clips[SfxType.Build] = Build;
 
         clips[UiType.ButtonClick] = buttonClick;
         clips[UiType.ButtonHover] = buttonHover;

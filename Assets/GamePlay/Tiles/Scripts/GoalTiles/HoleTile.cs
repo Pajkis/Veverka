@@ -13,11 +13,12 @@ public class HoleTile : GoalTile
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
         
-        // Play goal reached sound effect
-        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
         // Raise goal reached event
         if (payload.NutType == NutType.StoneNut)
         {
+             // Play build sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
+
             goalEvents.Raise(new GoalEventPayload
             {
                 EventType = GoalEventsType.GoalResolved,
@@ -42,6 +43,9 @@ public class HoleTile : GoalTile
         // basic nut falls into the hole, display "Ooops" message
         else if (payload.NutType == NutType.BasicNut)
         {
+            // Play sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
+
             // Display "Ooops" message if a non-stone nut falls into the hole
             goalEvents.Raise(new GoalEventPayload
             {
@@ -56,6 +60,10 @@ public class HoleTile : GoalTile
         // water nut falls into the hole, create water hole
         else if (payload.NutType == NutType.WaterNut)
         {
+
+            // Play waterfill sound effect
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterFill });
+
             // remove the hole goal
             goalEvents.Raise(new GoalEventPayload
             {
@@ -66,6 +74,8 @@ public class HoleTile : GoalTile
                 GoalMessage = BubbleMessageType.Lake,
                 GoalMessageTime = 1f
             });
+
+            // Destroy with small delay to ensure all operations complete
             Destroy(gameObject);
 
             // Create water hole goal instead
@@ -78,7 +88,7 @@ public class HoleTile : GoalTile
             });
         }
 
-        //Call base - all goal actions settleted
+        //Call base - all goal actions settled
         base.OnNutInGoal(payload);
         
     }

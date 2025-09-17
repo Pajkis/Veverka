@@ -14,12 +14,18 @@ public enum SoundChannel
 /// </summary>
 public enum SfxType   
 {
-VeverkaMove,
-VeverkaRotate,
-NutMove,
-GoalReached,
-LevelFinished,
-Undo
+    VeverkaMove,
+    VeverkaRotate,
+    NutMove,
+    GoalReached,
+    LevelFinished,
+    Undo,
+    WaterSplash,
+    WaterFill,
+    NutInWater,
+    NutInHole,
+    Build,
+    Oops,
 }
 
 /// <summary>

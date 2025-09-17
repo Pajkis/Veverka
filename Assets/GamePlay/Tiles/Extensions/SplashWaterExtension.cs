@@ -30,7 +30,7 @@ public static class SplashWaterExtension
             });
 
             // Check if there is a basic nut that can be pushed away
-            if (queryPayload.TileType == TileType.Nut && queryPayload.NutType == NutType.BasicNut)
+            if (queryPayload.TileType == TileType.Nut && ( queryPayload.NutType == NutType.BasicNut || queryPayload.NutType == NutType.WaterNut))
             {
                 //check if the tile in the direction is pushable
                Vector2Int PushQueryPosition = GridUtils.GetPositionInDir(queryPayload.Position, (Direction)i);
