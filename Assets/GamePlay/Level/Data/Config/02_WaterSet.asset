@@ -17,7 +17,7 @@ MonoBehaviour:
   levelCsvFiles:
   - {fileID: 4900000, guid: 80f4e503065d00640a433e7b348593aa, type: 3}
   - {fileID: 4900000, guid: b98dbd40979c6ba4b8e248e6b3d2b555, type: 3}
-  - {fileID: 0}
+  - {fileID: 4900000, guid: 3d545674d9448a34f84cfaebecce961d, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
