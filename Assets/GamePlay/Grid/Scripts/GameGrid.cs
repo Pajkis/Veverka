@@ -495,6 +495,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnWallEvent(WallEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnWallEvent - EventType: {payload.EventType}, Position: {payload.Position}, WallType: {payload.WallType}", this);
+
         switch (payload.EventType)
         {
             case WallEventType.WallSet:
@@ -517,6 +519,7 @@ public class GameGrid : MonoBehaviour
                 // set tile and wall type in grid
                 SetTileType(payload.Position, TileType.Wall);
                 wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
+                DebugLogger.Log(DebugLogCategory.GridSystem, $"Wall created at {payload.Position} - TileType: {GetTileType(payload.Position)}, WallType: {payload.WallType}", this);
                 break;
         }
     }
@@ -527,6 +530,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnRoadEvent(RoadEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnRoadEvent - EventType: {payload.EventType}, Position: {payload.Position}, RoadType: {payload.RoadType}", this);
+
         switch (payload.EventType)
         {
             case RoadEventType.RoadSet:
@@ -549,6 +554,7 @@ public class GameGrid : MonoBehaviour
                 // set tile type and road type in grid
                 SetTileType(payload.Position, TileType.Road);
                 roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+                DebugLogger.Log(DebugLogCategory.GridSystem, $"Road created at {payload.Position} - TileType: {GetTileType(payload.Position)}, RoadType: {payload.RoadType}", this);
                 break;
         }
     }
@@ -592,8 +598,11 @@ public class GameGrid : MonoBehaviour
             Debug.LogError("Remove tile is outside the grid");
             return;
         }
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnNutRemoved at {payload.CurrentPosition} - Old TileType: {GetTileType(payload.CurrentPosition)}", this);
         SetTileType(payload.CurrentPosition, TileType.Empty);
         nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Nut removed from {payload.CurrentPosition} - New TileType: {GetTileType(payload.CurrentPosition)}", this);
     }
 
     /// <summary>
@@ -602,6 +611,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnGoalEvent(GoalEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnGoalEvent - EventType: {payload.EventType}, Position: {payload.Position}, GoalType: {payload.GoalType}, GoalRemove: {payload.GoalRemove}", this);
+
         switch (payload.EventType)
         {
             case GoalEventsType.GoalSet:
@@ -643,8 +654,10 @@ public class GameGrid : MonoBehaviour
 
                 if (!payload.InstantiateTile)
                 {
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolved - Setting {payload.Position} to Empty (GoalRemove: {payload.GoalRemove})", this);
                     SetTileType(payload.Position, TileType.Empty);
                     goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {GetTileType(payload.Position)}", this);
                     return;
                 }
 
@@ -666,6 +679,8 @@ public class GameGrid : MonoBehaviour
         payload.TileType = grid[payload.Position.x, payload.Position.y];
         payload.GoalType = goalGrid[payload.Position.x, payload.Position.y];
         payload.WallType = wallGrid[payload.Position.x, payload.Position.y];
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"TileQuery at {payload.Position} - TileType: {payload.TileType}, IsWalkable: {payload.IsWalkable}, IsPushable: {payload.IsPushable}", this);
         payload.NutType = nutGrid[payload.Position.x, payload.Position.y];
         payload.RoadType = roadGrid[payload.Position.x, payload.Position.y];
     }

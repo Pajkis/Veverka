@@ -21,9 +21,13 @@ public class BasicGoalTile : GoalTile, INutInteractive
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
 
+        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal - NutType: {payload.NutType}, Position: {payload.CurrentPosition}, GoalPosition: {GridPosition}", this);
+
         // Build wall if stone nut reached the goal
         if (payload.NutType == NutType.StoneNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut reached goal - creating wall at {payload.CurrentPosition}", this);
+
             // Play build sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
 
@@ -38,6 +42,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 GoalMessageTime = gameplayConfig.goalBubbleTime
             });
 
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for stone nut at {payload.CurrentPosition}", this);
+
             // Destroy goal tile
             Destroy(gameObject);
 
@@ -49,11 +55,15 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 WallType = WallType.StoneWall,
                 InstantiateTile = true,
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"WallSet event sent for stone wall at {payload.CurrentPosition}", this);
         }
 
         // water nut falls into the goal, create splash effect and splash around
         else if (payload.NutType == NutType.WaterNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut reached goal - creating splash at {payload.CurrentPosition}", this);
+
             // Play build sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
@@ -71,12 +81,16 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 GoalMessageTime = gameplayConfig.goalBubbleTime
             });
 
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for water nut at {payload.CurrentPosition}", this);
+
             // Destroy goal tile
             Destroy(gameObject);
         }
 
         else if (payload.NutType == NutType.BasicNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut reached goal at {payload.CurrentPosition}", this);
+
             // Play goal reached sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
@@ -90,6 +104,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 GoalMessage = BubbleMessageType.Yatta,
                 GoalMessageTime = gameplayConfig.goalBubbleTime
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for basic nut at {payload.CurrentPosition}", this);
 
             // Destroy goal tile
             Destroy(gameObject);

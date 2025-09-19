@@ -182,16 +182,16 @@ public abstract class NutTile : TileObject
             return;
         }
 
-        Debug.Log($"[NutTile] OnNutEvent PUSH - GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}, PayloadCurrent: {payload.CurrentPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnNutEvent PUSH - GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}, PayloadCurrent: {payload.CurrentPosition}", this);
 
         // Check if this nut matches with position in payload
         if (GridPosition != payload.PreviousPosition)
         {
-            Debug.Log($"[NutTile] Position mismatch - GridPosition: {GridPosition} != PayloadPrevious: {payload.PreviousPosition}");
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Position mismatch - GridPosition: {GridPosition} != PayloadPrevious: {payload.PreviousPosition}", this);
             return;
         }
 
-        Debug.Log($"[NutTile] Position match - calling Move()");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Position match - calling Move()", this);
         // check if nut can be pushed
        // payload.CanBePushed = CanBePushed(payload.Direction);
       //  if (payload.CanBePushed)
@@ -233,7 +233,7 @@ public abstract class NutTile : TileObject
 
         // Store the previous position BEFORE any potential updates to GridPosition
         Vector2Int previousPosition = GridPosition;
-        Debug.Log($"[NutTile] Move START - GridPosition: {GridPosition}, PreviousPosition: {previousPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move START - GridPosition: {GridPosition}, PreviousPosition: {previousPosition}", this);
 
         // calculate movement positions
         Vector3 currentPosition = transform.localPosition;
@@ -241,7 +241,7 @@ public abstract class NutTile : TileObject
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
-        Debug.Log($"[NutTile] Move CALC - From: {GridPosition} To: {targetPosVec2Int}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move CALC - From: {GridPosition} To: {targetPosVec2Int}", this);
 
         // prepare movement payload for events and turn records
         payload = new NutEventPayload
@@ -253,7 +253,7 @@ public abstract class NutTile : TileObject
             Duration = moveDuration,
         };
 
-        Debug.Log($"[NutTile] Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}", this);
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
@@ -273,7 +273,7 @@ public abstract class NutTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        Debug.Log($"[NutTile] OnMoveComplete START - TargetPosition: {targetPosition}, GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnMoveComplete START - TargetPosition: {targetPosition}, GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}", this);
 
         // remove nut from previous position (use payload.PreviousPosition, not current GridPosition)
         nutEvents.Raise(new NutEventPayload
@@ -282,7 +282,7 @@ public abstract class NutTile : TileObject
             CurrentPosition = payload.PreviousPosition,
         });
 
-        Debug.Log($"[NutTile] NutRemoved sent for position: {payload.PreviousPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"NutRemoved sent for position: {payload.PreviousPosition}", this);
 
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
@@ -325,16 +325,16 @@ public abstract class NutTile : TileObject
             Destroy(gameObject);
         }
 
-        Debug.Log($"[NutTile] UPDATE GridPosition: {GridPosition} → {targetPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"UPDATE GridPosition: {GridPosition} → {targetPosition}", this);
         GridPosition = targetPosition;
-        Debug.Log($"[NutTile] GridPosition updated to: {GridPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"GridPosition updated to: {GridPosition}", this);
 
         // notify listeners about nut movement
         payload.EventType = NutEventType.NutMoved;
         payload.CurrentPosition = targetPosition;
         nutEvents.Raise(payload);
 
-        Debug.Log($"[NutTile] OnMoveComplete END - Final GridPosition: {GridPosition}");
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnMoveComplete END - Final GridPosition: {GridPosition}", this);
     }
     #endregion
 

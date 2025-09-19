@@ -12,10 +12,14 @@ public class HoleTile : GoalTile
     {
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
+
+        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal (HoleTile) - NutType: {payload.NutType}, Position: {payload.CurrentPosition}", this);
         
         // Raise goal reached event
         if (payload.NutType == NutType.StoneNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut in hole - filling hole at {payload.CurrentPosition}", this);
+
              // Play build sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
 
@@ -28,6 +32,9 @@ public class HoleTile : GoalTile
                 GoalMessage = BubbleMessageType.Road,
                 GoalMessageTime = 1f
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for stone-filled hole at {payload.CurrentPosition}", this);
+
             Destroy(gameObject);
 
             // Set wall in the position of the hole
@@ -38,11 +45,15 @@ public class HoleTile : GoalTile
                 RoadType = RoadType.StoneFilledHole,
                 InstantiateTile = true,
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"RoadSet event sent for stone-filled hole at {payload.CurrentPosition}", this);
         }
 
         // basic nut falls into the hole, display "Ooops" message
         else if (payload.NutType == NutType.BasicNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut fell into hole at {payload.CurrentPosition} - showing Ooops message", this);
+
             // Play sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
@@ -55,11 +66,14 @@ public class HoleTile : GoalTile
                 GoalMessage = BubbleMessageType.Ooops,
                 GoalMessageTime = 1f
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for basic nut in hole (Ooops) at {payload.CurrentPosition}", this);
         }
 
         // water nut falls into the hole, create water hole
         else if (payload.NutType == NutType.WaterNut)
         {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut in hole - creating water hole at {payload.CurrentPosition}", this);
 
             // Play waterfill sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterFill });
@@ -75,6 +89,8 @@ public class HoleTile : GoalTile
                 GoalMessageTime = 1f
             });
 
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for water hole at {payload.CurrentPosition}", this);
+
             // Destroy with small delay to ensure all operations complete
             Destroy(gameObject);
 
@@ -86,6 +102,8 @@ public class HoleTile : GoalTile
                 GoalType = GoalType.WaterHoleGoal,
                 InstantiateTile = true,
             });
+
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalSet event sent for water hole goal at {payload.CurrentPosition}", this);
         }
 
         //Call base - all goal actions settled
