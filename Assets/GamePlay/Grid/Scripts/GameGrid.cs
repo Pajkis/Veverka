@@ -511,8 +511,9 @@ public class GameGrid : MonoBehaviour
                     }
 
                     tile.transform.SetParent(gridRoot, false);
-                    tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
                 }
+
                 // set tile and wall type in grid
                 SetTileType(payload.Position, TileType.Wall);
                 wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
@@ -542,7 +543,7 @@ public class GameGrid : MonoBehaviour
                     }
 
                     tile.transform.SetParent(gridRoot, false);
-                    tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
                 }
 
                 // set tile type and road type in grid
@@ -644,9 +645,9 @@ public class GameGrid : MonoBehaviour
                 {
                     SetTileType(payload.Position, TileType.Empty);
                     goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-                    return;                    
-                }                               
-                
+                    return;
+                }
+
                 break;
         }
     }
@@ -660,7 +661,6 @@ public class GameGrid : MonoBehaviour
         payload.IsInGrid = IsInGrid(payload.Position);
         if (!payload.IsInGrid) return;
 
-        Debug.Log($"[GameGrid] Tile query at position: {payload.Position.x}, {payload.Position.y}");
         payload.IsWalkable = IsWalkableAt(payload.Position);
         payload.IsPushable = IsPushableAt(payload.Position);
         payload.TileType = grid[payload.Position.x, payload.Position.y];
