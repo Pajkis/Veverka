@@ -121,29 +121,37 @@ public class CameraFollow : MonoBehaviour
     private void Init(Transform target, Transform origin, Vector2Int gridSize)
     {
         this.target = target;
-                       
+
         Vector3 gridOrigin = origin.position;
 
-        Vector2 levelSize = new Vector2(gridSize.x * tileSize, gridSize.y * tileSize);
+        // Calculate effective grid size considering surrounding walls
+        Vector2Int effectiveGridSize = CalculateEffectiveGridSize(gridSize);
+        Vector2 effectiveLevelSize = new Vector2(effectiveGridSize.x * tileSize, effectiveGridSize.y * tileSize);
+
+        // Calculate grid offset due to surrounding walls centering
+        Vector3 gridOffset = CalculateGridOffset(gridSize, effectiveGridSize);
+        Vector3 effectiveGridOrigin = gridOrigin + gridOffset;
+
         Vector2 visibleSize = new Vector2(maxStaticTileSize.x * tileSize, maxStaticTileSize.y * tileSize);
         Vector2 halfVisibleSize = visibleSize / 2f;
 
-        minBounds = gridOrigin + (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
-        maxBounds = gridOrigin + (Vector3)levelSize - (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
+        // Use effective grid origin and size for bounds calculation
+        minBounds = effectiveGridOrigin + (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
+        maxBounds = effectiveGridOrigin + (Vector3)effectiveLevelSize - (Vector3)halfVisibleSize + ScreenToPlayScreenOffset;
 
         // Camera mode setup
         if (gridSize.x <= maxStaticTileSize.x && gridSize.y <= maxStaticTileSize.y)
         {
             mode = CameraMode.StaticCenter;
-            Vector3 center = gridOrigin + (Vector3)(levelSize / 2f);
-              
+            Vector3 center = effectiveGridOrigin + (Vector3)(effectiveLevelSize / 2f);
+
             // adjust to even tile numbered grid
-            if ((gridSize.x % 2) == 0)
+            if ((effectiveGridSize.x % 2) == 0)
             {
                 center += new Vector3(evenTilesOffset, 0, 0);
             }
 
-            if ((gridSize.y % 2) == 0)
+            if ((effectiveGridSize.y % 2) == 0)
             {
                 center += new Vector3(0, evenTilesOffset, 0);
             }
@@ -155,6 +163,59 @@ public class CameraFollow : MonoBehaviour
             mode = CameraMode.FollowWithClamp;
             // Don't set initialized = true yet, wait for character event
         }
+    }
+
+    /// <summary>
+    /// Calculate effective grid size including surrounding walls
+    /// </summary>
+    /// <param name="originalGridSize">Original grid size without walls</param>
+    /// <returns>Effective grid size including walls</returns>
+    private Vector2Int CalculateEffectiveGridSize(Vector2Int originalGridSize)
+    {
+        Vector2Int effectiveSize = originalGridSize;
+
+        // If width is smaller than max screen, it will be filled to max screen width
+        if (originalGridSize.x < maxStaticTileSize.x)
+        {
+            effectiveSize.x = maxStaticTileSize.x;
+        }
+
+        // If height is smaller than max screen, it will be filled to max screen height
+        if (originalGridSize.y < maxStaticTileSize.y)
+        {
+            effectiveSize.y = maxStaticTileSize.y;
+        }
+
+        return effectiveSize;
+    }
+
+    /// <summary>
+    /// Calculate grid offset due to surrounding walls centering
+    /// </summary>
+    /// <param name="originalGridSize">Original grid size</param>
+    /// <param name="effectiveGridSize">Effective grid size with walls</param>
+    /// <returns>Offset to apply to grid origin</returns>
+    private Vector3 CalculateGridOffset(Vector2Int originalGridSize, Vector2Int effectiveGridSize)
+    {
+        Vector3 offset = Vector3.zero;
+
+        // Calculate offset for X axis (horizontal centering)
+        int diffX = effectiveGridSize.x - originalGridSize.x;
+        if (diffX > 0)
+        {
+            int offsetLeft = diffX / 2;
+            offset.x = -offsetLeft * tileSize;
+        }
+
+        // Calculate offset for Y axis (vertical centering)
+        int diffY = effectiveGridSize.y - originalGridSize.y;
+        if (diffY > 0)
+        {
+            int offsetDown = diffY / 2;
+            offset.y = -offsetDown * tileSize;
+        }
+
+        return offset;
     }
 
     /// <summary>

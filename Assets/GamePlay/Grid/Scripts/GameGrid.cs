@@ -330,26 +330,45 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     void BuildSurroundings()
     {
-        // if grid is larger than max screen size, do not build surroundings
+        // Calculate differences for each dimension
         int diffX = maxScreenGridSize.x - gridSize.x;
         int diffY = maxScreenGridSize.y - gridSize.y;
 
-        if (diffX < 0 || diffY < 0 || (diffX == 0 && diffY == 0))
+        // If both dimensions are larger than or equal to max screen size, do not build surroundings
+        if (diffX <= 0 && diffY <= 0)
         {
             return;
         }
 
-        //Offset calculation for surrounding walls
-        int offsetLeft = diffX / 2;
-        int offsetRight = diffX - offsetLeft;
-        int offsetDown = diffY / 2;
-        int offsetUp = diffY - offsetDown;
+        // Calculate offsets - if dimension is larger than screen, offset should be 0
+        int offsetLeft = diffX > 0 ? diffX / 2 : 0;
+        int offsetRight = diffX > 0 ? diffX - offsetLeft : 0;
+        int offsetDown = diffY > 0 ? diffY / 2 : 0;
+        int offsetUp = diffY > 0 ? diffY - offsetDown : 0;
 
-        //number of needed surrounding walls
+        // Calculate number of needed surrounding walls
         int widthWithOffset = gridSize.x + offsetLeft + offsetRight;
-        int needed = widthWithOffset * (offsetDown + offsetUp) + gridSize.y * (offsetLeft + offsetRight);
+        int needed = 0;
 
-        // if there are not enough walls in pool, instantiate new ones
+        // Count walls needed for top/bottom (if height is smaller than screen)
+        if (diffY > 0)
+        {
+            needed += widthWithOffset * (offsetDown + offsetUp);
+        }
+
+        // Count walls needed for left/right (if width is smaller than screen)
+        if (diffX > 0)
+        {
+            needed += gridSize.y * (offsetLeft + offsetRight);
+        }
+
+        // If no walls are needed, return early
+        if (needed == 0)
+        {
+            return;
+        }
+
+        // If there are not enough walls in pool, instantiate new ones
         for (int i = surroundingWalls.Count; i < needed; i++)
         {
             var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
@@ -358,39 +377,51 @@ public class GameGrid : MonoBehaviour
 
         int index = 0;
 
-        // Position surrounding walls on bottom
-        for (int y = -offsetDown; y < 0; y++)
+        // Position surrounding walls on bottom (only if height is smaller than screen)
+        if (diffY > 0)
         {
-            for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+            for (int y = -offsetDown; y < 0; y++)
             {
-                PositionWall(index++, x, y);
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        // Position surrounding walls on top
-        for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
+        // Position surrounding walls on top (only if height is smaller than screen)
+        if (diffY > 0)
         {
-            for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+            for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
             {
-                PositionWall(index++, x, y);
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        //position surrounding walls on left
-        for (int x = -offsetLeft; x < 0; x++)
+        // Position surrounding walls on left (only if width is smaller than screen)
+        if (diffX > 0)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = -offsetLeft; x < 0; x++)
             {
-                PositionWall(index++, x, y);
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        //position surrounding walls on right
-        for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
+        // Position surrounding walls on right (only if width is smaller than screen)
+        if (diffX > 0)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
             {
-                PositionWall(index++, x, y);
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
