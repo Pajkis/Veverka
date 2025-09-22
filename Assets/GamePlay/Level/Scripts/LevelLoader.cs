@@ -32,7 +32,7 @@ public class LevelLoader : MonoBehaviour
         // Validate required components
         if (levelSetManager == null)
         {
-            Debug.LogError("LevelSetManager is not assigned! Cannot load levels.");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelSetManager is not assigned! Cannot load levels.", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -43,7 +43,7 @@ public class LevelLoader : MonoBehaviour
 
         if (levelDatabase == null)
         {
-            Debug.LogError("LevelDatabase is not assigned!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -52,10 +52,14 @@ public class LevelLoader : MonoBehaviour
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader initialized - Starting level {levelDatabase.CurrentLevelIndex} from set {levelDatabase.LevelSetType}", this);
+
         // play music
+        DebugLogger.Log(DebugLogCategory.Audio, "Starting game music", this);
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Game });
 
         // invoke level reset
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Requesting level reset before loading", this);
         levelSelectEvent.Raise(new LevelSelectPayload
         {
             levelNumber = levelDatabase.CurrentLevelIndex,
@@ -86,6 +90,7 @@ public class LevelLoader : MonoBehaviour
     {
         if (payload.EventType == GridEventType.BuildGrid && payload.BuildDone)
         {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "Grid build completed - level is ready", this);
             levelBuilt = true;
         }
     }
@@ -98,7 +103,12 @@ public class LevelLoader : MonoBehaviour
     {
         if (!payload.resetRequested)
         {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Starting level load coroutine for level {payload.levelNumber}", this);
             StartCoroutine(LoadLevelCoroutine());
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "Level reset requested - preparing for new level load", this);
         }
     }
 
@@ -117,12 +127,12 @@ public class LevelLoader : MonoBehaviour
         LevelSetType currentSet = levelDatabase.LevelSetType;
         int currentLevelIndex = levelDatabase.CurrentLevelIndex;
 
-        Debug.Log($"Loading level {currentLevelIndex} from set {currentSet}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Loading level {currentLevelIndex} from set {currentSet}", this);
 
         // Check if the level exists in the set
         if (!levelSetManager.HasLevel(currentSet, currentLevelIndex))
         {
-            Debug.LogError($"Level {currentLevelIndex} not found in set {currentSet}!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Level {currentLevelIndex} not found in set {currentSet}!", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -131,11 +141,14 @@ public class LevelLoader : MonoBehaviour
             yield break;
         }
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Level exists in set - proceeding with CSV load", this);
+
         // Get the CSV data for the level
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Loading CSV data from level set", this);
         TextAsset levelCsv = levelSetManager.GetLevelCsv(currentSet, currentLevelIndex);
         if (levelCsv == null)
         {
-            Debug.LogError($"Failed to load CSV data for level {currentLevelIndex} in set {currentSet}!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to load CSV data for level {currentLevelIndex} in set {currentSet}!", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -143,6 +156,8 @@ public class LevelLoader : MonoBehaviour
             });
             yield break;
         }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "CSV data loaded successfully - parsing grid", this);
 
         // Parse the grid from the CSV data
         TileType[,] grid = GridUtils.LoadGridFromTextAsset(levelCsv);
@@ -150,7 +165,7 @@ public class LevelLoader : MonoBehaviour
         // raise event to build grid
         if (grid == null)
         {
-            Debug.LogError($"Grid parsing failed for level {currentLevelIndex} in set {currentSet}!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Grid parsing failed for level {currentLevelIndex} in set {currentSet}!", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -159,10 +174,13 @@ public class LevelLoader : MonoBehaviour
             yield break;
         }
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Grid parsed successfully - Size: {grid.GetLength(0)}x{grid.GetLength(1)}", this);
+
         // validate grid
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Validating grid configuration", this);
         if (!GridUtils.ValidateGrid(grid))
         {
-            Debug.LogWarning($"Invalid level configuration for level {currentLevelIndex} in set {currentSet}!");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Invalid level configuration for level {currentLevelIndex} in set {currentSet}!", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -170,25 +188,32 @@ public class LevelLoader : MonoBehaviour
             });
             yield break;
         }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Grid validation passed - sending build request", this);
 
         // wait for the level to be built
         levelBuilt = false;
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Requesting grid build from GameGrid system", this);
         gridEvents.Raise(new GridEventPayload
         {
             EventType = GridEventType.BuildGrid,
             Grid = grid,
             BuildDone = false
         });
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Waiting for grid build completion", this);
         yield return new WaitUntil(() => levelBuilt);
 
         //keep track of the time elapsed and ensure a minimum loading time
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
         {
-            yield return new WaitForSeconds(minLoadingTime - timeElapsed);
+            float remainingTime = minLoadingTime - timeElapsed;
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Enforcing minimum loading time - waiting {remainingTime:F2}s more", this);
+            yield return new WaitForSeconds(remainingTime);
         }
 
-        Debug.Log($"Successfully loaded level {currentLevelIndex} from set {currentSet}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level load complete - total time: {Time.time - startTime:F2}s", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, "Transitioning to GamePlay scene", this);
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,

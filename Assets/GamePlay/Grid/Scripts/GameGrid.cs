@@ -155,12 +155,14 @@ public class GameGrid : MonoBehaviour
         this.gridSize.y = grid.GetLength(1);
             
 
-        Debug.Log($"Size GameGrid: {gridSize.x}, {gridSize.y}");
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid initialized - Size: {gridSize.x}x{gridSize.y}", this);
 
-        // Spawn objects based on tile types            
+        // Spawn objects based on tile types
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Starting level build from grid data", this);
         BuildLevelFromGrid();
 
         // add surrounding walls where grid does not fill the screen
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding walls for screen fill", this);
         BuildSurroundings();
 
         //level database initialization
@@ -193,12 +195,20 @@ public class GameGrid : MonoBehaviour
     /// <param name="requiredCount">The minimum number of objects that the background pool should contain.</param>
     private void EnsureBackgroundPool(int requiredCount)
     {
+        int currentCount = backgroundPool.Count;
+        if (requiredCount > currentCount)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Expanding background pool from {currentCount} to {requiredCount} objects", this);
+        }
+
         for (int i = backgroundPool.Count; i < requiredCount; i++)
         {
             var background = Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
             background.SetActive(false);
             backgroundPool.Add(background);
         }
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Background pool ready with {backgroundPool.Count} objects", this);
     }
 
     /// <summary>
@@ -206,6 +216,7 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     private void BuildLevelFromGrid()
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Building level from grid - Processing {gridSize.x * gridSize.y} tiles", this);
         EnsureBackgroundPool(gridSize.x * gridSize.y);
 
         int bgIndex = 0;
@@ -323,6 +334,8 @@ public class GameGrid : MonoBehaviour
         {
             backgroundPool[i].SetActive(false);
         }
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Level build complete - {bgIndex} tiles processed, {backgroundPool.Count - bgIndex} background objects deactivated", this);
     }
 
     /// <summary>
@@ -334,9 +347,12 @@ public class GameGrid : MonoBehaviour
         int diffX = maxScreenGridSize.x - gridSize.x;
         int diffY = maxScreenGridSize.y - gridSize.y;
 
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Building surroundings - Grid: {gridSize.x}x{gridSize.y}, MaxScreen: {maxScreenGridSize.x}x{maxScreenGridSize.y}, Diff: {diffX}x{diffY}", this);
+
         // If both dimensions are larger than or equal to max screen size, do not build surroundings
         if (diffX <= 0 && diffY <= 0)
         {
+            DebugLogger.Log(DebugLogCategory.GridSystem, "Grid fills or exceeds screen size - no surrounding walls needed", this);
             return;
         }
 
@@ -365,10 +381,19 @@ public class GameGrid : MonoBehaviour
         // If no walls are needed, return early
         if (needed == 0)
         {
+            DebugLogger.Log(DebugLogCategory.GridSystem, "No surrounding walls needed", this);
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Need {needed} surrounding walls - Offsets: Left:{offsetLeft}, Right:{offsetRight}, Down:{offsetDown}, Up:{offsetUp}", this);
+
         // If there are not enough walls in pool, instantiate new ones
+        int currentWalls = surroundingWalls.Count;
+        if (needed > currentWalls)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Expanding wall pool from {currentWalls} to {needed} walls", this);
+        }
+
         for (int i = surroundingWalls.Count; i < needed; i++)
         {
             var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
@@ -426,10 +451,14 @@ public class GameGrid : MonoBehaviour
         }
 
         // Deactivate remaining walls in pool
+        int deactivatedWalls = 0;
         for (; index < surroundingWalls.Count; index++)
         {
             surroundingWalls[index].SetActive(false);
+            deactivatedWalls++;
         }
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Surrounding walls complete - {index} walls positioned, {deactivatedWalls} walls deactivated", this);
     }
 
     /// <summary>
@@ -468,7 +497,7 @@ public class GameGrid : MonoBehaviour
                 resetRequested = false
             });
 
-            Debug.Log($"Grid reseted and starting new level {levelDatabase.CurrentLevelIndex}");
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelDatabase.CurrentLevelIndex}", this);
             return;
         }
     }
@@ -611,7 +640,7 @@ public class GameGrid : MonoBehaviour
     {
         if (!IsInGrid(payload.CurrentPosition))
         {
-            Debug.LogError("Set tile is outside the grid");
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot set nut tile - Position {payload.CurrentPosition} is outside grid bounds", this);
             return;
         }
         SetTileType(payload.CurrentPosition, TileType.Nut);
@@ -626,7 +655,7 @@ public class GameGrid : MonoBehaviour
     {
         if (!IsInGrid(payload.CurrentPosition))
         {
-            Debug.LogError("Remove tile is outside the grid");
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot remove nut tile - Position {payload.CurrentPosition} is outside grid bounds", this);
             return;
         }
 
@@ -667,7 +696,7 @@ public class GameGrid : MonoBehaviour
                     SetTileType(payload.Position, TileType.Goal);
                     goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
 
-                    Debug.Log($"Water hole goal set at {payload.Position.x}, {payload.Position.y}");
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Water hole goal created at {payload.Position}", this);
                 }              
                 break;
 
@@ -679,7 +708,7 @@ public class GameGrid : MonoBehaviour
 
                 if (!IsInGrid(payload.Position))
                 {
-                    Debug.LogError("Remove tile is outside the grid");
+                    DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot remove nut tile - Position {payload.CurrentPosition} is outside grid bounds", this);
                     return;
                 }
 

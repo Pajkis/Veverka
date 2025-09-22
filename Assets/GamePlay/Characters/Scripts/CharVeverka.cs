@@ -54,8 +54,8 @@ public class CharVeverka : Character
         // Check if this is a game scene (you can adjust the condition as needed)
         if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
         {
-            Debug.Log($"Game scene loaded: {scene.name}, sending startup message");
-            hasShownStartupMessage = false; // Reset flag for new level
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Game scene loaded: {scene.name}, preparing startup message", this);
+            hasShownStartupMessage = false;
             StartCoroutine(SendStartupMessageAfterDelay());
         }
     }
@@ -73,7 +73,7 @@ public class CharVeverka : Character
         if (!hasShownStartupMessage)
         {
             hasShownStartupMessage = true;
-            Debug.Log("Sending startup message from Veverka");
+            DebugLogger.Log(DebugLogCategory.BubbleMessage, $"Sending startup bubble message: {BubbleMessageType.LetsStart}", this);
 
             characterEvents.Raise(new CharacterEventPayload
             {
@@ -98,14 +98,18 @@ public class CharVeverka : Character
     {
         if (payload.EventType == CharacterEventType.DataRequest)
         {
+            DebugLogger.Log(DebugLogCategory.EventSystem, "Received DataRequest event", this);
+
             // If turn is active, queue the request
             if (FindObjectOfType<TurnControl>()?.IsInputLocked == true)
             {
+                DebugLogger.Log(DebugLogCategory.TurnSystem, "Input locked - queuing data request", this);
                 hasPendingDataRequest = true;
                 return;
             }
 
             // Send current position immediately if turn not active
+            DebugLogger.Log(DebugLogCategory.EventSystem, "Sending character data response", this);
             SendCharacterData();
         }
     }
@@ -115,6 +119,8 @@ public class CharVeverka : Character
     /// </summary>
     private void SendCharacterData()
     {
+        DebugLogger.Log(DebugLogCategory.EventSystem, $"Sending character data - Position: {gridPosition}, Direction: {facingDirection}", this);
+
         characterEvents.Raise(new CharacterEventPayload
         {
             Character = this,
@@ -124,7 +130,7 @@ public class CharVeverka : Character
             Duration = moveDuration,
             RequestData = false,
             ResponseData = true,
-            CharacterBubbleMessage = BubbleMessageType.LetsStart, // Default - won't be used
+            CharacterBubbleMessage = BubbleMessageType.LetsStart,
             CharacterBubbleMessageTime = 0f
         });
     }
@@ -158,8 +164,7 @@ public class CharVeverka : Character
         {
             int distance = moveDistance;
             Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputDirection, distance);
-            Debug.Log($"current position (x,y): {gridPosition.x}, {gridPosition.y}");
-            Debug.Log($"target position to move (x,y): {targetPos.x}, {targetPos.y}");
+            DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Movement attempt - From: {gridPosition} To: {targetPos} Direction: {inputDirection}", this);
 
             // Check if target position is in grid
             var gridQuery = new TileQueryPayload { Position = targetPos };
@@ -209,7 +214,7 @@ public class CharVeverka : Character
             {
                 Position = targetPushPos,
             };
-            Debug.Log($"Querying pushable nut at (x,y): {pushQuery.Position.x}, {pushQuery.Position.y}, is pushable: {pushQuery.IsPushable}");
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Checking if nut can be pushed to: {pushQuery.Position}", this);
 
             gridEvents.Raise(new GridEventPayload
             {
@@ -277,10 +282,10 @@ public class CharVeverka : Character
     /// </summary>
     protected override void OnMoveStart()
     {
-        //Reset  pending data request flag
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, "Move started - resetting pending request flag", this);
         hasPendingDataRequest = false;
 
-        // play move sound
+        DebugLogger.Log(DebugLogCategory.Audio, "Playing Veverka move sound", this);
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaMove });
     }
 
@@ -289,16 +294,15 @@ public class CharVeverka : Character
     /// </summary>
     protected override void OnMoveComplete(Vector2Int targetPosition)
     {
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Move completed to position: {targetPosition}", this);
         base.OnMoveComplete(targetPosition);
-
-        // Note: MoveCompleted event is already raised in base.OnMoveComplete()
-        // No need to raise it again here
 
         // Handle any pending character data requests now that move is complete
         if (hasPendingDataRequest)
         {
+            DebugLogger.Log(DebugLogCategory.EventSystem, "Processing pending data request after move completion", this);
             hasPendingDataRequest = false;
-            SendCharacterData(); // Use default values for movement completion
+            SendCharacterData();
         }
     }
 
@@ -343,6 +347,7 @@ public class CharVeverka : Character
     /// Override this method to customize behavior when a rotation starts.</remarks>
     protected override void OnRotateStart()
     {
+        DebugLogger.Log(DebugLogCategory.Audio, "Playing Veverka rotate sound", this);
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.VeverkaRotate });
     }
 
@@ -352,9 +357,8 @@ public class CharVeverka : Character
     /// <param name="targetTransform">The grid position (unchanged during rotation).</param>
     protected override void OnRotateComplete(Vector2Int targetTransform)
     {
-       // Grid position doesn't change during rotation, only facing direction changes
-       // The facing direction should be updated here to match the target direction
-       
+        DebugLogger.Log(DebugLogCategory.Rotation, $"Rotation completed - Direction: {rotationPreviousDirection} -> {facingDirection}", this);
+
         characterEvents.Raise(new CharacterEventPayload
         {
             Character = this,
@@ -363,6 +367,8 @@ public class CharVeverka : Character
             CurrentDirection = facingDirection,
             PreviousDirection = rotationPreviousDirection
         });
+
+        DebugLogger.Log(DebugLogCategory.EventSystem, "RotateCompleted event sent", this);
     }
 
     #endregion

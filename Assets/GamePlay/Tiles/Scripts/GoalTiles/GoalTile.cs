@@ -25,6 +25,9 @@ public abstract class GoalTile : TileObject
     {
         base.Init(tileType, gridPosition);
         this.goalType = goalType;
+
+        DebugLogger.Log(DebugLogCategory.GoalSystem, $"Initializing {goalType} goal at position: {gridPosition}", this);
+
         goalEvents.Raise(new GoalEventPayload
         {
             EventType = GoalEventsType.GoalSet,
@@ -60,12 +63,15 @@ public abstract class GoalTile : TileObject
     {
         if (payload.EventType == NutEventType.NutInGoal)
         {
+            DebugLogger.Log(DebugLogCategory.GoalSystem, $"{goalType} goal received NutInGoal event - Nut: {payload.NutType} at position: {payload.CurrentPosition}", this);
             OnNutInGoal(payload);
         }
     }
 
     protected virtual void OnNutInGoal(NutEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GoalSystem, $"{goalType} goal processing {payload.NutType} nut - sending NutInGoalDone event", this);
+
         // Raise nut in goal done event to notify that all interaction with goal are complete
         goalEvents.Raise(new GoalEventPayload
         {

@@ -122,5 +122,9 @@ public enum DebugLogCategory
     GridSystem,
     TileInteraction,
     Input,
-    UI
+    UI,
+    LevelSystem,
+    BubbleMessage,
+    GoalSystem,
+    SceneManager
 }
