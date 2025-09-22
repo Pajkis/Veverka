@@ -669,6 +669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   target: {fileID: 0}
   minBounds: {x: 0, y: 0}
   maxBounds: {x: 0, y: 0}

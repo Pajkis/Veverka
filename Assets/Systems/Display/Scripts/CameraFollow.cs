@@ -10,6 +10,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private DisplayConfig displayConfig;
     [SerializeField] private LevelDatabase levelDatabase;
 
+    [Header("Events")]
+    [SerializeField] private CharacterEvents characterEvents;
+
     #region fields
     [Header("Follow Settings")]
     [SerializeField] private Transform target;
@@ -27,6 +30,7 @@ public class CameraFollow : MonoBehaviour
     private float evenTilesOffset;
 
     private bool initialized = false;
+    private bool hasReceivedCharacterData = false;
 
     private CameraMode mode;
 
@@ -47,6 +51,28 @@ public class CameraFollow : MonoBehaviour
             return;
         }
         Init(levelDatabase.gridCenterStartTarget, levelDatabase.gridOrigin, levelDatabase.gridSize);
+    }
+
+    /// <summary>
+    /// event subscriptions
+    /// </summary>
+    private void OnEnable()
+    {
+        if (characterEvents != null)
+        {
+            characterEvents.AddListener(OnCharacterEvent);
+        }
+    }
+
+    /// <summary>
+    /// event unsubscriptions
+    /// </summary>
+    private void OnDisable()
+    {
+        if (characterEvents != null)
+        {
+            characterEvents.RemoveListener(OnCharacterEvent);
+        }
     }
 
 #if UNITY_EDITOR
@@ -127,7 +153,26 @@ public class CameraFollow : MonoBehaviour
         else
         {
             mode = CameraMode.FollowWithClamp;
-            initialized = true;
+            // Don't set initialized = true yet, wait for character event
+        }
+    }
+
+    /// <summary>
+    /// Handles character events to position camera on character spawn
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnCharacterEvent(CharacterEventPayload payload)
+    {
+        if (payload.EventType == CharacterEventType.DataResponse && !hasReceivedCharacterData)
+        {
+            hasReceivedCharacterData = true;
+            if (mode == CameraMode.FollowWithClamp && payload.Character != null)
+            {
+                Vector3 desired = payload.Character.transform.position + FollowOffset + ScreenToPlayScreenOffset;
+                Vector3 clamped = ClampToBounds(desired);
+                transform.position = clamped;
+                initialized = true; // Now start following normally
+            }
         }
     }
 
