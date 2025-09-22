@@ -37,7 +37,7 @@ public class LevelSelectMenu : MonoBehaviour
         }
         else
         {
-            Debug.LogError("UniversalTabManager not assigned to LevelSetAdapter!");
+            DebugLogger.LogError(DebugLogCategory.SceneManager, "UniversalTabManager not assigned to LevelSelectMenu!", this);
         }
 
         // Set initial tab based on level database
@@ -55,11 +55,11 @@ public class LevelSelectMenu : MonoBehaviour
             if (tabValue != -1)
             {
                 tabManager.ShowTabByValue(tabValue);
-                Debug.Log($"Initial tab set to level set: {levelDatabase.LevelSetType}");
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Initial tab set to level set {levelDatabase.LevelSetType}", this);
             }
             else
             {
-                Debug.LogWarning($"No tab mapping found for level set: {levelDatabase.LevelSetType}");
+                DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"No tab mapping found for level set: {levelDatabase.LevelSetType}", this);
             }
         }
     }
@@ -78,7 +78,7 @@ public class LevelSelectMenu : MonoBehaviour
             if (levelSetType != levelDatabase.LevelSetType)
             {
                 levelDatabase.LevelSetType = levelSetType;
-                Debug.Log($"Level set changed to: {levelSetType}");
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Level set changed to {levelSetType}", this);
             }
         }
     }
@@ -128,11 +128,11 @@ public class LevelSelectMenu : MonoBehaviour
                 Scene = SceneType.LoadLevel
             });
 
-            Debug.Log($"Loading level {levelNumber} from set {levelDatabase.LevelSetType}");
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Loading level {levelNumber} from set {levelDatabase.LevelSetType}", this);
         }
         else
         {
-            Debug.LogError("LevelDatabase or SceneNavigationEvent not assigned to LevelSetAdapter!");
+            DebugLogger.LogError(DebugLogCategory.SceneManager, "LevelDatabase or SceneNavigationEvent not assigned to LevelSelectMenu!", this);
         }
     }
 
@@ -143,6 +143,7 @@ public class LevelSelectMenu : MonoBehaviour
     {
         if (sceneNavigationEvents != null)
         {
+            DebugLogger.Log(DebugLogCategory.SceneManager, "LevelSelectMenu: Back button clicked - returning to MainMenu", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -151,7 +152,7 @@ public class LevelSelectMenu : MonoBehaviour
         }
         else
         {
-            Debug.LogError("SceneNavigationEvent not assigned to LevelSetAdapter!");
+            DebugLogger.LogError(DebugLogCategory.SceneManager, "SceneNavigationEvent not assigned to LevelSelectMenu!", this);
         }
     }
 
@@ -168,11 +169,11 @@ public class LevelSelectMenu : MonoBehaviour
             if (tabValue != -1)
             {
                 tabManager.SetTabAvailabilityByValue(tabValue, unlocked);
-                Debug.Log($"Level set {setType} unlock state changed to: {unlocked}");
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Level set {setType} unlock state changed to {unlocked}", this);
             }
             else
             {
-                Debug.LogWarning($"No tab mapping found for level set: {setType}");
+                DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"No tab mapping found for level set: {setType}", this);
             }
         }
     }

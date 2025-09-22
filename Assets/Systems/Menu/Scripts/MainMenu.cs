@@ -12,6 +12,7 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandlePlayButtonOnClickEvent()
     {
+      DebugLogger.Log(DebugLogCategory.SceneManager, "MainMenu: Play button clicked - navigating to LevelMenu", this);
       sceneNavigationEvents.Raise(new SceneNavigationEventPayload
       {
           EventType = SceneNavigationEventType.GoToScene,
@@ -23,7 +24,8 @@ public class MainMenu : MonoBehaviour
     ///handles the click on help button event
     /// </summary>
     public void HandleHelpButtonOnClickEvent()
-    {    
+    {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "MainMenu: Help button clicked - opening GameHelp overlay", this);
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.OpenOverlay,
@@ -35,7 +37,8 @@ public class MainMenu : MonoBehaviour
     /// hndles the click on credits button event
     /// </summary>
     public void HandleCreditsButtonOnClickEvent()
-    { 
+    {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "MainMenu: Credits button clicked - opening Credits overlay", this);
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.OpenOverlay,
@@ -48,6 +51,7 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
+       DebugLogger.Log(DebugLogCategory.SceneManager, "MainMenu: Settings button clicked - opening SettingsMenu overlay", this);
        sceneNavigationEvents.Raise(new SceneNavigationEventPayload
        {
            EventType = SceneNavigationEventType.OpenOverlay,
@@ -60,6 +64,7 @@ public class MainMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitGameButtonOnClickEvent()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "MainMenu: Quit button clicked - exiting application", this);
         Application.Quit();
     }
 }

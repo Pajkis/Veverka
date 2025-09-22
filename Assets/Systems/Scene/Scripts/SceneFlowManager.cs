@@ -11,6 +11,7 @@ public class SceneFlowManager : MonoBehaviour
 
     void Awake()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "SceneFlowManager initialized - persisting across scene loads", this);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -26,12 +27,16 @@ public class SceneFlowManager : MonoBehaviour
 
     private void OnSceneNavigationEvent(SceneNavigationEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"SceneNavigation event received - Type: {payload.EventType}", this);
+
         switch (payload.EventType)
         {
             case SceneNavigationEventType.GoToScene:
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"Processing GoToScene request for: {payload.Scene}", this);
                 GoToScene(payload.Scene);
                 break;
             case SceneNavigationEventType.OpenOverlay:
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"Processing OpenOverlay request for: {payload.Overlay}", this);
                 OpenOverlay(payload.Overlay);
                 break;
         }
@@ -43,9 +48,11 @@ public class SceneFlowManager : MonoBehaviour
     /// <param name="scene">Scene to load.</param>
     private void GoToScene(SceneType scene)
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"GoToScene initiated for: {scene}", this);
+
         if (SceneRefProvider.Instance == null)
         {
-            Debug.LogWarning("SceneNameProvider.Instance is not set.");
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "SceneRefProvider.Instance is not set - cannot load scene", this);
             return;
         }
 
@@ -53,10 +60,11 @@ public class SceneFlowManager : MonoBehaviour
 
         if (sceneRef == null || !sceneRef.RuntimeKeyIsValid())
         {
-            Debug.LogWarning($"Scene reference for {scene} is not assigned in SceneNameProvider.");
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"Scene reference for {scene} is not assigned or invalid in SceneRefProvider", this);
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"Loading scene {scene} via Addressables", this);
         sceneRef.LoadSceneAsync();
     }
 
@@ -66,9 +74,11 @@ public class SceneFlowManager : MonoBehaviour
     /// <param name="overlay">Overlay to open.</param>
     private void OpenOverlay(OverlayType overlay)
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"OpenOverlay initiated for: {overlay}", this);
+
         if (OverlayPrefabProvider.Instance == null)
         {
-            Debug.LogWarning("OverlayPrefabProvider.Instance is not set.");
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "OverlayPrefabProvider.Instance is not set - cannot open overlay", this);
             return;
         }
 
@@ -76,10 +86,11 @@ public class SceneFlowManager : MonoBehaviour
 
         if (prefab == null)
         {
-            Debug.LogWarning($"Overlay prefab for {overlay} is not assigned in OverlayPrefabProvider.");
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"Overlay prefab for {overlay} is not assigned in OverlayPrefabProvider", this);
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"Instantiating overlay {overlay} from prefab: {prefab.name}", this);
         Object.Instantiate(prefab);
     }
 }

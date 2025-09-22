@@ -20,20 +20,24 @@ public class LevelFinishedMenu : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {  
+    {
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu opened - Level {levelDatabase.CurrentLevelIndex} completed", this);
+
         // hide button on max level finished
         buttonNextLevel = GameObject.Find("ButtonNextLevel");
-        
+
         if (levelDatabase.CurrentLevelIndex == 9)
         {
+            DebugLogger.Log(DebugLogCategory.SceneManager, "Last level completed - hiding Next Level button", this);
             buttonNextLevel.SetActive(false);
         }
-        else 
+        else
         {
+            DebugLogger.Log(DebugLogCategory.SceneManager, "More levels available - showing Next Level button", this);
             buttonNextLevel.SetActive(true);
         }
 
-
+        DebugLogger.Log(DebugLogCategory.SceneManager, "Pausing game time for level finished menu", this);
         Time.timeScale = 0;
     }
 
@@ -42,8 +46,9 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>  
     public void HandleNextLevelButtonOnClickEvent()
     {
-        Time.timeScale = 1; 
-        
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu: Next Level button clicked - advancing to level {levelDatabase.CurrentLevelIndex + 1}", this);
+        Time.timeScale = 1;
+
         //Set next level
         levelDatabase.CurrentLevelIndex++;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
@@ -59,8 +64,9 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        Time.timeScale = 1;                        
-      
+        DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level menu", this);
+        Time.timeScale = 1;
+
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
