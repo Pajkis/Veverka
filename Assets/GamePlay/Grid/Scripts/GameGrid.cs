@@ -330,26 +330,45 @@ public class GameGrid : MonoBehaviour
     /// </summary>
     void BuildSurroundings()
     {
-        // if grid is larger than max screen size, do not build surroundings
+        // Calculate differences for each dimension
         int diffX = maxScreenGridSize.x - gridSize.x;
         int diffY = maxScreenGridSize.y - gridSize.y;
 
-        if (diffX < 0 || diffY < 0 || (diffX == 0 && diffY == 0))
+        // If both dimensions are larger than or equal to max screen size, do not build surroundings
+        if (diffX <= 0 && diffY <= 0)
         {
             return;
         }
 
-        //Offset calculation for surrounding walls
-        int offsetLeft = diffX / 2;
-        int offsetRight = diffX - offsetLeft;
-        int offsetDown = diffY / 2;
-        int offsetUp = diffY - offsetDown;
+        // Calculate offsets - if dimension is larger than screen, offset should be 0
+        int offsetLeft = diffX > 0 ? diffX / 2 : 0;
+        int offsetRight = diffX > 0 ? diffX - offsetLeft : 0;
+        int offsetDown = diffY > 0 ? diffY / 2 : 0;
+        int offsetUp = diffY > 0 ? diffY - offsetDown : 0;
 
-        //number of needed surrounding walls
+        // Calculate number of needed surrounding walls
         int widthWithOffset = gridSize.x + offsetLeft + offsetRight;
-        int needed = widthWithOffset * (offsetDown + offsetUp) + gridSize.y * (offsetLeft + offsetRight);
+        int needed = 0;
 
-        // if there are not enough walls in pool, instantiate new ones
+        // Count walls needed for top/bottom (if height is smaller than screen)
+        if (diffY > 0)
+        {
+            needed += widthWithOffset * (offsetDown + offsetUp);
+        }
+
+        // Count walls needed for left/right (if width is smaller than screen)
+        if (diffX > 0)
+        {
+            needed += gridSize.y * (offsetLeft + offsetRight);
+        }
+
+        // If no walls are needed, return early
+        if (needed == 0)
+        {
+            return;
+        }
+
+        // If there are not enough walls in pool, instantiate new ones
         for (int i = surroundingWalls.Count; i < needed; i++)
         {
             var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
@@ -358,39 +377,51 @@ public class GameGrid : MonoBehaviour
 
         int index = 0;
 
-        // Position surrounding walls on bottom
-        for (int y = -offsetDown; y < 0; y++)
+        // Position surrounding walls on bottom (only if height is smaller than screen)
+        if (diffY > 0)
         {
-            for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+            for (int y = -offsetDown; y < 0; y++)
             {
-                PositionWall(index++, x, y);
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        // Position surrounding walls on top
-        for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
+        // Position surrounding walls on top (only if height is smaller than screen)
+        if (diffY > 0)
         {
-            for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+            for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
             {
-                PositionWall(index++, x, y);
+                for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        //position surrounding walls on left
-        for (int x = -offsetLeft; x < 0; x++)
+        // Position surrounding walls on left (only if width is smaller than screen)
+        if (diffX > 0)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = -offsetLeft; x < 0; x++)
             {
-                PositionWall(index++, x, y);
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
-        //position surrounding walls on right
-        for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
+        // Position surrounding walls on right (only if width is smaller than screen)
+        if (diffX > 0)
         {
-            for (int y = 0; y < gridSize.y; y++)
+            for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
             {
-                PositionWall(index++, x, y);
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    PositionWall(index++, x, y);
+                }
             }
         }
 
@@ -495,6 +526,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnWallEvent(WallEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnWallEvent - EventType: {payload.EventType}, Position: {payload.Position}, WallType: {payload.WallType}", this);
+
         switch (payload.EventType)
         {
             case WallEventType.WallSet:
@@ -511,11 +544,13 @@ public class GameGrid : MonoBehaviour
                     }
 
                     tile.transform.SetParent(gridRoot, false);
-                    tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
                 }
+
                 // set tile and wall type in grid
                 SetTileType(payload.Position, TileType.Wall);
                 wallGrid[payload.Position.x, payload.Position.y] = payload.WallType;
+                DebugLogger.Log(DebugLogCategory.GridSystem, $"Wall created at {payload.Position} - TileType: {GetTileType(payload.Position)}, WallType: {payload.WallType}", this);
                 break;
         }
     }
@@ -526,6 +561,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnRoadEvent(RoadEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnRoadEvent - EventType: {payload.EventType}, Position: {payload.Position}, RoadType: {payload.RoadType}", this);
+
         switch (payload.EventType)
         {
             case RoadEventType.RoadSet:
@@ -542,12 +579,13 @@ public class GameGrid : MonoBehaviour
                     }
 
                     tile.transform.SetParent(gridRoot, false);
-                    tile.transform.localPosition = new Vector3(payload.Position.x, payload.Position.y, 0);
+                    tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
                 }
 
                 // set tile type and road type in grid
                 SetTileType(payload.Position, TileType.Road);
                 roadGrid[payload.Position.x, payload.Position.y] = payload.RoadType;
+                DebugLogger.Log(DebugLogCategory.GridSystem, $"Road created at {payload.Position} - TileType: {GetTileType(payload.Position)}, RoadType: {payload.RoadType}", this);
                 break;
         }
     }
@@ -591,8 +629,11 @@ public class GameGrid : MonoBehaviour
             Debug.LogError("Remove tile is outside the grid");
             return;
         }
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnNutRemoved at {payload.CurrentPosition} - Old TileType: {GetTileType(payload.CurrentPosition)}", this);
         SetTileType(payload.CurrentPosition, TileType.Empty);
         nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Nut removed from {payload.CurrentPosition} - New TileType: {GetTileType(payload.CurrentPosition)}", this);
     }
 
     /// <summary>
@@ -601,6 +642,8 @@ public class GameGrid : MonoBehaviour
     /// <param name="payload"></param>
     private void OnGoalEvent(GoalEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnGoalEvent - EventType: {payload.EventType}, Position: {payload.Position}, GoalType: {payload.GoalType}, GoalRemove: {payload.GoalRemove}", this);
+
         switch (payload.EventType)
         {
             case GoalEventsType.GoalSet:
@@ -642,11 +685,13 @@ public class GameGrid : MonoBehaviour
 
                 if (!payload.InstantiateTile)
                 {
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolved - Setting {payload.Position} to Empty (GoalRemove: {payload.GoalRemove})", this);
                     SetTileType(payload.Position, TileType.Empty);
                     goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-                    return;                    
-                }                               
-                
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {GetTileType(payload.Position)}", this);
+                    return;
+                }
+
                 break;
         }
     }
@@ -660,12 +705,13 @@ public class GameGrid : MonoBehaviour
         payload.IsInGrid = IsInGrid(payload.Position);
         if (!payload.IsInGrid) return;
 
-        Debug.Log($"[GameGrid] Tile query at position: {payload.Position.x}, {payload.Position.y}");
         payload.IsWalkable = IsWalkableAt(payload.Position);
         payload.IsPushable = IsPushableAt(payload.Position);
         payload.TileType = grid[payload.Position.x, payload.Position.y];
         payload.GoalType = goalGrid[payload.Position.x, payload.Position.y];
         payload.WallType = wallGrid[payload.Position.x, payload.Position.y];
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"TileQuery at {payload.Position} - TileType: {payload.TileType}, IsWalkable: {payload.IsWalkable}, IsPushable: {payload.IsPushable}", this);
         payload.NutType = nutGrid[payload.Position.x, payload.Position.y];
         payload.RoadType = roadGrid[payload.Position.x, payload.Position.y];
     }

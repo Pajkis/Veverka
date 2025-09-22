@@ -182,12 +182,16 @@ public abstract class NutTile : TileObject
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnNutEvent PUSH - GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}, PayloadCurrent: {payload.CurrentPosition}", this);
+
         // Check if this nut matches with position in payload
         if (GridPosition != payload.PreviousPosition)
         {
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Position mismatch - GridPosition: {GridPosition} != PayloadPrevious: {payload.PreviousPosition}", this);
             return;
         }
 
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Position match - calling Move()", this);
         // check if nut can be pushed
        // payload.CanBePushed = CanBePushed(payload.Direction);
       //  if (payload.CanBePushed)
@@ -227,6 +231,9 @@ public abstract class NutTile : TileObject
     {
        // if (smoothMover.IsMoving) return;
 
+        // Store the previous position BEFORE any potential updates to GridPosition
+        Vector2Int previousPosition = GridPosition;
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move START - GridPosition: {GridPosition}, PreviousPosition: {previousPosition}", this);
 
         // calculate movement positions
         Vector3 currentPosition = transform.localPosition;
@@ -234,15 +241,19 @@ public abstract class NutTile : TileObject
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;
 
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move CALC - From: {GridPosition} To: {targetPosVec2Int}", this);
+
         // prepare movement payload for events and turn records
         payload = new NutEventPayload
         {
             NutType = this.nutType,
             NutTile = this,
             CurrentPosition = targetPosVec2Int,
-            PreviousPosition = GridPosition,
+            PreviousPosition = previousPosition,
             Duration = moveDuration,
         };
+
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}", this);
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
@@ -262,12 +273,16 @@ public abstract class NutTile : TileObject
     /// <param name="targetPosition"></param>
     protected virtual void OnMoveComplete(Vector2Int targetPosition)
     {
-        // remove nut from previous position
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnMoveComplete START - TargetPosition: {targetPosition}, GridPosition: {GridPosition}, PayloadPrevious: {payload.PreviousPosition}", this);
+
+        // remove nut from previous position (use payload.PreviousPosition, not current GridPosition)
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            CurrentPosition = GridPosition,
+            CurrentPosition = payload.PreviousPosition,
         });
+
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"NutRemoved sent for position: {payload.PreviousPosition}", this);
 
         // Check if the nut reached the goal
         TileQueryPayload query = new() { Position = targetPosition };
@@ -310,13 +325,16 @@ public abstract class NutTile : TileObject
             Destroy(gameObject);
         }
 
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"UPDATE GridPosition: {GridPosition} → {targetPosition}", this);
         GridPosition = targetPosition;
-
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"GridPosition updated to: {GridPosition}", this);
 
         // notify listeners about nut movement
         payload.EventType = NutEventType.NutMoved;
         payload.CurrentPosition = targetPosition;
         nutEvents.Raise(payload);
+
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"OnMoveComplete END - Final GridPosition: {GridPosition}", this);
     }
     #endregion
 

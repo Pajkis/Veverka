@@ -235,6 +235,8 @@ public class CharVeverka : Character
             {
                 DebugLogger.Log(DebugLogCategory.NutMovement, "Nut is pushable - calling Move() which will send MoveStarted event", this);
                 Move(inputDirection, distance, moveDuration);
+
+                DebugLogger.Log(DebugLogCategory.NutMovement, $"Sending NutPush event - From: {targetPos} To: {targetPushPos}", this);
                 nutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,

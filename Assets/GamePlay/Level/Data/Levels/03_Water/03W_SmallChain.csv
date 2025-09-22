@@ -1,0 +1,11 @@
+WS,.,.,WS,HW,.,HW,N,G
+HW,.,NW,.,NS,.,NW,WS,WS
+NW,.,.,WS,HW,.,HW,N,G
+HW,.,NW,.,.,NW,WS,WS,WS
+NW,.,.,WS,HW,.,.,.,.
+HW,.,NW,.,.,.,WS,NW,WS
+NW,.,.,WS,HW,NW,HW,.,HW
+HW,.,NW,.,WS,.,NW,.,.
+NW,.,.,NW,.,.,WS,WS,HW
+HW,.,NW,.,WS,NW,NW,.,.
+WS,V,H,.,HW,.,HW,NW,HW
