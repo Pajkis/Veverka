@@ -708,7 +708,7 @@ public class GameGrid : MonoBehaviour
 
                 if (!IsInGrid(payload.Position))
                 {
-                    DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot remove nut tile - Position {payload.CurrentPosition} is outside grid bounds", this);
+                    DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot remove nut tile - Position {payload.Position} is outside grid bounds", this);
                     return;
                 }
 

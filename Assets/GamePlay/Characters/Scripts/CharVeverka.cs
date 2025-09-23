@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AddressableAssets;
 using System.Collections;
 
 /// <summary>
@@ -51,12 +52,16 @@ public class CharVeverka : Character
     /// <param name="mode"></param>
     protected override void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Check if this is a game scene (you can adjust the condition as needed)
-        if (scene.name.Contains("Game") || scene.name.Contains("Level") || scene.name.Contains("InGame"))
+        // Check if this is the GamePlay scene using Addressables
+        if (SceneRefProvider.Instance != null)
         {
-            DebugLogger.Log(DebugLogCategory.SceneManager, $"Game scene loaded: {scene.name}, preparing startup message", this);
-            hasShownStartupMessage = false;
-            StartCoroutine(SendStartupMessageAfterDelay());
+            AssetReference gamePlayScene = SceneRefProvider.Instance.GetScene(SceneType.GamePlay);
+            if (gamePlayScene != null && gamePlayScene.RuntimeKeyIsValid())
+            {
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"GamePlay scene loaded: {scene.name}, preparing startup message", this);
+                hasShownStartupMessage = false;
+                StartCoroutine(SendStartupMessageAfterDelay());
+            }
         }
     }
 
@@ -103,7 +108,7 @@ public class CharVeverka : Character
             // If turn is active, queue the request
             if (FindObjectOfType<TurnControl>()?.IsInputLocked == true)
             {
-                DebugLogger.Log(DebugLogCategory.TurnSystem, "Input locked - queuing data request", this);
+                DebugLogger.Log(DebugLogCategory.TurnControl, "Input locked - queuing data request", this);
                 hasPendingDataRequest = true;
                 return;
             }
