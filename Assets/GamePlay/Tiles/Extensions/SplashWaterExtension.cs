@@ -42,7 +42,7 @@ public static class SplashWaterExtension
                     Query = queryPayload,
                 });
 
-                if (!queryPayload.IsPushable) return;
+                if (!queryPayload.IsPushable) continue;
 
                 // Raise event to push the nut away from the splash
                 splasher.NutEvents.Raise(new NutEventPayload

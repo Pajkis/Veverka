@@ -1,7 +1,7 @@
 V,.,WS,HW,NW,HW, NW, H,N,G
-.,NS,WS,NW,.,.,.,.,HW,WS
-.,.,.,HW,.,.,.,.,NW,.
+.,WS,WS,NW,.,NW,.,.,HW,WS
+.,.,.,HW,.,H,W,HW,.,.
 .,.,.,NW,HW,.,.,.,.,.
-.,NW,.,G,WS,.,.,.,.,.
- .,.,.,NW,.,WS,W,W,.,NS
-WS,.,NW,HW,.,G,H,H,.,.
+H,.,WS,HW,WS,.,W,.,NS,.
+WS,.,.,NW,.,.,.,W,.,.
+WS,.,NW,HW, NW,HW,.,.,.,.
