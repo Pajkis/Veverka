@@ -42,6 +42,20 @@ public abstract class Character : MonoBehaviour
     #endregion
 
 
+    #region Init & Properties
+
+    /// <summary>
+    /// Initialize character with basic gameplay logging
+    /// </summary>
+    protected virtual void Awake()
+    {
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Character {characterType} created", this);
+        smoothMover = GetComponent<SmoothMover>();
+        smoothRotate = GetComponent<SmoothRotate>();
+    }
+
+    #endregion
+
     #region properties
     /// <summary>
     /// Facing direction property

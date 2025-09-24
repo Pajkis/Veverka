@@ -33,6 +33,7 @@ public class LevelLoader : MonoBehaviour
         if (levelSetManager == null)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelSetManager is not assigned! Cannot load levels.", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "Critical error - cannot start gameplay without LevelSetManager", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
@@ -44,6 +45,7 @@ public class LevelLoader : MonoBehaviour
         if (levelDatabase == null)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "Critical error - cannot start gameplay without LevelDatabase", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,

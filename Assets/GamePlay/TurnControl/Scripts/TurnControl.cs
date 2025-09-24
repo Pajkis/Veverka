@@ -25,6 +25,7 @@ public class TurnControl : MonoBehaviour
         }
 
         DebugLogger.Log(DebugLogCategory.TurnControl, "TurnControl initialized with clean state", this);
+        DebugLogger.Log(DebugLogCategory.Gameplay, "TurnControl system ready for gameplay", this);
     }
 
     #region Fields
@@ -120,6 +121,7 @@ public class TurnControl : MonoBehaviour
         }
 
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked - turn complete", this);
+        DebugLogger.Log(DebugLogCategory.Gameplay, "Turn completed - player can input next action", this);
     }
 
     /// <summary>

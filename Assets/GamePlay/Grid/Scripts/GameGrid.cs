@@ -273,6 +273,7 @@ public class GameGrid : MonoBehaviour
 
                         //Center grid according veverka
                         levelDatabase.gridCenterStartTarget = veverka.transform;
+                        DebugLogger.Log(DebugLogCategory.Gameplay, $"Player character (Veverka) placed at {tilePos} and set as camera target", this);
                         break;
 
                     case TileType.Nut:
