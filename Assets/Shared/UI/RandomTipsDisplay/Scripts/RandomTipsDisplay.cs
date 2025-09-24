@@ -36,7 +36,11 @@ public class RandomTipsDisplay : MonoBehaviour
         "Hint: You can use 'Undo' to go back until last scored goal.",
         "Message: If you think some visuals and grafics does not match, you are right.",
         "Tip: For higher difficulty try to drink some shots!",
-        "Tip: There is no Game Over screen, you have to decice by yourself, when you give up or when to restart!"
+        "Tip: There is no Game Over screen, you have to decice by yourself, when you give up or when to restart!",
+        "Tip: First levels of each set 'Basic', 'Stone', etc. is a tutorial.",
+        "Hint: Put stone nut into hole or water hole to make a road.",
+        "Hint: Some interactions can cause splash to move nuts from the source of splash.",
+        "Message: I do not know how to make splash animation yet, so you have to imagine it!",
     };
 
     /// <summary>
