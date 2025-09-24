@@ -11,6 +11,7 @@ public static class GameSettingsUtils
 /// <returns>dictionary with game settings</returns>
     public static Dictionary<GameSettingsEnum, int> LoadOrInitializeDefaults(GameSettingsConfig config)
     {
+        DebugLogger.Log(DebugLogCategory.Settings, "LoadOrInitializeDefaults called");
         Dictionary<GameSettingsEnum, int> settings = new();
 
         // Load or set default values
@@ -19,21 +20,27 @@ public static class GameSettingsUtils
             int defaultValue = config.GetDefault(key);
             if (!PlayerPrefs.HasKey(key.ToString()))
             {
+                DebugLogger.Log(DebugLogCategory.Settings, $"Key {key} not found in PlayerPrefs, initializing with default value: {defaultValue}");
                 PlayerPrefs.SetInt(key.ToString(), defaultValue);
                 settings[key] = defaultValue;
             }
             else
             {
-                settings[key] = PlayerPrefs.GetInt(key.ToString());
+                int savedValue = PlayerPrefs.GetInt(key.ToString());
+                DebugLogger.Log(DebugLogCategory.Settings, $"Key {key} loaded from PlayerPrefs with value: {savedValue}");
+                settings[key] = savedValue;
             }
         }
 
+        DebugLogger.Log(DebugLogCategory.Settings, "Initializing all settings from enum values");
         foreach (GameSettingsEnum key in System.Enum.GetValues(typeof(GameSettingsEnum)))
         {
             Init(key);
         }
 
+        DebugLogger.Log(DebugLogCategory.Settings, "Saving PlayerPrefs after initialization");
         PlayerPrefs.Save();
+        DebugLogger.Log(DebugLogCategory.Settings, $"LoadOrInitializeDefaults completed, {settings.Count} settings loaded");
 
         return settings;
     }
@@ -45,7 +52,8 @@ public static class GameSettingsUtils
     /// <param name="value">settings value</param>
     public static void Set(GameSettingsEnum setting, int value)
     {
-       PlayerPrefs.SetInt(setting.ToString(), value);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Setting {setting} to int value: {value}");
+        PlayerPrefs.SetInt(setting.ToString(), value);
     }
 
     /// <summary>
@@ -53,16 +61,22 @@ public static class GameSettingsUtils
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="value">settings value</param>
-    public static void Set(GameSettingsEnum setting, float value) =>
-       PlayerPrefs.SetFloat(setting.ToString(), value);
+    public static void Set(GameSettingsEnum setting, float value)
+    {
+        DebugLogger.Log(DebugLogCategory.Settings, $"Setting {setting} to float value: {value}");
+        PlayerPrefs.SetFloat(setting.ToString(), value);
+    }
 
     /// <summary>
     /// Set string game settings properties
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="value">settings value</param>
-    public static void Set(GameSettingsEnum setting, string value) =>
-       PlayerPrefs.SetString(setting.ToString(), value);
+    public static void Set(GameSettingsEnum setting, string value)
+    {
+        DebugLogger.Log(DebugLogCategory.Settings, $"Setting {setting} to string value: {value}");
+        PlayerPrefs.SetString(setting.ToString(), value);
+    }
 
 
     /// <summary>
@@ -70,40 +84,61 @@ public static class GameSettingsUtils
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="defaultValue">settings value</param>
-    public static int GetInt(GameSettingsEnum setting, int defaultValue = 0) =>
-      PlayerPrefs.GetInt(setting.ToString(), defaultValue);
+    public static int GetInt(GameSettingsEnum setting, int defaultValue = 0)
+    {
+        int value = PlayerPrefs.GetInt(setting.ToString(), defaultValue);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Getting int value for {setting}: {value} (default: {defaultValue})");
+        return value;
+    }
 
     /// <summary>
     /// Get float game settings property value
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="defaultValue">settings value</param>
-    public static float GetFloat(GameSettingsEnum setting, float defaultValue = 0f) =>
-     PlayerPrefs.GetFloat(setting.ToString(), defaultValue);
+    public static float GetFloat(GameSettingsEnum setting, float defaultValue = 0f)
+    {
+        float value = PlayerPrefs.GetFloat(setting.ToString(), defaultValue);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Getting float value for {setting}: {value} (default: {defaultValue})");
+        return value;
+    }
 
     /// <summary>
     /// Get string game settings property value
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="defaultValue">settings value</param>
-    public static string GetString(GameSettingsEnum setting, string defaultValue = "") =>
-       PlayerPrefs.GetString(setting.ToString(), defaultValue);
+    public static string GetString(GameSettingsEnum setting, string defaultValue = "")
+    {
+        string value = PlayerPrefs.GetString(setting.ToString(), defaultValue);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Getting string value for {setting}: '{value}' (default: '{defaultValue}')");
+        return value;
+    }
 
     /// <summary>
     /// get bool game settings property value
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="defaultValue">settings value</param>
-    public static bool GetBool(GameSettingsEnum setting, bool defaultValue = false) =>
-       PlayerPrefs.GetInt(setting.ToString(), defaultValue ? 1 : 0) == 1;
+    public static bool GetBool(GameSettingsEnum setting, bool defaultValue = false)
+    {
+        int intValue = PlayerPrefs.GetInt(setting.ToString(), defaultValue ? 1 : 0);
+        bool value = intValue == 1;
+        DebugLogger.Log(DebugLogCategory.Settings, $"Getting bool value for {setting}: {value} (PlayerPrefs int: {intValue}, default: {defaultValue})");
+        return value;
+    }
 
     /// <summary>
     /// set integer game settings property value
     /// </summary>
     /// <param name="setting">settings property name</param>
     /// <param name="value">settings value</param>
-    public static void SetBool(GameSettingsEnum setting, bool value) =>
-        PlayerPrefs.SetInt(setting.ToString(), value ? 1 : 0);      
+    public static void SetBool(GameSettingsEnum setting, bool value)
+    {
+        int intValue = value ? 1 : 0;
+        DebugLogger.Log(DebugLogCategory.Settings, $"Setting bool {setting} to: {value} (PlayerPrefs int: {intValue})");
+        PlayerPrefs.SetInt(setting.ToString(), intValue);
+    }      
 }
 
 

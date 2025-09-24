@@ -23,19 +23,26 @@ public class DropDownSettingItem : MonoBehaviour
     #region Unity Lifecycle
     private void Awake()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"DropDownSettingItem Awake - Setting: {settingType}, EnumType: {enumType?.TypeName}", this);
+
         // Try to get components if not set in Inspector
         if (dropdown == null)
+        {
             dropdown = GetComponentInChildren<TMP_Dropdown>(true);
+            DebugLogger.Log(DebugLogCategory.Settings, dropdown != null ? "TMP_Dropdown component found" : "TMP_Dropdown component not found", this);
+        }
 
         // Try to find nameLabel if not set in Inspector
         if (nameLabel == null)
         {
             var labels = GetComponentsInChildren<TextMeshProUGUI>(true);
+            DebugLogger.Log(DebugLogCategory.Settings, $"Searching for name label in {labels.Length} TextMeshPro components", this);
             foreach (var label in labels)
             {
                 if (label.name.Contains("NameLabel"))
                 {
                     nameLabel = label;
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Found name label component: {label.name}", this);
                     break;
                 }
             }
@@ -44,39 +51,52 @@ public class DropDownSettingItem : MonoBehaviour
         // Validate components
         if (dropdown == null)
         {
-            Debug.LogError($"[{nameof(DropDownSettingItem)}] TMP_Dropdown not found on {name}.");
+            DebugLogger.LogError(DebugLogCategory.Settings, $"TMP_Dropdown not found on {name} - disabling component", this);
             enabled = false;
             return;
         }
 
         if (nameLabel == null)
         {
-            Debug.LogWarning($"[{nameof(DropDownSettingItem)}] Name label not found on {name}.");
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Name label not found on {name}", this);
         }
 
+        DebugLogger.Log(DebugLogCategory.Settings, $"Component validation complete for {settingType}, populating dropdown", this);
         PopulateDropdown();
     }
 
     private void OnEnable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"DropDownSettingItem OnEnable - Setting: {settingType}", this);
+
         if (dropdown != null)
         {
             dropdown.onValueChanged.AddListener(OnDropDownValueChanged);
-              settingEvents.AddListener(OnSettingEvent);
-              settingEvents.Raise(new SettingEventPayload
-              {
-                  EventType = SettingsEventType.DataRequest,
-                  Setting = settingType
-              });
+            settingEvents.AddListener(OnSettingEvent);
+            DebugLogger.Log(DebugLogCategory.Settings, $"Event listeners added for {settingType}", this);
+
+            settingEvents.Raise(new SettingEventPayload
+            {
+                EventType = SettingsEventType.DataRequest,
+                Setting = settingType
+            });
+            DebugLogger.Log(DebugLogCategory.Settings, $"DataRequest event raised for {settingType}", this);
+        }
+        else
+        {
+            DebugLogger.LogError(DebugLogCategory.Settings, $"Dropdown is null in OnEnable for {settingType}", this);
         }
     }
 
     private void OnDisable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"DropDownSettingItem OnDisable - Setting: {settingType}", this);
+
         if (dropdown != null)
         {
             dropdown.onValueChanged.RemoveListener(OnDropDownValueChanged);
-              settingEvents.RemoveListener(OnSettingEvent);
+            settingEvents.RemoveListener(OnSettingEvent);
+            DebugLogger.Log(DebugLogCategory.Settings, $"Event listeners removed for {settingType}", this);
         }
     }
     #endregion
@@ -93,21 +113,32 @@ public class DropDownSettingItem : MonoBehaviour
             payload.Setting != settingType)
             return;
 
+        DebugLogger.Log(DebugLogCategory.Settings, $"OnSettingEvent for {settingType} - received value: {payload.Value}", this);
+
         int settingValue = Mathf.RoundToInt(payload.Value);
         int dropdownIndex = FindEnumIndex(settingValue);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Setting value {settingValue} maps to dropdown index: {dropdownIndex}", this);
 
         if (dropdownIndex >= 0 && dropdownIndex < dropdown.options.Count)
         {
             dropdown.SetValueWithoutNotify(dropdownIndex);
+            DebugLogger.Log(DebugLogCategory.Settings, $"Dropdown {settingType} set to index {dropdownIndex} (option: {dropdown.options[dropdownIndex].text})", this);
         }
         else
         {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Invalid dropdown index {dropdownIndex} for {settingType}, defaulting to index 0", this);
             dropdown.SetValueWithoutNotify(0);
         }
 
         if (nameLabel != null)
         {
-            nameLabel.text = FormatEnumName(settingType.ToString());
+            string formattedName = FormatEnumName(settingType.ToString());
+            nameLabel.text = formattedName;
+            DebugLogger.Log(DebugLogCategory.Settings, $"Name label for {settingType} set to: '{formattedName}'", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Name label is null for {settingType}", this);
         }
     }
     #endregion
@@ -119,18 +150,27 @@ public class DropDownSettingItem : MonoBehaviour
     private void PopulateDropdown()
     {
         if (enumType == null || dropdown == null)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Cannot populate dropdown - enumType: {enumType != null}, dropdown: {dropdown != null}", this);
             return;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Settings, $"Populating dropdown for {settingType} with enum type: {enumType.TypeName}", this);
 
         dropdown.options.Clear();
 
         var enumValues = enumType.GetValues();
+        DebugLogger.Log(DebugLogCategory.Settings, $"Found {enumValues.Length} enum values for {enumType.TypeName}", this);
+
         foreach (var enumValue in enumValues)
         {
             string optionText = FormatEnumName(enumValue.ToString());
             dropdown.options.Add(new TMP_Dropdown.OptionData(optionText));
+            DebugLogger.Log(DebugLogCategory.Settings, $"Added dropdown option: '{optionText}' (enum: {enumValue})", this);
         }
 
         dropdown.RefreshShownValue();
+        DebugLogger.Log(DebugLogCategory.Settings, $"Dropdown population complete for {settingType} - {dropdown.options.Count} options added", this);
     }
 
     #endregion
@@ -143,25 +183,32 @@ public class DropDownSettingItem : MonoBehaviour
     public void OnDropDownValueChanged(int dropdownIndex)
     {
         if (enumType == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Settings, $"EnumType is null for {settingType} dropdown change", this);
             return;
+        }
 
         var enumValues = enumType.GetValues();
         if (dropdownIndex < 0 || dropdownIndex >= enumValues.Length)
+        {
+            DebugLogger.LogError(DebugLogCategory.Settings, $"Invalid dropdown index {dropdownIndex} for {settingType} (valid range: 0-{enumValues.Length - 1})", this);
             return;
+        }
 
         // Get the enum value at the selected index
         var selectedEnumValue = enumValues[dropdownIndex];
         int enumIntValue = enumType.GetIntValue(selectedEnumValue);
 
-        Debug.Log($"[{nameof(DropDownSettingItem)}] {settingType} changed to {selectedEnumValue} (value: {enumIntValue})");
+        DebugLogger.Log(DebugLogCategory.Settings, $"Dropdown {settingType} changed to index {dropdownIndex}: {selectedEnumValue} (int value: {enumIntValue})", this);
 
-        // Update game settings       
-          settingEvents.Raise(new SettingEventPayload
-          {
-              EventType = SettingsEventType.DataBroadcast,
-              Setting = settingType,
-              Value = enumIntValue
-          });
+        // Update game settings
+        settingEvents.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataBroadcast,
+            Setting = settingType,
+            Value = enumIntValue
+        });
+        DebugLogger.Log(DebugLogCategory.Settings, $"DataBroadcast event raised for {settingType} with value {enumIntValue}", this);
     }
     #endregion
 
@@ -191,17 +238,22 @@ public class DropDownSettingItem : MonoBehaviour
     private int FindEnumIndex(int enumIntValue)
     {
         if (enumType == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Settings, $"EnumType is null when finding index for value {enumIntValue}", this);
             return -1;
+        }
 
         var enumValues = enumType.GetValues();
         for (int i = 0; i < enumValues.Length; i++)
         {
             if (enumType.GetIntValue(enumValues[i]) == enumIntValue)
             {
+                DebugLogger.Log(DebugLogCategory.Settings, $"Found enum value {enumIntValue} at index {i} ({enumValues[i]})", this);
                 return i;
             }
         }
 
+        DebugLogger.LogWarning(DebugLogCategory.Settings, $"Enum value {enumIntValue} not found in {enumType.TypeName} enum", this);
         return -1;
     }
     #endregion

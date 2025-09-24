@@ -26,16 +26,21 @@ public class SliderSettingItem : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"SliderSettingItem Awake - Setting: {settingType}", this);
+
         //get slider object
         slider = GetComponentInChildren<Slider>();
         if (slider == null)
         {
-            Debug.LogError($"Slider not found in {gameObject.name}!");
+            DebugLogger.LogError(DebugLogCategory.Settings, $"Slider component not found in {gameObject.name}!", this);
             return;
         }
+        DebugLogger.Log(DebugLogCategory.Settings, $"Slider component found for {settingType}", this);
 
         //get textMesh components
         var textsComponents = GetComponentsInChildren<TextMeshProUGUI>();
+        DebugLogger.Log(DebugLogCategory.Settings, $"Found {textsComponents.Length} TextMeshPro components", this);
+
         foreach (var component in textsComponents)
         {
             if (component != null)
@@ -44,21 +49,24 @@ public class SliderSettingItem : MonoBehaviour
                 if (component.name.ToLower().Contains("name"))
                 {
                     nameLabel = component;
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Found name label component: {component.name}", this);
                 }
                 else if (component.name.ToLower().Contains("value"))
                 {
                     valueLabel = component;
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Found value label component: {component.name}", this);
                 }
             }
             else
             {
-                Debug.LogError($"TextMesh object {component} not found in {gameObject.name}!");
+                DebugLogger.LogError(DebugLogCategory.Settings, $"TextMesh component is null in {gameObject.name}!", this);
                 return;
             }
         }
 
         slider.minValue = minValue;
-        slider.maxValue = maxValue;        
+        slider.maxValue = maxValue;
+        DebugLogger.Log(DebugLogCategory.Settings, $"Slider {settingType} configured with range [{minValue}, {maxValue}]", this);
     }
 
     /// <summary>
@@ -66,14 +74,21 @@ public class SliderSettingItem : MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"SliderSettingItem OnEnable - Setting: {settingType}", this);
+
         slider.onValueChanged.AddListener(OnSliderChanged);
         settingEvents.AddListener(OnSettingEvent);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Event listeners added for {settingType}", this);
+
         nameLabel.text = SplitCamelCase(settingType.ToString());
+        DebugLogger.Log(DebugLogCategory.Settings, $"Name label set to: '{nameLabel.text}' for {settingType}", this);
+
         settingEvents.Raise(new SettingEventPayload
         {
             EventType = SettingsEventType.DataRequest,
             Setting = settingType
         });
+        DebugLogger.Log(DebugLogCategory.Settings, $"DataRequest event raised for {settingType}", this);
     }
 
 
@@ -82,8 +97,10 @@ public class SliderSettingItem : MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"SliderSettingItem OnDisable - Setting: {settingType}", this);
         slider.onValueChanged.RemoveListener(OnSliderChanged);
         settingEvents.RemoveListener(OnSettingEvent);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Event listeners removed for {settingType}", this);
     }
 
 
@@ -93,16 +110,24 @@ public class SliderSettingItem : MonoBehaviour
     /// <param name="value"></param>
     private void OnSliderChanged(float value)
     {
+        int intValue = Mathf.RoundToInt(value);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Slider {settingType} value changed to: {value} (rounded: {intValue})", this);
+
         settingEvents.Raise(new SettingEventPayload
         {
             EventType = SettingsEventType.DataBroadcast,
             Setting = settingType,
-            Value = Mathf.RoundToInt(value)
+            Value = intValue
         });
 
         if (valueLabel != null)
         {
-            valueLabel.text = Mathf.RoundToInt(value).ToString();
+            valueLabel.text = intValue.ToString();
+            DebugLogger.Log(DebugLogCategory.Settings, $"Value label updated to: {intValue} for {settingType}", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Value label is null for {settingType}, cannot update display", this);
         }
     }
 
@@ -121,12 +146,31 @@ public class SliderSettingItem : MonoBehaviour
     {
         if (payload.EventType != SettingsEventType.DataBroadcast ||
             payload.Setting != settingType)
+        {
             return;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Settings, $"OnSettingEvent for {settingType} - received value: {payload.Value}", this);
 
         float value = Mathf.Clamp(payload.Value, minValue, maxValue);
+        if (value != payload.Value)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Value {payload.Value} for {settingType} was clamped to {value} (range: [{minValue}, {maxValue}])", this);
+        }
+
         slider.SetValueWithoutNotify(value);
+        DebugLogger.Log(DebugLogCategory.Settings, $"Slider {settingType} value set to: {value} (without triggering events)", this);
+
         if (valueLabel != null)
-            valueLabel.text = Mathf.RoundToInt(value).ToString();
+        {
+            int displayValue = Mathf.RoundToInt(value);
+            valueLabel.text = displayValue.ToString();
+            DebugLogger.Log(DebugLogCategory.Settings, $"Value label for {settingType} updated to: {displayValue}", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"Value label is null for {settingType}", this);
+        }
     }
 
     #endregion

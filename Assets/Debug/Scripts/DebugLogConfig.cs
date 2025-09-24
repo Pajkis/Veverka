@@ -44,9 +44,12 @@ public class DebugLogConfig : ScriptableObject
     [Header("Input & UI")]
     [Tooltip("Enable input handling logging")]
     public bool inputLog = false;
-    
+
     [Tooltip("Enable UI system logging")]
     public bool uiLog = false;
+
+    [Tooltip("Enable settings system logging")]
+    public bool settingsLog = false;
 
     [Header("Debug Utilities")]
     [Tooltip("Enable all debug logs at once (overrides individual settings)")]
@@ -76,6 +79,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.TileInteraction => tileInteractionLog,
             DebugLogCategory.Input => inputLog,
             DebugLogCategory.UI => uiLog,
+            DebugLogCategory.Settings => settingsLog,
             _ => false
         };
     }
@@ -101,6 +105,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.TileInteraction => "#EE82EE", // Violet
             DebugLogCategory.Input => "#32CD32",       // Lime Green
             DebugLogCategory.UI => "#FF1493",          // Deep Pink
+            DebugLogCategory.Settings => "#FFB6C1",    // Light Pink
             _ => "#FFFFFF" // White
         };
     }
@@ -123,6 +128,7 @@ public enum DebugLogCategory
     TileInteraction,
     Input,
     UI,
+    Settings,
     LevelSystem,
     BubbleMessage,
     GoalSystem,
