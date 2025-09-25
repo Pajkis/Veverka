@@ -17,6 +17,7 @@ public enum TileType
 /// </summary>
 public enum NutType
 {
+    None,        // No nut (default/empty)
     BasicNut,
     StoneNut,
     WaterNut
@@ -27,6 +28,7 @@ public enum NutType
 /// </summary>
 public enum GoalType
 {
+    None,        // No goal (default/empty)
     BasicGoal,
     HoleGoal,
     WaterHoleGoal
@@ -37,6 +39,7 @@ public enum GoalType
 /// </summary>
 public enum WallType
 {
+    None,        // No wall (default/empty)
     BasicWall,
     StoneWall
 }
@@ -45,9 +48,10 @@ public enum WallType
 /// Road types enumeration
 /// </summary>
 public enum RoadType
-{ 
- BasicRoad,
- StoneRoad,
- StoneFilledHole,
- BranchRoad
+{
+    None,           // No road (default/empty)
+    BasicRoad,
+    StoneRoad,
+    StoneFilledHole,
+    BranchRoad
 }

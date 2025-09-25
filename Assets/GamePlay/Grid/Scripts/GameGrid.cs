@@ -662,8 +662,8 @@ public class GameGrid : MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.GridSystem, $"OnNutRemoved at {payload.CurrentPosition} - Old TileType: {GetTileType(payload.CurrentPosition)}", this);
         SetTileType(payload.CurrentPosition, TileType.Empty);
-        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = payload.NutType;
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Nut removed from {payload.CurrentPosition} - New TileType: {GetTileType(payload.CurrentPosition)}", this);
+        nutGrid[payload.CurrentPosition.x, payload.CurrentPosition.y] = NutType.None; // Clear nut from grid
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Nut removed from {payload.CurrentPosition} - New TileType: {GetTileType(payload.CurrentPosition)}, NutType cleared", this);
     }
 
     /// <summary>
@@ -717,8 +717,8 @@ public class GameGrid : MonoBehaviour
                 {
                     DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolved - Setting {payload.Position} to Empty (GoalRemove: {payload.GoalRemove})", this);
                     SetTileType(payload.Position, TileType.Empty);
-                    goalGrid[payload.Position.x, payload.Position.y] = payload.GoalType;
-                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {GetTileType(payload.Position)}", this);
+                    goalGrid[payload.Position.x, payload.Position.y] = GoalType.None; // Clear goal from grid
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {GetTileType(payload.Position)}, GoalType cleared", this);
                     return;
                 }
 
@@ -774,7 +774,9 @@ public class GameGrid : MonoBehaviour
         var tile = grid[position.x, position.y];
         if (tile == TileType.Goal)
         {
-            return goalGrid[position.x, position.y] != GoalType.HoleGoal && goalGrid[position.x, position.y] != GoalType.WaterHoleGoal;
+            // Characters can walk on BasicGoals but not holes
+            var goalType = goalGrid[position.x, position.y];
+            return goalType != GoalType.HoleGoal && goalType != GoalType.WaterHoleGoal;
         }
         return tile == TileType.Empty || tile == TileType.Road;
     }
