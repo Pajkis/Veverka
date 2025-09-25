@@ -22,7 +22,7 @@ public class GoalEventPayload
     public GoalType ReplacementGoalType;
 
     //Instantiate replacement tile
-    public bool InstantiateTile = true;
+    public bool InstantiateTile = false; // Default: most goals just remove, don't create
 
     [Header("Special Effects")]
     public bool TriggerSplash;

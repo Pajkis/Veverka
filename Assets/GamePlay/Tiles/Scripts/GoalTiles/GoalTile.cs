@@ -26,15 +26,7 @@ public abstract class GoalTile : TileObject
         base.Init(tileType, gridPosition);
         this.goalType = goalType;
 
-        DebugLogger.Log(DebugLogCategory.GoalSystem, $"Initializing {goalType} goal at position: {gridPosition}", this);
-
-        goalEvents.Raise(new GoalEventPayload
-        {
-            EventType = GoalEventsType.GoalSet,
-            Position = gridPosition,
-            GoalType = goalType,
-            GoalTile = this,
-        });
+        DebugLogger.Log(DebugLogCategory.GoalSystem, $"Initialized {goalType} goal at position: {gridPosition}", this);
     }
 
     /// <summary>
