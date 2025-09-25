@@ -27,7 +27,7 @@ public class HoleTile : GoalTile
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 0,
+                ScoreValue = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Road,
                 GoalMessageTime = 1f
@@ -83,7 +83,7 @@ public class HoleTile : GoalTile
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 0,
+                ScoreValue = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Lake,
                 GoalMessageTime = 1f

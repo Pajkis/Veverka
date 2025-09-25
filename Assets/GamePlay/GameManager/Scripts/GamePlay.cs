@@ -135,10 +135,10 @@ public class GamePlay : MonoBehaviour
         if (payload.EventType != GoalEventsType.GoalResolved) return;
 
         int previousGoalCount = levelGoalCount;
-        levelGoalCount -= payload.GoalReduction;
+        levelGoalCount -= payload.ScoreValue;
         goalDisplay.DisplayNumber(levelGoalCount);
 
-        DebugLogger.Log(DebugLogCategory.Gameplay, $"Goal resolved - Goals: {previousGoalCount} → {levelGoalCount} (reduction: {payload.GoalReduction})", this);
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Goal resolved - Goals: {previousGoalCount} → {levelGoalCount} (reduction: {payload.ScoreValue})", this);
 
         if (levelGoalCount <= 0)
         {

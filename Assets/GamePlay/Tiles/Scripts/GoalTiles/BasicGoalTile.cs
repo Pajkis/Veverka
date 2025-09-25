@@ -36,7 +36,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 1,
+                ScoreValue = 1,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Yatta,
                 GoalMessageTime = gameplayConfig.goalBubbleTime
@@ -75,7 +75,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 1,
+                ScoreValue = 1,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Yatta,
                 GoalMessageTime = gameplayConfig.goalBubbleTime
@@ -99,7 +99,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 1,
+                ScoreValue = 1,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Yatta,
                 GoalMessageTime = gameplayConfig.goalBubbleTime
