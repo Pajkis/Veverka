@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9c21e633959e1a645bca2056b964511e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - goalCountDisplay: {instanceID: 0}
+  - turnCountDisplay: {instanceID: 0}
+  - levelDisplay: {instanceID: 0}
+  - levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  - nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
+  - levelInitEvent: {fileID: 11400000, guid: c57de046fb3b7a546b5a1e24544bfb2d, type: 2}
+  - characterEvents: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

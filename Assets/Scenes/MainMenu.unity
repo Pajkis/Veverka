@@ -378,8 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d67a08fab36481f4b96c4ed63966d37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  goToSceneEvent: {fileID: 11400000, guid: 788c3995b16014145a555454608cd85b, type: 2}
-  openOverlayEvent: {fileID: 11400000, guid: 25e6e07096ccf644d8c66fd6ff11926e, type: 2}
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!114 &405905181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -392,7 +391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d54fd2642c7ea0b499255122d7305922, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playUiEvent: {fileID: 11400000, guid: 4c9763dda34a48079cf91cabca3f71fc, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   logButtonProcessing: 0
 --- !u!1 &507590988
 GameObject:
@@ -933,27 +932,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb29111b26f85fc41b03774cf1607f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildGridDoneEvent: {fileID: 11400000, guid: 8ec110636ed184f46a8e72e8a7789016, type: 2}
+  gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
-  resetGridEvent: {fileID: 11400000, guid: f16b84b05db4cba4891c2d72c84bbc71, type: 2}
-  buildGridEvent: {fileID: 11400000, guid: 9f86097b788f1a645903018cdd2ce923, type: 2}
   levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
-  nutSetEvent: {fileID: 11400000, guid: 83d51b251f46afb4ba0500f94f20ec6d, type: 2}
-  nutRemovedEvent: {fileID: 11400000, guid: f70c06483cca135408668e20cd245788, type: 2}
-  goalSetEvent: {fileID: 11400000, guid: 8979bb091fe3fdc4292eaa381355342a, type: 2}
-  goalResolvedEvent: {fileID: 11400000, guid: 0e0a6cb3cdf61944aa81cf6e898101aa, type: 2}
-  tileQueryEvent: {fileID: 11400000, guid: c4961bfd0c374545ab43ce22f29ae6d3, type: 2}
-  wallSetEvent: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
-  roadSetEvent: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
+  nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
+  goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
+  wallEvents: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
   emptyPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
   veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
+  nutWaterPrefab: {fileID: 5049554270686572608, guid: 6ecba3ec68f43ea439dececdfc7ac805, type: 3}
   wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
+  waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
   goalPrefab: {fileID: 7474811582496385836, guid: 2e49a39d5bbfab640a268bb3905414ed, type: 3}
   backgroundPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
   gridRoot: {fileID: 507590989}
@@ -1363,11 +1359,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2223211058465654375, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 560
+      value: 620
       objectReference: {fileID: 0}
     - target: {fileID: 2223211058465654375, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 200
+      value: 220
       objectReference: {fileID: 0}
     - target: {fileID: 2223211058465654375, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1416,10 +1412,6 @@ PrefabInstance:
     - target: {fileID: 2223211058465654375, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4594579449195194528, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
-      propertyPath: m_Name
-      value: Label_Veverka
       objectReference: {fileID: 0}
     - target: {fileID: 5828791665143259216, guid: 20d959955469dca4097ef1e59685b0bf, type: 3}
       propertyPath: m_Name
