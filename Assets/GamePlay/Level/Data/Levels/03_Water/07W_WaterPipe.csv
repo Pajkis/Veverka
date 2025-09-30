@@ -17,11 +17,11 @@ H,.,WS,H,WS
 NW,.,.,NS,.
 HW,.,WS,H,HW
 NW,.,NS,.,HW
-HW,.,.,.,WS
+G,.,.,.,WS
 .,WS,.,WS,.
-NS,NW,.,HW,.
+.,NW,.,HW,.
 .,.,.,.,.
-H,WS,WS,.,NS
+.,WS,WS,.,NS
 NW,.,.,.,.
 .,.,.,.,HW
 .,.,HW,NW,HW
