@@ -36,14 +36,18 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     void Awake()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, "GameSettings Awake called", this);
+
         // Init singleton
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            DebugLogger.Log(DebugLogCategory.Settings, "GameSettings singleton instance created and marked as DontDestroyOnLoad", this);
         }
         else
         {
+            DebugLogger.LogWarning(DebugLogCategory.Settings, "GameSettings singleton already exists, destroying duplicate instance", this);
             Destroy(gameObject);
         }
     }
@@ -53,6 +57,7 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     private void OnEnable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, "GameSettings OnEnable - adding setting event listener", this);
         settingEvents.AddListener(OnSettingEvent);
     }
 
@@ -61,6 +66,7 @@ public class GameSettings: MonoBehaviour
     /// </summary>
     private void OnDisable()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, "GameSettings OnDisable - removing setting event listener", this);
         settingEvents.RemoveListener(OnSettingEvent);
     }
 
@@ -75,31 +81,43 @@ public class GameSettings: MonoBehaviour
     /// their defaults.</remarks>
     public void InitGameSettings()
     {
+        DebugLogger.Log(DebugLogCategory.Settings, "InitGameSettings called - starting settings initialization", this);
+
         if (config == null)
         {
+            DebugLogger.Log(DebugLogCategory.Settings, "Config is null, attempting to load GameSettingsConfig from Resources", this);
             config = Resources.Load<GameSettingsConfig>("GameSettingsConfig");
             if (config == null)
             {
-                Debug.LogError("GameSettingsConfig asset not found. Using default values.");
+                DebugLogger.LogError(DebugLogCategory.Settings, "GameSettingsConfig asset not found in Resources. Creating default config instance", this);
                 config = ScriptableObject.CreateInstance<GameSettingsConfig>();
+            }
+            else
+            {
+                DebugLogger.Log(DebugLogCategory.Settings, "GameSettingsConfig successfully loaded from Resources", this);
             }
         }
 
         //get init values for PlayerPrefab
+        DebugLogger.Log(DebugLogCategory.Settings, "Loading or initializing default settings from config", this);
         gameSettings =  GameSettingsUtils.LoadOrInitializeDefaults(config);
 
-        // Test that values are set properly 
+        // Test that values are set properly
+        DebugLogger.Log(DebugLogCategory.Settings, "Validating loaded settings values:", this);
         foreach (GameSettingsEnum key in Enum.GetValues(typeof(GameSettingsEnum)))
         {
-            Debug.Log($"Settings property {key}: value {gameSettings[key]}");
+            DebugLogger.Log(DebugLogCategory.Settings, $"Settings property {key}: value {gameSettings[key]}", this);
         }
 
         // Validation of animation speed
         if (gameSettings[GameSettingsEnum.AnimationSpeed] <= 0)
         {
-            Debug.LogWarning("AnimationSpeed <= 0! Resetting to default.");
+            DebugLogger.LogWarning(DebugLogCategory.Settings, $"AnimationSpeed value {gameSettings[GameSettingsEnum.AnimationSpeed]} is invalid (<= 0), resetting to default", this);
             gameSettings[GameSettingsEnum.AnimationSpeed] = config.GetDefault(GameSettingsEnum.AnimationSpeed);
+            DebugLogger.Log(DebugLogCategory.Settings, $"AnimationSpeed reset to default value: {gameSettings[GameSettingsEnum.AnimationSpeed]}", this);
         }
+
+        DebugLogger.Log(DebugLogCategory.Settings, "InitGameSettings completed successfully", this);
     }
     #endregion
 
@@ -111,30 +129,49 @@ public class GameSettings: MonoBehaviour
     /// <param name="payload"></param>
     private void OnSettingEvent(SettingEventPayload payload)
     {
+        DebugLogger.Log(DebugLogCategory.Settings, $"OnSettingEvent received - EventType: {payload.EventType}, Setting: {payload.Setting}", this);
+
         switch (payload.EventType)
         {
             case SettingsEventType.DataRequest:
                 var key = payload.Setting;
+                DebugLogger.Log(DebugLogCategory.Settings, $"Processing DataRequest for setting: {key}", this);
+
                 if (!gameSettings.TryGetValue(key, out int value))
                 {
-                    Debug.LogError($"[GameSettings] Missing key {key}, returning fallback from config.");
+                    DebugLogger.LogError(DebugLogCategory.Settings, $"Missing key {key} in gameSettings dictionary, using fallback from config", this);
                     value = config != null ? config.GetDefault(key) : 0;
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Fallback value for {key}: {value}", this);
                 }
+                else
+                {
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Found value for {key}: {value}", this);
+                }
+
                 settingEvents.Raise(new SettingEventPayload
                 {
                     EventType = SettingsEventType.DataBroadcast,
                     Setting = key,
                     Value = value
                 });
+                DebugLogger.Log(DebugLogCategory.Settings, $"Raised DataBroadcast event for {key} with value {value}", this);
                 break;
+
             case SettingsEventType.DataBroadcast:
                 int intValue = Mathf.RoundToInt(payload.Value);
-                if (gameSettings.TryGetValue(payload.Setting, out int current) && current == intValue)
-                    return;
+                DebugLogger.Log(DebugLogCategory.Settings, $"Processing DataBroadcast for {payload.Setting} with value {intValue}", this);
 
+                if (gameSettings.TryGetValue(payload.Setting, out int current) && current == intValue)
+                {
+                    DebugLogger.Log(DebugLogCategory.Settings, $"Value for {payload.Setting} unchanged ({intValue}), skipping update", this);
+                    return;
+                }
+
+                DebugLogger.Log(DebugLogCategory.Settings, $"Updating {payload.Setting} from {(gameSettings.ContainsKey(payload.Setting) ? gameSettings[payload.Setting] : "null")} to {intValue}", this);
                 gameSettings[payload.Setting] = intValue;
                 GameSettingsUtils.Set(payload.Setting, intValue);
                 PlayerPrefs.Save();
+                DebugLogger.Log(DebugLogCategory.Settings, $"Successfully saved {payload.Setting} = {intValue} to PlayerPrefs", this);
                 break;
         }
     }

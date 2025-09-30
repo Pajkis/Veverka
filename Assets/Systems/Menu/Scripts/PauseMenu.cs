@@ -16,7 +16,8 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*         
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu opened - pausing game time", this);
+        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*
     }
 
     /// <summary>
@@ -24,8 +25,9 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleResumeButtonOnClickEvent()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Resume button clicked - resuming game and destroying pause menu", this);
         Time.timeScale = 1;
-        Destroy(gameObject);    
+        Destroy(gameObject);
     }
 
     /// <summary>
@@ -33,6 +35,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Restart button clicked - reloading current level", this);
         Time.timeScale = 1;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
@@ -47,6 +50,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleGameSettingsButtonOnClickEvent()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Settings button clicked - opening SettingsMenu overlay", this);
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.OpenOverlay,
@@ -57,16 +61,16 @@ public class PauseMenu : MonoBehaviour
     /// <summary>
     /// Handles on click quit button event
     /// </summary>
-    public void HandleQuitButtonOnClickEvent()   
-    
-    {       
-        Time.timeScale = 1;       
+    public void HandleQuitButtonOnClickEvent()
+    {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Quit button clicked - unloading level and returning to menu", this);
+        Time.timeScale = 1;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
             Scene = SceneType.UnloadLevel
         });
-       
+
       //  Destroy(gameObject);
     }
     #endregion

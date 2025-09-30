@@ -1,3 +1,142 @@
+# Changelog v0.13.0
+
+### **📅 Date: `2025-09-26`**
+
+### **🔖 Git Version: `v0.13.0`**
+
+### **📦 Area:**
+
+**[Water Mechanics / Project Structure / Debug System / Event System / Level Design / Testing]**
+
+### **📝 Description:**
+
+ Major milestone introducing **Water Set mechanics** with water nuts, water holes, and splash physics. Complete project structure refactor for better organization, comprehensive debug logging system, extensive event system unification, and robust testing framework. Added 10 new water-themed levels and improved development workflow with Notion documentation integration.
+
+---
+
+### **➕ Added:**
+
+- **Water Set Game Mechanics**
+    - Water nut tiles with splash physics and push interactions
+    - Water hole goal tiles with specialized interaction logic
+    - Water splash push mechanics for strategic gameplay
+    - 10 new water-themed levels including tutorial level
+    - Water level set integration in level select menu
+- **Debug & Logging System**
+    - Centralized debug logging system across all components
+    - GamePlay debug logging for gameplay events
+    - Settings debug logging for configuration tracking
+    - Extensive event tracking and state monitoring
+    - Scene management flow debugging
+- **Testing Framework**
+    - Comprehensive GridUtils test suite
+    - Test assembly definitions for editor and runtime
+    - Unit tests for grid logic and utilities
+    - Test infrastructure for gameplay mechanics
+- **Level Design & Content**
+    - New bubble message types for enhanced player communication
+    - Random tips display system with rotating hints
+    - Enhanced goal-related sound effects and audio logic
+    - Improved bubble message display for character interactions
+- **Event System Enhancements**
+    - Enhanced GoalPayload with additional data fields
+    - Character data request events for state management
+    - Unified nut event system with comprehensive payloads
+    - Improved turn recording and undo system integration
+    - Event-based undo system with better state tracking
+- **Development Tools**
+    - Notion documentation analysis scripts
+    - Unity to Notion documentation comparison tools
+    - Automated documentation workflow integration
+    - Development workflow improvements
+
+---
+
+### **♻️ Updated / Refactored:**
+
+- **Project Structure (Major Overhaul)**
+    - Assets reorganized into Core folder structure
+    - UI-related assets moved to shared locations
+    - Level and turn-related assets consolidated
+    - Audio folders renamed to 'Clips' for clarity
+    - Scene renaming for consistency (numerical prefixes)
+    - GamePlay folder structure for shared assets
+- **Event System Unification**
+    - Unified character event system across all character types
+    - Consolidated grid events for better organization
+    - Merged grid build events into single system
+    - Unified nut events with comprehensive payloads
+    - Unified settings events for configuration management
+    - Unified road and wall handling events
+    - Unified audio events for consistent sound management
+    - Unified scene navigation events
+- **Character & Movement System**
+    - Character rotation animation implementation
+    - Enhanced character movement event handling
+    - Improved character and grid logic integration
+    - Character and nut pushing mechanics refinement
+    - Turn control refactored to remove singleton pattern
+- **Grid & Gameplay Logic**
+    - Goal tile logic refactoring for water mechanics
+    - Game grid and nut interaction improvements
+    - Grid surroundings and camera bounds enhancement
+    - Camera initialization after character spawn
+    - Level loading and scene management improvements
+- **Configuration & Settings**
+    - Game settings configuration refactoring
+    - Display configuration consolidated into single SO
+    - Gameplay config implementation for consistent rules
+    - Music playback with fade and delay improvements
+
+---
+
+### **🛠️ BugFixes:**
+
+- **Critical Fixes**
+    - StackOverflow fix: Recursive call prevention in SetEvents Init
+    - Water splash push logic corrections
+    - Scene loading and grid check fixes
+    - Android pause and level finished background resolution fix
+    - Wrong event assignment to TurnController correction
+- **Stability Improvements**
+    - Grid check logic improvements
+    - Level data consistency fixes
+    - Event initialization order fixes
+    - Memory management improvements in water mechanics
+
+---
+
+### **🔥 Removed:**
+
+- **Cleanup & Optimization**
+    - Unused overlay prefabs removal
+    - Unnecessary dotnet workflows removal
+    - Obsolete changelog modifications cleanup
+    - Addressables removed from git tracking
+    - Legacy project structure artifacts
+
+---
+
+### **🔧 Technical Infrastructure:**
+
+- **None Enum Members**: Added None member for Goal/Nut/Road/Wall enums for better null handling
+- **Debug Logging**: Comprehensive logging system for all major game systems
+- **Event Payload Enhancement**: Improved data structures for event communication
+- **Test Coverage**: Extensive test suite for grid utilities and core mechanics
+- **Documentation Integration**: Notion API integration for automated documentation workflow
+
+---
+
+### **🎮 Gameplay Features:**
+
+- **Water Mechanics**: Complete water-based puzzle mechanics with physics
+- **Level Progression**: 10 new challenging water levels
+- **Audio Enhancement**: Goal-specific sound effects and undo move sounds
+- **User Experience**: Enhanced bubble messages and tip system
+- **Turn System**: Improved turn recording with better undo functionality
+
+---
+
 # Veverka Changelog v0.12.0
 
 ### 📅 Date: `2025-09-04`
@@ -8,13 +147,10 @@
 
 ### 📝 Description:
 
-> Major refactor of NutTile / GoalTile hierarchy, simplification of payloads
+Major refactor of NutTile / GoalTile hierarchy, simplification of payloads
 Add new game mechanics, holes and stone nuts. Create stone set with 10 new levels.
 Unified visuals by universal UI prefabs, Unified background for Loadings screens and some menus.
-> 
-> 
-> Grid utilities consolidated and obsolete scripts removed.
-> 
+Grid utilities consolidated and obsolete scripts removed.
 
 ---
 
@@ -98,13 +234,9 @@ Unified visuals by universal UI prefabs, Unified background for Loadings screens
 
 ### 📝 Description:
 
-> Major refactor introducing event-driven GameSettings, decoupling of GameGrid from CameraFollow,
-> 
-> 
-> and new **UI/Settings components** (sliders, dropdowns, layout manager).
-> 
-> Added more flexible level loading, settings overlay improvements, and cross-platform UI layouts.
-> 
+Major refactor introducing event-driven GameSettings, decoupling of GameGrid from CameraFollow,
+and new **UI/Settings components** (sliders, dropdowns, layout manager).
+Added more flexible level loading, settings overlay improvements, and cross-platform UI layouts.
 
 ---
 

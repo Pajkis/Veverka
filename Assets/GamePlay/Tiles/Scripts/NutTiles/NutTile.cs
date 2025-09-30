@@ -156,16 +156,7 @@ public abstract class NutTile : TileObject
 
         // base initialization
         base.Init(tileType, gridPosition);
-        this.nutType = nutType;
-
-        // raise event to register nut tile in the GameGrid
-        nutEvents.Raise(new NutEventPayload
-        {
-            EventType = NutEventType.NutSet,
-            CurrentPosition = gridPosition,
-            NutType = nutType,
-            NutTile = this,
-        });
+        this.nutType = nutType;          
     }
 
     #endregion

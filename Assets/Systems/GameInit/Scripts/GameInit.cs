@@ -19,11 +19,14 @@ public class GameInit : MonoBehaviour
     /// </summary>
     void Start()
     {
+        DebugLogger.Log(DebugLogCategory.SceneManager, "GameInit starting - initializing game systems", this);
+
         // call game settings init
         GameSettings.Instance.InitGameSettings();
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.Init });
 
         // Game start delay
+        DebugLogger.Log(DebugLogCategory.SceneManager, "Starting game initialization delay", this);
         StartCoroutine(GameStartDelayCoroutine());
     }
     /// <summary>
@@ -37,7 +40,13 @@ public class GameInit : MonoBehaviour
 
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
-            yield return new WaitForSeconds(minLoadingTime - timeElapsed);
+        {
+            float remainingTime = minLoadingTime - timeElapsed;
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Enforcing minimum init time - waiting {remainingTime:F2}s more", this);
+            yield return new WaitForSeconds(remainingTime);
+        }
+
+        DebugLogger.Log(DebugLogCategory.SceneManager, "Game initialization complete - navigating to MainMenu", this);
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,

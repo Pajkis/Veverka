@@ -1,6 +1,6 @@
-HW,NW,HW,W,W,W,HW,W,WS,W,WS,W,W,W,W,WS,W,W
-N,W,.,.,.,.,HW,W,W,W,.,W,W,W,W,.,W,W
-G,W,.,W,N,W,W,W,W,W,NS,W,W,W,W,NS,.,W
-.,W,.,NW,HW,NS,G,W,.,NW,H,N,.,.,NW,G,N,G
-.,W,.,.,NS,W,W,W,W,W,NW,W,W,WS,W,NW,W,W
-.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,V
+HW,NW,HW,W,W,W,W,W,W,W,W,W,W,W,W,G,W,W,W,W,W,W,W,W,W,W,W,G,W
+N,W,NW,W,.,G,.,W,W,W,W,G,W,W,W,.,W,G,W,G,W,.,W,G,W,G,W,.,W
+G,W,HW,W,W,N,W,W,W,W,W,N,W,W,W,N,W,NS,W,NW,W,N,W,N,W,N,W,N,W
+.,W,NW,.,NS,H,NW,G,W,G, NW,HW,NS,.,W,HW,W,G,W,G,W,H,W,HW,W,G,W,G,W
+.,W,.,W,.,NW,W,W,W,W,W,NW,W,W,W,NS,W,NW,W,NW,W,NW,W,NW,W,NW,W,NW,W
+.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,.,V

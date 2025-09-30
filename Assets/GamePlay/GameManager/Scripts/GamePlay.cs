@@ -34,12 +34,13 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        // Undo controller will be set via inspector         
-        
+        DebugLogger.Log(DebugLogCategory.Gameplay, "GamePlay Awake called", this);
+        // Undo controller will be set via inspector
     }
 
     private void Start()
     {
+        DebugLogger.Log(DebugLogCategory.Gameplay, "GamePlay Start called - initializing level", this);
         // initialize level goal count and turn count
         LevelInit();
     }
@@ -52,15 +53,18 @@ public class GamePlay : MonoBehaviour
     /// reflect the current level index.</remarks>
     private void OnEnable()
     {
+        DebugLogger.Log(DebugLogCategory.Gameplay, "GamePlay OnEnable - adding event listeners", this);
         // add listeners
         goalEvents.AddListener(UpdateGoalCount);
         characterEvents.AddListener(OnCharacterEvent);
+        DebugLogger.Log(DebugLogCategory.Gameplay, "Event listeners added for goal and character events", this);
     }
     /// <summary>
     /// OnDisable method - called when object deactivate or before destroy
     /// </summary>
     private void OnDisable()
     {
+        DebugLogger.Log(DebugLogCategory.Gameplay, "GamePlay OnDisable - removing event listeners", this);
         goalEvents.RemoveListener(UpdateGoalCount);
         characterEvents.RemoveListener(OnCharacterEvent);
     }
@@ -73,6 +77,7 @@ public class GamePlay : MonoBehaviour
         // undo last turn only if undo is available
         if (Input.GetKeyDown(KeyCode.B) && undoController != null && undoController.CanUndo())
         {
+            DebugLogger.Log(DebugLogCategory.Gameplay, "Undo key (B) pressed - executing undo", this);
             Undo();
         }
 
@@ -81,11 +86,16 @@ public class GamePlay : MonoBehaviour
         {
             if (GameObject.FindWithTag("PauseMenu") == null)
             {
+                DebugLogger.Log(DebugLogCategory.Gameplay, "Escape key pressed - opening pause menu", this);
                 sceneNavigationEvents.Raise(new SceneNavigationEventPayload
                 {
                     EventType = SceneNavigationEventType.OpenOverlay,
                     Overlay = OverlayType.PauseMenu
                 });
+            }
+            else
+            {
+                DebugLogger.Log(DebugLogCategory.Gameplay, "Escape key pressed but pause menu already exists", this);
             }
         }
     }
@@ -96,21 +106,25 @@ public class GamePlay : MonoBehaviour
     /// <param name="goalCount"></param>
     void LevelInit() // LevelInitPayload payload
     {
+        DebugLogger.Log(DebugLogCategory.Gameplay, "LevelInit called - initializing level data", this);
+
         //Set turn count and goal count
         turnCount = 0;
         turnsDisplay.DisplayNumber(turnCount);
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Turn count initialized to {turnCount}", this);
 
         if (levelDatabase == null || levelDatabase.GoalsCount == 0)
         {
-            Debug.LogError("LevelDatabase is null or no goals set");
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "LevelDatabase is null or no goals set - cannot initialize level", this);
             return;
         }
-        
+
         levelNumDisplay.DisplayNumber(levelDatabase.CurrentLevelIndex + 1);
         levelTypeDisplay.DisplayEnum<LevelSetType>(levelDatabase.LevelSetType);
         levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
         goalDisplay.DisplayNumber(levelGoalCount);
-        Debug.Log($"Left goals: {levelGoalCount}");
+
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Level initialized - Level: {levelDatabase.CurrentLevelIndex + 1}, Type: {levelDatabase.LevelSetType}, Goals remaining: {levelGoalCount}", this);
     }
 
     /// <summary>
@@ -119,12 +133,16 @@ public class GamePlay : MonoBehaviour
     void UpdateGoalCount(GoalEventPayload payload)
     {
         if (payload.EventType != GoalEventsType.GoalResolved) return;
-        levelGoalCount -= payload.GoalReduction;
+
+        int previousGoalCount = levelGoalCount;
+        levelGoalCount -= payload.ScoreValue;
         goalDisplay.DisplayNumber(levelGoalCount);
-        Debug.Log($"Left goals: {levelGoalCount}");
-        if (levelGoalCount <= 0) 
+
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Goal resolved - Goals: {previousGoalCount} → {levelGoalCount} (reduction: {payload.ScoreValue})", this);
+
+        if (levelGoalCount <= 0)
         {
-            Debug.Log("Level completed");
+            DebugLogger.Log(DebugLogCategory.Gameplay, "All goals completed - level finished! Opening completion menu", this);
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.OpenOverlay,
@@ -135,6 +153,7 @@ public class GamePlay : MonoBehaviour
         // reset history recording
         if (undoController != null)
         {
+            DebugLogger.Log(DebugLogCategory.Gameplay, "Clearing undo history after goal resolution", this);
             undoController.ClearHistory();
         }
     }
@@ -145,10 +164,13 @@ public class GamePlay : MonoBehaviour
       /// <param name="payload"></param>
         private void OnCharacterEvent(CharacterEventPayload payload)
         {
+            DebugLogger.Log(DebugLogCategory.Gameplay, $"OnCharacterEvent received - EventType: {payload.EventType}", this);
+
             if (payload.EventType == CharacterEventType.MoveCompleted)
             {
                 turnCount++;
                 turnsDisplay.DisplayNumber(turnCount);
+                DebugLogger.Log(DebugLogCategory.Gameplay, $"Character move completed - Turn count: {turnCount}", this);
             }
         }
 
@@ -159,13 +181,15 @@ public class GamePlay : MonoBehaviour
     {
         if (undoController != null && undoController.CanUndo())
         {
+            DebugLogger.Log(DebugLogCategory.Gameplay, "Undo requested - executing undo operation", this);
             undoController.RequestUndo();
             turnCount++;
             turnsDisplay.DisplayNumber(turnCount);
+            DebugLogger.Log(DebugLogCategory.Gameplay, $"Undo completed - Turn count: {turnCount}", this);
         }
         else
         {
-            DebugLogger.Log(DebugLogCategory.UndoLogic, "Cannot undo - no controller or undo not available", this);
+            DebugLogger.LogWarning(DebugLogCategory.Gameplay, "Cannot undo - no controller available or undo not possible", this);
         }
     }
 }

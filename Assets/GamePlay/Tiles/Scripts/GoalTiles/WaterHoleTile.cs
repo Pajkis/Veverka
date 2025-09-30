@@ -37,7 +37,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 0,
+                ScoreValue = 0,
                 GoalRemove = true,
                 GoalMessage = BubbleMessageType.Splash,
                 GoalMessageTime = 1f
@@ -96,7 +96,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             {
                 EventType = GoalEventsType.GoalResolved,
                 Position = payload.CurrentPosition,
-                GoalReduction = 0,
+                ScoreValue = 0,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Splash,
                 GoalMessageTime = 1f
