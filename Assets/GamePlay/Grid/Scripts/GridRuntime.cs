@@ -96,7 +96,7 @@ public class GridRuntime : MonoBehaviour
                 break;
 
             case GoalEventsType.GoalResolve:
-                OnGoalResolveEvent(payload);
+                OnGoalResolve(payload);
                 break;
         }
     }
@@ -119,7 +119,7 @@ public class GridRuntime : MonoBehaviour
                 OnObstacleSet(payload.Position, payload.ObstacleType);
                 break;
             case ObstacleEventsType.ObstacleResolve:
-                OnObstacleResolveEvent(payload);
+                OnObstacleResolve(payload);
                 break;
         }
     }
@@ -185,10 +185,8 @@ public class GridRuntime : MonoBehaviour
     /// </summary>
     private void OnGoalSet(Vector2Int position, GoalType goalType)
     {
-       
-        GameObject tile = null;
-
         //instantiate goal prefab based on goal type
+        GameObject tile = null;
         switch (goalType)
         {
             case GoalType.BasicGoal:
@@ -228,7 +226,7 @@ public class GridRuntime : MonoBehaviour
     /// <summary>
     /// Handle goal resolved event
     /// </summary>
-    private void OnGoalResolveEvent(GoalEventPayload payload)
+    private void OnGoalResolve(GoalEventPayload payload)
     {        
         if (!gridData.IsInGrid(payload.Position))
         {
@@ -313,9 +311,17 @@ public class GridRuntime : MonoBehaviour
             return;
         }
 
+        ObstacleTile tileObstacle = tile.GetComponent<ObstacleTile>();
+        if (tileObstacle == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnObstacleSet: ObstacleTile component not found in tile {obstacleType} at {position}", this);
+            return;
+        }
+
         //set position of the obstacle
-        tile.transform.SetParent(gridRoot, false);
-        tile.transform.localPosition = GridUtils.GridToWorld(position);
+        tileObstacle.transform.SetParent(gridRoot, false);
+        tileObstacle.transform.localPosition = GridUtils.GridToWorld(position);
+        tileObstacle.Init(TileType.Obstacle, position, obstacleType);
 
         // Set tile and obstacle type in grid
         gridData.SetTileType(position, TileType.Obstacle);
@@ -326,7 +332,7 @@ public class GridRuntime : MonoBehaviour
     /// <summary>
     /// Handle obstacle resolved event
     /// </summary>
-    private void OnObstacleResolveEvent(ObstacleEventPayload payload)
+    private void OnObstacleResolve(ObstacleEventPayload payload)
     {
         if (!gridData.IsInGrid(payload.Position))
         {
