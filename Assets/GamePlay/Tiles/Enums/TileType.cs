@@ -30,8 +30,6 @@ public enum GoalType
 {
     None,        // No goal (default/empty)
     BasicGoal,
-    HoleGoal,
-    WaterHoleGoal
 }
 
 /// <summary>

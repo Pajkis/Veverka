@@ -194,12 +194,6 @@ public class GridRuntime : MonoBehaviour
             case GoalType.BasicGoal:
                 tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 break;
-            case GoalType.HoleGoal:
-                tile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                break;
-            case GoalType.WaterHoleGoal:
-                tile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                break;
             default:
                 DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnGoalSet: Unsupported GoalType {goalType} at {position}, defaulting to BasicGoal", this);
                 break;

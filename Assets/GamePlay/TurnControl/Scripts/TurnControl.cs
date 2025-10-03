@@ -38,6 +38,7 @@ public class TurnControl : MonoBehaviour
     [SerializeField] public CharacterEvents characterEvents;
     [SerializeField] public NutEvents nutEvents;
     [SerializeField] public GoalEvents goalEvents;
+    [SerializeField] public ObstacleEvents obstacleEvents;
     
     [Header("Debug")]
     [SerializeField] private DebugLogConfig debugConfig;
@@ -64,6 +65,7 @@ public class TurnControl : MonoBehaviour
         characterEvents?.AddListener(OnCharacterEvent);
         nutEvents?.AddListener(OnNutEvent);
         goalEvents?.AddListener(OnGoalEvent);
+        obstacleEvents?.AddListener(OnObstacleEvent);
         
         DebugLogger.Log(DebugLogCategory.TurnControl, "Event listeners registered", this);
     }
@@ -73,6 +75,7 @@ public class TurnControl : MonoBehaviour
         characterEvents?.RemoveListener(OnCharacterEvent);
         nutEvents?.RemoveListener(OnNutEvent);
         goalEvents?.RemoveListener(OnGoalEvent);
+        obstacleEvents?.RemoveListener(OnObstacleEvent);
     }
 
     #endregion
@@ -349,6 +352,19 @@ public class TurnControl : MonoBehaviour
         {
             case GoalEventsType.NutInGoalDone:
                 CompleteAction($"Goal Action ({payload.Position.x},{payload.Position.y})");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Handle obstacle events for obstacle action completion tracking
+    /// </summary>
+    private void OnObstacleEvent(ObstacleEventPayload payload)
+    {
+        switch (payload.EventType)
+        {
+            case ObstacleEventsType.ObstacleActionDone:
+                CompleteAction($"Obstacle Action ({payload.Position.x},{payload.Position.y})");
                 break;
         }
     }

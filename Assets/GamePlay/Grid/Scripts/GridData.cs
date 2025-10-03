@@ -220,8 +220,8 @@ public class GridData : MonoBehaviour
         if (tile == TileType.Goal)
         {
             // Characters can walk on BasicGoals but not holes
-            var goalType = goalGrid[position.x, position.y];
-            return goalType != GoalType.HoleGoal && goalType != GoalType.WaterHoleGoal;
+            var obstacleType = obstacleGrid[position.x, position.y];
+            return obstacleType != ObstacleType.Hole && obstacleType != ObstacleType.WaterHole;
         }
         return tile == TileType.Empty || tile == TileType.Road;
     }
@@ -235,7 +235,19 @@ public class GridData : MonoBehaviour
             return false;
 
         var tile = grid[position.x, position.y];
-        return tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal;
+
+        // Basic pushable types
+        if (tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal)
+            return true;
+
+        // Obstacles are pushable only if they are Hole or WaterHole
+        if (tile == TileType.Obstacle)
+        {
+            var obstacleType = obstacleGrid[position.x, position.y];
+            return obstacleType == ObstacleType.Hole || obstacleType == ObstacleType.WaterHole;
+        }
+
+        return false;
     }
     #endregion
 }

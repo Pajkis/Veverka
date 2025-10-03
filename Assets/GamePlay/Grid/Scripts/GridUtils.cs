@@ -13,7 +13,7 @@ public static class GridUtils
     public static TileType[,] CachedGrid { get; private set; }
     public static NutType[,] CachedNutGrid { get; private set; }
     public static GoalType[,] CachedGoalGrid { get; private set; }
-    public static WallType[,] CachedWallGrid { get; private set; }
+    public static ObstacleType[,] CachedObstacleGrid { get; private set; }
     public static RoadType[,] CachedRoadGrid { get; private set; }
 
 
@@ -24,7 +24,7 @@ public static class GridUtils
     {
         public TileType TileType;
         public GoalType GoalType;
-        public WallType WallType;
+        public ObstacleType ObstacleType;
         public NutType NutType;
         public RoadType RoadType;
     }
@@ -40,7 +40,7 @@ public static class GridUtils
         {
             TileType = TileType.ErrorTile,
             GoalType = GoalType.BasicGoal,
-            WallType = WallType.BasicWall,
+            ObstacleType = ObstacleType.BasicWall,
             NutType = NutType.BasicNut,
             RoadType = RoadType.BasicRoad,
         };
@@ -48,12 +48,12 @@ public static class GridUtils
         switch (symbol)
         {
             case "W":
-                result.TileType = TileType.Wall;
-                result.WallType = WallType.BasicWall;
+                result.TileType = TileType.Obstacle;
+                result.ObstacleType = ObstacleType.BasicWall;
                 break;
             case "WS":
-                result.TileType = TileType.Wall;
-                result.WallType = WallType.StoneWall;
+                result.TileType = TileType.Obstacle;
+                result.ObstacleType = ObstacleType.StoneWall;
                 break;
             case "V":
                 result.TileType = TileType.Veverka;
@@ -75,12 +75,12 @@ public static class GridUtils
                 result.GoalType = GoalType.BasicGoal;
                 break;
             case "H":
-                result.TileType = TileType.Goal;
-                result.GoalType = GoalType.HoleGoal;
+                result.TileType = TileType.Obstacle;
+                result.ObstacleType = ObstacleType.Hole;
                 break;
             case "HW":
-                result.TileType = TileType.Goal;
-                result.GoalType = GoalType.WaterHoleGoal;
+                result.TileType = TileType.Obstacle;
+                result.ObstacleType = ObstacleType.WaterHole;
                 break;
             case "R":
                 result.TileType = TileType.Road;
@@ -145,13 +145,13 @@ public static class GridUtils
             // Clear cached grids
             CachedNutGrid = null;
             CachedGoalGrid = null;
-            CachedWallGrid = null;
+            CachedObstacleGrid = null;
             CachedRoadGrid = null;
 
             TileType[,] levelGrid = new TileType[width, height];
             NutType[,] nutGrid = new NutType[width, height];
             GoalType[,] goalGrid = new GoalType[width, height];
-            WallType[,] wallGrid = new WallType[width, height];
+            ObstacleType[,] obstacleGrid = new ObstacleType[width, height];
             RoadType[,] roadGrid = new RoadType[width, height];
 
             Debug.Log($"Loading level '{levelData.name}' with size (width, height): {width}, {height}");
@@ -172,7 +172,7 @@ public static class GridUtils
                     levelGrid[x, y] = parsed.TileType;
                     nutGrid[x, y] = parsed.NutType;
                     goalGrid[x, y] = parsed.GoalType;
-                    wallGrid[x, y] = parsed.WallType;
+                    obstacleGrid[x, y] = parsed.ObstacleType;
                     roadGrid[x, y] = parsed.RoadType;
 
                     // Catch error types
@@ -186,7 +186,7 @@ public static class GridUtils
             // Cache the grids
             CachedNutGrid = nutGrid;
             CachedGoalGrid = goalGrid;
-            CachedWallGrid = wallGrid;
+            CachedObstacleGrid = obstacleGrid;
             CachedRoadGrid = roadGrid;
 
             return levelGrid;

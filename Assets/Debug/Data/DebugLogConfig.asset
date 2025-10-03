@@ -15,7 +15,7 @@ MonoBehaviour:
   turnControlLog: 0
   turnRecordLog: 0
   undoLogicLog: 0
-  characterMovementLog: 1
+  characterMovementLog: 0
   nutMovementLog: 0
   rotationLog: 0
   eventSystemLog: 0
@@ -24,5 +24,7 @@ MonoBehaviour:
   tileInteractionLog: 0
   inputLog: 0
   uiLog: 0
+  settingsLog: 0
+  gameplayLog: 0
   enableAllLogs: 0
   useColoredLogs: 1
