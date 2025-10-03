@@ -29,6 +29,7 @@ public class GridRuntime : MonoBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
     [SerializeField] private GameObject waterHolePrefab;
+    [SerializeField] private GameObject holePrefab;
     #endregion
 
     #region Unity Lifecycle
@@ -91,11 +92,11 @@ public class GridRuntime : MonoBehaviour
         switch (payload.EventType)
         {
             case GoalEventsType.GoalSet:
-                OnGoalSet(payload);
+                OnGoalSet(payload.Position, payload.GoalType);
                 break;
 
-            case GoalEventsType.GoalResolved:
-                OnGoalResolved(payload);
+            case GoalEventsType.GoalResolve:
+                OnGoalResolveEvent(payload);
                 break;
         }
     }
@@ -105,12 +106,18 @@ public class GridRuntime : MonoBehaviour
     /// </summary>
     private void OnWallEvent(WallEventPayload payload)
     {
+        if (!payload.InstantiateTile)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnWallEvent - InstantiateTile is false for EventType: {payload.EventType} at Position: {payload.Position}. No action taken.", this);
+            return;
+        }
+        
         DebugLogger.Log(DebugLogCategory.GridSystem, $"OnWallEvent - EventType: {payload.EventType}, Position: {payload.Position}, WallType: {payload.WallType}", this);
 
         switch (payload.EventType)
         {
             case WallEventType.WallSet:
-                OnWallSet(payload);
+                OnWallSet(payload.Position, payload.WallType);
                 break;
         }
     }
@@ -120,12 +127,18 @@ public class GridRuntime : MonoBehaviour
     /// </summary>
     private void OnRoadEvent(RoadEventPayload payload)
     {
+        if (!payload.InstantiateTile)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnRoadEvent - InstantiateTile is false for EventType: {payload.EventType} at Position: {payload.Position}. No action taken.", this);
+            return;
+        }
+
         DebugLogger.Log(DebugLogCategory.GridSystem, $"OnRoadEvent - EventType: {payload.EventType}, Position: {payload.Position}, RoadType: {payload.RoadType}", this);
 
         switch (payload.EventType)
         {
             case RoadEventType.RoadSet:
-                OnRoadSet(payload);
+                OnRoadSet(payload.Position, payload.RoadType);
                 break;
         }
     }
@@ -168,54 +181,103 @@ public class GridRuntime : MonoBehaviour
     /// <summary>
     /// Set goal tile on position and update tile type in the grid
     /// </summary>
-    private void OnGoalSet(GoalEventPayload payload)
+    private void OnGoalSet(Vector2Int position, GoalType goalType)
     {
-        if (!payload.InstantiateTile)
+       
+        GameObject tile = null;
+
+        //instantiate goal prefab based on goal type
+        switch (goalType)
         {
-            gridData.SetTileType(payload.Position, TileType.Goal);
-            gridData.SetGoalType(payload.Position, payload.GoalType);
+            case GoalType.BasicGoal:
+                tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            case GoalType.HoleGoal:
+                tile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            case GoalType.WaterHoleGoal:
+                tile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            default:
+                DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnGoalSet: Unsupported GoalType {goalType} at {position}, defaulting to BasicGoal", this);
+                break;
+        }
+
+        // Check if instantiation was successful
+        if (tile == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnGoalSet: Failed to instantiate goal prefab for GoalType {goalType} at {position}", this);
+            return;
+        }
+        // Get GoalTile component
+        GoalTile goalTile = tile.GetComponent<GoalTile>();
+        if (goalTile == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnGoalSet: GoalTile component not found in tile {goalType} at {position}", this);
             return;
         }
 
-        // Instantiate new tile on goal position
-        if (payload.GoalType == GoalType.WaterHoleGoal)
-        {
-            WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
-            holeTile.transform.SetParent(gridRoot, false);
-            holeTile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
-            holeTile.Init(TileType.Goal, payload.Position, payload.GoalType);
+        //set position of the goal
+        goalTile.transform.SetParent(gridRoot, false);
+        goalTile.transform.localPosition = GridUtils.GridToWorld(position);
+        goalTile.Init(TileType.Goal, position, goalType);
+        
+        // Set tile type and goal type in grid
+        gridData.SetTileType(position, TileType.Goal);
+        gridData.SetGoalType(position,goalType);
 
-            // Set tile type and goal type in grid
-            gridData.SetTileType(payload.Position, TileType.Goal);
-            gridData.SetGoalType(payload.Position, payload.GoalType);
-
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Water hole goal created at {payload.Position}", this);
-        }
+        DebugLogger.Log(DebugLogCategory.GridSystem, $" Goal: {goalType} created at {position}", this);        
     }
 
     /// <summary>
     /// Handle goal resolved event
     /// </summary>
-    private void OnGoalResolved(GoalEventPayload payload)
-    {
-        if (!payload.GoalRemove)
-        {
-            return;
-        }
-
+    private void OnGoalResolveEvent(GoalEventPayload payload)
+    {        
         if (!gridData.IsInGrid(payload.Position))
         {
             DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot remove goal tile - Position {payload.Position} is outside grid bounds", this);
             return;
         }
 
-        if (!payload.InstantiateTile)
+        // Goal without removal
+        if (!payload.GoalRemove)
         {
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolved - Setting {payload.Position} to Empty (GoalRemove: {payload.GoalRemove})", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolve event received without goal removal {payload.Position}", this);            
+        }
+        // goal removal with replacement
+        else if (payload.GoalRemove && !payload.InstantiateTile)
+        {          
             gridData.SetTileType(payload.Position, TileType.Empty);
             gridData.SetGoalType(payload.Position, GoalType.None);
             DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, GoalType cleared", this);
             return;
+        }
+        // goal removal with replacement and tile instantiation
+        else if (payload.GoalRemove && payload.InstantiateTile)
+        {
+            // Set tile type and replacement type in grid
+            gridData.SetGoalType(payload.Position, GoalType.None);
+
+            // Handle replacement based on type
+            switch (payload.ReplacementType)
+            {
+                case TileType.Wall:
+                    OnWallSet(payload.Position, payload.ReplacementWallType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementWallType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;
+                case TileType.Road:
+                    OnRoadSet(payload.Position, payload.ReplacementRoadType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementRoadType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;
+                case TileType.Goal:
+                    OnGoalSet(payload.Position, payload.ReplacementGoalType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementGoalType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;                    
+                default:
+                    DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"GoalResolve with replacement at {payload.Position} has unsupported ReplacementType: {payload.ReplacementType}", this);
+                break;
+            }
         }
     }
     #endregion
@@ -224,28 +286,39 @@ public class GridRuntime : MonoBehaviour
     /// <summary>
     /// Set wall tile on position and update tile type in the grid
     /// </summary>
-    private void OnWallSet(WallEventPayload payload)
+    private void OnWallSet(Vector2Int position, WallType wallType)
     {
-        if (payload.InstantiateTile)
-        {
-            GameObject tile;
-            if (payload.WallType == WallType.StoneWall)
-            {
-                tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            }
-            else
-            {
-                tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            }
+        GameObject tile = null;
 
-            tile.transform.SetParent(gridRoot, false);
-            tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
+        //instantiate wall prefab based on wall type
+        switch (wallType)
+        {
+            case WallType.StoneWall:
+                tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            case WallType.BasicWall:
+                tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            default:
+                DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnWallSet: Unsupported WallType {wallType} at {position}, defaulting to basic wall", this);
+            break;
         }
 
+        // Check if instantiation was successful
+        if (tile == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnWallSet: Failed to instantiate wall prefab for WallType {wallType} at {position}", this);
+            return;
+        }
+
+        //set position of the wall        
+        tile.transform.SetParent(gridRoot, false);
+        tile.transform.localPosition = GridUtils.GridToWorld(position);   
+
         // Set tile and wall type in grid
-        gridData.SetTileType(payload.Position, TileType.Wall);
-        gridData.SetWallType(payload.Position, payload.WallType);
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Wall created at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, WallType: {payload.WallType}", this);
+        gridData.SetTileType(position, TileType.Wall);
+        gridData.SetWallType(position, wallType);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Wall created at {position} - TileType: {gridData.GetTileType(position)}, WallType: {wallType}", this);
     }
     #endregion
 
@@ -253,28 +326,39 @@ public class GridRuntime : MonoBehaviour
     /// <summary>
     /// Set road tile on position and update tile type in the grid
     /// </summary>
-    private void OnRoadSet(RoadEventPayload payload)
+    private void OnRoadSet(Vector2Int position, RoadType roadType)
     {
-        if (payload.InstantiateTile)
-        {
-            GameObject tile;
-            if (payload.RoadType == RoadType.StoneFilledHole)
-            {
-                tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            }
-            else
-            {
-                tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            }
+        // Instantiate new tile on road position
+        GameObject tile = null;
 
-            tile.transform.SetParent(gridRoot, false);
-            tile.transform.localPosition = GridUtils.GridToWorld(payload.Position);
+        switch (roadType)
+        { 
+         case RoadType.BasicRoad:
+            tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+            break;
+        case RoadType.StoneFilledHole:
+            tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+            break;
+        default:
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnRoadSet: Unsupported RoadType {roadType} at {position}, defaulting to basic road", this);
+            break;
         }
 
+        // Check if instantiation was successful
+        if (tile == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnRoadSet: Failed to instantiate road prefab for RoadType {roadType} at {position}", this);
+            return;
+        }
+
+        //set position of the road
+        tile.transform.SetParent(gridRoot, false);
+        tile.transform.localPosition = GridUtils.GridToWorld(position);        
+
         // Set tile type and road type in grid
-        gridData.SetTileType(payload.Position, TileType.Road);
-        gridData.SetRoadType(payload.Position, payload.RoadType);
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Road created at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, RoadType: {payload.RoadType}", this);
+        gridData.SetTileType(position, TileType.Road);
+        gridData.SetRoadType(position, roadType);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Road created at {position} - TileType: {gridData.GetTileType(position)}, RoadType: {roadType}", this);
     }
     #endregion
 

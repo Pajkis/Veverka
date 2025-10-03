@@ -20,101 +20,70 @@ public class BasicGoalTile : GoalTile, INutInteractive
     {
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
-
         DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal - NutType: {payload.NutType}, Position: {payload.CurrentPosition}, GoalPosition: {GridPosition}", this);
 
-        // Build wall if stone nut reached the goal
+        // goal payload
+        GoalEventPayload goalPayload = (new GoalEventPayload
+       {
+            // fill goal payload - common goal related actions
+            GoalTile = this,
+            GoalType = this.goalType,
+            EventType = GoalEventsType.GoalResolve,
+            Position = payload.CurrentPosition,
+            ScoreValue = 1,
+            GoalRemove = true,
+            GoalMessage = BubbleMessageType.Yatta,
+            GoalMessageTime = gameplayConfig.goalBubbleTime,
+        });
+                // Build wall if stone nut reached the goal
         if (payload.NutType == NutType.StoneNut)
-        {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut reached goal - creating wall at {payload.CurrentPosition}", this);
+        {          
 
             // Play build sound effect
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
+            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });                      
+         
+            // fill goal payload - road related actions
+            goalPayload.CreateReplacement = true;
+            goalPayload.ReplacementType = TileType.Wall;
+            goalPayload.ReplacementWallType = WallType.StoneWall;
+            goalPayload.InstantiateTile = true;          
 
-            // FIRST: Raise goal resolved event (like HoleTile does)
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                ScoreValue = 1,
-                GoalRemove = true,
-                GoalMessage = BubbleMessageType.Yatta,
-                GoalMessageTime = gameplayConfig.goalBubbleTime
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for stone nut at {payload.CurrentPosition}", this);
-
-            // Destroy goal tile
-            Destroy(gameObject);
-
-            // THEN: Create wall (after goal is resolved and removed)
-            wallEvents.Raise(new WallEventPayload
-            {
-                EventType = WallEventType.WallSet,
-                Position = payload.CurrentPosition,
-                WallType = WallType.StoneWall,
-                InstantiateTile = true,
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"WallSet event sent for stone wall at {payload.CurrentPosition}", this);
+            // debug log
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut reached goal - creating wall at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: Stone nut in basic goal -> replacement with stone wall at {payload.CurrentPosition}", this);        
         }
 
         // water nut falls into the goal, create splash effect and splash around
         else if (payload.NutType == NutType.WaterNut)
         {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut reached goal - creating splash at {payload.CurrentPosition}", this);
-
             // Play build sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
             // splash water to move nuts around
             this.SplashWater();
 
-            // Raise goal reached event
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                ScoreValue = 1,
-                GoalRemove = true,
-                GoalMessage = BubbleMessageType.Yatta,
-                GoalMessageTime = gameplayConfig.goalBubbleTime
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for water nut at {payload.CurrentPosition}", this);
-
-            // Destroy goal tile
-            Destroy(gameObject);
+            // debug log
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut reached goal - creating splash at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: water nut in basic goal -> remove and splash {payload.CurrentPosition}", this);           
         }
-
+        // basic nut falls into the goal, just remove the goal
         else if (payload.NutType == NutType.BasicNut)
         {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut reached goal at {payload.CurrentPosition}", this);
-
             // Play goal reached sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-            // Raise goal reached event
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                ScoreValue = 1,
-                GoalRemove = true,
-                GoalMessage = BubbleMessageType.Yatta,
-                GoalMessageTime = gameplayConfig.goalBubbleTime
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for basic nut at {payload.CurrentPosition}", this);
-
-            // Destroy goal tile
-            Destroy(gameObject);
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut reached goal at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: basic nut in basic goal -> remove {payload.CurrentPosition}", this);            
         }
+
+        //raise goal event with goal payload
+        goalEvents.Raise(goalPayload);
+
+        // Set flag for goal removal (will be handled in base class)
+        shouldRemoveGoal = goalPayload.GoalRemove;
 
         //Call base - all goal actions settled
         base.OnNutInGoal(payload);
-               
     }
-
     #endregion
 }

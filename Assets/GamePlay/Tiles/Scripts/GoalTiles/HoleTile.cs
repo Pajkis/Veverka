@@ -25,7 +25,7 @@ public class HoleTile : GoalTile
 
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 ScoreValue = 0,
                 GoalRemove = true,
@@ -60,7 +60,7 @@ public class HoleTile : GoalTile
             // Display "Ooops" message if a non-stone nut falls into the hole
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Ooops,
@@ -81,7 +81,7 @@ public class HoleTile : GoalTile
             // remove the hole goal
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 ScoreValue = 0,
                 GoalRemove = true,

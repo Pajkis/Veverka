@@ -35,7 +35,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
 
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 ScoreValue = 0,
                 GoalRemove = true,
@@ -74,7 +74,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
             // Display "Ooops" message if a non-stone nut falls into the hole
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 GoalRemove = false,
                 GoalMessage = BubbleMessageType.Ooops,
@@ -94,7 +94,7 @@ public class WaterHoleTile : GoalTile, INutInteractive
 
             goalEvents.Raise(new GoalEventPayload
             {
-                EventType = GoalEventsType.GoalResolved,
+                EventType = GoalEventsType.GoalResolve,
                 Position = payload.CurrentPosition,
                 ScoreValue = 0,
                 GoalRemove = false,
