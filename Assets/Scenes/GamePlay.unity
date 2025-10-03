@@ -1165,6 +1165,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
+  obstacleEvents: {fileID: 11400000, guid: 486b4ca6ce5b0fc489f25f6307032575, type: 2}
   characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
   prefabBubbleBox: {fileID: 3996216760852934602, guid: a94c537606948374cbc00726702464fd, type: 3}
 --- !u!1 &1013319274
