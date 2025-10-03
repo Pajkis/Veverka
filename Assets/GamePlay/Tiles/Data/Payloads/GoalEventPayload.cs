@@ -14,11 +14,12 @@ public class GoalEventPayload
     public GoalTile GoalTile;
 
     [Header("Replacement Creation")]
-    public bool GoalRemove; 
-    public bool CreateReplacement; 
+    public bool GoalRemove;
+    public bool CreateReplacement;
+    public bool InstantiateTile;
     public TileType ReplacementType;
     public RoadType ReplacementRoadType;
-    public WallType ReplacementWallType;
+    public ObstacleType ReplacementObstacleType;
     public GoalType ReplacementGoalType;
     
     [Header("Special Effects")]

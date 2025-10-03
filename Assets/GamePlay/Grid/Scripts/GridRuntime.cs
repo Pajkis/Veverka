@@ -18,7 +18,7 @@ public class GridRuntime : MonoBehaviour
     [SerializeField] private GridEvents gridEvents;
     [SerializeField] private NutEvents nutEvents;
     [SerializeField] private GoalEvents goalEvents;
-    [SerializeField] private WallEvents wallEvents;
+    [SerializeField] private ObstacleEvents obstacleEvents;
     [SerializeField] private RoadEvents roadEvents;
     #endregion
 
@@ -38,7 +38,7 @@ public class GridRuntime : MonoBehaviour
         gridEvents.AddListener(OnGridEvent);
         nutEvents.AddListener(OnNutEvent);
         goalEvents.AddListener(OnGoalEvent);
-        wallEvents.AddListener(OnWallEvent);
+        obstacleEvents.AddListener(OnObstacleEvent);
         roadEvents.AddListener(OnRoadEvent);
     }
 
@@ -47,7 +47,7 @@ public class GridRuntime : MonoBehaviour
         gridEvents.RemoveListener(OnGridEvent);
         nutEvents.RemoveListener(OnNutEvent);
         goalEvents.RemoveListener(OnGoalEvent);
-        wallEvents.RemoveListener(OnWallEvent);
+        obstacleEvents.RemoveListener(OnObstacleEvent);
         roadEvents.RemoveListener(OnRoadEvent);
     }
     #endregion
@@ -102,22 +102,24 @@ public class GridRuntime : MonoBehaviour
     }
 
     /// <summary>
-    /// Handles wall-related events
+    /// Handles obstacle-related events
     /// </summary>
-    private void OnWallEvent(WallEventPayload payload)
+    private void OnObstacleEvent(ObstacleEventPayload payload)
     {
-        if (!payload.InstantiateTile)
-        {
-            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnWallEvent - InstantiateTile is false for EventType: {payload.EventType} at Position: {payload.Position}. No action taken.", this);
-            return;
-        }
-        
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnWallEvent - EventType: {payload.EventType}, Position: {payload.Position}, WallType: {payload.WallType}", this);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"OnObstacleEvent - EventType: {payload.EventType}, Position: {payload.Position}, ObstacleType: {payload.ObstacleType}", this);
 
         switch (payload.EventType)
         {
-            case WallEventType.WallSet:
-                OnWallSet(payload.Position, payload.WallType);
+            case ObstacleEventsType.ObstacleSet:
+                if (!payload.InstantiateTile)
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnObstacleEvent - InstantiateTile is false for ObstacleSet at Position: {payload.Position}. No action taken.", this);
+                    return;
+                }
+                OnObstacleSet(payload.Position, payload.ObstacleType);
+                break;
+            case ObstacleEventsType.ObstacleResolve:
+                OnObstacleResolveEvent(payload);
                 break;
         }
     }
@@ -262,9 +264,9 @@ public class GridRuntime : MonoBehaviour
             // Handle replacement based on type
             switch (payload.ReplacementType)
             {
-                case TileType.Wall:
-                    OnWallSet(payload.Position, payload.ReplacementWallType);
-                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementWallType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                case TileType.Obstacle:
+                    OnObstacleSet(payload.Position, payload.ReplacementObstacleType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementObstacleType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
                     break;
                 case TileType.Road:
                     OnRoadSet(payload.Position, payload.ReplacementRoadType);
@@ -282,43 +284,101 @@ public class GridRuntime : MonoBehaviour
     }
     #endregion
 
-    #region Wall Event Handlers
+    #region Obstacle Event Handlers
     /// <summary>
-    /// Set wall tile on position and update tile type in the grid
+    /// Set obstacle tile on position and update tile type in the grid
     /// </summary>
-    private void OnWallSet(Vector2Int position, WallType wallType)
+    private void OnObstacleSet(Vector2Int position, ObstacleType obstacleType)
     {
         GameObject tile = null;
 
-        //instantiate wall prefab based on wall type
-        switch (wallType)
+        //instantiate obstacle prefab based on obstacle type
+        switch (obstacleType)
         {
-            case WallType.StoneWall:
+            case ObstacleType.StoneWall:
                 tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 break;
-            case WallType.BasicWall:
+            case ObstacleType.BasicWall:
                 tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 break;
+            case ObstacleType.Hole:
+                tile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            case ObstacleType.WaterHole:
+                tile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
             default:
-                DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnWallSet: Unsupported WallType {wallType} at {position}, defaulting to basic wall", this);
+                DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnObstacleSet: Unsupported ObstacleType {obstacleType} at {position}", this);
             break;
         }
 
         // Check if instantiation was successful
         if (tile == null)
         {
-            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnWallSet: Failed to instantiate wall prefab for WallType {wallType} at {position}", this);
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnObstacleSet: Failed to instantiate obstacle prefab for ObstacleType {obstacleType} at {position}", this);
             return;
         }
 
-        //set position of the wall        
+        //set position of the obstacle
         tile.transform.SetParent(gridRoot, false);
-        tile.transform.localPosition = GridUtils.GridToWorld(position);   
+        tile.transform.localPosition = GridUtils.GridToWorld(position);
 
-        // Set tile and wall type in grid
-        gridData.SetTileType(position, TileType.Wall);
-        gridData.SetWallType(position, wallType);
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Wall created at {position} - TileType: {gridData.GetTileType(position)}, WallType: {wallType}", this);
+        // Set tile and obstacle type in grid
+        gridData.SetTileType(position, TileType.Obstacle);
+        gridData.SetObstacleType(position, obstacleType);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Obstacle created at {position} - TileType: {gridData.GetTileType(position)}, ObstacleType: {obstacleType}", this);
+    }
+
+    /// <summary>
+    /// Handle obstacle resolved event
+    /// </summary>
+    private void OnObstacleResolveEvent(ObstacleEventPayload payload)
+    {
+        if (!gridData.IsInGrid(payload.Position))
+        {
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"Cannot resolve obstacle - Position {payload.Position} is outside grid bounds", this);
+            return;
+        }
+
+        // Obstacle without removal
+        if (!payload.ObstacleRemove)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"ObstacleResolve event received without obstacle removal {payload.Position}", this);
+        }
+        // Obstacle removal without replacement
+        else if (payload.ObstacleRemove && !payload.CreateReplacement)
+        {
+            gridData.SetTileType(payload.Position, TileType.Empty);
+            gridData.SetObstacleType(payload.Position, ObstacleType.None);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Obstacle resolved at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, ObstacleType cleared", this);
+            return;
+        }
+        // Obstacle removal with replacement and tile instantiation
+        else if (payload.ObstacleRemove && payload.CreateReplacement)
+        {
+            // Clear obstacle type
+            gridData.SetObstacleType(payload.Position, ObstacleType.None);
+
+            // Handle replacement based on type
+            switch (payload.ReplacementType)
+            {
+                case TileType.Obstacle:
+                    OnObstacleSet(payload.Position, payload.ReplacementObstacleType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementObstacleType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;
+                case TileType.Road:
+                    OnRoadSet(payload.Position, payload.ReplacementRoadType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementRoadType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;
+                case TileType.Goal:
+                    OnGoalSet(payload.Position, payload.ReplacementGoalType);
+                    DebugLogger.Log(DebugLogCategory.GridSystem, $"Build new {payload.ReplacementGoalType} at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}", this);
+                    break;
+                default:
+                    DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"ObstacleResolve with replacement at {payload.Position} has unsupported ReplacementType: {payload.ReplacementType}", this);
+                break;
+            }
+        }
     }
     #endregion
 
@@ -376,7 +436,7 @@ public class GridRuntime : MonoBehaviour
         payload.IsPushable = gridData.IsPushableAt(payload.Position);
         payload.TileType = gridData.GetTileType(payload.Position);
         payload.GoalType = gridData.GetGoalType(payload.Position);
-        payload.WallType = gridData.GetWallType(payload.Position);
+        payload.ObstacleType = gridData.GetObstacleType(payload.Position);
         payload.NutType = gridData.GetNutType(payload.Position);
         payload.RoadType = gridData.GetRoadType(payload.Position);
 
