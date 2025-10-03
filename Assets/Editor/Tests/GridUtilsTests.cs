@@ -48,8 +48,8 @@ public class GridUtilsTests
         var result = GridUtils.ParseTileType("W");
 
         // Assert
-        Assert.AreEqual(TileType.Wall, result.TileType);
-        Assert.AreEqual(WallType.BasicWall, result.WallType);
+        Assert.AreEqual(TileType.Obstacle, result.TileType);
+        Assert.AreEqual(ObstacleType.BasicWall, result.ObstacleType);
     }
 
     [Test]
@@ -182,8 +182,8 @@ public class GridUtilsTests
         var result = GridUtils.ParseTileType("WS");
 
         // Assert
-        Assert.AreEqual(TileType.Wall, result.TileType);
-        Assert.AreEqual(WallType.StoneWall, result.WallType);
+        Assert.AreEqual(TileType.Obstacle, result.TileType);
+        Assert.AreEqual(ObstacleType.StoneWall, result.ObstacleType);
     }
 
     [Test]
@@ -230,14 +230,14 @@ public class GridUtilsTests
     }
 
     [Test]
-    public void ParseTileType_HoleGoal_ReturnsCorrectTile()
+    public void ParseTileType_HoleObstacle_ReturnsCorrectTile()
     {
         // Act
         var result = GridUtils.ParseTileType("H");
 
         // Assert
-        Assert.AreEqual(TileType.Goal, result.TileType);
-        Assert.AreEqual(GoalType.HoleGoal, result.GoalType);
+        Assert.AreEqual(TileType.Obstacle, result.TileType);
+        Assert.AreEqual(ObstacleType.Hole, result.ObstacleType);
     }
 
     [Test]
@@ -300,9 +300,9 @@ public class GridUtilsTests
     {
         // Arrange - simple 3x3 grid with 1 veverka, 1 nut, 1 goal
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Nut },
-            { TileType.Wall, TileType.Goal, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Nut },
+            { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
         // Act
@@ -318,9 +318,9 @@ public class GridUtilsTests
     {
         // Arrange - grid without veverka
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Empty, TileType.Nut },
-            { TileType.Wall, TileType.Goal, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Empty, TileType.Nut },
+            { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
         // Act
@@ -335,9 +335,9 @@ public class GridUtilsTests
     {
         // Arrange - grid with 2 veverkas
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Veverka, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Nut },
-            { TileType.Wall, TileType.Goal, TileType.Wall }
+            { TileType.Obstacle, TileType.Veverka, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Nut },
+            { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
         // Act
@@ -352,9 +352,9 @@ public class GridUtilsTests
     {
         // Arrange - grid without nuts
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Empty },
-            { TileType.Wall, TileType.Goal, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Empty },
+            { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
         // Act
@@ -369,9 +369,9 @@ public class GridUtilsTests
     {
         // Arrange - grid without goals
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Nut },
-            { TileType.Wall, TileType.Empty, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Nut },
+            { TileType.Obstacle, TileType.Empty, TileType.Obstacle }
         };
 
         // Act
@@ -386,9 +386,9 @@ public class GridUtilsTests
     {
         // Arrange - grid with error tile
         TileType[,] grid = new TileType[3, 3] {
-            { TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Nut },
-            { TileType.ErrorTile, TileType.Goal, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Nut },
+            { TileType.ErrorTile, TileType.Goal, TileType.Obstacle }
         };
 
         // Act
@@ -403,10 +403,10 @@ public class GridUtilsTests
     {
         // Arrange - valid grid with 2 nuts and 2 goals
         TileType[,] grid = new TileType[4, 4] {
-            { TileType.Wall, TileType.Wall, TileType.Wall, TileType.Wall },
-            { TileType.Wall, TileType.Veverka, TileType.Nut, TileType.Wall },
-            { TileType.Wall, TileType.Nut, TileType.Goal, TileType.Wall },
-            { TileType.Wall, TileType.Goal, TileType.Wall, TileType.Wall }
+            { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Veverka, TileType.Nut, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Nut, TileType.Goal, TileType.Obstacle },
+            { TileType.Obstacle, TileType.Goal, TileType.Obstacle, TileType.Obstacle }
         };
 
         // Act
@@ -469,7 +469,7 @@ public class GridUtilsTests
         Vector2Int veverkaPos = FindTilePosition(grid, TileType.Veverka);
         Vector2Int nutPos = FindTilePosition(grid, TileType.Nut);
         Vector2Int goalPos = FindTilePosition(grid, TileType.Goal);
-        Vector2Int wallPos = FindTilePosition(grid, TileType.Wall);
+        Vector2Int wallPos = FindTilePosition(grid, TileType.Obstacle);
         Vector2Int emptyPos = FindTilePosition(grid, TileType.Empty);
 
         // Run GridToWorld tests equivalent to original unit tests
@@ -594,12 +594,12 @@ public class GridUtilsTests
     {
         // Test all the parsing variants like in the original unit tests
         var wallResult = GridUtils.ParseTileType("W");
-        Assert.AreEqual(TileType.Wall, wallResult.TileType, $"[{levelName}] ParseTileType Wall test failed");
-        Assert.AreEqual(WallType.BasicWall, wallResult.WallType, $"[{levelName}] ParseTileType Wall WallType test failed");
+        Assert.AreEqual(TileType.Obstacle, wallResult.TileType, $"[{levelName}] ParseTileType Wall test failed");
+        Assert.AreEqual(ObstacleType.BasicWall, wallResult.ObstacleType, $"[{levelName}] ParseTileType Wall ObstacleType test failed");
 
         var stoneWallResult = GridUtils.ParseTileType("WS");
-        Assert.AreEqual(TileType.Wall, stoneWallResult.TileType, $"[{levelName}] ParseTileType StoneWall test failed");
-        Assert.AreEqual(WallType.StoneWall, stoneWallResult.WallType, $"[{levelName}] ParseTileType StoneWall WallType test failed");
+        Assert.AreEqual(TileType.Obstacle, stoneWallResult.TileType, $"[{levelName}] ParseTileType StoneWall test failed");
+        Assert.AreEqual(ObstacleType.StoneWall, stoneWallResult.ObstacleType, $"[{levelName}] ParseTileType StoneWall ObstacleType test failed");
 
         var veverkaResult = GridUtils.ParseTileType("V");
         Assert.AreEqual(TileType.Veverka, veverkaResult.TileType, $"[{levelName}] ParseTileType Veverka test failed");
@@ -617,8 +617,8 @@ public class GridUtilsTests
         Assert.AreEqual(GoalType.BasicGoal, goalResult.GoalType, $"[{levelName}] ParseTileType BasicGoal GoalType test failed");
 
         var holeResult = GridUtils.ParseTileType("H");
-        Assert.AreEqual(TileType.Goal, holeResult.TileType, $"[{levelName}] ParseTileType HoleGoal test failed");
-        Assert.AreEqual(GoalType.HoleGoal, holeResult.GoalType, $"[{levelName}] ParseTileType HoleGoal GoalType test failed");
+        Assert.AreEqual(TileType.Obstacle, holeResult.TileType, $"[{levelName}] ParseTileType Hole test failed");
+        Assert.AreEqual(ObstacleType.Hole, holeResult.ObstacleType, $"[{levelName}] ParseTileType Hole ObstacleType test failed");
 
         var emptyResult = GridUtils.ParseTileType(".");
         Assert.AreEqual(TileType.Empty, emptyResult.TileType, $"[{levelName}] ParseTileType Empty test failed");

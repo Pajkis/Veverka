@@ -42,7 +42,7 @@ public class GridBuilder : MonoBehaviour
 
     #region Object Pools
     private readonly List<GameObject> backgroundPool = new();
-    private readonly List<GameObject> surroundingWalls = new();
+    private readonly List<GameObject> surroundingObstacles = new();
     #endregion
 
     #region Unity Lifecycle
@@ -123,7 +123,7 @@ public class GridBuilder : MonoBehaviour
                 gridData.SetTileType(pos, grid[x, y]);
                 gridData.SetNutType(pos, GridUtils.CachedNutGrid[x, y]);
                 gridData.SetGoalType(pos, GridUtils.CachedGoalGrid[x, y]);
-                gridData.SetWallType(pos, GridUtils.CachedWallGrid[x, y]);
+                gridData.SetObstacleType(pos, GridUtils.CachedObstacleGrid[x, y]);
                 gridData.SetRoadType(pos, GridUtils.CachedRoadGrid[x, y]);
             }
         }
@@ -134,8 +134,8 @@ public class GridBuilder : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.GridSystem, "Starting level build from grid data", this);
         BuildLevelFromGrid();
 
-        // Add surrounding walls where grid does not fill the screen
-        DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding walls for screen fill", this);
+        // Add surrounding obstacles where grid does not fill the screen
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
         BuildSurroundings();
 
         // Initialize level database
@@ -167,8 +167,8 @@ public class GridBuilder : MonoBehaviour
         // Destroy old grid except pooled backgrounds
         foreach (Transform child in gridRoot.transform)
         {
-            // Pool of surrounding walls
-            if (surroundingWalls.Contains(child.gameObject))
+            // Pool of surrounding obstacles
+            if (surroundingObstacles.Contains(child.gameObject))
             {
                 child.gameObject.SetActive(false);
                 continue;
@@ -258,19 +258,35 @@ public class GridBuilder : MonoBehaviour
                         gridData.SetTileType(tilePos, TileType.Empty);
                         break;
 
-                    case TileType.Wall:
-                        GameObject tile;
-                        if (gridData.GetWallType(tilePos) == WallType.StoneWall)
+                    case TileType.Obstacle:
+                        ObstacleType obstacleType = gridData.GetObstacleType(tilePos);
+                        if (obstacleType == ObstacleType.Hole)
                         {
-                            tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
+                            holeTile.transform.SetParent(gridRoot, false);
+                            holeTile.transform.localPosition = worldTilePos;
+                            holeTile.Init(tileType, tilePos, ObstacleType.Hole);
                         }
-                        else
+                        else if (obstacleType == ObstacleType.WaterHole)
                         {
-                            tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            WaterHoleTile waterHoleTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
+                            waterHoleTile.transform.SetParent(gridRoot, false);
+                            waterHoleTile.transform.localPosition = worldTilePos;
+                            waterHoleTile.Init(tileType, tilePos, ObstacleType.WaterHole);
                         }
-                        tile.transform.SetParent(gridRoot, false);
-                        tile.transform.localPosition = worldTilePos;
-                        gridData.SetTileType(tilePos, TileType.Wall);
+                        else if (obstacleType == ObstacleType.StoneWall)
+                        {
+                            GameObject tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            tile.transform.SetParent(gridRoot, false);
+                            tile.transform.localPosition = worldTilePos;
+                        }
+                        else // BasicWall
+                        {
+                            GameObject tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            tile.transform.SetParent(gridRoot, false);
+                            tile.transform.localPosition = worldTilePos;
+                        }
+                        gridData.SetTileType(tilePos, TileType.Obstacle);
                         break;
 
                     case TileType.Veverka:
@@ -314,21 +330,7 @@ public class GridBuilder : MonoBehaviour
 
                     case TileType.Goal:
                         GoalType goalType = gridData.GetGoalType(tilePos);
-                        if (goalType == GoalType.HoleGoal)
-                        {
-                            HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
-                            holeTile.transform.SetParent(gridRoot, false);
-                            holeTile.transform.localPosition = worldTilePos;
-                            holeTile.Init(tileType, tilePos, GoalType.HoleGoal);
-                        }
-                        else if (goalType == GoalType.WaterHoleGoal)
-                        {
-                            WaterHoleTile holeTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
-                            holeTile.transform.SetParent(gridRoot, false);
-                            holeTile.transform.localPosition = worldTilePos;
-                            holeTile.Init(tileType, tilePos, GoalType.WaterHoleGoal);
-                        }
-                        else
+                        if (goalType == GoalType.BasicGoal)
                         {
                             GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
                             goalTile.transform.SetParent(gridRoot, false);
@@ -367,7 +369,7 @@ public class GridBuilder : MonoBehaviour
         // If both dimensions are larger than or equal to max screen size, do not build surroundings
         if (diffX <= 0 && diffY <= 0)
         {
-            DebugLogger.Log(DebugLogCategory.GridSystem, "Grid fills or exceeds screen size - no surrounding walls needed", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, "Grid fills or exceeds screen size - no surrounding obstacles needed", this);
             return;
         }
 
@@ -377,115 +379,115 @@ public class GridBuilder : MonoBehaviour
         int offsetDown = diffY > 0 ? diffY / 2 : 0;
         int offsetUp = diffY > 0 ? diffY - offsetDown : 0;
 
-        // Calculate number of needed surrounding walls
+        // Calculate number of needed surrounding obstacles
         int widthWithOffset = gridSize.x + offsetLeft + offsetRight;
         int needed = 0;
 
-        // Count walls needed for top/bottom (if height is smaller than screen)
+        // Count obstacles needed for top/bottom (if height is smaller than screen)
         if (diffY > 0)
         {
             needed += widthWithOffset * (offsetDown + offsetUp);
         }
 
-        // Count walls needed for left/right (if width is smaller than screen)
+        // Count obstacles needed for left/right (if width is smaller than screen)
         if (diffX > 0)
         {
             needed += gridSize.y * (offsetLeft + offsetRight);
         }
 
-        // If no walls are needed, return early
+        // If no obstacles are needed, return early
         if (needed == 0)
         {
-            DebugLogger.Log(DebugLogCategory.GridSystem, "No surrounding walls needed", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, "No surrounding obstacles needed", this);
             return;
         }
 
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Need {needed} surrounding walls - Offsets: Left:{offsetLeft}, Right:{offsetRight}, Down:{offsetDown}, Up:{offsetUp}", this);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Need {needed} surrounding obstacles - Offsets: Left:{offsetLeft}, Right:{offsetRight}, Down:{offsetDown}, Up:{offsetUp}", this);
 
-        // If there are not enough walls in pool, instantiate new ones
-        int currentWalls = surroundingWalls.Count;
-        if (needed > currentWalls)
+        // If there are not enough obstacles in pool, instantiate new ones
+        int currentObstacles = surroundingObstacles.Count;
+        if (needed > currentObstacles)
         {
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Expanding wall pool from {currentWalls} to {needed} walls", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Expanding obstacle pool from {currentObstacles} to {needed} obstacles", this);
         }
 
-        for (int i = surroundingWalls.Count; i < needed; i++)
+        for (int i = surroundingObstacles.Count; i < needed; i++)
         {
-            var wall = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            surroundingWalls.Add(wall);
+            var obstacle = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+            surroundingObstacles.Add(obstacle);
         }
 
         int index = 0;
 
-        // Position surrounding walls on bottom (only if height is smaller than screen)
+        // Position surrounding obstacles on bottom (only if height is smaller than screen)
         if (diffY > 0)
         {
             for (int y = -offsetDown; y < 0; y++)
             {
                 for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
                 {
-                    PositionWall(index++, x, y);
+                    PositionObstacle(index++, x, y);
                 }
             }
         }
 
-        // Position surrounding walls on top (only if height is smaller than screen)
+        // Position surrounding obstacles on top (only if height is smaller than screen)
         if (diffY > 0)
         {
             for (int y = gridSize.y; y < gridSize.y + offsetUp; y++)
             {
                 for (int x = -offsetLeft; x < gridSize.x + offsetRight; x++)
                 {
-                    PositionWall(index++, x, y);
+                    PositionObstacle(index++, x, y);
                 }
             }
         }
 
-        // Position surrounding walls on left (only if width is smaller than screen)
+        // Position surrounding obstacles on left (only if width is smaller than screen)
         if (diffX > 0)
         {
             for (int x = -offsetLeft; x < 0; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
-                    PositionWall(index++, x, y);
+                    PositionObstacle(index++, x, y);
                 }
             }
         }
 
-        // Position surrounding walls on right (only if width is smaller than screen)
+        // Position surrounding obstacles on right (only if width is smaller than screen)
         if (diffX > 0)
         {
             for (int x = gridSize.x; x < gridSize.x + offsetRight; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
-                    PositionWall(index++, x, y);
+                    PositionObstacle(index++, x, y);
                 }
             }
         }
 
-        // Deactivate remaining walls in pool
-        int deactivatedWalls = 0;
-        for (; index < surroundingWalls.Count; index++)
+        // Deactivate remaining obstacles in pool
+        int deactivatedObstacles = 0;
+        for (; index < surroundingObstacles.Count; index++)
         {
-            surroundingWalls[index].SetActive(false);
-            deactivatedWalls++;
+            surroundingObstacles[index].SetActive(false);
+            deactivatedObstacles++;
         }
 
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Surrounding walls complete - {index} walls positioned, {deactivatedWalls} walls deactivated", this);
+        DebugLogger.Log(DebugLogCategory.GridSystem, $"Surrounding obstacles complete - {index} obstacles positioned, {deactivatedObstacles} obstacles deactivated", this);
     }
 
     /// <summary>
-    /// Positions a wall at the specified grid coordinates and activates it.
+    /// Positions an obstacle at the specified grid coordinates and activates it.
     /// </summary>
-    private void PositionWall(int index, int x, int y)
+    private void PositionObstacle(int index, int x, int y)
     {
-        var wall = surroundingWalls[index];
-        wall.SetActive(true);
+        var obstacle = surroundingObstacles[index];
+        obstacle.SetActive(true);
         Vector3 worldTilePos = GridUtils.GridToWorld(new Vector2Int(x, y));
-        wall.transform.SetParent(gridRoot, false);
-        wall.transform.localPosition = worldTilePos;
+        obstacle.transform.SetParent(gridRoot, false);
+        obstacle.transform.localPosition = worldTilePos;
     }
     #endregion
 }

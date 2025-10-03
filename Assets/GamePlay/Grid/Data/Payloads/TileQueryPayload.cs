@@ -17,7 +17,7 @@ public class TileQueryPayload
 
     public TileType TileType;
     public GoalType GoalType;
-    public WallType WallType;
+    public ObstacleType ObstacleType;
     public NutType NutType;
     public RoadType RoadType;
 }

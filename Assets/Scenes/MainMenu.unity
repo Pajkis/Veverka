@@ -713,13 +713,14 @@ MonoBehaviour:
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
-  wallEvents: {fileID: 11400000, guid: 75c3f7c30b2ff7649985de8866d0f27b, type: 2}
+  obstacleEvents: {fileID: 11400000, guid: 486b4ca6ce5b0fc489f25f6307032575, type: 2}
   roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
   wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
   waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
+  holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
 --- !u!4 &1341780942
 Transform:
   m_ObjectHideFlags: 0

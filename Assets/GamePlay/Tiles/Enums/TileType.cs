@@ -5,7 +5,7 @@ public enum TileType
 {
     Empty,
     Road,
-    Wall,
+    Obstacle,
     Nut,
     Veverka,
     Goal,
@@ -30,18 +30,18 @@ public enum GoalType
 {
     None,        // No goal (default/empty)
     BasicGoal,
-    HoleGoal,
-    WaterHoleGoal
 }
 
 /// <summary>
-/// Enumeration of wall types
+/// Enumeration of obstacle types
 /// </summary>
-public enum WallType
+public enum ObstacleType
 {
-    None,        // No wall (default/empty)
+    None,           // No obstacle (default/empty)
     BasicWall,
-    StoneWall
+    StoneWall,
+    Hole,
+    WaterHole
 }
 
 /// <summary>

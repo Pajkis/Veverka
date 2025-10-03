@@ -1,15 +1,15 @@
 using UnityEngine;
 
 /// <summary>
-/// Unified ScriptableObject event system for all wall-related events.
+/// Unified ScriptableObject event system for all obstacle-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/WallEvents")]
-public class WallEvents : GameEventSO<WallEventPayload>
+[CreateAssetMenu(menuName = "Events/ObstacleEvents")]
+public class ObstacleEvents : GameEventSO<ObstacleEventPayload>
 {
     /// <summary>
     /// Raises the event only for a specific event type.
     /// </summary>
-    public void RaiseForEventType(WallEventPayload payload, WallEventType eventType)
+    public void RaiseForEventType(ObstacleEventPayload payload, ObstacleEventsType eventType)
     {
         if (payload.EventType == eventType)
         {
@@ -20,7 +20,7 @@ public class WallEvents : GameEventSO<WallEventPayload>
     /// <summary>
     /// Raises the event only for multiple event types.
     /// </summary>
-    public void RaiseForEventTypes(WallEventPayload payload, params WallEventType[] eventTypes)
+    public void RaiseForEventTypes(ObstacleEventPayload payload, params ObstacleEventsType[] eventTypes)
     {
         foreach (var type in eventTypes)
         {

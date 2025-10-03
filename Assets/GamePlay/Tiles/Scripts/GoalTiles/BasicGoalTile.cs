@@ -56,8 +56,9 @@ public class BasicGoalTile : GoalTile, INutInteractive
 
                 // fill goal payload - stone nut related actions
                 goalPayload.CreateReplacement = true;
-                goalPayload.ReplacementType = TileType.Wall;
-                goalPayload.ReplacementWallType = WallType.StoneWall;
+                goalPayload.InstantiateTile = true;
+                goalPayload.ReplacementType = TileType.Obstacle;
+                goalPayload.ReplacementObstacleType = ObstacleType.StoneWall;
 
                 // debug log
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating wall at {payload.CurrentPosition}", this);

@@ -12,7 +12,7 @@ public class GridData : MonoBehaviour
     private TileType[,] grid;
     private NutType[,] nutGrid;
     private GoalType[,] goalGrid;
-    private WallType[,] wallGrid;
+    private ObstacleType[,] obstacleGrid;
     private RoadType[,] roadGrid;
 
     // Grid dimensions
@@ -42,7 +42,7 @@ public class GridData : MonoBehaviour
         grid = new TileType[width, height];
         nutGrid = new NutType[width, height];
         goalGrid = new GoalType[width, height];
-        wallGrid = new WallType[width, height];
+        obstacleGrid = new ObstacleType[width, height];
         roadGrid = new RoadType[width, height];
 
         DebugLogger.Log(DebugLogCategory.GridSystem, $"GridData initialized - Size: {width}x{height}", this);
@@ -56,7 +56,7 @@ public class GridData : MonoBehaviour
         grid = null;
         nutGrid = null;
         goalGrid = null;
-        wallGrid = null;
+        obstacleGrid = null;
         roadGrid = null;
         gridSize = Vector2Int.zero;
 
@@ -107,14 +107,14 @@ public class GridData : MonoBehaviour
     /// <summary>
     /// Get wall type at position
     /// </summary>
-    public WallType GetWallType(Vector2Int position)
+    public ObstacleType GetObstacleType(Vector2Int position)
     {
         if (!IsInGrid(position))
         {
-            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"GetWallType: Position {position} is outside grid bounds", this);
-            return WallType.None;
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"GetObstacleType: Position {position} is outside grid bounds", this);
+            return ObstacleType.None;
         }
-        return wallGrid[position.x, position.y];
+        return obstacleGrid[position.x, position.y];
     }
 
     /// <summary>
@@ -174,14 +174,14 @@ public class GridData : MonoBehaviour
     /// <summary>
     /// Set wall type at position
     /// </summary>
-    public void SetWallType(Vector2Int position, WallType wallType)
+    public void SetObstacleType(Vector2Int position, ObstacleType obstacleType)
     {
         if (!IsInGrid(position))
         {
-            DebugLogger.LogError(DebugLogCategory.GridSystem, $"SetWallType: Position {position} is outside grid bounds", this);
+            DebugLogger.LogError(DebugLogCategory.GridSystem, $"SetObstacleType: Position {position} is outside grid bounds", this);
             return;
         }
-        wallGrid[position.x, position.y] = wallType;
+        obstacleGrid[position.x, position.y] = obstacleType;
     }
 
     /// <summary>
@@ -220,8 +220,8 @@ public class GridData : MonoBehaviour
         if (tile == TileType.Goal)
         {
             // Characters can walk on BasicGoals but not holes
-            var goalType = goalGrid[position.x, position.y];
-            return goalType != GoalType.HoleGoal && goalType != GoalType.WaterHoleGoal;
+            var obstacleType = obstacleGrid[position.x, position.y];
+            return obstacleType != ObstacleType.Hole && obstacleType != ObstacleType.WaterHole;
         }
         return tile == TileType.Empty || tile == TileType.Road;
     }
@@ -235,7 +235,19 @@ public class GridData : MonoBehaviour
             return false;
 
         var tile = grid[position.x, position.y];
-        return tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal;
+
+        // Basic pushable types
+        if (tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal)
+            return true;
+
+        // Obstacles are pushable only if they are Hole or WaterHole
+        if (tile == TileType.Obstacle)
+        {
+            var obstacleType = obstacleGrid[position.x, position.y];
+            return obstacleType == ObstacleType.Hole || obstacleType == ObstacleType.WaterHole;
+        }
+
+        return false;
     }
     #endregion
 }
