@@ -246,7 +246,7 @@ public class GridRuntime : MonoBehaviour
             DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolve event received without goal removal {payload.Position}", this);            
         }
         // goal removal with replacement
-        else if (payload.GoalRemove && !payload.InstantiateTile)
+        else if (payload.GoalRemove && !payload.CreateReplacement)
         {          
             gridData.SetTileType(payload.Position, TileType.Empty);
             gridData.SetGoalType(payload.Position, GoalType.None);
@@ -254,7 +254,7 @@ public class GridRuntime : MonoBehaviour
             return;
         }
         // goal removal with replacement and tile instantiation
-        else if (payload.GoalRemove && payload.InstantiateTile)
+        else if (payload.GoalRemove && payload.CreateReplacement)
         {
             // Set tile type and replacement type in grid
             gridData.SetGoalType(payload.Position, GoalType.None);
@@ -331,6 +331,7 @@ public class GridRuntime : MonoBehaviour
         // Instantiate new tile on road position
         GameObject tile = null;
 
+        //instantiate road prefab based on road type
         switch (roadType)
         { 
          case RoadType.BasicRoad:

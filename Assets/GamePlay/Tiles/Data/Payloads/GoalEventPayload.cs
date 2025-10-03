@@ -20,10 +20,7 @@ public class GoalEventPayload
     public RoadType ReplacementRoadType;
     public WallType ReplacementWallType;
     public GoalType ReplacementGoalType;
-
-    //Instantiate replacement tile
-    public bool InstantiateTile = false; // Default: most goals just remove, don't create
-
+    
     [Header("Special Effects")]
     public bool TriggerSplash;
 

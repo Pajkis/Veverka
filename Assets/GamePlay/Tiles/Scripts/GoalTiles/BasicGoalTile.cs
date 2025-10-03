@@ -20,7 +20,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
     {
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
-        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal - NutType: {payload.NutType}, Position: {payload.CurrentPosition}, GoalPosition: {GridPosition}", this);
+        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal: {this.goalType} - NutType: {payload.NutType}, Position: {payload.CurrentPosition}, GoalPosition: {GridPosition}", this);
 
         // goal payload
         GoalEventPayload goalPayload = (new GoalEventPayload
@@ -35,22 +35,21 @@ public class BasicGoalTile : GoalTile, INutInteractive
             GoalMessage = BubbleMessageType.Yatta,
             GoalMessageTime = gameplayConfig.goalBubbleTime,
         });
-                // Build wall if stone nut reached the goal
+        
+        // Build wall if stone nut reached the goal
         if (payload.NutType == NutType.StoneNut)
-        {          
-
+        {
             // Play build sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });                      
          
-            // fill goal payload - road related actions
+            // fill goal payload - stone nut related actions
             goalPayload.CreateReplacement = true;
             goalPayload.ReplacementType = TileType.Wall;
-            goalPayload.ReplacementWallType = WallType.StoneWall;
-            goalPayload.InstantiateTile = true;          
+            goalPayload.ReplacementWallType = WallType.StoneWall;                  
 
             // debug log
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut reached goal - creating wall at {payload.CurrentPosition}", this);
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: Stone nut in basic goal -> replacement with stone wall at {payload.CurrentPosition}", this);        
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating wall at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} -> replacement with stone wall at {payload.CurrentPosition}", this);        
         }
 
         // water nut falls into the goal, create splash effect and splash around
@@ -63,8 +62,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
             this.SplashWater();
 
             // debug log
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut reached goal - creating splash at {payload.CurrentPosition}", this);
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: water nut in basic goal -> remove and splash {payload.CurrentPosition}", this);           
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating splash at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} -> remove and splash {payload.CurrentPosition}", this);           
         }
         // basic nut falls into the goal, just remove the goal
         else if (payload.NutType == NutType.BasicNut)
@@ -72,8 +71,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
             // Play goal reached sound effect
             audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut reached goal at {payload.CurrentPosition}", this);
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: basic nut in basic goal -> remove {payload.CurrentPosition}", this);            
+            DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition}", this);
+            DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove {payload.CurrentPosition}", this);            
         }
 
         //raise goal event with goal payload
