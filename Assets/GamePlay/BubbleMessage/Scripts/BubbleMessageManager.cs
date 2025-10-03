@@ -77,7 +77,7 @@ public class BubbleMessageManager : MonoBehaviour
     /// <param name="payload"></param>
     private void OnGoalEvent(GoalEventPayload payload)
     {
-        if (payload.EventType != GoalEventsType.GoalResolved) return;
+        if (payload.EventType != GoalEventsType.GoalResolve) return;
 
         // Show only first goal message per turn
         if (hasShownGoalMessageThisTurn) return;

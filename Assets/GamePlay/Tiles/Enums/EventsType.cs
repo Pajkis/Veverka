@@ -4,7 +4,7 @@
 public enum GoalEventsType
 {
     GoalSet,
-    GoalResolved,
+    GoalResolve,
     NutInGoalDone
 }
 

@@ -12,99 +12,78 @@ public class HoleTile : GoalTile
     {
         // Check if the pushable is in the goal position
         if (GridPosition != payload.CurrentPosition) return;
+        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal: {this.goalType} - NutType: {payload.NutType}, Position: {payload.CurrentPosition}, GoalPosition: {GridPosition}", this);
 
-        DebugLogger.Log(DebugLogCategory.TileInteraction, $"OnNutInGoal (HoleTile) - NutType: {payload.NutType}, Position: {payload.CurrentPosition}", this);
-        
-        // Raise goal reached event
-        if (payload.NutType == NutType.StoneNut)
+        // goal payload
+        GoalEventPayload goalPayload = (new GoalEventPayload
         {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Stone nut in hole - filling hole at {payload.CurrentPosition}", this);
+            // fill goal payload - common goal related actions
+            GoalTile = this,
+            GoalType = this.goalType,
+            EventType = GoalEventsType.GoalResolve,
+            Position = payload.CurrentPosition,
+            GoalRemove = false,
+            CreateReplacement = false,
+            ScoreValue = 0,
+            GoalMessageTime = gameplayConfig.goalBubbleTime,
+        });
 
-             // Play build sound effect
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
-
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                ScoreValue = 0,
-                GoalRemove = true,
-                GoalMessage = BubbleMessageType.Road,
-                GoalMessageTime = 1f
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for stone-filled hole at {payload.CurrentPosition}", this);
-
-            Destroy(gameObject);
-
-            // Set wall in the position of the hole
-            roadEvents.Raise(new RoadEventPayload
-            {
-                EventType = RoadEventType.RoadSet,
-                Position = payload.CurrentPosition,
-                RoadType = RoadType.StoneFilledHole,
-                InstantiateTile = true,
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"RoadSet event sent for stone-filled hole at {payload.CurrentPosition}", this);
-        }
-
-        // basic nut falls into the hole, display "Ooops" message
-        else if (payload.NutType == NutType.BasicNut)
+        // handle nut type specific actions to resolve the goal
+        switch (payload.NutType)
         {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Basic nut fell into hole at {payload.CurrentPosition} - showing Ooops message", this);
+            case NutType.BasicNut:  // basic nut falls into the hole with no effect
 
-            // Play sound effect
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
+                // Play sound effect
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-            // Display "Ooops" message if a non-stone nut falls into the hole
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                GoalRemove = false,
-                GoalMessage = BubbleMessageType.Ooops,
-                GoalMessageTime = 1f
-            });
+                //fill goal payload - basic nut related actions
+                goalPayload.GoalRemove = false;
+                goalPayload.GoalMessage = BubbleMessageType.Ooops;
 
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for basic nut in hole (Ooops) at {payload.CurrentPosition}", this);
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} fell into {this.goalType} at {payload.CurrentPosition} - showing Ooops message", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> Nothin happens (Ooops) at {payload.CurrentPosition}", this);
+                break;
+            case NutType.StoneNut: // stone nut falls into the hole, splash around and fills it with road
+
+                // Play build sound effect
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
+
+                // fill goal payload - road related actions
+                goalPayload.GoalRemove = true;
+                goalPayload.GoalMessage = BubbleMessageType.Road;
+                goalPayload.CreateReplacement = true;
+                goalPayload.ReplacementType = TileType.Road;
+                goalPayload.ReplacementRoadType = RoadType.StoneFilledHole;
+
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} in {this.goalType} - filling hole at {payload.CurrentPosition}", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> replacement with {RoadType.StoneFilledHole} at {payload.CurrentPosition}", this);
+                break;
+
+            case NutType.WaterNut: // water nut falls into the hole, create water hole
+
+                // Play waterfill sound effect
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterFill });
+
+                goalPayload.GoalRemove = true;
+                goalPayload.GoalMessage = BubbleMessageType.Lake;
+                goalPayload.CreateReplacement = true;
+                goalPayload.ReplacementType = TileType.Goal;
+                goalPayload.ReplacementGoalType = GoalType.WaterHoleGoal;
+
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} in hole - creating water hole at {payload.CurrentPosition}", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> fill and make {GoalType.WaterHoleGoal} at {payload.CurrentPosition}", this);
+                break;
+
+            default:
+                DebugLogger.LogWarning(DebugLogCategory.TileInteraction, $"OnNutInGoal: {this.goalType} - Unhandled NutType: {payload.NutType}, Position: {payload.CurrentPosition}", this);
+                return; // unhandled nut type
         }
+       
+        //raise goal event with goal payload
+        goalEvents.Raise(goalPayload);
 
-        // water nut falls into the hole, create water hole
-        else if (payload.NutType == NutType.WaterNut)
-        {
-            DebugLogger.Log(DebugLogCategory.TileInteraction, $"Water nut in hole - creating water hole at {payload.CurrentPosition}", this);
-
-            // Play waterfill sound effect
-            audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterFill });
-
-            // remove the hole goal
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType = GoalEventsType.GoalResolved,
-                Position = payload.CurrentPosition,
-                ScoreValue = 0,
-                GoalRemove = true,
-                GoalMessage = BubbleMessageType.Lake,
-                GoalMessageTime = 1f
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalResolved event sent for water hole at {payload.CurrentPosition}", this);
-
-            // Destroy with small delay to ensure all operations complete
-            Destroy(gameObject);
-
-            // Create water hole goal instead
-            goalEvents.Raise(new GoalEventPayload
-            {
-                EventType =  GoalEventsType.GoalSet,
-                Position = payload.CurrentPosition,
-                GoalType = GoalType.WaterHoleGoal,
-                InstantiateTile = true,
-            });
-
-            DebugLogger.Log(DebugLogCategory.EventSystem, $"GoalSet event sent for water hole goal at {payload.CurrentPosition}", this);
-        }
+        // Set flag for goal removal (will be handled in base class)
+        shouldRemoveGoal = goalPayload.GoalRemove;
 
         //Call base - all goal actions settled
         base.OnNutInGoal(payload);

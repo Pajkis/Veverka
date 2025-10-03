@@ -132,7 +132,7 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void UpdateGoalCount(GoalEventPayload payload)
     {
-        if (payload.EventType != GoalEventsType.GoalResolved) return;
+        if (payload.EventType != GoalEventsType.GoalResolve) return;
 
         int previousGoalCount = levelGoalCount;
         levelGoalCount -= payload.ScoreValue;
