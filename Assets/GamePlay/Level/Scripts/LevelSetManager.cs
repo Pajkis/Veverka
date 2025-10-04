@@ -10,6 +10,9 @@ public class LevelSetManager : ScriptableObject
     [Header("Available Level Sets")]
     [SerializeField] private List<LevelSet> levelSets = new List<LevelSet>();
 
+    [Header("User Levels")]
+    [SerializeField] private UserLevelSet userLevelSet;
+
     // Dictionary for faster lookups
     private Dictionary<LevelSetType, LevelSet> setLookup;
 
@@ -49,6 +52,20 @@ public class LevelSetManager : ScriptableObject
     /// <returns>LevelSet or null if not found</returns>
     public LevelSet GetLevelSet(LevelSetType setType)
     {
+        // Handle UserLevels specially
+        if (setType == LevelSetType.UserLevels)
+        {
+            if (userLevelSet == null)
+            {
+                Debug.LogError("UserLevelSet is not assigned in LevelSetManager!");
+                return null;
+            }
+
+            // Initialize user levels if needed
+            UserLevelSet.InitializeUserLevels();
+            return userLevelSet;
+        }
+
         // Ensure lookup is initialized
         if (setLookup == null)
         {
