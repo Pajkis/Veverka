@@ -254,10 +254,6 @@ public class GridBuilder : MonoBehaviour
                 // Insert specific tiles
                 switch (tileType)
                 {
-                    case TileType.Empty:
-                        gridData.SetTileType(tilePos, TileType.Empty);
-                        break;
-
                     case TileType.Obstacle:
                         ObstacleType obstacleType = gridData.GetObstacleType(tilePos);
                         if (obstacleType == ObstacleType.Hole)
@@ -290,7 +286,8 @@ public class GridBuilder : MonoBehaviour
                         break;
 
                     case TileType.Veverka:
-                        gridData.SetTileType(tilePos, TileType.Empty);
+                        gridData.SetTileType(tilePos, TileType.Road);
+                        gridData.SetRoadType(tilePos, RoadType.Empty);
 
                         // Generate veverka
                         CharVeverka veverka = Instantiate(veverkaPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<CharVeverka>();
@@ -336,6 +333,36 @@ public class GridBuilder : MonoBehaviour
                             goalTile.transform.SetParent(gridRoot, false);
                             goalTile.transform.localPosition = worldTilePos;
                             goalTile.Init(tileType, tilePos, GoalType.BasicGoal);
+                        }
+                        break;
+
+                    case TileType.Road:
+                        RoadType roadType = gridData.GetRoadType(tilePos);
+                        if (roadType == RoadType.Empty)
+                        {
+                            // Empty road - just background, no prefab needed
+                            gridData.SetTileType(tilePos, TileType.Road);
+                        }
+                        else if (roadType == RoadType.StoneFilledHole)
+                        {
+                            GameObject roadTile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                            gridData.SetTileType(tilePos, TileType.Road);
+                        }
+                        else if (roadType == RoadType.StoneRoad)
+                        {
+                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                            gridData.SetTileType(tilePos, TileType.Road);
+                        }
+                        else // BasicRoad
+                        {
+                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                            gridData.SetTileType(tilePos, TileType.Road);
                         }
                         break;
 

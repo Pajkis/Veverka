@@ -73,7 +73,7 @@ public class GridData : MonoBehaviour
         if (!IsInGrid(position))
         {
             DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"GetTileType: Position {position} is outside grid bounds", this);
-            return TileType.Empty;
+            return TileType.ErrorTile;
         }
         return grid[position.x, position.y];
     }
@@ -223,7 +223,7 @@ public class GridData : MonoBehaviour
             var obstacleType = obstacleGrid[position.x, position.y];
             return obstacleType != ObstacleType.Hole && obstacleType != ObstacleType.WaterHole;
         }
-        return tile == TileType.Empty || tile == TileType.Road;
+        return tile == TileType.Road;
     }
 
     /// <summary>
@@ -237,7 +237,7 @@ public class GridData : MonoBehaviour
         var tile = grid[position.x, position.y];
 
         // Basic pushable types
-        if (tile == TileType.Empty || tile == TileType.Road || tile == TileType.Goal)
+        if (tile == TileType.Road || tile == TileType.Goal)
             return true;
 
         // Obstacles are pushable only if they are Hole or WaterHole

@@ -3,13 +3,12 @@
 /// </summary>
 public enum TileType
 {
-    Empty,
+    ErrorTile,  // Default value (0) - uninitialized or invalid tile
     Road,
     Obstacle,
     Nut,
     Veverka,
-    Goal,
-    ErrorTile
+    Goal
 }
 
 /// <summary>
@@ -50,6 +49,7 @@ public enum ObstacleType
 public enum RoadType
 {
     None,           // No road (default/empty)
+    Empty,          // Empty walkable tile (background only)
     BasicRoad,
     StoneRoad,
     StoneFilledHole,
