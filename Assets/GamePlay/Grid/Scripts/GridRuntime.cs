@@ -173,7 +173,8 @@ public class GridRuntime : MonoBehaviour
         }
 
         DebugLogger.Log(DebugLogCategory.GridSystem, $"OnNutRemoved at {payload.CurrentPosition} - Old TileType: {gridData.GetTileType(payload.CurrentPosition)}", this);
-        gridData.SetTileType(payload.CurrentPosition, TileType.Empty);
+        gridData.SetTileType(payload.CurrentPosition, TileType.Road);
+        gridData.SetRoadType(payload.CurrentPosition, RoadType.Empty);
         gridData.SetNutType(payload.CurrentPosition, NutType.None);
         DebugLogger.Log(DebugLogCategory.GridSystem, $"Nut removed from {payload.CurrentPosition} - New TileType: {gridData.GetTileType(payload.CurrentPosition)}, NutType cleared", this);
     }
@@ -239,10 +240,11 @@ public class GridRuntime : MonoBehaviour
         {
             DebugLogger.Log(DebugLogCategory.GridSystem, $"GoalResolve event received without goal removal {payload.Position}", this);            
         }
-        // goal removal with replacement
+        // goal removal without replacement
         else if (payload.GoalRemove && !payload.CreateReplacement)
-        {          
-            gridData.SetTileType(payload.Position, TileType.Empty);
+        {
+            gridData.SetTileType(payload.Position, TileType.Road);
+            gridData.SetRoadType(payload.Position, RoadType.Empty);
             gridData.SetGoalType(payload.Position, GoalType.None);
             DebugLogger.Log(DebugLogCategory.GridSystem, $"Goal resolved at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, GoalType cleared", this);
             return;
@@ -311,17 +313,17 @@ public class GridRuntime : MonoBehaviour
             return;
         }
 
-        ObstacleTile tileObstacle = tile.GetComponent<ObstacleTile>();
-        if (tileObstacle == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.GridSystem, $"OnObstacleSet: ObstacleTile component not found in tile {obstacleType} at {position}", this);
-            return;
-        }
+        // Set position first (works for all obstacles)
+        tile.transform.SetParent(gridRoot, false);
+        tile.transform.localPosition = GridUtils.GridToWorld(position);
 
-        //set position of the obstacle
-        tileObstacle.transform.SetParent(gridRoot, false);
-        tileObstacle.transform.localPosition = GridUtils.GridToWorld(position);
-        tileObstacle.Init(TileType.Obstacle, position, obstacleType);
+        // Try to get ObstacleTile component (for interactive obstacles like Hole, WaterHole)
+        ObstacleTile tileObstacle = tile.GetComponent<ObstacleTile>();
+        if (tileObstacle != null)
+        {
+            // Initialize interactive obstacle
+            tileObstacle.Init(TileType.Obstacle, position, obstacleType);
+        }
 
         // Set tile and obstacle type in grid
         gridData.SetTileType(position, TileType.Obstacle);
@@ -348,7 +350,8 @@ public class GridRuntime : MonoBehaviour
         // Obstacle removal without replacement
         else if (payload.ObstacleRemove && !payload.CreateReplacement)
         {
-            gridData.SetTileType(payload.Position, TileType.Empty);
+            gridData.SetTileType(payload.Position, TileType.Road);
+            gridData.SetRoadType(payload.Position, RoadType.Empty);
             gridData.SetObstacleType(payload.Position, ObstacleType.None);
             DebugLogger.Log(DebugLogCategory.GridSystem, $"Obstacle resolved at {payload.Position} - TileType: {gridData.GetTileType(payload.Position)}, ObstacleType cleared", this);
             return;

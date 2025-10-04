@@ -42,9 +42,9 @@ public class GoalEventPayload
     public bool IsValid()
     {
         // If creating replacement, should have valid replacement type
-        if (CreateReplacement && ReplacementType == TileType.Empty)
+        if (CreateReplacement && ReplacementType == TileType.ErrorTile)
         {
-            DebugLogger.LogWarning(DebugLogCategory.GoalSystem, "GoalEventPayload creating replacement but ReplacementType is Empty");
+            DebugLogger.LogWarning(DebugLogCategory.GoalSystem, "GoalEventPayload creating replacement but ReplacementType is ErrorTile");
         }
 
         return true;

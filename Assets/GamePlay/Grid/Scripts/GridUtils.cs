@@ -95,7 +95,8 @@ public static class GridUtils
                 result.RoadType = RoadType.StoneFilledHole;
                 break;
             case ".":
-                result.TileType = TileType.Empty;
+                result.TileType = TileType.Road;
+                result.RoadType = RoadType.Empty;
                 break;
             default:
                 result.TileType = TileType.ErrorTile;

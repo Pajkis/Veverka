@@ -247,7 +247,8 @@ public class GridUtilsTests
         var result = GridUtils.ParseTileType(".");
 
         // Assert
-        Assert.AreEqual(TileType.Empty, result.TileType);
+        Assert.AreEqual(TileType.Road, result.TileType);
+        Assert.AreEqual(RoadType.Empty, result.RoadType);
     }
 
     [Test]
@@ -319,7 +320,7 @@ public class GridUtilsTests
         // Arrange - grid without veverka
         TileType[,] grid = new TileType[3, 3] {
             { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
-            { TileType.Obstacle, TileType.Empty, TileType.Nut },
+            { TileType.Obstacle, TileType.Road, TileType.Nut },
             { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
@@ -353,7 +354,7 @@ public class GridUtilsTests
         // Arrange - grid without nuts
         TileType[,] grid = new TileType[3, 3] {
             { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
-            { TileType.Obstacle, TileType.Veverka, TileType.Empty },
+            { TileType.Obstacle, TileType.Veverka, TileType.Road },
             { TileType.Obstacle, TileType.Goal, TileType.Obstacle }
         };
 
@@ -371,7 +372,7 @@ public class GridUtilsTests
         TileType[,] grid = new TileType[3, 3] {
             { TileType.Obstacle, TileType.Obstacle, TileType.Obstacle },
             { TileType.Obstacle, TileType.Veverka, TileType.Nut },
-            { TileType.Obstacle, TileType.Empty, TileType.Obstacle }
+            { TileType.Obstacle, TileType.Road, TileType.Obstacle }
         };
 
         // Act
@@ -470,7 +471,7 @@ public class GridUtilsTests
         Vector2Int nutPos = FindTilePosition(grid, TileType.Nut);
         Vector2Int goalPos = FindTilePosition(grid, TileType.Goal);
         Vector2Int wallPos = FindTilePosition(grid, TileType.Obstacle);
-        Vector2Int emptyPos = FindTilePosition(grid, TileType.Empty);
+        Vector2Int roadPos = FindTilePosition(grid, TileType.Road);
 
         // Run GridToWorld tests equivalent to original unit tests
         Test_GridToWorld_Origin_ReturnsZero_OnRealLevel(levelName);
@@ -621,7 +622,8 @@ public class GridUtilsTests
         Assert.AreEqual(ObstacleType.Hole, holeResult.ObstacleType, $"[{levelName}] ParseTileType Hole ObstacleType test failed");
 
         var emptyResult = GridUtils.ParseTileType(".");
-        Assert.AreEqual(TileType.Empty, emptyResult.TileType, $"[{levelName}] ParseTileType Empty test failed");
+        Assert.AreEqual(TileType.Road, emptyResult.TileType, $"[{levelName}] ParseTileType Empty test failed");
+        Assert.AreEqual(RoadType.Empty, emptyResult.RoadType, $"[{levelName}] ParseTileType Empty RoadType test failed");
 
         var roadResult = GridUtils.ParseTileType("R");
         Assert.AreEqual(TileType.Road, roadResult.TileType, $"[{levelName}] ParseTileType Road test failed");
