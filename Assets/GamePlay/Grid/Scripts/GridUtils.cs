@@ -90,7 +90,7 @@ public static class GridUtils
                 result.TileType = TileType.Road;
                 result.RoadType = RoadType.StoneRoad;
                 break;
-            case "RSH":
+            case "RSF":
                 result.TileType = TileType.Road;
                 result.RoadType = RoadType.StoneFilledHole;
                 break;

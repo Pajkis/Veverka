@@ -339,6 +339,29 @@ public class GridBuilder : MonoBehaviour
                         }
                         break;
 
+                    case TileType.Road:
+                        RoadType roadType = gridData.GetRoadType(tilePos);
+                        if (roadType == RoadType.StoneFilledHole)
+                        {
+                            GameObject roadTile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                        }
+                        else if (roadType == RoadType.StoneRoad)
+                        {
+                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                        }
+                        else // BasicRoad
+                        {
+                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                        }
+                        gridData.SetTileType(tilePos, TileType.Road);
+                        break;
+
                     default: break;
                 }
             }
