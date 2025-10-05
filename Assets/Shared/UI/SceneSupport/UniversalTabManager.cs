@@ -39,6 +39,9 @@ public class UniversalTabManager : MonoBehaviour
     [Tooltip("Allow hover effects on inactive tabs")]
     [SerializeField] private bool allowHoverOnInactive = false;
 
+    [Header("Debug")]
+    [SerializeField] private DebugLogConfig debugConfig;
+
     public enum SpriteStateType
     {
         Selected,
@@ -62,12 +65,15 @@ public class UniversalTabManager : MonoBehaviour
     // Store original sprites for each button
     private Sprite[] originalSprites;
 
+    // Identifier for debug logs
+    private string TabManagerId => $"TabManager[{gameObject.name}]";
+
     /// <summary>
     /// Init and show default tab
     /// </summary>
     void Start()
     {
-        Debug.Log($"UniversalTabManager Start - Default tab: {defaultTabIndex}");
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Initializing with default tab: {defaultTabIndex}", this);
         InitializeTabs();
 
         // Add delay in case other components are not ready yet
@@ -114,7 +120,7 @@ public class UniversalTabManager : MonoBehaviour
     private System.Collections.IEnumerator DelayedShowTab(int tabIndex)
     {
         yield return new WaitForEndOfFrame();
-        Debug.Log($"Delayed showing tab: {tabIndex}");
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Delayed showing tab: {tabIndex}", this);
         ShowTab(tabIndex);
     }
 
@@ -155,7 +161,7 @@ public class UniversalTabManager : MonoBehaviour
             onTabChangedWithInfo?.Invoke(tabs[tabIndex]);
         }
 
-        Debug.Log($"Tab activated: {tabIndex} {(isRefresh ? "[REFRESH]" : "")}");
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Tab activated: {tabIndex} {(isRefresh ? "[REFRESH]" : "")}", this);
     }
 
     /// <summary>
@@ -183,7 +189,7 @@ public class UniversalTabManager : MonoBehaviour
                 return;
             }
         }
-        Debug.LogWarning($"No tab found with value: {value}");
+        DebugLogger.LogWarning(DebugLogCategory.UI, $"{TabManagerId} - No tab found with value: {value}", this);
     }
 
     /// <summary>
@@ -416,15 +422,15 @@ public class UniversalTabManager : MonoBehaviour
     [ContextMenu("Debug - Tab Information")]
     private void DebugTabInfo()
     {
-        Debug.Log("=== TAB INFORMATION ===");
-        Debug.Log($"Current Tab: {currentTabIndex}");
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} === TAB INFORMATION ===", this);
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Current Tab: {currentTabIndex}", this);
 
         for (int i = 0; i < tabs.Length; i++)
         {
             var tab = tabs[i];
             string status = i == currentTabIndex ? "[ACTIVE]" :
                            tab.isAvailable ? "[AVAILABLE]" : "[LOCKED]";
-            Debug.Log($"Index {i}: Value {tab.tabValue} | {status}");
+            DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Index {i}: Value {tab.tabValue} | {status}", this);
         }
     }
 
@@ -443,7 +449,7 @@ public class UniversalTabManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Found {children.Count} potential tabs");
+        DebugLogger.Log(DebugLogCategory.UI, $"{TabManagerId} - Found {children.Count} potential tabs", this);
     }
 #endif
 }

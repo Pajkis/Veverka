@@ -231,6 +231,103 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+--- !u!1 &170640412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 170640414}
+  - component: {fileID: 170640413}
+  m_Layer: 0
+  m_Name: GridBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &170640413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170640412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5644e9e42caf14044ad6d7b16a31de3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 878312289}
+  gridRoot: {fileID: 438281642}
+  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
+  levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
+  emptyPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
+  roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
+  stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
+  veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
+  nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
+  nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
+  nutWaterPrefab: {fileID: 5049554270686572608, guid: 6ecba3ec68f43ea439dececdfc7ac805, type: 3}
+  wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
+  wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
+  holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
+  waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
+  goalPrefab: {fileID: 7474811582496385836, guid: 2e49a39d5bbfab640a268bb3905414ed, type: 3}
+  backgroundPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
+--- !u!4 &170640414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 170640412}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805298381}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &438281641
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 438281642}
+  m_Layer: 0
+  m_Name: GridRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &438281642
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 438281641}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805298381}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &712305979
 GameObject:
   m_ObjectHideFlags: 0
@@ -466,6 +563,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
+--- !u!1 &878312288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 878312290}
+  - component: {fileID: 878312289}
+  m_Layer: 0
+  m_Name: GridData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &878312289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878312288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c9698fb16723341ac0ce03ca1401cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &878312290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878312288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805298381}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1498983316
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +791,114 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1709886638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1709886640}
+  - component: {fileID: 1709886639}
+  m_Layer: 0
+  m_Name: GridRuntime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1709886639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709886638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0b1ba8fc230ed4fa8c1452107f6c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 878312289}
+  gridRoot: {fileID: 438281642}
+  gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
+  nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
+  goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
+  obstacleEvents: {fileID: 11400000, guid: 486b4ca6ce5b0fc489f25f6307032575, type: 2}
+  roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
+  wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
+  wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
+  roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
+  stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
+  waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
+  holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
+--- !u!4 &1709886640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1709886638}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1805298381}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1805298379
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1805298381}
+  - component: {fileID: 1805298380}
+  m_Layer: 0
+  m_Name: GameGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1805298380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805298379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb29111b26f85fc41b03774cf1607f86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 878312289}
+  gridBuilder: {fileID: 170640413}
+  gridRuntime: {fileID: 1709886639}
+--- !u!4 &1805298381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1805298379}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 878312290}
+  - {fileID: 170640414}
+  - {fileID: 1709886640}
+  - {fileID: 438281642}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -660,3 +909,4 @@ SceneRoots:
   - {fileID: 1640321004}
   - {fileID: 745832935}
   - {fileID: 78011111}
+  - {fileID: 1805298381}

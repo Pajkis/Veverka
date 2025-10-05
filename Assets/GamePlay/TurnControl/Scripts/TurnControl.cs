@@ -10,8 +10,6 @@ public class TurnControl : MonoBehaviour
 {
     private void Awake()
     {
-        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-
         // Reset state for fresh level start
         activeActionCount = 0;
         inputLocked = false;
