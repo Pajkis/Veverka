@@ -35,11 +35,17 @@ public class UserLevelSet : LevelSet
     {
         string userLevelsPath = GetUserLevelsPath();
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Initializing user levels at: {userLevelsPath}");
+
         // Create directory if it doesn't exist
         if (!Directory.Exists(userLevelsPath))
         {
             Directory.CreateDirectory(userLevelsPath);
-            Debug.Log($"Created user levels directory at: {userLevelsPath}");
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Created user levels directory at: {userLevelsPath}");
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "User levels directory already exists");
         }
 
         // Get grid size from DisplayConfig
@@ -50,10 +56,20 @@ public class UserLevelSet : LevelSet
             if (profile != null)
             {
                 gridSize = profile.maxStaticScreenSize;
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Using grid size from DisplayConfig: {gridSize.x}x{gridSize.y}");
             }
+            else
+            {
+                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "DisplayConfig profile is null, using fallback grid size 15x11");
+            }
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "DisplayConfig is null, using fallback grid size 15x11");
         }
 
         // Create empty CSV files for each level if they don't exist
+        int createdCount = 0;
         for (int i = 0; i < USER_LEVEL_COUNT; i++)
         {
             string levelPath = GetUserLevelPath(i);
@@ -61,8 +77,18 @@ public class UserLevelSet : LevelSet
             {
                 string emptyGrid = CreateEmptyGridCSV(gridSize.x, gridSize.y);
                 File.WriteAllText(levelPath, emptyGrid);
-                Debug.Log($"Created empty user level at: {levelPath}");
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Created empty user level {i + 1} at: {levelPath}");
+                createdCount++;
             }
+        }
+
+        if (createdCount == 0)
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "All user level files already exist, no new files created");
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"User levels initialization complete - created {createdCount} new level(s)");
         }
     }
 
@@ -92,27 +118,32 @@ public class UserLevelSet : LevelSet
     /// </summary>
     public override TextAsset GetLevelCsv(int levelNumber)
     {
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Attempting to load user level {levelNumber}");
+
         if (levelNumber < 0 || levelNumber >= USER_LEVEL_COUNT)
         {
-            Debug.LogError($"User level {levelNumber} not found. Available levels: 0-{USER_LEVEL_COUNT - 1}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"User level {levelNumber} out of range. Available levels: 0-{USER_LEVEL_COUNT - 1}");
             return null;
         }
 
         string levelPath = GetUserLevelPath(levelNumber);
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"User level path: {levelPath}");
 
         if (!File.Exists(levelPath))
         {
-            Debug.LogError($"User level file not found at: {levelPath}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"User level file not found at: {levelPath}");
             return null;
         }
 
         // Read CSV from persistent storage
         string csvContent = File.ReadAllText(levelPath);
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Successfully read user level {levelNumber} - {csvContent.Length} characters");
 
         // Create a TextAsset from the content
         TextAsset textAsset = new TextAsset(csvContent);
         textAsset.name = $"UserLevel{levelNumber + 1}";
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"User level {levelNumber} loaded successfully as '{textAsset.name}'");
         return textAsset;
     }
 
@@ -128,10 +159,14 @@ public class UserLevelSet : LevelSet
     {
         if (levelNumber < 0 || levelNumber >= USER_LEVEL_COUNT)
         {
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"HasLevel check failed: User level {levelNumber} out of range (0-{USER_LEVEL_COUNT - 1})");
             return false;
         }
 
         string levelPath = GetUserLevelPath(levelNumber);
-        return File.Exists(levelPath);
+        bool exists = File.Exists(levelPath);
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"User level {levelNumber} exists check: {exists} at {levelPath}");
+        return exists;
     }
 }
