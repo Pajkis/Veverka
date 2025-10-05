@@ -13,6 +13,9 @@ public class LevelSetManager : ScriptableObject
     [Header("User Levels")]
     [SerializeField] private UserLevelSet userLevelSet;
 
+    [Header("Configuration")]
+    [SerializeField] private DisplayConfig displayConfig;
+
     // Dictionary for faster lookups
     private Dictionary<LevelSetType, LevelSet> setLookup;
 
@@ -62,7 +65,7 @@ public class LevelSetManager : ScriptableObject
             }
 
             // Initialize user levels if needed
-            UserLevelSet.InitializeUserLevels();
+            UserLevelSet.InitializeUserLevels(displayConfig);
             return userLevelSet;
         }
 

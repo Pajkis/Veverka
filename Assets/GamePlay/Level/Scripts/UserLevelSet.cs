@@ -31,7 +31,7 @@ public class UserLevelSet : LevelSet
     /// <summary>
     /// Initialize user levels folder and create empty CSV files if they don't exist
     /// </summary>
-    public static void InitializeUserLevels()
+    public static void InitializeUserLevels(DisplayConfig displayConfig)
     {
         string userLevelsPath = GetUserLevelsPath();
 
@@ -42,14 +42,24 @@ public class UserLevelSet : LevelSet
             Debug.Log($"Created user levels directory at: {userLevelsPath}");
         }
 
+        // Get grid size from DisplayConfig
+        Vector2Int gridSize = new Vector2Int(15, 11); // Fallback
+        if (displayConfig != null)
+        {
+            var profile = displayConfig.ResolveProfile();
+            if (profile != null)
+            {
+                gridSize = profile.maxStaticScreenSize;
+            }
+        }
+
         // Create empty CSV files for each level if they don't exist
         for (int i = 0; i < USER_LEVEL_COUNT; i++)
         {
             string levelPath = GetUserLevelPath(i);
             if (!File.Exists(levelPath))
             {
-                // Create an empty 10x10 grid as default
-                string emptyGrid = CreateEmptyGridCSV(10, 10);
+                string emptyGrid = CreateEmptyGridCSV(gridSize.x, gridSize.y);
                 File.WriteAllText(levelPath, emptyGrid);
                 Debug.Log($"Created empty user level at: {levelPath}");
             }
@@ -66,7 +76,7 @@ public class UserLevelSet : LevelSet
         {
             for (int x = 0; x < width; x++)
             {
-                csv += "0"; // 0 = Empty tile
+                csv += "."; // . = Empty road
                 if (x < width - 1)
                 {
                     csv += ",";
