@@ -51,8 +51,21 @@ public class DebugLogConfig : ScriptableObject
     [Tooltip("Enable settings system logging")]
     public bool settingsLog = false;
 
+    [Header("Game Systems")]
     [Tooltip("Enable gameplay system logging")]
     public bool gameplayLog = false;
+
+    [Tooltip("Enable level system logging")]
+    public bool levelSystemLog = false;
+
+    [Tooltip("Enable bubble message system logging")]
+    public bool bubbleMessageLog = false;
+
+    [Tooltip("Enable goal system logging")]
+    public bool goalSystemLog = false;
+
+    [Tooltip("Enable scene manager logging")]
+    public bool sceneManagerLog = false;
 
     [Header("Debug Utilities")]
     [Tooltip("Enable all debug logs at once (overrides individual settings)")]
@@ -67,7 +80,7 @@ public class DebugLogConfig : ScriptableObject
     public bool IsLogEnabled(DebugLogCategory category)
     {
         if (enableAllLogs) return true;
-        
+
         return category switch
         {
             DebugLogCategory.TurnControl => turnControlLog,
@@ -84,6 +97,10 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.UI => uiLog,
             DebugLogCategory.Settings => settingsLog,
             DebugLogCategory.Gameplay => gameplayLog,
+            DebugLogCategory.LevelSystem => levelSystemLog,
+            DebugLogCategory.BubbleMessage => bubbleMessageLog,
+            DebugLogCategory.GoalSystem => goalSystemLog,
+            DebugLogCategory.SceneManager => sceneManagerLog,
             _ => false
         };
     }
@@ -94,7 +111,7 @@ public class DebugLogConfig : ScriptableObject
     public string GetCategoryColor(DebugLogCategory category)
     {
         if (!useColoredLogs) return "";
-        
+
         return category switch
         {
             DebugLogCategory.TurnControl => "#00FF00", // Green
@@ -110,7 +127,11 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.Input => "#32CD32",       // Lime Green
             DebugLogCategory.UI => "#FF1493",          // Deep Pink
             DebugLogCategory.Settings => "#FFB6C1",    // Light Pink
-            DebugLogCategory.Gameplay => "#98FB98",     // Pale Green
+            DebugLogCategory.Gameplay => "#98FB98",    // Pale Green
+            DebugLogCategory.LevelSystem => "#00CED1", // Dark Turquoise
+            DebugLogCategory.BubbleMessage => "#FF69B4", // Hot Pink
+            DebugLogCategory.GoalSystem => "#FFD700",  // Gold
+            DebugLogCategory.SceneManager => "#9370DB", // Medium Purple
             _ => "#FFFFFF" // White
         };
     }
