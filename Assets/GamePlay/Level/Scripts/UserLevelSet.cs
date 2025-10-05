@@ -90,7 +90,7 @@ public class UserLevelSet : LevelSet
     /// <summary>
     /// Load user level from persistent storage
     /// </summary>
-    public new TextAsset GetLevelCsv(int levelNumber)
+    public override TextAsset GetLevelCsv(int levelNumber)
     {
         if (levelNumber < 0 || levelNumber >= USER_LEVEL_COUNT)
         {
@@ -119,12 +119,12 @@ public class UserLevelSet : LevelSet
     /// <summary>
     /// Get the total number of user levels
     /// </summary>
-    public new int LevelCount => USER_LEVEL_COUNT;
+    public override int LevelCount => USER_LEVEL_COUNT;
 
     /// <summary>
     /// Check if a user level number exists
     /// </summary>
-    public new bool HasLevel(int levelNumber)
+    public override bool HasLevel(int levelNumber)
     {
         if (levelNumber < 0 || levelNumber >= USER_LEVEL_COUNT)
         {
