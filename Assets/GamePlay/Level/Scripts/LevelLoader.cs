@@ -22,13 +22,28 @@ public class LevelLoader : MonoBehaviour
 
     #endregion
 
-    #region Methods       
+    #region Methods
 
     /// <summary>
-    /// Start is called before update
+    /// Start is called before update - checks LevelAction and proceeds if Load
     /// </summary>
     private void Start()
     {
+        // Only proceed if CurrentAction is Load
+        if (levelDatabase == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
+            return;
+        }
+
+        if (levelDatabase.CurrentAction != LevelAction.Load)
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader: CurrentAction is {levelDatabase.CurrentAction}, skipping load", this);
+            return;
+        }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader: CurrentAction is Load, proceeding with level loading", this);
+
         // Validate required components
         if (levelSetManager == null)
         {
@@ -37,19 +52,7 @@ public class LevelLoader : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
-            });
-            return;
-        }
-
-        if (levelDatabase == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
-            DebugLogger.LogError(DebugLogCategory.Gameplay, "Critical error - cannot start gameplay without LevelDatabase", this);
-            sceneNavigationEvents.Raise(new SceneNavigationEventPayload
-            {
-                EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
+                Scene = SceneType.LevelSelect
             });
             return;
         }
@@ -138,7 +141,7 @@ public class LevelLoader : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
+                Scene = SceneType.LevelSelect
             });
             yield break;
         }
@@ -154,7 +157,7 @@ public class LevelLoader : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
+                Scene = SceneType.LevelSelect
             });
             yield break;
         }
@@ -171,7 +174,7 @@ public class LevelLoader : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
+                Scene = SceneType.LevelSelect
             });
             yield break;
         }
@@ -186,7 +189,7 @@ public class LevelLoader : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LevelMenu
+                Scene = SceneType.LevelSelect
             });
             yield break;
         }

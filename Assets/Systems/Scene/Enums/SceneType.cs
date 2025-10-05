@@ -4,10 +4,9 @@
 public enum SceneType
 {
     MainMenu,
-    LevelMenu,
+    LevelSelect,
     PlayerMenu,
     HighScoreMenu,
     GamePlay,
     LoadLevel,
-    UnloadLevel,
 }

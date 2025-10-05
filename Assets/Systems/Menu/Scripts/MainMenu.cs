@@ -16,7 +16,7 @@ public class MainMenu : MonoBehaviour
       sceneNavigationEvents.Raise(new SceneNavigationEventPayload
       {
           EventType = SceneNavigationEventType.GoToScene,
-          Scene = SceneType.LevelMenu
+          Scene = SceneType.LevelSelect
       });
     }
 

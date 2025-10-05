@@ -660,7 +660,7 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  levelMenuScene:
+  levelSelectScene:
     m_AssetGUID: cf32a0027ff2bcc44a687b34da600605
     m_SubObjectName: 
     m_SubObjectType: 
@@ -682,11 +682,6 @@ MonoBehaviour:
     m_EditorAssetChanged: 0
   loadLevelScene:
     m_AssetGUID: ddfe4556805467348aba625339db2cd5
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  unloadLevelScene:
-    m_AssetGUID: 9428cb2979b128349b87eebd3ae2d3b4
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0

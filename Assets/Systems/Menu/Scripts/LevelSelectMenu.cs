@@ -122,6 +122,7 @@ public class LevelSelectMenu : MonoBehaviour
         if (levelDatabase != null && sceneNavigationEvents != null)
         {
             levelDatabase.CurrentLevelIndex = levelNumber;
+            levelDatabase.CurrentAction = LevelAction.Load;
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,

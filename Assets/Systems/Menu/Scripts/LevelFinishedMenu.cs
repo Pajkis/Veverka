@@ -43,7 +43,7 @@ public class LevelFinishedMenu : MonoBehaviour
 
     /// <summary>
     /// Handle next level button on click event
-    /// </summary>  
+    /// </summary>
     public void HandleNextLevelButtonOnClickEvent()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu: Next Level button clicked - advancing to level {levelDatabase.CurrentLevelIndex + 1}", this);
@@ -51,6 +51,7 @@ public class LevelFinishedMenu : MonoBehaviour
 
         //Set next level
         levelDatabase.CurrentLevelIndex++;
+        levelDatabase.CurrentAction = LevelAction.Load;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
@@ -64,13 +65,14 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level menu", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level select", this);
         Time.timeScale = 1;
 
+        levelDatabase.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.UnloadLevel
+            Scene = SceneType.LoadLevel
         });
       //  Destroy(gameObject);
     }
