@@ -20,8 +20,6 @@ public class UndoController : MonoBehaviour
 
     private void Awake()
     {
-        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-
         turnHistory = new TurnHistory();
         DebugLogger.Log(DebugLogCategory.UndoLogic, "EventBasedUndoController initialized", this);
     }

@@ -22,13 +22,13 @@ MonoBehaviour:
   audioLog: 0
   gridSystemLog: 0
   tileInteractionLog: 0
-  inputLog: 0
-  uiLog: 0
-  settingsLog: 0
+  inputLog: 1
+  uiLog: 1
+  settingsLog: 1
   gameplayLog: 0
   levelSystemLog: 0
   bubbleMessageLog: 0
   goalSystemLog: 0
   sceneManagerLog: 0
-  enableAllLogs: 0
+  enableAllLogs: 1
   useColoredLogs: 1

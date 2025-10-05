@@ -24,8 +24,6 @@ public class TurnRecorder : MonoBehaviour
 
     private void Awake()
     {
-        if (debugConfig != null) DebugLogger.Initialize(debugConfig);
-
         DebugLogger.Log(DebugLogCategory.TurnRecord, "EventBasedTurnRecorder initialized", this);
     }
 
