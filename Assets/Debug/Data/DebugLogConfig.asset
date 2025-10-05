@@ -26,5 +26,9 @@ MonoBehaviour:
   uiLog: 0
   settingsLog: 0
   gameplayLog: 0
+  levelSystemLog: 0
+  bubbleMessageLog: 0
+  goalSystemLog: 0
+  sceneManagerLog: 0
   enableAllLogs: 0
   useColoredLogs: 1
