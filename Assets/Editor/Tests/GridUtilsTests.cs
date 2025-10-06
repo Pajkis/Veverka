@@ -45,7 +45,7 @@ public class GridUtilsTests
     public void ParseTileType_Wall_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("W");
+        var result = TileParser.ParseTileType("W");
 
         // Assert
         Assert.AreEqual(TileType.Obstacle, result.TileType);
@@ -179,7 +179,7 @@ public class GridUtilsTests
     public void ParseTileType_StoneWall_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("WS");
+        var result = TileParser.ParseTileType("WS");
 
         // Assert
         Assert.AreEqual(TileType.Obstacle, result.TileType);
@@ -190,7 +190,7 @@ public class GridUtilsTests
     public void ParseTileType_Veverka_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("V");
+        var result = TileParser.ParseTileType("V");
 
         // Assert
         Assert.AreEqual(TileType.Veverka, result.TileType);
@@ -200,7 +200,7 @@ public class GridUtilsTests
     public void ParseTileType_BasicNut_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("N");
+        var result = TileParser.ParseTileType("N");
 
         // Assert
         Assert.AreEqual(TileType.Nut, result.TileType);
@@ -211,7 +211,7 @@ public class GridUtilsTests
     public void ParseTileType_StoneNut_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("NS");
+        var result = TileParser.ParseTileType("NS");
 
         // Assert
         Assert.AreEqual(TileType.Nut, result.TileType);
@@ -222,7 +222,7 @@ public class GridUtilsTests
     public void ParseTileType_BasicGoal_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("G");
+        var result = TileParser.ParseTileType("G");
 
         // Assert
         Assert.AreEqual(TileType.Goal, result.TileType);
@@ -233,7 +233,7 @@ public class GridUtilsTests
     public void ParseTileType_HoleObstacle_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("H");
+        var result = TileParser.ParseTileType("H");
 
         // Assert
         Assert.AreEqual(TileType.Obstacle, result.TileType);
@@ -244,7 +244,7 @@ public class GridUtilsTests
     public void ParseTileType_Empty_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType(".");
+        var result = TileParser.ParseTileType(".");
 
         // Assert
         Assert.AreEqual(TileType.Road, result.TileType);
@@ -255,7 +255,7 @@ public class GridUtilsTests
     public void ParseTileType_Road_ReturnsCorrectTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("R");
+        var result = TileParser.ParseTileType("R");
 
         // Assert
         Assert.AreEqual(TileType.Road, result.TileType);
@@ -266,7 +266,7 @@ public class GridUtilsTests
     public void ParseTileType_InvalidSymbol_ReturnsErrorTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("X");
+        var result = TileParser.ParseTileType("X");
 
         // Assert
         Assert.AreEqual(TileType.ErrorTile, result.TileType, "Invalid symbol should return ErrorTile");
@@ -276,7 +276,7 @@ public class GridUtilsTests
     public void ParseTileType_EmptyString_ReturnsErrorTile()
     {
         // Act
-        var result = GridUtils.ParseTileType("");
+        var result = TileParser.ParseTileType("");
 
         // Assert
         Assert.AreEqual(TileType.ErrorTile, result.TileType, "Empty string should return ErrorTile");
@@ -286,7 +286,7 @@ public class GridUtilsTests
     public void ParseTileType_NullString_ReturnsErrorTile()
     {
         // Act
-        var result = GridUtils.ParseTileType(null);
+        var result = TileParser.ParseTileType(null);
 
         // Assert
         Assert.AreEqual(TileType.ErrorTile, result.TileType, "Null string should return ErrorTile");
@@ -443,7 +443,7 @@ public class GridUtilsTests
                 Debug.Log($"Testing level: {levelAsset.name}");
 
                 // Load grid from file
-                TileType[,] grid = GridUtils.LoadGridFromTextAsset(levelAsset);
+                TileType[,] grid = TileParser.LoadGridFromTextAsset(levelAsset);
                 Assert.IsNotNull(grid, $"GridUtils.LoadGridFromTextAsset failed for level {levelAsset.name}");
 
                 // Now run EVERY individual test that was originally in GridUtilsTests on this real level
@@ -594,48 +594,48 @@ public class GridUtilsTests
     private void Test_ParseTileType_AllVariants_OnRealLevel(string levelName)
     {
         // Test all the parsing variants like in the original unit tests
-        var wallResult = GridUtils.ParseTileType("W");
+        var wallResult = TileParser.ParseTileType("W");
         Assert.AreEqual(TileType.Obstacle, wallResult.TileType, $"[{levelName}] ParseTileType Wall test failed");
         Assert.AreEqual(ObstacleType.BasicWall, wallResult.ObstacleType, $"[{levelName}] ParseTileType Wall ObstacleType test failed");
 
-        var stoneWallResult = GridUtils.ParseTileType("WS");
+        var stoneWallResult = TileParser.ParseTileType("WS");
         Assert.AreEqual(TileType.Obstacle, stoneWallResult.TileType, $"[{levelName}] ParseTileType StoneWall test failed");
         Assert.AreEqual(ObstacleType.StoneWall, stoneWallResult.ObstacleType, $"[{levelName}] ParseTileType StoneWall ObstacleType test failed");
 
-        var veverkaResult = GridUtils.ParseTileType("V");
+        var veverkaResult = TileParser.ParseTileType("V");
         Assert.AreEqual(TileType.Veverka, veverkaResult.TileType, $"[{levelName}] ParseTileType Veverka test failed");
 
-        var nutResult = GridUtils.ParseTileType("N");
+        var nutResult = TileParser.ParseTileType("N");
         Assert.AreEqual(TileType.Nut, nutResult.TileType, $"[{levelName}] ParseTileType BasicNut test failed");
         Assert.AreEqual(NutType.BasicNut, nutResult.NutType, $"[{levelName}] ParseTileType BasicNut NutType test failed");
 
-        var stoneNutResult = GridUtils.ParseTileType("NS");
+        var stoneNutResult = TileParser.ParseTileType("NS");
         Assert.AreEqual(TileType.Nut, stoneNutResult.TileType, $"[{levelName}] ParseTileType StoneNut test failed");
         Assert.AreEqual(NutType.StoneNut, stoneNutResult.NutType, $"[{levelName}] ParseTileType StoneNut NutType test failed");
 
-        var goalResult = GridUtils.ParseTileType("G");
+        var goalResult = TileParser.ParseTileType("G");
         Assert.AreEqual(TileType.Goal, goalResult.TileType, $"[{levelName}] ParseTileType BasicGoal test failed");
         Assert.AreEqual(GoalType.BasicGoal, goalResult.GoalType, $"[{levelName}] ParseTileType BasicGoal GoalType test failed");
 
-        var holeResult = GridUtils.ParseTileType("H");
+        var holeResult = TileParser.ParseTileType("H");
         Assert.AreEqual(TileType.Obstacle, holeResult.TileType, $"[{levelName}] ParseTileType Hole test failed");
         Assert.AreEqual(ObstacleType.Hole, holeResult.ObstacleType, $"[{levelName}] ParseTileType Hole ObstacleType test failed");
 
-        var emptyResult = GridUtils.ParseTileType(".");
+        var emptyResult = TileParser.ParseTileType(".");
         Assert.AreEqual(TileType.Road, emptyResult.TileType, $"[{levelName}] ParseTileType Empty test failed");
         Assert.AreEqual(RoadType.Empty, emptyResult.RoadType, $"[{levelName}] ParseTileType Empty RoadType test failed");
 
-        var roadResult = GridUtils.ParseTileType("R");
+        var roadResult = TileParser.ParseTileType("R");
         Assert.AreEqual(TileType.Road, roadResult.TileType, $"[{levelName}] ParseTileType Road test failed");
         Assert.AreEqual(RoadType.BasicRoad, roadResult.RoadType, $"[{levelName}] ParseTileType Road RoadType test failed");
 
-        var invalidResult = GridUtils.ParseTileType("X");
+        var invalidResult = TileParser.ParseTileType("X");
         Assert.AreEqual(TileType.ErrorTile, invalidResult.TileType, $"[{levelName}] ParseTileType Invalid test failed");
 
-        var emptyStringResult = GridUtils.ParseTileType("");
+        var emptyStringResult = TileParser.ParseTileType("");
         Assert.AreEqual(TileType.ErrorTile, emptyStringResult.TileType, $"[{levelName}] ParseTileType EmptyString test failed");
 
-        var nullResult = GridUtils.ParseTileType(null);
+        var nullResult = TileParser.ParseTileType(null);
         Assert.AreEqual(TileType.ErrorTile, nullResult.TileType, $"[{levelName}] ParseTileType Null test failed");
     }
 
@@ -768,7 +768,7 @@ public class GridUtilsTests
         TextAsset mockLevel = new TextAsset(invalidLevelData);
 
         // Test loading
-        TileType[,] grid = GridUtils.LoadGridFromTextAsset(mockLevel);
+        TileType[,] grid = TileParser.LoadGridFromTextAsset(mockLevel);
         Assert.IsNotNull(grid, "LoadGridFromTextAsset should work even with invalid data");
 
         // Test individual validation functions (not ValidateGrid)
