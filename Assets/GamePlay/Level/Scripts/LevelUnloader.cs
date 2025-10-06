@@ -10,7 +10,7 @@ public class LevelUnloader : MonoBehaviour
     [SerializeField] private GridEvents gridEvents;
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
     [SerializeField] private AudioEvents audioEvents;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
 
     private bool isUnloading = false;
 
@@ -20,15 +20,15 @@ public class LevelUnloader : MonoBehaviour
     private void Start()
     {
         // Only proceed if CurrentAction is Unload
-        if (levelDatabase == null)
+        if (levelSelection == null)
         {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelSelection is not assigned!", this);
             return;
         }
 
-        if (levelDatabase.CurrentAction != LevelAction.Unload)
+        if (levelSelection.CurrentAction != LevelAction.Unload)
         {
-            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelUnloader: CurrentAction is {levelDatabase.CurrentAction}, skipping unload", this);
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelUnloader: CurrentAction is {levelSelection.CurrentAction}, skipping unload", this);
             return;
         }
 

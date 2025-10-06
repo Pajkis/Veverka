@@ -10,7 +10,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField]
     private SceneNavigationEvents sceneNavigationEvent;
     [SerializeField]
-    private LevelDatabase levelDatabase;
+    private LevelSelection levelSelection;
     #endregion
 
     #region methods
@@ -39,7 +39,7 @@ public class PauseMenu : MonoBehaviour
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Restart button clicked - reloading current level", this);
         Time.timeScale = 1;
-        levelDatabase.CurrentAction = LevelAction.Load;
+        levelSelection.CurrentAction = LevelAction.Load;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
@@ -68,7 +68,7 @@ public class PauseMenu : MonoBehaviour
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Quit button clicked - unloading level and returning to level select", this);
         Time.timeScale = 1;
-        levelDatabase.CurrentAction = LevelAction.Unload;
+        levelSelection.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,

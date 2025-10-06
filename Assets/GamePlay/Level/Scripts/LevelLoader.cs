@@ -13,7 +13,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
     [SerializeField] private GridEvents gridEvents;
     [SerializeField] private AudioEvents audioEvents;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
 
     [Header("Level Management")]
     [SerializeField] private LevelSetManager levelSetManager;
@@ -30,15 +30,15 @@ public class LevelLoader : MonoBehaviour
     private void Start()
     {
         // Only proceed if CurrentAction is Load
-        if (levelDatabase == null)
+        if (levelSelection == null)
         {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelDatabase is not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelSelection is not assigned!", this);
             return;
         }
 
-        if (levelDatabase.CurrentAction != LevelAction.Load)
+        if (levelSelection.CurrentAction != LevelAction.Load)
         {
-            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader: CurrentAction is {levelDatabase.CurrentAction}, skipping load", this);
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader: CurrentAction is {levelSelection.CurrentAction}, skipping load", this);
             return;
         }
 
@@ -57,7 +57,7 @@ public class LevelLoader : MonoBehaviour
             return;
         }
 
-        DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader initialized - Starting level {levelDatabase.CurrentLevelIndex} from set {levelDatabase.LevelSetType}", this);
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelLoader initialized - Starting level {levelSelection.CurrentLevelIndex} from set {levelSelection.LevelSetType}", this);
 
         // play music
         DebugLogger.Log(DebugLogCategory.Audio, "Starting game music", this);
@@ -67,7 +67,7 @@ public class LevelLoader : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.LevelSystem, "Requesting level reset before loading", this);
         levelSelectEvent.Raise(new LevelSelectPayload
         {
-            levelNumber = levelDatabase.CurrentLevelIndex,
+            levelNumber = levelSelection.CurrentLevelIndex,
             resetRequested = true
         });
     }
@@ -129,8 +129,8 @@ public class LevelLoader : MonoBehaviour
         float startTime = Time.time;
 
         // Get level data from the level set system
-        LevelSetType currentSet = levelDatabase.LevelSetType;
-        int currentLevelIndex = levelDatabase.CurrentLevelIndex;
+        LevelSetType currentSet = levelSelection.LevelSetType;
+        int currentLevelIndex = levelSelection.CurrentLevelIndex;
 
         DebugLogger.Log(DebugLogCategory.LevelSystem, $"Loading level {currentLevelIndex} from set {currentSet}", this);
 
@@ -259,14 +259,14 @@ public class LevelLoader : MonoBehaviour
     [ContextMenu("Debug - Validate Current Selection")]
     private void DebugValidateCurrentSelection()
     {
-        if (levelDatabase == null || levelSetManager == null)
+        if (levelSelection == null || levelSetManager == null)
         {
             Debug.Log("Required components not assigned!");
             return;
         }
 
-        bool hasLevel = levelSetManager.HasLevel(levelDatabase.LevelSetType, levelDatabase.CurrentLevelIndex);
-        Debug.Log($"Current selection - Set: {levelDatabase.LevelSetType}, Level: {levelDatabase.CurrentLevelIndex} - Valid: {hasLevel}");
+        bool hasLevel = levelSetManager.HasLevel(levelSelection.LevelSetType, levelSelection.CurrentLevelIndex);
+        Debug.Log($"Current selection - Set: {levelSelection.LevelSetType}, Level: {levelSelection.CurrentLevelIndex} - Valid: {hasLevel}");
     }
 #endif
 

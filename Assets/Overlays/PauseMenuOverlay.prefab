@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneNavigationEvent: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
-  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  levelSelection: {fileID: 11400000, guid: 9d05985cbb43a63468aaede41e0a2a79, type: 2}
 --- !u!114 &6935047262844824697
 MonoBehaviour:
   m_ObjectHideFlags: 0

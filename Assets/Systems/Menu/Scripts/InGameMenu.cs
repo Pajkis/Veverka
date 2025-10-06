@@ -3,14 +3,14 @@ using UnityEngine;
 public class InGameMenu : MonoBehaviour
 {
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
 
     /// <summary>
     /// Handles on click level restart button event
     /// </summary>
     public void HandleRestartButtonOnClickEvent()
     {
-        levelDatabase.CurrentAction = LevelAction.Load;
+        levelSelection.CurrentAction = LevelAction.Load;
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
