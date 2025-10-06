@@ -239,7 +239,7 @@ public class LevelLoader : MonoBehaviour
     {
         if (levelSetManager == null)
         {
-            Debug.Log("LevelSetManager not assigned!");
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "LevelSetManager not assigned!", this);
             return;
         }
 
@@ -248,7 +248,7 @@ public class LevelLoader : MonoBehaviour
         {
             if (levelSet != null)
             {
-                Debug.Log($"Set: {levelSet.setType} ({levelSet.setDisplayName}) - {levelSet.LevelCount} levels");
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Set: {levelSet.setType} ({levelSet.setDisplayName}) - {levelSet.LevelCount} levels", this);
             }
         }
     }
@@ -261,12 +261,12 @@ public class LevelLoader : MonoBehaviour
     {
         if (levelSelection == null || levelSetManager == null)
         {
-            Debug.Log("Required components not assigned!");
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "Required components not assigned!", this);
             return;
         }
 
         bool hasLevel = levelSetManager.HasLevel(levelSelection.LevelSetType, levelSelection.CurrentLevelIndex);
-        Debug.Log($"Current selection - Set: {levelSelection.LevelSetType}, Level: {levelSelection.CurrentLevelIndex} - Valid: {hasLevel}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Current selection - Set: {levelSelection.LevelSetType}, Level: {levelSelection.CurrentLevelIndex} - Valid: {hasLevel}", this);
     }
 #endif
 

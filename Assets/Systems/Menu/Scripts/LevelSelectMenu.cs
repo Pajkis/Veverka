@@ -262,9 +262,9 @@ public class LevelSelectMenu : MonoBehaviour
     [ContextMenu("Debug - Level Set Mappings")]
     private void DebugLevelSetMappings()
     {
-        Debug.Log("=== LEVEL SET MAPPINGS ===");
-        Debug.Log($"Current Level Set: {(levelSelection != null ? levelSelection.LevelSetType.ToString() : "NULL")}");
-        Debug.Log($"Current Tab Value: {(tabManager != null ? tabManager.GetCurrentTabValue() : -1)}");
+        DebugLogger.Log(DebugLogCategory.UI, "=== LEVEL SET MAPPINGS ===", this);
+        DebugLogger.Log(DebugLogCategory.UI, $"Current Level Set: {(levelSelection != null ? levelSelection.LevelSetType.ToString() : "NULL")}", this);
+        DebugLogger.Log(DebugLogCategory.UI, $"Current Tab Value: {(tabManager != null ? tabManager.GetCurrentTabValue() : -1)}", this);
 
         for (int i = 0; i < levelSetMappings.Length; i++)
 
@@ -272,7 +272,7 @@ public class LevelSelectMenu : MonoBehaviour
         {
             var mapping = levelSetMappings[i];
             bool isUnlocked = IsLevelSetUnlocked(mapping.setType);
-            Debug.Log($"Mapping {i}: {mapping.setType} → Tab Value {mapping.tabValue} | Unlocked: {isUnlocked} | {mapping.description}");
+            DebugLogger.Log(DebugLogCategory.UI, $"Mapping {i}: {mapping.setType} → Tab Value {mapping.tabValue} | Unlocked: {isUnlocked} | {mapping.description}", this);
         }
     }
 

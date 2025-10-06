@@ -47,7 +47,7 @@ public class CameraFollow : MonoBehaviour
         if (levelInitData == null || levelInitData.gridOrigin == null ||
             levelInitData.gridCenterStartTarget == null || levelInitData.gridSize == null)
         {
-            Debug.LogError("LevelInitData or its parameters is not set in CameraFollow. Please assign it or set values.");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: LevelInitData or its parameters is not set. Please assign it or set values.", this);
             return;
         }
         Init(levelInitData.gridCenterStartTarget, levelInitData.gridOrigin, levelInitData.gridSize);
@@ -93,14 +93,14 @@ public class CameraFollow : MonoBehaviour
     {
         if (displayConfig == null)
         {
-            Debug.LogError("DisplayConfig is not assigned in CameraFollow!");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: DisplayConfig is not assigned!", this);
             return;
         }
 
         var profile = displayConfig.ResolveProfile();
         if (profile == null)
         {
-            Debug.LogError("No suitable display profile found!");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: No suitable display profile found!", this);
             return;
         }
 

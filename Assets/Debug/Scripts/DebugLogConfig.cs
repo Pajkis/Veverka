@@ -67,6 +67,9 @@ public class DebugLogConfig : ScriptableObject
     [Tooltip("Enable audio system logging")]
     public bool audioLog = false;
 
+    [Tooltip("Enable display and camera system logging")]
+    public bool displayLog = false;
+
     [Header("Debug Utilities")]
     [Tooltip("Enable all debug logs at once (overrides individual settings)")]
     public bool enableAllLogs = false;
@@ -101,6 +104,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.BubbleMessage => bubbleMessageLog,
             DebugLogCategory.GoalSystem => goalSystemLog,
             DebugLogCategory.SceneManager => sceneManagerLog,
+            DebugLogCategory.Display => displayLog,
             _ => false
         };
     }
@@ -132,6 +136,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.BubbleMessage => "#FF69B4", // Hot Pink
             DebugLogCategory.GoalSystem => "#FFD700",  // Gold
             DebugLogCategory.SceneManager => "#9370DB", // Medium Purple
+            DebugLogCategory.Display => "#00BFFF",  // Deep Sky Blue
             _ => "#FFFFFF" // White
         };
     }
@@ -159,5 +164,6 @@ public enum DebugLogCategory
     LevelSystem,
     BubbleMessage,
     GoalSystem,
-    SceneManager
+    SceneManager,
+    Display
 }
