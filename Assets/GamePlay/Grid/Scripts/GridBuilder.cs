@@ -12,7 +12,8 @@ public class GridBuilder : MonoBehaviour
     [Header("Core References")]
     [SerializeField] private GridData gridData;
     [SerializeField] private Transform gridRoot;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
+    [SerializeField] private LevelInitData levelInitData;
     #endregion
 
     #region Events
@@ -95,7 +96,7 @@ public class GridBuilder : MonoBehaviour
                 resetRequested = false
             });
 
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelDatabase.CurrentLevelIndex}", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelSelection.CurrentLevelIndex}", this);
             return;
         }
     }
@@ -138,8 +139,8 @@ public class GridBuilder : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
         BuildSurroundings();
 
-        // Initialize level database
-        levelDatabase.gridSize = gridData.GridSize;
+        // Initialize level init data
+        levelInitData.gridSize = gridData.GridSize;
         int goalCount = 0;
         for (int x = 0; x < width; x++)
         {
@@ -152,8 +153,8 @@ public class GridBuilder : MonoBehaviour
                 }
             }
         }
-        levelDatabase.GoalsCount = goalCount;
-        levelDatabase.gridOrigin = transform;
+        levelInitData.StartGoalsCount = goalCount;
+        levelInitData.gridOrigin = transform;
 
         // Raise event to notify build completion
         gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
@@ -189,13 +190,13 @@ public class GridBuilder : MonoBehaviour
         // Clear GridData
         gridData.ClearGrids();
 
-        // Clear level database
-        if (levelDatabase != null)
+        // Clear level init data
+        if (levelInitData != null)
         {
-            levelDatabase.gridSize = Vector2Int.zero;
-            levelDatabase.GoalsCount = 0;
-            levelDatabase.gridCenterStartTarget = null;
-            levelDatabase.gridOrigin = null;
+            levelInitData.gridSize = Vector2Int.zero;
+            levelInitData.StartGoalsCount = 0;
+            levelInitData.gridCenterStartTarget = null;
+            levelInitData.gridOrigin = null;
         }
 
         DebugLogger.Log(DebugLogCategory.GridSystem, "Level reset complete", this);
@@ -296,7 +297,7 @@ public class GridBuilder : MonoBehaviour
                         veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
 
                         // Center grid according to veverka
-                        levelDatabase.gridCenterStartTarget = veverka.transform;
+                        levelInitData.gridCenterStartTarget = veverka.transform;
                         DebugLogger.Log(DebugLogCategory.Gameplay, $"Player character (Veverka) placed at {tilePos} and set as camera target", this);
                         break;
 

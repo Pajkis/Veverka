@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
 {
     [Header("Config (SO)")]
     [SerializeField] private DisplayConfig displayConfig;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelInitData levelInitData;
 
     [Header("Events")]
     [SerializeField] private CharacterEvents characterEvents;
@@ -44,13 +44,13 @@ public class CameraFollow : MonoBehaviour
     {
         ApplyConfig();
 
-        if (levelDatabase == null || levelDatabase.gridOrigin == null ||
-            levelDatabase.gridCenterStartTarget == null || levelDatabase.gridSize == null)
+        if (levelInitData == null || levelInitData.gridOrigin == null ||
+            levelInitData.gridCenterStartTarget == null || levelInitData.gridSize == null)
         {
-            Debug.LogError("LevelDatabase or its paramateres is not set in CameraFollow. Please assign it or set values.");
+            Debug.LogError("LevelInitData or its parameters is not set in CameraFollow. Please assign it or set values.");
             return;
         }
-        Init(levelDatabase.gridCenterStartTarget, levelDatabase.gridOrigin, levelDatabase.gridSize);
+        Init(levelInitData.gridCenterStartTarget, levelInitData.gridOrigin, levelInitData.gridSize);
     }
 
     /// <summary>

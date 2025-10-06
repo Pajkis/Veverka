@@ -14,12 +14,11 @@ public class SceneRefProvider : MonoBehaviour
     
     [Header("Scene References")]
     [SerializeField] private AssetReference mainMenuScene;
-    [SerializeField] private AssetReference levelMenuScene;
+    [SerializeField] private AssetReference levelSelectScene;
     [SerializeField] private AssetReference playerMenuScene;
     [SerializeField] private AssetReference highScoreMenuScene;
     [SerializeField] private AssetReference gamePlayScene;
-    [SerializeField] private AssetReference loadLevelScene;
-    [SerializeField] private AssetReference unloadLevelScene;
+    [SerializeField] private AssetReference levelTransitionScene;
 
     private void Awake()
     {
@@ -44,12 +43,11 @@ public class SceneRefProvider : MonoBehaviour
         return scene switch
         {
             SceneType.MainMenu => mainMenuScene,
-            SceneType.LevelMenu => levelMenuScene,
+            SceneType.LevelSelect => levelSelectScene,
             SceneType.PlayerMenu => playerMenuScene,
             SceneType.HighScoreMenu => highScoreMenuScene,
             SceneType.GamePlay => gamePlayScene,
-            SceneType.LoadLevel => loadLevelScene,
-            SceneType.UnloadLevel => unloadLevelScene,
+            SceneType.LevelTransition => levelTransitionScene,
             _ => null,
         };
     }

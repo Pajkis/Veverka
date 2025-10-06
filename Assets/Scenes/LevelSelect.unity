@@ -2423,7 +2423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  logButtonProcessing: 0
 --- !u!4 &1343382310
 Transform:
   m_ObjectHideFlags: 0
@@ -3043,7 +3042,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tabManager: {fileID: 1621450282}
-  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  levelSelection: {fileID: 11400000, guid: 9d05985cbb43a63468aaede41e0a2a79, type: 2}
   sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
   levelSetMappings:
   - setType: 0

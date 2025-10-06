@@ -9,7 +9,7 @@ public class LevelFinishedMenu : MonoBehaviour
     GameObject buttonNextLevel;
 
     [SerializeField]
-    private LevelDatabase levelDatabase;   
+    private LevelSelection levelSelection;   
 
     [SerializeField]
     private SceneNavigationEvents sceneNavigationEvent;
@@ -21,12 +21,12 @@ public class LevelFinishedMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu opened - Level {levelDatabase.CurrentLevelIndex} completed", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu opened - Level {levelSelection.CurrentLevelIndex} completed", this);
 
         // hide button on max level finished
         buttonNextLevel = GameObject.Find("ButtonNextLevel");
 
-        if (levelDatabase.CurrentLevelIndex == 9)
+        if (levelSelection.CurrentLevelIndex == 9)
         {
             DebugLogger.Log(DebugLogCategory.SceneManager, "Last level completed - hiding Next Level button", this);
             buttonNextLevel.SetActive(false);
@@ -43,18 +43,19 @@ public class LevelFinishedMenu : MonoBehaviour
 
     /// <summary>
     /// Handle next level button on click event
-    /// </summary>  
+    /// </summary>
     public void HandleNextLevelButtonOnClickEvent()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu: Next Level button clicked - advancing to level {levelDatabase.CurrentLevelIndex + 1}", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu: Next Level button clicked - advancing to level {levelSelection.CurrentLevelIndex + 1}", this);
         Time.timeScale = 1;
 
         //Set next level
-        levelDatabase.CurrentLevelIndex++;
+        levelSelection.CurrentLevelIndex++;
+        levelSelection.CurrentAction = LevelAction.Load;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.LoadLevel
+            Scene = SceneType.LevelTransition
         });
         // Destroy(gameObject);
     }
@@ -64,13 +65,14 @@ public class LevelFinishedMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level menu", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level select", this);
         Time.timeScale = 1;
 
+        levelSelection.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.UnloadLevel
+            Scene = SceneType.LevelTransition
         });
       //  Destroy(gameObject);
     }

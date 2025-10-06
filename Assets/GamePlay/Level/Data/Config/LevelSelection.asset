@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b7aeddc9c17a7b428d11b652daa70a2, type: 3}
-  m_Name: LevelDatabase
+  m_Script: {fileID: 11500000, guid: ddb48495eb95ee942aa19438a81447ef, type: 3}
+  m_Name: LevelSelection
   m_EditorClassIdentifier: 
   LevelSetType: 0
   CurrentLevelIndex: 0
-  GoalsCount: 2
-  gridSize: {x: 5, y: 7}
-  gridCenterStartTarget: {fileID: 0}
-  gridOrigin: {fileID: 0}
+  CurrentAction: 0

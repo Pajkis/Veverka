@@ -262,7 +262,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridData: {fileID: 878312289}
   gridRoot: {fileID: 438281642}
-  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  levelSelection: {fileID: 11400000, guid: 9d05985cbb43a63468aaede41e0a2a79, type: 2}
+  levelInitData: {fileID: 11400000, guid: ea37cadc23184384fbeec0ce51e35441, type: 2}
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   emptyPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
@@ -660,7 +661,7 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  levelMenuScene:
+  levelSelectScene:
     m_AssetGUID: cf32a0027ff2bcc44a687b34da600605
     m_SubObjectName: 
     m_SubObjectType: 
@@ -680,13 +681,8 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  loadLevelScene:
+  levelTransitionScene:
     m_AssetGUID: ddfe4556805467348aba625339db2cd5
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  unloadLevelScene:
-    m_AssetGUID: 9428cb2979b128349b87eebd3ae2d3b4
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
