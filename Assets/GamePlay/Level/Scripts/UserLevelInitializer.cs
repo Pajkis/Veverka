@@ -89,7 +89,7 @@ public class UserLevelInitializer : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"User levels folder does not exist at: {path}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"User levels folder does not exist at: {path}");
         }
     }
 #endif

@@ -174,7 +174,7 @@ public class AudioManager : MonoBehaviour
         // load volume from game settings
         if (audioConfig == null)
         {
-            Debug.LogError("AudioConfig is not assigned in AudioManager!");
+            DebugLogger.LogError(DebugLogCategory.General, "AudioManager: AudioConfig is not assigned!");
             return;
         }
       
@@ -209,11 +209,11 @@ public class AudioManager : MonoBehaviour
             // check if clip and source are not null
             if (clip == null)
             {
-                Debug.LogWarning($"Clip for {clipKey} is null.");               
+                DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: Clip for {clipKey} is null.");               
             }
             if (source == null)
             {
-                Debug.LogWarning($"AudioSource for {channel} is null.");
+                DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: AudioSource for {channel} is null.");
             }
 
             // adjust pitch for sound effects based on animation speed setting
@@ -238,7 +238,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"Missing clip or source for {clipKey}");
+            DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: Missing clip or source for {clipKey}");
         }
     }
 
@@ -377,7 +377,7 @@ public class AudioManager : MonoBehaviour
         // check if the sound channel exists in sources
         if (!sources.TryGetValue(soundChannel, out AudioSource audioSource))
         {
-            Debug.LogWarning($"AudioSource for {soundChannel} not found!");
+            DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: AudioSource for {soundChannel} not found!");
             return;
         }
 

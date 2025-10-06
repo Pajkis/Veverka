@@ -26,7 +26,7 @@ public class PulsatingSprite : MonoBehaviour
 
         if (spriteRenderer == null)
         {
-            Debug.LogError("PulsatingSprite: SpriteRenderer komponenta nenalezena!");
+            DebugLogger.LogError(DebugLogCategory.General, "SpriteRenderer komponenta nenalezena!", this);
             return;
         }
 

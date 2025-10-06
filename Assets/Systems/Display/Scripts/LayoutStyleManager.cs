@@ -44,14 +44,14 @@ public class LayoutStyleManager : MonoBehaviour
     {
         if (displayConfig == null)
         {
-            Debug.LogError($"[{nameof(LayoutStyleManager)}] DisplayConfig not set in Inspector.");
+            DebugLogger.LogError(DebugLogCategory.UI, $"{nameof(LayoutStyleManager)}: DisplayConfig not set in Inspector.", this);
             return;
         }
 
         var profile = displayConfig.ResolveProfile();
         if (profile == null)
         {
-            Debug.LogError($"[{nameof(LayoutStyleManager)}] No suitable display profile found!");
+            DebugLogger.LogError(DebugLogCategory.UI, $"{nameof(LayoutStyleManager)}: No suitable display profile found!", this);
             return;
         }
 
@@ -96,7 +96,7 @@ public class LayoutStyleManager : MonoBehaviour
             return;
 
         currentLayoutStyle = (LayoutStyleTypes)payload.Value;
-        Debug.Log($"[{nameof(LayoutStyleManager)}] Current layout style: {currentLayoutStyle}");
+        DebugLogger.Log(DebugLogCategory.UI, $"{nameof(LayoutStyleManager)}: Current layout style: {currentLayoutStyle}", this);
         setLayout();
     }
 
@@ -115,7 +115,7 @@ public class LayoutStyleManager : MonoBehaviour
                 androidLayoutSet();
                 break;
             default:
-                Debug.LogWarning($"[{nameof(LayoutStyleManager)}] Unknown layout style: {currentLayoutStyle}");
+                DebugLogger.LogWarning(DebugLogCategory.UI, $"{nameof(LayoutStyleManager)}: Unknown layout style: {currentLayoutStyle}", this);
                 break;
         }
     }

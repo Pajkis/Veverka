@@ -117,7 +117,7 @@ public static class GridUtils
         {
             if (levelData == null)
             {
-                Debug.LogError("Level data is null!");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Level data is null!");
                 return null;
             }
 
@@ -136,7 +136,7 @@ public static class GridUtils
 
             if (validLines.Count == 0)
             {
-                Debug.LogError("No valid data found in level file!");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: No valid data found in level file!");
                 return null;
             }
 
@@ -155,7 +155,7 @@ public static class GridUtils
             ObstacleType[,] obstacleGrid = new ObstacleType[width, height];
             RoadType[,] roadGrid = new RoadType[width, height];
 
-            Debug.Log($"Loading level '{levelData.name}' with size (width, height): {width}, {height}");
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Loading level '{levelData.name}' with size (width, height): {width}, {height}");
 
             // put data into grid (flip Y axis to match Unity's coordinate system)
             for (int y = 0; y < height; y++)
@@ -164,7 +164,7 @@ public static class GridUtils
 
                 if (row.Length != width)
                 {
-                    Debug.LogWarning($"Row {y} has {row.Length} columns, expected {width}. Level: {levelData.name}");
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Row {y} has {row.Length} columns, expected {width}. Level: {levelData.name}");
                 }
 
                 for (int x = 0; x < width && x < row.Length; x++)
@@ -179,7 +179,7 @@ public static class GridUtils
                     // Catch error types
                     if (parsed.TileType == TileType.ErrorTile)
                     {
-                        Debug.LogWarning($"Error tile at position [{x},{y}] in level '{levelData.name}'. Symbol: '{row[x].Trim()}'");
+                        DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Error tile at position [{x},{y}] in level '{levelData.name}'. Symbol: '{row[x].Trim()}'");
                     }
                 }
             }
@@ -194,7 +194,7 @@ public static class GridUtils
         }
         catch (Exception ex)
         {
-            Debug.LogError($"Error loading level from TextAsset '{levelData?.name}': {ex.Message}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Error loading level from TextAsset '{levelData?.name}': {ex.Message}");
             return null;
         }
     }
@@ -229,35 +229,35 @@ public static class GridUtils
         // check veverka count
         if (veverkaCount != 1)
         {
-            Debug.LogWarning($"Expected 1 veverka but found {veverkaCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected 1 veverka but found {veverkaCount}");
             valid = false;
         }
 
-        // check nuts amount more than zero        
+        // check nuts amount more than zero
         if (nutCount < 1)
         {
-            Debug.LogWarning($"Expected at least 1 nut but found {nutCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 nut but found {nutCount}");
             valid = false;
         }
 
-        // check goal amount more than zero        
+        // check goal amount more than zero
         if (goalCount < 1)
         {
-            Debug.LogWarning($"Expected at least 1 goal but found {goalCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 goal but found {goalCount}");
             valid = false;
         }
 
         // check same amount of nut and goals
         if (nutCount != goalCount)
         {
-            Debug.LogWarning($"The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
             // valid =  false;
         }
 
         // Check for invalid tiles
         if (errorTileCount > 0)
         {
-            Debug.LogWarning($"invalid tiles in input CSV file: Count {errorTileCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Invalid tiles in input CSV file: Count {errorTileCount}");
             valid = false;
         }
 
@@ -289,7 +289,7 @@ public static class GridUtils
             case Direction.Right:
                 return currentPosition + Vector2Int.right * distance;
             default:
-                Debug.LogWarning($"Unknown direction {direction}, returning current position");
+                DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"{nameof(GridUtils)}: Unknown direction {direction}, returning current position");
                 return currentPosition;
         }
     }

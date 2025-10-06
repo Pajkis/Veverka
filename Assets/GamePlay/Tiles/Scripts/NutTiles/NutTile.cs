@@ -147,7 +147,7 @@ public abstract class NutTile : TileObject
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)
         {
-            Debug.LogError($"MovableTile: SmoothMover component is missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.General, $"SmoothMover component is missing on {gameObject.name}", this);
             return;
         }
 
