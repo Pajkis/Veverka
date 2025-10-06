@@ -174,7 +174,7 @@ public class AudioManager : MonoBehaviour
         // load volume from game settings
         if (audioConfig == null)
         {
-            DebugLogger.LogError(DebugLogCategory.General, "AudioManager: AudioConfig is not assigned!");
+            DebugLogger.LogError(DebugLogCategory.Audio, "AudioManager: AudioConfig is not assigned!", this);
             return;
         }
       
@@ -209,11 +209,11 @@ public class AudioManager : MonoBehaviour
             // check if clip and source are not null
             if (clip == null)
             {
-                DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: Clip for {clipKey} is null.");               
+                DebugLogger.LogWarning(DebugLogCategory.Audio, $"AudioManager: Clip for {clipKey} is null.", this);               
             }
             if (source == null)
             {
-                DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: AudioSource for {channel} is null.");
+                DebugLogger.LogWarning(DebugLogCategory.Audio, $"AudioManager: AudioSource for {channel} is null.", this);
             }
 
             // adjust pitch for sound effects based on animation speed setting
@@ -238,7 +238,7 @@ public class AudioManager : MonoBehaviour
         }
         else
         {
-            DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: Missing clip or source for {clipKey}");
+            DebugLogger.LogWarning(DebugLogCategory.Audio, $"AudioManager: Missing clip or source for {clipKey}", this);
         }
     }
 
@@ -377,7 +377,7 @@ public class AudioManager : MonoBehaviour
         // check if the sound channel exists in sources
         if (!sources.TryGetValue(soundChannel, out AudioSource audioSource))
         {
-            DebugLogger.LogWarning(DebugLogCategory.General, $"AudioManager: AudioSource for {soundChannel} not found!");
+            DebugLogger.LogWarning(DebugLogCategory.Audio, $"AudioManager: AudioSource for {soundChannel} not found!", this);
             return;
         }
 

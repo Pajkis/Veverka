@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Movable object setup and control
@@ -147,7 +147,7 @@ public abstract class NutTile : TileObject
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)
         {
-            DebugLogger.LogError(DebugLogCategory.General, $"SmoothMover component is missing on {gameObject.name}", this);
+            DebugLogger.LogError(DebugLogCategory.NutMovement, $"SmoothMover component is missing on {gameObject.name}", this);
             return;
         }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// pulsates the sprite by changing its scale and contrast over time
@@ -26,7 +26,7 @@ public class PulsatingSprite : MonoBehaviour
 
         if (spriteRenderer == null)
         {
-            DebugLogger.LogError(DebugLogCategory.General, "SpriteRenderer komponenta nenalezena!", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "SpriteRenderer komponenta nenalezena!", this);
             return;
         }
 

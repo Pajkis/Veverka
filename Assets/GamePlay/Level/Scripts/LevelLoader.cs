@@ -165,7 +165,7 @@ public class LevelLoader : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.LevelSystem, "CSV data loaded successfully - parsing grid", this);
 
         // Parse the grid from the CSV data
-        TileType[,] grid = GridUtils.LoadGridFromTextAsset(levelCsv);
+        TileType[,] grid = TileParser.LoadGridFromTextAsset(levelCsv);
 
         // raise event to build grid
         if (grid == null)

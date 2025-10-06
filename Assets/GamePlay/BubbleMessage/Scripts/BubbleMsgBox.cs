@@ -36,7 +36,7 @@ public class BubbleMsgBox : MonoBehaviour
     {
         if (messageText == null)
         {
-            DebugLogger.LogError(DebugLogCategory.General, "Message Text is not found in the prefab.", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "Message Text is not found in the prefab.", this);
             return;
         }
 

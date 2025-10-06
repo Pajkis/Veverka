@@ -36,7 +36,7 @@ public class EnvironmentSounds : MonoBehaviour
         // Audio source check
         if (ambientClips == null || ambientClips.Count == 0)
         {
-            DebugLogger.LogWarning(DebugLogCategory.General, "No ambient clips assigned to EnvironmentSounds.", this);
+            DebugLogger.LogWarning(DebugLogCategory.Audio, "No ambient clips assigned to EnvironmentSounds.", this);
         }
 
         // AudioConfig settings

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Camera follows target and clamps within GameGrid bounds.
@@ -47,7 +47,7 @@ public class CameraFollow : MonoBehaviour
         if (levelInitData == null || levelInitData.gridOrigin == null ||
             levelInitData.gridCenterStartTarget == null || levelInitData.gridSize == null)
         {
-            DebugLogger.LogError(DebugLogCategory.Systems, $"{nameof(CameraFollow)}: LevelInitData or its parameters is not set. Please assign it or set values.", this);
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: LevelInitData or its parameters is not set. Please assign it or set values.", this);
             return;
         }
         Init(levelInitData.gridCenterStartTarget, levelInitData.gridOrigin, levelInitData.gridSize);
@@ -93,14 +93,14 @@ public class CameraFollow : MonoBehaviour
     {
         if (displayConfig == null)
         {
-            DebugLogger.LogError(DebugLogCategory.Systems, $"{nameof(CameraFollow)}: DisplayConfig is not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: DisplayConfig is not assigned!", this);
             return;
         }
 
         var profile = displayConfig.ResolveProfile();
         if (profile == null)
         {
-            DebugLogger.LogError(DebugLogCategory.Systems, $"{nameof(CameraFollow)}: No suitable display profile found!", this);
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: No suitable display profile found!", this);
             return;
         }
 

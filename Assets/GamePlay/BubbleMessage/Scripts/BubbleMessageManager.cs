@@ -28,7 +28,7 @@ public class BubbleMessageManager : MonoBehaviour
         gridRoot = GameObject.Find("GridRoot")?.transform;
         if (gridRoot == null)
         {
-            DebugLogger.LogError(DebugLogCategory.General, "GridRoot not found in the scene. Please make sure there is a GameObject named 'GridRoot'.", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "GridRoot not found in the scene. Please make sure there is a GameObject named 'GridRoot'.", this);
         }
     }
 
