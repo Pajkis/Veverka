@@ -681,7 +681,7 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  loadLevelScene:
+  levelTransitionScene:
     m_AssetGUID: ddfe4556805467348aba625339db2cd5
     m_SubObjectName: 
     m_SubObjectType: 

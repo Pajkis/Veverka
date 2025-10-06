@@ -14,7 +14,7 @@ public class InGameMenu : MonoBehaviour
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.LoadLevel
+            Scene = SceneType.LevelTransition
         });
     }
 

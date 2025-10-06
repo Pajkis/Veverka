@@ -55,7 +55,7 @@ public class LevelFinishedMenu : MonoBehaviour
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.LoadLevel
+            Scene = SceneType.LevelTransition
         });
         // Destroy(gameObject);
     }
@@ -72,7 +72,7 @@ public class LevelFinishedMenu : MonoBehaviour
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.LoadLevel
+            Scene = SceneType.LevelTransition
         });
       //  Destroy(gameObject);
     }

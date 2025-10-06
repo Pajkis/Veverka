@@ -8,5 +8,5 @@ public enum SceneType
     PlayerMenu,
     HighScoreMenu,
     GamePlay,
-    LoadLevel,
+    LevelTransition,
 }

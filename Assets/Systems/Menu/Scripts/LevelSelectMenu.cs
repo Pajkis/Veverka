@@ -126,7 +126,7 @@ public class LevelSelectMenu : MonoBehaviour
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LoadLevel
+                Scene = SceneType.LevelTransition
             });
 
             DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Loading level {levelNumber} from set {levelSelection.LevelSetType}", this);
