@@ -40,7 +40,7 @@ public class LevelSetManager : ScriptableObject
             {
                 if (setLookup.ContainsKey(levelSet.setType))
                 {
-                    Debug.LogWarning($"Duplicate level set type found: {levelSet.setType}");
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: Duplicate level set type found: {levelSet.setType}");
                     continue;
                 }
                 setLookup[levelSet.setType] = levelSet;
@@ -60,7 +60,7 @@ public class LevelSetManager : ScriptableObject
         {
             if (userLevelSet == null)
             {
-                Debug.LogError("UserLevelSet is not assigned in LevelSetManager!");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: UserLevelSet is not assigned!");
                 return null;
             }
 
@@ -79,7 +79,7 @@ public class LevelSetManager : ScriptableObject
 
         if (levelSet == null)
         {
-            Debug.LogError($"Level set of type {setType} not found!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: Level set of type {setType} not found!");
         }
 
         return levelSet;

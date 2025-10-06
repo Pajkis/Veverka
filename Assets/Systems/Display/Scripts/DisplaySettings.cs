@@ -58,7 +58,7 @@ public class DisplaySettings : MonoBehaviour
     {
         if (displayConfig == null)
         {
-            Debug.LogWarning("[DisplaySettings] Missing DisplayConfigSO — using defaults.");
+            DebugLogger.LogWarning(DebugLogCategory.General, "DisplaySettings: Missing DisplayConfigSO — using defaults.");
             // fallback defaults
             _active = new DisplayConfigPars
             {
@@ -79,7 +79,7 @@ public class DisplaySettings : MonoBehaviour
         _active = displayConfig.ResolveProfile();
         if (_active == null)
         {
-            Debug.LogWarning("[DisplaySettings] DisplayConfigSO has no profiles — using defaults.");
+            DebugLogger.LogWarning(DebugLogCategory.General, "DisplaySettings: DisplayConfigSO has no profiles — using defaults.");
             _active = new DisplayConfigPars
             {
                 referenceResolution = new Vector2Int(1920, 1080),

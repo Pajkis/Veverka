@@ -22,7 +22,7 @@ public class LevelSet : ScriptableObject
     {
         if (levelNumber < 0 || levelNumber >= levelCsvFiles.Length)
         {
-            Debug.LogError($"Level {levelNumber} not found in set {setType}. Available levels: 0-{levelCsvFiles.Length - 1}");
+            DebugLogger.LogError(DebugLogCategory.LevelLoading, $"LevelSet: Level {levelNumber} not found in set {setType}. Available levels: 0-{levelCsvFiles.Length - 1}");
             return null;
         }
 

@@ -15,7 +15,7 @@ public class ArrowButtonHandler : MonoBehaviour
     public void OnClick()
     {
         directionPressed.Raise(direction);
-        Debug.Log($"Arrow pressed: {direction}");
+        DebugLogger.Log(DebugLogCategory.General, $"Arrow pressed: {direction}", this);
     }
     
 }

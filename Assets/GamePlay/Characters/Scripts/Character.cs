@@ -259,19 +259,19 @@ public abstract class Character : MonoBehaviour
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)
         {
-            Debug.LogError($"[Character Init] SmoothMover component missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.CharacterMovement, $"SmoothMover component missing on {gameObject.name}", this);
             return;
         }
         smoothRotate = GetComponent<SmoothRotate>();
         if (smoothRotate == null)
         {
-            Debug.LogError($"[Character Init] SmoothRotate component missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.Rotation, $"SmoothRotate component missing on {gameObject.name}", this);
             return;
         }
         smoothRotate.Rotate(gridPosition, facingDirection, facingDirection, 0f,
-            onStart: null, onComplete: null);    
-        
-        Debug.Log($"[Character INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
+            onStart: null, onComplete: null);
+
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Character initialized - GridPos: {gridPosition}, WorldPos: {transform.position}", this);
   
     }  
 
