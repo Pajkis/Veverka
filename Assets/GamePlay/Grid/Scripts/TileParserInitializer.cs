@@ -17,7 +17,7 @@ public class TileParserInitializer : MonoBehaviour
     private void Awake()
     {
         // Make this object persist across scenes
-        DontDestroyOnLoad(gameObject);
+       // DontDestroyOnLoad(gameObject);
 
         // Initialize TileParser with the config
         if (tileParsingConfig != null)
