@@ -56,7 +56,7 @@ public class LevelSetManager : ScriptableObject
     public LevelSet GetLevelSet(LevelSetType setType)
     {
         // Handle UserLevels specially
-        if (setType == LevelSetType.UserLevels)
+        if (setType == LevelSetType.User)
         {
             if (userLevelSet == null)
             {
