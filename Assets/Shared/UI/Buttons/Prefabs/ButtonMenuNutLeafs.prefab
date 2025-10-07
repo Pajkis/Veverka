@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5080156997050286087}
   - component: {fileID: 3253936299739061598}
   m_Layer: 5
-  m_Name: ButtonMenuCommon
+  m_Name: ButtonMenuNutLeafs
   m_TagString: UIButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

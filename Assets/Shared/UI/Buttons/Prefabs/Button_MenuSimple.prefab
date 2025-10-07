@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9115972056776696656}
   - component: {fileID: 5847195177206558838}
   m_Layer: 5
-  m_Name: Button_LevelName
+  m_Name: Button_MenuSimple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1376180027, guid: 56f751f4fb464244eb6e2c7412732c48, type: 3}
+  m_Sprite: {fileID: 1799498212, guid: 71477d52235fe5244a4dd94c099d4867, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -106,9 +106,9 @@ MonoBehaviour:
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
-    m_HighlightedSprite: {fileID: 1722249143, guid: 56f751f4fb464244eb6e2c7412732c48, type: 3}
-    m_PressedSprite: {fileID: 1722249143, guid: 56f751f4fb464244eb6e2c7412732c48, type: 3}
-    m_SelectedSprite: {fileID: 1722249143, guid: 56f751f4fb464244eb6e2c7412732c48, type: 3}
+    m_HighlightedSprite: {fileID: -1697485365, guid: 71477d52235fe5244a4dd94c099d4867, type: 3}
+    m_PressedSprite: {fileID: -1697485365, guid: 71477d52235fe5244a4dd94c099d4867, type: 3}
+    m_SelectedSprite: {fileID: -1697485365, guid: 71477d52235fe5244a4dd94c099d4867, type: 3}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
     m_NormalTrigger: Normal
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level
+  m_text: Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d955eb3858845cd4fb30f4b7f4d2e83d, type: 2}
   m_sharedMaterial: {fileID: 948689851243620465, guid: d955eb3858845cd4fb30f4b7f4d2e83d, type: 2}
