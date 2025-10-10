@@ -1,0 +1,310 @@
+================================================================================
+                        USER LEVEL CREATION MANUAL
+                              Get Nuts Game
+================================================================================
+
+Welcome to the User Level Creation Guide! This manual will teach you everything
+you need to know about creating custom levels for Get Nuts.
+
+================================================================================
+                            BASIC TUTORIAL
+================================================================================
+
+1. WHAT ARE USER LEVELS?
+-------------------------
+User levels are custom game levels stored as simple text files (.csv format).
+You can create, edit, and share them with other players!
+
+Level files are located at:
+- Windows: C:\Users\[YourUsername]\AppData\LocalLow\Veverka\GetNuts\UserLevels\
+- Android: /storage/emulated/0/Android/data/com.Veverka.GetNuts/files/UserLevels/
+
+
+2. FILE FORMAT
+--------------
+Each level is a CSV (Comma-Separated Values) file with a grid layout.
+- Each cell contains a tile symbol
+- Cells are separated by commas (,)
+- Each row ends with a new line
+- NO extra empty lines at the end of file
+
+Example of a simple 5x3 level:
+W,W,W,W,W
+W,V,N,G,W
+W,W,W,W,W
+
+
+3. BASIC TILE SYMBOLS
+----------------------
+Here are the essential symbols you need to create a simple level:
+
+.   = Empty Road (walkable space)
+V   = Veverka (player starting position) - REQUIRED, use only ONE
+N   = Basic Nut (collectible item) - REQUIRED, use at least ONE
+G   = Goal (destination where nuts are delivered) - REQUIRED, use at least ONE
+W   = Basic Wall (blocks movement)
+R   = Road (decorative walkable surface)
+
+IMPORTANT RULES:
+- Every level MUST have exactly ONE Veverka (V)
+- Every level MUST have at least ONE Goal (G)
+- Every level MUST have at least ONE Nut (N, NS, or NW)
+
+
+4. YOUR FIRST LEVEL
+-------------------
+Let's create a simple level step by step:
+
+Step 1: Open UserLevel1.csv with a text editor (Notepad, Notepad++, etc.)
+Step 2: Delete all existing content
+Step 3: Copy and paste this example:
+
+W,W,W,W,W,W,W
+W,V,.,N,.,G,W
+W,W,W,W,W,W,W
+
+Step 4: Make sure there are NO empty lines after the last row
+Step 5: Save the file
+Step 6: Launch the game and select User Levels tab
+Step 7: Play UserLevel1!
+
+
+5. BASIC DESIGN TIPS
+--------------------
+✓ Start small - create simple levels first
+✓ Test your level - make sure it's solvable!
+✓ Grid must be rectangular or square - all rows same length
+✓ Every cell must have a symbol (no empty cells)
+✓ Design tip: Start from the goal and work backwards!
+
+EDITING TOOLS:
+- You can use any text editor (Notepad, Notepad++, VS Code, etc.)
+- TIP: Open the .csv file in Excel or similar spreadsheet program for easier
+  visual editing! Each cell becomes one grid tile - much easier to see!
+- In Excel: Save as CSV (Comma delimited) when done
+
+
+================================================================================
+                          ADVANCED TUTORIAL
+================================================================================
+
+6. ALL TILE SYMBOLS
+-------------------
+
+ROADS (Walkable):
+  .     Empty Road
+  R     Basic Road
+  RS    Stone Road
+  RSF   Stone Filled Hole
+
+PLAYER:
+  V     Veverka (player start)
+
+NUTS (Collectibles):
+  N     Basic Nut
+  NS    Stone Nut
+  NW    Water Nut
+
+GOAL:
+  G     Basic Goal
+
+OBSTACLES:
+  W     Basic Wall
+  WS    Stone Wall
+  H     Hole
+  HW    Water Hole
+
+
+7. NUT & HOLE INTERACTIONS
+---------------------------
+
+N + H/HW   → Ooops (nut lost, hole stays)
+NS + H     → Fills hole → RSF road
+NS + HW    → Fills hole + splash → RSF road
+NW + H     → Creates HW (water hole)
+NW + HW    → Splash only (HW stays)
+
+SPLASH: Pushes adjacent nuts away (up/down/left/right, not diagonal)
+
+
+8. GRID SIZE & CAMERA
+----------------------
+
+- Grid can be rectangular or square
+- Recommended: Up to 15 columns × 11 rows
+- Up to 15×11: Static camera (entire level visible)
+- Larger than 15×11: Camera follows Veverka
+- Technical limit: Very large grids possible but not recommended
+- Keep grids reasonable for good gameplay
+
+
+9. LEVEL DESIGN
+----------------
+
+REQUIREMENTS:
+- Exactly 1 Veverka (V)
+- At least 1 Goal (G)
+- At least 1 Nut (N, NS, or NW)
+- All rows same length (rectangular or square)
+- Every cell must have a symbol
+- No walls needed on edges (game handles boundaries)
+
+DESIGN STRATEGY:
+- Place Goals first
+- Work backwards to determine nut positions
+- Add Veverka start position
+- Add obstacles and challenges
+- Test for solvability
+
+
+10. SHARING LEVELS
+-------------------
+
+TO SHARE:
+1. Copy your UserLevel[X].csv file from UserLevels folder
+2. Share via email, cloud storage, etc.
+
+TO IMPORT:
+1. Copy received .csv file to your UserLevels folder
+2. Rename to UserLevel[1-10].csv
+3. Launch game and play
+
+NAMING: Must be exactly UserLevel1.csv through UserLevel10.csv
+
+
+================================================================================
+                           TROUBLESHOOTING
+================================================================================
+
+11. WHEN LEVEL FAILS TO LOAD
+-----------------------------
+
+If your level has an error, the game returns to menu with no error message.
+You must manually check and fix your level file.
+
+COMMON PROBLEMS:
+
+✗ Missing required elements
+  → Must have: 1 V, at least 1 G, at least 1 Nut
+
+✗ Wrong column count (rows have different lengths)
+  → Count: (commas per row) + 1 = columns
+  → All rows must have SAME count
+
+✗ Empty cells in grid
+  → Every cell needs a symbol
+  → Use . for empty walkable space
+
+✗ Extra empty lines
+  → No blank lines at end of file or in middle
+
+✗ Missing commas between symbols
+  → Wrong: W W W
+  → Right: W,W,W
+
+✗ Extra comma at end of row
+  → Wrong: W,W,W,
+  → Right: W,W,W
+
+✗ Invalid or lowercase symbols
+  → Must be UPPERCASE: V, N, G, W (not v, n, g, w)
+  → Only use symbols from section 6
+
+✗ Spaces before/after symbols
+  → Wrong: W, V, N
+  → Right: W,V,N
+
+✗ Wrong file extension
+  → Must be .csv (not .txt or .csv.txt)
+
+✗ Wrong file name
+  → Must be: UserLevel1.csv to UserLevel10.csv (exact format)
+
+✗ Grid not rectangular/square
+  → All rows must have equal length
+
+✗ Multiple Veverkas
+  → Only ONE V allowed
+
+✗ No nuts or no goals
+  → Need at least 1 nut and at least 1 goal
+
+✗ Tabs instead of commas
+  → Use commas, not tabs (save as CSV in Excel)
+
+✗ File encoding issues
+  → Use plain text (UTF-8 or ASCII)
+
+
+HOW TO CHECK YOUR FILE:
+
+1. COLUMN COUNT:
+   - Count commas in first row, add 1
+   - Repeat for every row
+   - All must be equal
+
+2. VISUAL CHECK IN EXCEL:
+   - Open .csv in Excel/Google Sheets
+   - Should be perfect rectangle or square
+   - No empty cells
+   - Save as "CSV (Comma delimited)"
+
+3. EMPTY LINES:
+   - Scroll to end of file
+   - Delete any blank lines after last row
+
+4. TRAILING SPACES:
+   - No spaces before first symbol
+   - No spaces after last symbol in row
+
+
+12. QUICK REFERENCE
+--------------------
+
+REQUIRED:
+  1× V (Veverka)
+  1+ G (Goal)
+  1+ Nuts (N, NS, or NW)
+
+SYMBOLS:
+  ROADS:     . R RS RSF
+  PLAYER:    V
+  NUTS:      N NS NW
+  GOAL:      G
+  OBSTACLES: W WS H HW
+
+INTERACTIONS:
+  N + H/HW   → Ooops
+  NS + H     → RSF road
+  NS + HW    → RSF + splash
+  NW + H     → HW
+  NW + HW    → Splash
+
+FILE FORMAT:
+  ✓ .csv with commas between symbols
+  ✓ All rows same length
+  ✓ Rectangular or square
+  ✓ Every cell has symbol
+  ✓ NO empty lines at end
+  ✓ UPPERCASE only
+  ✓ Named UserLevel[1-10].csv
+
+GRID SIZE:
+  Up to 15×11: Static camera
+  Larger: Following camera
+  Recommended: Under 30×30
+
+EDITING TIP: Use Excel for easier visual editing!
+
+
+================================================================================
+                           END OF MANUAL
+================================================================================
+
+Happy Level Creating!
+
+If your level doesn't load, check the Troubleshooting section!
+
+Design Tip: Start from the goal and work backwards!
+
+Version 1.0

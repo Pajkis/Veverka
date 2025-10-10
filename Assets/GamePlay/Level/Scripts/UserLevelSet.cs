@@ -9,6 +9,8 @@ public class UserLevelSet : LevelSet
 {
     private const int USER_LEVEL_COUNT = 10;
     private const string USER_LEVELS_FOLDER = "UserLevels";
+    private const string MANUAL_FILE_NAME = "UserLevelManual.txt";
+    private const string MANUAL_ASSET_PATH = "Assets/Gameplay/Level/Data/UserLevelManual.txt";
 
     private TextAsset[] cachedLevels;
 
@@ -89,6 +91,43 @@ public class UserLevelSet : LevelSet
         else
         {
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"User levels initialization complete - created {createdCount} new level(s)");
+        }
+
+        // Copy UserLevelManual.txt to UserLevels folder if it doesn't exist
+        CopyManualToUserLevelsFolder(userLevelsPath);
+    }
+
+    /// <summary>
+    /// Copy UserLevelManual.txt from Assets to UserLevels folder if it doesn't exist
+    /// </summary>
+    private static void CopyManualToUserLevelsFolder(string userLevelsPath)
+    {
+        string destinationPath = Path.Combine(userLevelsPath, MANUAL_FILE_NAME);
+
+        // Only copy if manual doesn't exist in UserLevels folder
+        if (File.Exists(destinationPath))
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "UserLevelManual.txt already exists in UserLevels folder");
+            return;
+        }
+
+        // Try to read manual from Assets
+        if (File.Exists(MANUAL_ASSET_PATH))
+        {
+            try
+            {
+                string manualContent = File.ReadAllText(MANUAL_ASSET_PATH);
+                File.WriteAllText(destinationPath, manualContent);
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Copied UserLevelManual.txt to: {destinationPath}");
+            }
+            catch (System.Exception ex)
+            {
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to copy UserLevelManual.txt: {ex.Message}");
+            }
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"UserLevelManual.txt not found at: {MANUAL_ASSET_PATH}");
         }
     }
 
