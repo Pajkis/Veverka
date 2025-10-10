@@ -26,6 +26,7 @@ public class GridBuilder : MonoBehaviour
     [Header("Tile Prefabs")]
     [SerializeField] private GameObject emptyPrefab;
     [SerializeField] private GameObject roadPrefab;
+    [SerializeField] private GameObject stoneRoadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
     [SerializeField] private GameObject veverkaPrefab;
     [SerializeField] private GameObject nutPrefab;
@@ -353,7 +354,7 @@ public class GridBuilder : MonoBehaviour
                         }
                         else if (roadType == RoadType.StoneRoad)
                         {
-                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            GameObject roadTile = Instantiate(stoneRoadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                             roadTile.transform.SetParent(gridRoot, false);
                             roadTile.transform.localPosition = worldTilePos;
                             gridData.SetTileType(tilePos, TileType.Road);
