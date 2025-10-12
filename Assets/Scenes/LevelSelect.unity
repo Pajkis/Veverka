@@ -156,8 +156,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.2, y: -2.15}
-  m_SizeDelta: {x: 1219.07, y: 766.46}
+  m_AnchoredPosition: {x: -43.2, y: -11.95}
+  m_SizeDelta: {x: 1219.07, y: 786.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &10288641
 MonoBehaviour:
@@ -189,12 +189,10 @@ MonoBehaviour:
     WHERE TO FIND YOUR LEVELS:
 
 
-
     Windows:
 
     C:\
     Users\YourUsername\AppData\LocalLow\Veverka\GetNuts\ UserLevels\
-
 
 
     Android:
@@ -204,7 +202,6 @@ MonoBehaviour:
 
     HOW
     TO CREATE LEVELS:
-
 
 
     Check the UserLevelManual.txt file in the UserLevels
@@ -2988,7 +2985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1263481094
 MonoBehaviour:
   m_ObjectHideFlags: 0
