@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: 666_UserSet
   m_EditorClassIdentifier: 
   setType: 666
-  setDisplayName: User Levels
+  setDisplayName: User
   levelCsvFiles: []

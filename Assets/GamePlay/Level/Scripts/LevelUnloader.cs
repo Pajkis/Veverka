@@ -12,8 +12,6 @@ public class LevelUnloader : MonoBehaviour
     [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private LevelSelection levelSelection;
 
-    private bool isUnloading = false;
-
     /// <summary>
     /// Start is called before update - checks LevelAction and proceeds if Unload
     /// </summary>
@@ -41,8 +39,6 @@ public class LevelUnloader : MonoBehaviour
     /// </summary>
     private IEnumerator UnloadLevelCoroutine()
     {
-        isUnloading = true;
-
         DebugLogger.Log(DebugLogCategory.LevelSystem, "Starting level unload process", this);
 
         // Reset grid
@@ -73,7 +69,5 @@ public class LevelUnloader : MonoBehaviour
             EventType = SceneNavigationEventType.GoToScene,
             Scene = SceneType.LevelSelect
         });
-
-        isUnloading = false;
     }
 }

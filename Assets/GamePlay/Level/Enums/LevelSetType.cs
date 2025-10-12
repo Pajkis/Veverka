@@ -7,5 +7,5 @@ public enum LevelSetType
     Stone = 1,
     Water = 2,
     Fire = 3,
-    UserLevels = 666,
+    User = 666,
 }

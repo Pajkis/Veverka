@@ -14,12 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelSelect.unity
     guid: cf32a0027ff2bcc44a687b34da600605
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/LevelTransition.unity
     guid: ddfe4556805467348aba625339db2cd5
-  - enabled: 1
-    path: Assets/Scenes/LevelUnload.unity
-    guid: 9428cb2979b128349b87eebd3ae2d3b4
   - enabled: 1
     path: Assets/Scenes/GamePlay.unity
     guid: 2cda990e2423bbf4892e6590ba056729

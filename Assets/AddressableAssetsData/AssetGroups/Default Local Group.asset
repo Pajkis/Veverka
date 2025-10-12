@@ -16,12 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: b080ecd0a60248d45a7433c7f327ff4e
-  m_SerializeEntries:
-  - m_GUID: ddfe4556805467348aba625339db2cd5
-    m_Address: Assets/Scenes/LevelTransition.unity
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: d8a8b0d8e1f55e045b1c8c98673085e6, type: 2}
   m_SchemaSet:

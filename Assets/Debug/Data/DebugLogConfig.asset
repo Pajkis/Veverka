@@ -12,23 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7024ed8b10f774e4ebc25da14e4d2fd8, type: 3}
   m_Name: DebugLogConfig
   m_EditorClassIdentifier: 
+  gameplayLog: 0
   turnControlLog: 0
   turnRecordLog: 0
   undoLogicLog: 0
+  bubbleMessageLog: 0
   characterMovementLog: 0
   nutMovementLog: 0
   rotationLog: 0
-  eventSystemLog: 0
-  audioLog: 0
-  gridSystemLog: 0
-  tileInteractionLog: 0
-  inputLog: 0
-  uiLog: 0
-  settingsLog: 0
-  gameplayLog: 0
-  levelSystemLog: 0
-  bubbleMessageLog: 0
+  gridSystemLog: 1
+  tileInteractionLog: 1
   goalSystemLog: 0
+  levelSystemLog: 1
+  uiLog: 0
+  inputLog: 0
   sceneManagerLog: 0
+  eventSystemLog: 0
+  settingsLog: 0
+  audioLog: 0
+  displayLog: 0
   enableAllLogs: 0
   useColoredLogs: 1
