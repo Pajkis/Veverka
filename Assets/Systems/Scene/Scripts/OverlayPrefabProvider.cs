@@ -17,6 +17,7 @@ public class OverlayPrefabProvider : MonoBehaviour
     [SerializeField] private GameObject settingsMenuPrefab;
     [SerializeField] private GameObject gameHelpPrefab;
     [SerializeField] private GameObject creditsPrefab;
+    [SerializeField] private GameObject notificationPrefab;
 
     private void Awake()
     {
@@ -45,6 +46,7 @@ public class OverlayPrefabProvider : MonoBehaviour
             OverlayType.SettingsMenu => settingsMenuPrefab,
             OverlayType.GameHelp => gameHelpPrefab,
             OverlayType.Credits => creditsPrefab,
+            OverlayType.Notification => notificationPrefab,
             _ => null,
         };
     }
