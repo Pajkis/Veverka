@@ -20,8 +20,8 @@ MonoBehaviour:
   characterMovementLog: 0
   nutMovementLog: 0
   rotationLog: 0
-  gridSystemLog: 1
-  tileInteractionLog: 1
+  gridSystemLog: 0
+  tileInteractionLog: 0
   goalSystemLog: 0
   levelSystemLog: 1
   uiLog: 0

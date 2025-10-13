@@ -1,5 +1,7 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 /// <summary>
 /// Initialize user levels on game start
@@ -7,6 +9,7 @@ using UnityEngine;
 public class UserLevelInitializer : MonoBehaviour
 {
     [SerializeField] private DisplayConfig displayConfig;
+    [SerializeField] private AssetReference userLevelManualAsset;
 
     /// <summary>
     /// Initialize user levels - call this from GameInit or other initialization system
@@ -24,12 +27,33 @@ public class UserLevelInitializer : MonoBehaviour
             DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "DisplayConfig not assigned - using fallback values");
         }
 
-        // Initialize user levels (without manual for now)
-        UserLevelSet.InitializeUserLevels(displayConfig);
-        DebugLogger.Log(DebugLogCategory.LevelSystem, $"User levels initialization complete at: {UserLevelSet.GetUserLevelsPath()}");
+        // Load manual from Addressables
+        TextAsset manualTextAsset = null;
+        if (userLevelManualAsset != null && userLevelManualAsset.RuntimeKeyIsValid())
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "Loading UserLevelManual from Addressables");
 
-        // Yield to ensure coroutine completes properly
-        yield return null;
+            AsyncOperationHandle<TextAsset> handle = userLevelManualAsset.LoadAssetAsync<TextAsset>();
+            yield return handle;
+
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                manualTextAsset = handle.Result;
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"UserLevelManual loaded successfully: {manualTextAsset.text.Length} characters");
+            }
+            else
+            {
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to load UserLevelManual from Addressables: {handle.OperationException}");
+            }
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "UserLevelManual AssetReference not assigned or invalid");
+        }
+
+        // Initialize user levels with manual
+        UserLevelSet.InitializeUserLevels(displayConfig, manualTextAsset);
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"User levels initialization complete at: {UserLevelSet.GetUserLevelsPath()}");
     }
 
 #if UNITY_EDITOR
