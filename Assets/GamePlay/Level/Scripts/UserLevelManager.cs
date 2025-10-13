@@ -108,45 +108,6 @@ public class UserLevelManager : MonoBehaviour
     #region Level Export Operations
 
     /// <summary>
-    /// Share current level using native share dialog
-    /// </summary>
-    public void ShareLevel()
-    {
-        string levelPath = UserLevelSet.GetUserLevelPath(currentLevelNumber);
-
-        if (!File.Exists(levelPath))
-        {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Level file not found at: {levelPath}");
-            NotificationManager.ShowError($"Level {currentLevelNumber + 1} not found", "404");
-            return;
-        }
-
-        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Sharing level {currentLevelNumber + 1} from: {levelPath}");
-
-        try
-        {
-            new NativeShare()
-                .AddFile(levelPath)
-                .SetSubject($"GetNuts - User Level {currentLevelNumber + 1}")
-                .SetText($"Check out my custom level for GetNuts game!")
-                .SetCallback((result, shareTarget) =>
-                {
-                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Share result: {result}, target: {shareTarget}");
-                    if (result == NativeShare.ShareResult.Shared)
-                    {
-                        NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} shared successfully");
-                    }
-                })
-                .Share();
-        }
-        catch (System.Exception ex)
-        {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to share level: {ex.Message}");
-            NotificationManager.ShowError("Failed to share level", "500");
-        }
-    }
-
-    /// <summary>
     /// Save current level to local storage (Downloads on Android, Documents on Windows)
     /// </summary>
     public void SaveLevel()
