@@ -118,7 +118,7 @@ public static class TileParser
                 result.TileType = TileType.Road;
                 result.RoadType = RoadType.StoneRoad;
                 break;
-            case "RSF":
+            case "HS":
                 result.TileType = TileType.Road;
                 result.RoadType = RoadType.StoneFilledHole;
                 break;

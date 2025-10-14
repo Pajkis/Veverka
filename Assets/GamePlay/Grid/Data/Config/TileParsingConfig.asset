@@ -79,7 +79,7 @@ MonoBehaviour:
     goalType: 0
     obstacleType: 0
     roadType: 3
-  - symbol: RSF
+  - symbol: HS
     tileType: 1
     nutType: 0
     goalType: 0

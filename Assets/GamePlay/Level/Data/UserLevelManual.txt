@@ -9,19 +9,15 @@ you need to know about creating custom levels for Get Nuts.
 ================================================================================
                             BASIC TUTORIAL
 ================================================================================
-
+-------------------
 1. WHAT ARE USER LEVELS?
--------------------------
+-------------------
 User levels are custom game levels stored as simple text files (.csv format).
 You can create, edit, and share them with other players!
 
-Level files are located at:
-- Windows: C:\Users\[YourUsername]\AppData\LocalLow\Veverka\GetNuts\UserLevels\
-- Android: /storage/emulated/0/Android/data/com.Veverka.GetNuts/files/UserLevels/
-
-
+-------------------
 2. FILE FORMAT
---------------
+-------------------
 Each level is a CSV (Comma-Separated Values) file with a grid layout.
 - Each cell contains a tile symbol
 - Cells are separated by commas (,)
@@ -33,9 +29,9 @@ W,W,W,W,W
 W,V,N,G,W
 W,W,W,W,W
 
-
+-------------------
 3. BASIC TILE SYMBOLS
-----------------------
+-------------------
 Here are the essential symbols you need to create a simple level:
 
 .   = Empty Road (walkable space)
@@ -43,14 +39,13 @@ V   = Veverka (player starting position) - REQUIRED, use only ONE
 N   = Basic Nut (collectible item) - REQUIRED, use at least ONE
 G   = Goal (destination where nuts are delivered) - REQUIRED, use at least ONE
 W   = Basic Wall (blocks movement)
-R   = Road (decorative walkable surface)
 
 IMPORTANT RULES:
 - Every level MUST have exactly ONE Veverka (V)
 - Every level MUST have at least ONE Goal (G)
 - Every level MUST have at least ONE Nut (N, NS, or NW)
 
-
+-------------------
 4. YOUR FIRST LEVEL
 -------------------
 Let's create a simple level step by step:
@@ -68,7 +63,7 @@ Step 5: Save the file
 Step 6: Launch the game and select User Levels tab
 Step 7: Play UserLevel1!
 
-
+-------------------
 5. BASIC DESIGN TIPS
 --------------------
 ✓ Start small - create simple levels first
@@ -78,11 +73,10 @@ Step 7: Play UserLevel1!
 ✓ Design tip: Start from the goal and work backwards!
 
 EDITING TOOLS:
-- You can use any text editor (Notepad, Notepad++, VS Code, etc.)
+- MS Excel, Google Sheets, Libre office are recommended tools, but you can use any text editor (Notepad, Notepad++, VS Code, etc.)
 - TIP: Open the .csv file in Excel or similar spreadsheet program for easier
   visual editing! Each cell becomes one grid tile - much easier to see!
 - In Excel: Save as CSV (Comma delimited) when done
-
 
 ================================================================================
                           ADVANCED TUTORIAL
@@ -92,10 +86,10 @@ EDITING TOOLS:
 -------------------
 
 ROADS (Walkable):
-  .     Empty Road
-  R     Basic Road
-  RS    Stone Road
-  RSF   Stone Filled Hole
+  .     Empty Road - Walkable space without any visuals
+  R     Basic Road - TBD
+  RS    Stone Road - TBD
+  HS   Stone Filled Hole 
 
 PLAYER:
   V     Veverka (player start)
@@ -124,18 +118,16 @@ NS + HW    → Fills hole + splash → RSF road
 NW + H     → Creates HW (water hole)
 NW + HW    → Splash only (HW stays)
 
-SPLASH: Pushes adjacent nuts away (up/down/left/right, not diagonal)
+SPLASH: Pushes adjacent water and baisc nuts (stone nuts are too heavy!) away (up/down/left/right, not diagonal)
 
 
 8. GRID SIZE & CAMERA
 ----------------------
 
 - Grid can be rectangular or square
-- Recommended: Up to 15 columns × 11 rows
 - Up to 15×11: Static camera (entire level visible)
-- Larger than 15×11: Camera follows Veverka
-- Technical limit: Very large grids possible but not recommended
-- Keep grids reasonable for good gameplay
+- Larger than 15×11: Camera follows Veverka (Character)
+- Very large grids possible - you can try the limits and let us know!
 
 
 9. LEVEL DESIGN
@@ -184,11 +176,10 @@ IMPORTANT NOTES:
 - Export will NOT overwrite existing files (prevents data loss)
 - If export file already exists, you'll get an error - delete or rename old file
 - Exported files are named: UserLevel1.csv, UserLevel2.csv, etc.
-- You can share exported files via email, cloud storage, messaging apps, etc.
 
 SHARING WORKFLOW:
 1. Export your level from the game
-2. Share the .csv file (email, Google Drive, etc.)
+2. Share the .csv file (Discord, forums, email, Google Drive, etc.)
 3. Recipient imports the file into their game
 4. Play and enjoy!
 
@@ -293,7 +284,7 @@ REQUIRED:
   1+ Nuts (N, NS, or NW)
 
 SYMBOLS:
-  ROADS:     . R RS RSF
+  ROADS:     . R RS HS
   PLAYER:    V
   NUTS:      N NS NW
   GOAL:      G
@@ -301,8 +292,8 @@ SYMBOLS:
 
 INTERACTIONS:
   N + H/HW   → Ooops
-  NS + H     → RSF road
-  NS + HW    → RSF + splash
+  NS + H     → HS road
+  NS + HW    → HS + splash
   NW + H     → HW
   NW + HW    → Splash
 
@@ -313,15 +304,6 @@ FILE FORMAT:
   ✓ Every cell has symbol
   ✓ NO empty lines at end
   ✓ UPPERCASE only
-  ✓ Named UserLevel[1-10].csv
-
-GRID SIZE:
-  Up to 15×11: Static camera
-  Larger: Following camera
-  Recommended: Under 30×30
-
-EDITING TIP: Use Excel for easier visual editing!
-
 
 ================================================================================
                            END OF MANUAL
@@ -333,4 +315,4 @@ If your level doesn't load, check the Troubleshooting section!
 
 Design Tip: Start from the goal and work backwards!
 
-Version 1.0
+Version 1.1

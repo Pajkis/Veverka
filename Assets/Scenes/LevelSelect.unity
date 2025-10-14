@@ -156,8 +156,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43.2, y: 28.049992}
-  m_SizeDelta: {x: 1219.07, y: 706.06}
+  m_AnchoredPosition: {x: -106.61, y: 28.049992}
+  m_SizeDelta: {x: 1092.24, y: 706.06}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &10288641
 MonoBehaviour:
@@ -179,33 +179,13 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'USER LEVELS
-
-
-    User Levels are custom levels that you can create, edit,
-    and share with others!
-
-
-    WHERE TO FIND YOUR LEVELS:
-
-
-    Windows:
-
-    C:\
-    Users\YourUsername\AppData\LocalLow\Veverka\GetNuts\ UserLevels\
-
-
-    Android:
-
-    /storage/emulated/0/Android/data/com.Veverka.GetNuts/files/UserLevels/
-
-
-    HOW
-    TO CREATE LEVELS:
-
-
-    Check the UserLevelManual.txt file in the UserLevels
-    folder for detailed instructions on creating and editing levels!'
+  m_text: "USER LEVELS\nUser Levels are custom levels that you can create, edit,
+    and share with others!\n\nHOW TO CREATE / EDIT?\nCreating / editing of user levels
+    is explained in UserLevelManual You can download it by \"Get Manual\", it will
+    appear in Documents/GetNuts \n\nIMPORT / EXPORT LEVELS\nSelect a level you want
+    to import / export.\nImport -> Choose a file from your drive to rewrite selected
+    level\nExport -> Export selected level to Documents/GetNuts\nExport All -> Export
+    all levels to Documents/GetNuts"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -544,6 +524,140 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5401712964375081367, guid: a94b4620606ccbf4da080214e54b7f4e, type: 3}
   m_PrefabInstance: {fileID: 56524220}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &91101382
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 91101383}
+  - component: {fileID: 91101385}
+  - component: {fileID: 91101384}
+  m_Layer: 5
+  m_Name: Text_SelectedLevel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &91101383
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91101382}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 725795962}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -174.54, y: -195.83}
+  m_SizeDelta: {x: 318.29, y: 40.33}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &91101384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91101382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: SELECTED LEVEL
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4279642687
+  m_fontColor: {r: 0.24705882, g: 0.16470589, b: 0.08627451, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &91101385
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91101382}
+  m_CullTransparentMesh: 1
 --- !u!1001 &117378633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -741,7 +855,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 753, y: 211}
+  m_AnchoredPosition: {x: -174.53998, y: -256}
   m_SizeDelta: {x: 230, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &120481457
@@ -1321,7 +1435,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -279
+      value: 195
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1807,11 +1921,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 763.00006
+      value: 762.99994
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -176
+      value: -256
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2262,7 +2376,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1312753224}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.912
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2425,11 +2539,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 762.99994
+      value: 214
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 39.99997
+      value: -256
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2499,6 +2613,7 @@ RectTransform:
   - {fileID: 599890463}
   - {fileID: 789622161}
   - {fileID: 120481456}
+  - {fileID: 91101383}
   m_Father: {fileID: 1343382310}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2790,11 +2905,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 763.00006
+      value: 488
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -77
+      value: -256
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -4107,7 +4222,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Name
-      value: Button_Help
+      value: Button_Create
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_SpriteState.m_PressedSprite
@@ -4674,7 +4789,7 @@ RectTransform:
   m_Father: {fileID: 299303858}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.912}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5233,7 +5348,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 550}
   m_SizeDelta: {x: 0, y: 500}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1531699182
@@ -5475,7 +5590,7 @@ GameObject:
   - component: {fileID: 1574095051}
   - component: {fileID: 1574095050}
   m_Layer: 5
-  m_Name: Panel_Help
+  m_Name: Panel_CreateLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
