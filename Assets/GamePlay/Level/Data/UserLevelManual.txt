@@ -157,19 +157,45 @@ DESIGN STRATEGY:
 - Test for solvability
 
 
-10. SHARING LEVELS
--------------------
+10. IMPORT / EXPORT LEVELS
+--------------------------
 
-TO SHARE:
-1. Copy your UserLevel[X].csv file from UserLevels folder
-2. Share via email, cloud storage, etc.
+The game includes built-in Import/Export functionality in the User Levels tab!
 
-TO IMPORT:
-1. Copy received .csv file to your UserLevels folder
-2. Rename to UserLevel[1-10].csv
-3. Launch game and play
+EXPORT LEVELS:
+1. Go to User Levels → Create tab
+2. Select level number from dropdown (1-10)
+3. Click "Export" to save selected level
+4. OR click "Export All" to save all 10 levels at once
+5. Files are saved to:
+   - Windows: Documents\GetNuts\
+   - Android: Downloads folder
 
-NAMING: Must be exactly UserLevel1.csv through UserLevel10.csv
+IMPORT LEVELS:
+1. Go to User Levels → Create tab
+2. Select level number you want to replace (1-10)
+3. Click "Import"
+4. Windows Editor: File picker opens - select your .csv file
+5. Windows/Android Build: Place .csv file in Documents\GetNuts or Downloads,
+   then click Import (file must be named UserLevel[1-10].csv)
+
+IMPORTANT NOTES:
+- Import OVERWRITES the selected level slot
+- Export will NOT overwrite existing files (prevents data loss)
+- If export file already exists, you'll get an error - delete or rename old file
+- Exported files are named: UserLevel1.csv, UserLevel2.csv, etc.
+- You can share exported files via email, cloud storage, messaging apps, etc.
+
+SHARING WORKFLOW:
+1. Export your level from the game
+2. Share the .csv file (email, Google Drive, etc.)
+3. Recipient imports the file into their game
+4. Play and enjoy!
+
+MANUAL FILE LOCATIONS:
+If you want to manually access level files:
+- Windows: C:\Users\[YourUsername]\AppData\LocalLow\Veverka\GetNuts\UserLevels\
+- Android: /storage/emulated/0/Android/data/com.Veverka.GetNuts/files/UserLevels/
 
 
 ================================================================================
