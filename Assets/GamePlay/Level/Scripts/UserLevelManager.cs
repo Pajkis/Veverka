@@ -297,4 +297,103 @@ public class UserLevelManager : MonoBehaviour
     }
 
     #endregion
+
+    #region Level Import Operations
+
+    /// <summary>
+    /// Import level from file picker
+    /// </summary>
+    public void ImportLevel()
+    {
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Starting import for level {currentLevelNumber + 1}");
+
+#if UNITY_EDITOR
+        // Use Unity Editor file picker
+        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Level CSV", "", "csv");
+        if (!string.IsNullOrEmpty(path))
+        {
+            ImportLevelFromPath(path);
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "File picker cancelled by user");
+        }
+#else
+        // For builds: Simple approach - look for file in expected location
+        ImportLevelFromExpectedLocation();
+#endif
+    }
+
+    /// <summary>
+    /// Import level from expected location (fallback for builds without NativeFilePicker)
+    /// </summary>
+    private void ImportLevelFromExpectedLocation()
+    {
+#if UNITY_ANDROID
+        string downloadsPath = "/storage/emulated/0/Download";
+#else
+        string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+        string downloadsPath = Path.Combine(documentsPath, "GetNuts");
+#endif
+
+        string expectedFileName = $"UserLevel{currentLevelNumber + 1}.csv";
+        string sourcePath = Path.Combine(downloadsPath, expectedFileName);
+
+        if (File.Exists(sourcePath))
+        {
+            ImportLevelFromPath(sourcePath);
+        }
+        else
+        {
+            string location = downloadsPath.Contains("Download") ? "Downloads" : "Documents\\GetNuts";
+            NotificationManager.ShowError(ErrorCode.FileNotFound, $"Place {expectedFileName} in {location}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Import file not found at: {sourcePath}");
+        }
+    }
+
+    /// <summary>
+    /// Import level from specified file path with basic validation
+    /// </summary>
+    private void ImportLevelFromPath(string sourcePath)
+    {
+        try
+        {
+            // Check if file exists
+            if (!File.Exists(sourcePath))
+            {
+                NotificationManager.ShowError(ErrorCode.FileNotFound, sourcePath);
+                return;
+            }
+
+            // Check if it's a CSV file
+            if (!sourcePath.EndsWith(".csv", System.StringComparison.OrdinalIgnoreCase))
+            {
+                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File must be .csv format");
+                return;
+            }
+
+            // Read CSV content
+            string csvContent = File.ReadAllText(sourcePath);
+
+            if (string.IsNullOrEmpty(csvContent))
+            {
+                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File is empty");
+                return;
+            }
+
+            // Copy to UserLevels folder - full validation happens when level loads in game
+            string destinationPath = UserLevelSet.GetUserLevelPath(currentLevelNumber);
+            File.WriteAllText(destinationPath, csvContent);
+
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level imported successfully to: {destinationPath}");
+            NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} imported successfully");
+        }
+        catch (System.Exception ex)
+        {
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to import level from {sourcePath}: {ex.Message}");
+            NotificationManager.ShowError(ErrorCode.FileReadFailed, $"Level {currentLevelNumber + 1}");
+        }
+    }
+
+    #endregion
 }
