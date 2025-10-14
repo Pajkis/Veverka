@@ -49,8 +49,7 @@ public class NotificationOverlay : MonoBehaviour
             }
             title += "!";
 
-            titleText.text = title;
-            titleText.color = GetColorForType(notification.Type);
+            titleText.text = title;            
         }
         else
         {
@@ -70,8 +69,7 @@ public class NotificationOverlay : MonoBehaviour
         // Set icon based on type
         if (iconImage != null)
         {
-            iconImage.sprite = GetIconForType(notification.Type);
-            iconImage.color = GetColorForType(notification.Type);
+            iconImage.sprite = GetIconForType(notification.Type);       
         }
 
         DebugLogger.Log(DebugLogCategory.UI, $"NotificationOverlay displayed: [{notification.Type}] {notification.Message}");
@@ -86,16 +84,5 @@ public class NotificationOverlay : MonoBehaviour
             NotificationType.Info => infoIcon,
             _ => null
         };
-    }
-
-    private Color GetColorForType(NotificationType type)
-    {
-        return type switch
-        {
-            NotificationType.Success => new Color(0.2f, 0.8f, 0.2f), // Green
-            NotificationType.Error => new Color(0.9f, 0.2f, 0.2f),   // Red
-            NotificationType.Info => new Color(0.4f, 0.7f, 1f),      // Blue
-            _ => Color.white
-        };
-    }
+    } 
 }

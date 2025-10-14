@@ -32,7 +32,7 @@ public class UserLevelManager : MonoBehaviour
         if (!File.Exists(manualPath))
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Manual not found at: {manualPath}");
-            NotificationManager.ShowError("Manual not found in game files");
+            NotificationManager.ShowError(ErrorCode.FileNotFound, "Manual");
             return;
         }
 
@@ -64,7 +64,7 @@ public class UserLevelManager : MonoBehaviour
         catch (System.Exception ex)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to save manual to Downloads: {ex.Message}");
-            NotificationManager.ShowError("Failed to save manual");
+            NotificationManager.ShowError(ErrorCode.FileWriteFailed, "Manual");
         }
     }
 
@@ -99,13 +99,103 @@ public class UserLevelManager : MonoBehaviour
         catch (System.Exception ex)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to copy manual: {ex.Message}");
-            NotificationManager.ShowError("Failed to save manual");
+            NotificationManager.ShowError(ErrorCode.FileWriteFailed, "Manual");
         }
     }
 
     #endregion
 
     #region Level Export Operations
+
+    /// <summary>
+    /// Save all user levels to local storage (Downloads on Android, Documents on Windows)
+    /// </summary>
+    public void SaveAllLevels()
+    {
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Starting export of all user levels");
+
+        int successCount = 0;
+        int failCount = 0;
+
+        for (int i = 0; i < 10; i++) // 10 user levels (0-9)
+        {
+            string levelPath = UserLevelSet.GetUserLevelPath(i);
+
+            if (!File.Exists(levelPath))
+            {
+                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {i + 1} not found at: {levelPath}");
+                failCount++;
+                continue;
+            }
+
+            try
+            {
+#if UNITY_ANDROID
+                string downloadsPath = "/storage/emulated/0/Download";
+                string fileName = $"UserLevel{i + 1}.csv";
+                string destinationPath = Path.Combine(downloadsPath, fileName);
+
+                // Skip if file already exists
+                if (File.Exists(destinationPath))
+                {
+                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} already exists in Downloads, skipping");
+                    continue;
+                }
+
+                File.Copy(levelPath, destinationPath, overwrite: false);
+#else
+                string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+                string getNutsFolder = Path.Combine(documentsPath, "GetNuts");
+
+                if (!Directory.Exists(getNutsFolder))
+                {
+                    Directory.CreateDirectory(getNutsFolder);
+                }
+
+                string fileName = $"UserLevel{i + 1}.csv";
+                string destinationPath = Path.Combine(getNutsFolder, fileName);
+
+                // Skip if file already exists
+                if (File.Exists(destinationPath))
+                {
+                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} already exists in Documents\\GetNuts, skipping");
+                    continue;
+                }
+
+                File.Copy(levelPath, destinationPath, overwrite: false);
+#endif
+
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} exported successfully");
+                successCount++;
+            }
+            catch (System.Exception ex)
+            {
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to export level {i + 1}: {ex.Message}");
+                failCount++;
+            }
+        }
+
+        // Show result notification
+        if (failCount == 0)
+        {
+#if UNITY_ANDROID
+            NotificationManager.ShowSuccess($"All {successCount} levels saved to Downloads");
+#else
+            System.Diagnostics.Process.Start("explorer.exe", Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "GetNuts"));
+            NotificationManager.ShowSuccess($"All {successCount} levels saved to Documents\\GetNuts");
+#endif
+        }
+        else if (successCount > 0)
+        {
+            NotificationManager.ShowSuccess($"{successCount} levels saved, {failCount} failed");
+        }
+        else
+        {
+            NotificationManager.ShowError(ErrorCode.InternalError, "Export all levels");
+        }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Export all completed: {successCount} succeeded, {failCount} failed");
+    }
 
     /// <summary>
     /// Save current level to local storage (Downloads on Android, Documents on Windows)
@@ -117,7 +207,7 @@ public class UserLevelManager : MonoBehaviour
         if (!File.Exists(levelPath))
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Level file not found at: {levelPath}");
-            NotificationManager.ShowError($"Level {currentLevelNumber + 1} not found", "404");
+            NotificationManager.ShowError(ErrorCode.FileNotFound, $"Level {currentLevelNumber + 1}");
             return;
         }
 
@@ -141,8 +231,15 @@ public class UserLevelManager : MonoBehaviour
             string fileName = $"UserLevel{currentLevelNumber + 1}.csv";
             string destinationPath = Path.Combine(downloadsPath, fileName);
 
-            // Always overwrite to get latest version
-            File.Copy(levelPath, destinationPath, overwrite: true);
+            // Check if file already exists
+            if (File.Exists(destinationPath))
+            {
+                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {currentLevelNumber + 1} already exists in Downloads");
+                NotificationManager.ShowError(ErrorCode.FileAlreadyExists, $"Level {currentLevelNumber + 1} in Downloads");
+                return;
+            }
+
+            File.Copy(levelPath, destinationPath, overwrite: false);
 
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level saved to Downloads: {destinationPath}");
             NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} saved to Downloads");
@@ -150,7 +247,7 @@ public class UserLevelManager : MonoBehaviour
         catch (System.Exception ex)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to save level to Downloads: {ex.Message}");
-            NotificationManager.ShowError("Failed to save level", "500");
+            NotificationManager.ShowError(ErrorCode.FileWriteFailed, $"Level {currentLevelNumber + 1}");
         }
     }
 
@@ -174,7 +271,16 @@ public class UserLevelManager : MonoBehaviour
             // Copy level
             string fileName = $"UserLevel{currentLevelNumber + 1}.csv";
             string destinationPath = Path.Combine(getNutsFolder, fileName);
-            File.Copy(levelPath, destinationPath, overwrite: true);
+
+            // Check if file already exists
+            if (File.Exists(destinationPath))
+            {
+                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {currentLevelNumber + 1} already exists in Documents\\GetNuts");
+                NotificationManager.ShowError(ErrorCode.FileAlreadyExists, $"Level {currentLevelNumber + 1} in Documents\\GetNuts");
+                return;
+            }
+
+            File.Copy(levelPath, destinationPath, overwrite: false);
 
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level copied to: {destinationPath}");
 
@@ -186,7 +292,7 @@ public class UserLevelManager : MonoBehaviour
         catch (System.Exception ex)
         {
             DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to copy level: {ex.Message}");
-            NotificationManager.ShowError("Failed to save level", "500");
+            NotificationManager.ShowError(ErrorCode.FileWriteFailed, $"Level {currentLevelNumber + 1}");
         }
     }
 

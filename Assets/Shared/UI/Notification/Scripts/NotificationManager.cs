@@ -59,6 +59,16 @@ public class NotificationManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Show an error notification using ErrorCode enum
+    /// </summary>
+    public static void ShowError(ErrorCode code, string context = "")
+    {
+        string message = ErrorMessages.Get(code, context);
+        string codeString = ErrorMessages.GetCodeString(code);
+        ShowError(message, codeString);
+    }
+
+    /// <summary>
     /// Show an info notification
     /// </summary>
     public static void ShowInfo(string message, string errorCode = null)

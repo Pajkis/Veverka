@@ -318,8 +318,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -424, y: 174}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: -397.8, y: 174}
+  m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3426761698451594696
 CanvasRenderer:
@@ -349,7 +349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 590620b8dbf90404880d4a6d178f6a71, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -558,9 +558,9 @@ MonoBehaviour:
   iconImage: {fileID: 4139261332168475337}
   titleText: {fileID: 4954160402489381057}
   messageText: {fileID: 6318152531706142314}
-  successIcon: {fileID: 21300000, guid: 781f499998c4bb94588fd4f4d7aa7fb8, type: 3}
-  errorIcon: {fileID: 21300000, guid: 9207583841745a049bfabb4faec81027, type: 3}
-  infoIcon: {fileID: 21300000, guid: 607803f6adf2d4e4d85111edcfccb8f9, type: 3}
+  successIcon: {fileID: 21300000, guid: cedff905e97b2a241b769bfe412f0ebe, type: 3}
+  errorIcon: {fileID: 21300000, guid: 590620b8dbf90404880d4a6d178f6a71, type: 3}
+  infoIcon: {fileID: 21300000, guid: b28a5f5a535c54148bb0e2f7027eab1e, type: 3}
 --- !u!114 &3590430045184367794
 MonoBehaviour:
   m_ObjectHideFlags: 0
