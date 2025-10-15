@@ -10,7 +10,6 @@ public class UserLevelSet : LevelSet
     private const int USER_LEVEL_COUNT = 10;
     private const string USER_LEVELS_FOLDER = "UserLevels";
     private const string MANUAL_FILE_NAME = "UserLevelManual.txt";
-    private const string MANUAL_ASSET_PATH = "Assets/Gameplay/Level/Data/UserLevelManual.txt";
 
     private TextAsset[] cachedLevels;
 
@@ -33,7 +32,9 @@ public class UserLevelSet : LevelSet
     /// <summary>
     /// Initialize user levels folder and create empty CSV files if they don't exist
     /// </summary>
-    public static void InitializeUserLevels(DisplayConfig displayConfig)
+    /// <param name="displayConfig">Display configuration for grid size</param>
+    /// <param name="manualTextAsset">Optional manual text asset to copy to user levels folder</param>
+    public static void InitializeUserLevels(DisplayConfig displayConfig, TextAsset manualTextAsset = null)
     {
         string userLevelsPath = GetUserLevelsPath();
 
@@ -93,14 +94,21 @@ public class UserLevelSet : LevelSet
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"User levels initialization complete - created {createdCount} new level(s)");
         }
 
-        // Copy UserLevelManual.txt to UserLevels folder if it doesn't exist
-        CopyManualToUserLevelsFolder(userLevelsPath);
+        // Copy UserLevelManual.txt to UserLevels folder if provided
+        if (manualTextAsset != null)
+        {
+            CopyManualToUserLevelsFolder(userLevelsPath, manualTextAsset);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "Manual TextAsset not provided - skipping manual copy");
+        }
     }
 
     /// <summary>
-    /// Copy UserLevelManual.txt from Assets to UserLevels folder if it doesn't exist
+    /// Copy UserLevelManual from TextAsset to UserLevels folder if it doesn't exist
     /// </summary>
-    private static void CopyManualToUserLevelsFolder(string userLevelsPath)
+    private static void CopyManualToUserLevelsFolder(string userLevelsPath, TextAsset manualTextAsset)
     {
         string destinationPath = Path.Combine(userLevelsPath, MANUAL_FILE_NAME);
 
@@ -111,23 +119,15 @@ public class UserLevelSet : LevelSet
             return;
         }
 
-        // Try to read manual from Assets
-        if (File.Exists(MANUAL_ASSET_PATH))
+        // Copy manual from TextAsset
+        try
         {
-            try
-            {
-                string manualContent = File.ReadAllText(MANUAL_ASSET_PATH);
-                File.WriteAllText(destinationPath, manualContent);
-                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Copied UserLevelManual.txt to: {destinationPath}");
-            }
-            catch (System.Exception ex)
-            {
-                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to copy UserLevelManual.txt: {ex.Message}");
-            }
+            File.WriteAllText(destinationPath, manualTextAsset.text);
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Copied UserLevelManual.txt to: {destinationPath}");
         }
-        else
+        catch (System.Exception ex)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"UserLevelManual.txt not found at: {MANUAL_ASSET_PATH}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to copy UserLevelManual.txt: {ex.Message}");
         }
     }
 
