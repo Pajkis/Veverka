@@ -30,6 +30,9 @@ public class LevelSelectMenu : MonoBehaviour
 
     void Start()
     {
+        // Check if validation errors should be displayed
+        LevelValidationErrorManager.ShowErrorOverlayIfPending();
+
         // Subscribe to tab manager events
         if (tabManager != null)
         {

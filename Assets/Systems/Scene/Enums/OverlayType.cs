@@ -8,6 +8,7 @@ public enum OverlayType
     SettingsMenu,
     GameHelp,
     Credits,
-    Notification
+    Notification,
+    LevelValidationError,    
 }
 

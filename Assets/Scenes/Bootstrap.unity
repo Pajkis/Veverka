@@ -527,8 +527,9 @@ GameObject:
   m_Component:
   - component: {fileID: 716192307}
   - component: {fileID: 716192306}
+  - component: {fileID: 716192308}
   m_Layer: 0
-  m_Name: NotificationManager
+  m_Name: NotificationOverlays
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -562,6 +563,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &716192308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 716192305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2255be583e49d75499c99bd7611edbdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!1 &745832932
 GameObject:
   m_ObjectHideFlags: 0
@@ -804,6 +818,7 @@ MonoBehaviour:
   gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
   creditsPrefab: {fileID: 3636506746201861303, guid: 171486bcfd41e67459628f5294fe9350, type: 3}
   notificationPrefab: {fileID: 9187378460226002792, guid: 8d5eed3dc9354264dbf6fc98cd1ee5fd, type: 3}
+  levelValidationPrefab: {fileID: 907536609874866753, guid: 1c7877f0b30a8564faf71f8b095ed9d8, type: 3}
 --- !u!114 &1498983318
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,6 +5,12 @@
 public static class ErrorMessages
 {
     /// <summary>
+    /// Maximum number of validation errors to display at once
+    /// Used by LevelValidationErrorManager and LevelValidationErrorOverlay
+    /// </summary>
+    public const int MAX_VALIDATION_ERRORS = 3;
+
+    /// <summary>
     /// Get error message for given error code
     /// </summary>
     /// <param name="code">Error code</param>
@@ -28,6 +34,12 @@ public static class ErrorMessages
             ErrorCode.LevelDataCorrupted => "Level data is corrupted",
             ErrorCode.GridSizeMismatch => "Grid size doesn't match",
             ErrorCode.InvalidLevelFormat => "Invalid level format",
+
+            // Grid Validation Errors
+            ErrorCode.InvalidVeverkaCount => "Expected 1 Veverka (V)",
+            ErrorCode.NoNutsFound => "Expected at least 1 Nut (N/NS/NW)",
+            ErrorCode.NoGoalsFound => "Expected at least 1 Goal (G)",
+            ErrorCode.InvalidTileSymbols => "Invalid tile symbols in CSV",
 
             // File System Errors
             ErrorCode.DirectoryCreationFailed => "Failed to create directory",

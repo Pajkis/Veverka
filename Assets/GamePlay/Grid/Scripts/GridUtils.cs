@@ -41,11 +41,15 @@ public static class GridUtils
 
     /// <summary>
     /// Validates the grid loaded from file
+    /// Collects validation errors for display in LevelValidationErrorOverlay
     /// </summary>
     /// <param name="grid">loaded grid from file</param>
     /// <returns>grid is Valid <= true</returns>
     public static bool ValidateGrid(TileType[,] grid)
     {
+        // Clear previous validation errors
+        LevelValidationErrorManager.ClearErrors();
+
         int veverkaCount = 0;
         int nutCount = 0;
         int goalCount = 0;
@@ -69,35 +73,45 @@ public static class GridUtils
         // check veverka count
         if (veverkaCount != 1)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected 1 veverka but found {veverkaCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.InvalidVeverkaCount, $"found {veverkaCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
         // check nuts amount more than zero
         if (nutCount < 1)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 nut but found {nutCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.NoNutsFound, $"found {nutCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
         // check goal amount more than zero
         if (goalCount < 1)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 goal but found {goalCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.NoGoalsFound, $"found {goalCount}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
         // check same amount of nut and goals
         if (nutCount != goalCount)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
-            // valid =  false;
+            string errorMsg = $"Nuts ({nutCount}) and Goals ({goalCount}) count mismatch!";
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            // Note: Not marked as validation error (valid = false commented out)
+            // valid = false;
         }
 
         // Check for invalid tiles
         if (errorTileCount > 0)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Invalid tiles in input CSV file: Count {errorTileCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.InvalidTileSymbols, $"{errorTileCount} error(s)");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 

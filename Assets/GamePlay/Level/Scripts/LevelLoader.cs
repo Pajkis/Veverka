@@ -186,6 +186,10 @@ public class LevelLoader : MonoBehaviour
         if (!GridUtils.ValidateGrid(grid))
         {
             DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Invalid level configuration for level {currentLevelIndex} in set {currentSet}!", this);
+
+            // Mark validation errors for display in LevelSelect scene
+            LevelValidationErrorManager.MarkForDisplay();
+
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
