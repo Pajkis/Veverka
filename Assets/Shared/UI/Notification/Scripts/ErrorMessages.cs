@@ -36,10 +36,12 @@ public static class ErrorMessages
             ErrorCode.InvalidLevelFormat => "Invalid level format",
 
             // Grid Validation Errors
-            ErrorCode.InvalidVeverkaCount => "Expected 1 Veverka (V)",
-            ErrorCode.NoNutsFound => "Expected at least 1 Nut (N/NS/NW)",
-            ErrorCode.NoGoalsFound => "Expected at least 1 Goal (G)",
-            ErrorCode.InvalidTileSymbols => "Invalid tile symbols in CSV",
+            ErrorCode.NoVeverkaFound => "No Veverka (V) found",
+            ErrorCode.MultipleVeverkas => "Multiple Veverkas found",
+            ErrorCode.NoNutsFound => "No Nuts found",
+            ErrorCode.NoGoalsFound => "No Goals found",
+            ErrorCode.InvalidTileSymbol => "Invalid tile",
+            ErrorCode.EmptyTileCell => "Empty tile",
 
             // File System Errors
             ErrorCode.DirectoryCreationFailed => "Failed to create directory",

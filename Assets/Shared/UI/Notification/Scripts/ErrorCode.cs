@@ -22,10 +22,12 @@ public enum ErrorCode
     InvalidLevelFormat = 1003,      // Level CSV format is invalid
 
     // Grid Validation Errors (1010-1019)
-    InvalidVeverkaCount = 1010,     // Wrong number of Veverkas (should be exactly 1)
-    NoNutsFound = 1011,             // No nuts found in grid (need at least 1)
-    NoGoalsFound = 1012,            // No goals found in grid (need at least 1)
-    InvalidTileSymbols = 1013,      // Invalid tile symbols in CSV
+    NoVeverkaFound = 1010,          // No Veverka found in grid
+    MultipleVeverkas = 1011,        // Multiple Veverkas found (should be exactly 1)
+    NoNutsFound = 1012,             // No nuts found in grid (need at least 1)
+    NoGoalsFound = 1013,            // No goals found in grid (need at least 1)
+    InvalidTileSymbol = 1014,       // Unknown tile symbol at position
+    EmptyTileCell = 1015,           // Empty cell (no symbol) at position
 
     // File System Errors (1100-1199)
     DirectoryCreationFailed = 1100, // Failed to create directory
