@@ -179,6 +179,8 @@ public static class TileParser
             GoalType[,] goalGrid = new GoalType[width, height];
             ObstacleType[,] obstacleGrid = new ObstacleType[width, height];
             RoadType[,] roadGrid = new RoadType[width, height];
+            string[,] validationGrid = new string[width, height];
+            int[] rowLengths = new int[height];
 
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"TileParser: Loading level '{levelData.name}' with size (width, height): {width}, {height}");
 
@@ -186,6 +188,7 @@ public static class TileParser
             for (int y = 0; y < height; y++)
             {
                 string[] row = validLines[height - 1 - y].Split(",");
+                rowLengths[y] = row.Length; // Cache actual row length for validation
 
                 if (row.Length != width)
                 {
@@ -194,23 +197,26 @@ public static class TileParser
 
                 for (int x = 0; x < width && x < row.Length; x++)
                 {
-                    ParsedTile parsed = ParseTileType(row[x].Trim());
+                    string symbol = row[x].Trim();
+                    ParsedTile parsed = ParseTileType(symbol);
+
                     levelGrid[x, y] = parsed.TileType;
                     nutGrid[x, y] = parsed.NutType;
                     goalGrid[x, y] = parsed.GoalType;
                     obstacleGrid[x, y] = parsed.ObstacleType;
                     roadGrid[x, y] = parsed.RoadType;
+                    validationGrid[x, y] = symbol; // Cache raw symbol for validation
 
                     // Catch error types
                     if (parsed.TileType == TileType.ErrorTile)
                     {
-                        DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"TileParser: Error tile at position [{x},{y}] in level '{levelData.name}'. Symbol: '{row[x].Trim()}'");
+                        DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"TileParser: Error tile at position [{x},{y}] in level '{levelData.name}'. Symbol: '{symbol}'");
                     }
                 }
             }
 
             // Cache the grids in GridUtils
-            GridUtils.SetCachedGrids(nutGrid, goalGrid, obstacleGrid, roadGrid);
+            GridUtils.SetCachedGrids(nutGrid, goalGrid, obstacleGrid, roadGrid, validationGrid, rowLengths);
 
             return levelGrid;
         }

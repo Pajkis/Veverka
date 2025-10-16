@@ -16,6 +16,16 @@ public static class GridUtils
     public static ObstacleType[,] CachedObstacleGrid { get; private set; }
     public static RoadType[,] CachedRoadGrid { get; private set; }
 
+    /// <summary>
+    /// Raw symbol grid from CSV - used for validation error messages
+    /// </summary>
+    public static string[,] CachedValidationGrid { get; private set; }
+
+    /// <summary>
+    /// Row lengths from CSV - used for validation (detecting unequal row lengths)
+    /// </summary>
+    public static int[] CachedRowLengths { get; private set; }
+
 
     /// <summary>
     /// Clear all cached grids
@@ -26,79 +36,157 @@ public static class GridUtils
         CachedGoalGrid = null;
         CachedObstacleGrid = null;
         CachedRoadGrid = null;
+        CachedValidationGrid = null;
+        CachedRowLengths = null;
     }
 
     /// <summary>
     /// Set cached grids (called by TileParser after loading)
     /// </summary>
-    public static void SetCachedGrids(NutType[,] nutGrid, GoalType[,] goalGrid, ObstacleType[,] obstacleGrid, RoadType[,] roadGrid)
+    public static void SetCachedGrids(NutType[,] nutGrid, GoalType[,] goalGrid, ObstacleType[,] obstacleGrid, RoadType[,] roadGrid, string[,] validationGrid, int[] rowLengths)
     {
         CachedNutGrid = nutGrid;
         CachedGoalGrid = goalGrid;
         CachedObstacleGrid = obstacleGrid;
         CachedRoadGrid = roadGrid;
+        CachedValidationGrid = validationGrid;
+        CachedRowLengths = rowLengths;
     }
 
     /// <summary>
     /// Validates the grid loaded from file
+    /// Collects validation errors for display in LevelValidationErrorOverlay
     /// </summary>
     /// <param name="grid">loaded grid from file</param>
     /// <returns>grid is Valid <= true</returns>
     public static bool ValidateGrid(TileType[,] grid)
     {
+        // Clear previous validation errors
+        LevelValidationErrorManager.ClearErrors();
+
         int veverkaCount = 0;
         int nutCount = 0;
         int goalCount = 0;
-        int errorTileCount = 0;
         bool valid = true;
 
+        var veverkaPositions = new System.Collections.Generic.List<Vector2Int>();
+
+        // Check row lengths - first row is used as reference
+        // This must be checked FIRST as mismatched rows cause misleading errors
+        if (CachedRowLengths != null && CachedRowLengths.Length > 0)
+        {
+            int expectedWidth = CachedRowLengths[0]; // First row determines expected width
+            bool hasRowLengthErrors = false;
+
+            for (int y = 0; y < CachedRowLengths.Length; y++)
+            {
+                if (CachedRowLengths[y] != expectedWidth)
+                {
+                    string errorMsg = ErrorMessages.Get(
+                        ErrorCode.RowLengthMismatch,
+                        $"Row {y}: expected {expectedWidth}, found {CachedRowLengths[y]} (Note: First row used as reference)"
+                    );
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+                    LevelValidationErrorManager.AddError(errorMsg);
+                    hasRowLengthErrors = true;
+                }
+            }
+
+            // If row lengths don't match, stop validation here
+            // Other errors (empty tiles, etc.) would be misleading
+            if (hasRowLengthErrors)
+            {
+                CachedGrid = null;
+                CachedGrid = grid;
+                return false;
+            }
+        }
+
+        // First pass - count tiles and collect positions
         for (int x = 0; x < grid.GetLength(0); x++)
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
                 switch (grid[x, y])
                 {
-                    case TileType.Veverka: veverkaCount++; break;
-                    case TileType.Nut: nutCount++; break;
-                    case TileType.Goal: goalCount++; break;
-                    case TileType.ErrorTile: errorTileCount++; break;
+                    case TileType.Veverka:
+                        veverkaCount++;
+                        veverkaPositions.Add(new Vector2Int(x, y));
+                        break;
+                    case TileType.Nut:
+                        nutCount++;
+                        break;
+                    case TileType.Goal:
+                        goalCount++;
+                        break;
+                    case TileType.ErrorTile:
+                        // Handle error tiles individually with positions
+                        if (CachedValidationGrid != null)
+                        {
+                            string symbol = CachedValidationGrid[x, y];
+                            string errorMsg;
+
+                            if (string.IsNullOrWhiteSpace(symbol))
+                            {
+                                errorMsg = ErrorMessages.Get(ErrorCode.EmptyTileCell, $"at ({x}, {y})");
+                            }
+                            else
+                            {
+                                errorMsg = ErrorMessages.Get(ErrorCode.InvalidTileSymbol, $"at ({x}, {y}): \"{symbol}\"");
+                            }
+
+                            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+                            LevelValidationErrorManager.AddError(errorMsg);
+                            valid = false;
+                        }
+                        break;
                 }
             }
         }
 
-        // check veverka count
-        if (veverkaCount != 1)
+        // Check veverka count
+        if (veverkaCount == 0)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected 1 veverka but found {veverkaCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.NoVeverkaFound);
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
+            valid = false;
+        }
+        else if (veverkaCount > 1)
+        {
+            // Multiple veverkas - list positions
+            string positions = string.Join(", ", veverkaPositions.ConvertAll(p => $"({p.x}, {p.y})"));
+            string errorMsg = ErrorMessages.Get(ErrorCode.MultipleVeverkas, $"at {positions}");
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
-        // check nuts amount more than zero
+        // Check nuts amount more than zero
         if (nutCount < 1)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 nut but found {nutCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.NoNutsFound);
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
-        // check goal amount more than zero
+        // Check goal amount more than zero
         if (goalCount < 1)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Expected at least 1 goal but found {goalCount}");
+            string errorMsg = ErrorMessages.Get(ErrorCode.NoGoalsFound);
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            LevelValidationErrorManager.AddError(errorMsg);
             valid = false;
         }
 
-        // check same amount of nut and goals
+        // Check same amount of nut and goals
         if (nutCount != goalCount)
         {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: The amount of goals and nuts does not match! Found goals: {goalCount}, found nuts {nutCount}");
-            // valid =  false;
-        }
-
-        // Check for invalid tiles
-        if (errorTileCount > 0)
-        {
-            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: Invalid tiles in input CSV file: Count {errorTileCount}");
-            valid = false;
+            string errorMsg = $"Nuts ({nutCount}) and Goals ({goalCount}) count mismatch!";
+            DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+            // Note: Not marked as validation error (valid = false commented out)
+            // valid = false;
         }
 
         //Set up grid

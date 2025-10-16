@@ -132,7 +132,7 @@ public class UserLevelSet : LevelSet
     }
 
     /// <summary>
-    /// Create an empty grid CSV string
+    /// Create a minimal playable grid CSV string with required elements
     /// </summary>
     private static string CreateEmptyGridCSV(int width, int height)
     {
@@ -141,7 +141,25 @@ public class UserLevelSet : LevelSet
         {
             for (int x = 0; x < width; x++)
             {
-                csv += "."; // . = Empty road
+                // Place required elements at top-left corner to make level playable
+                // Position (0,0) = Veverka, (0,1) = Nut, (0,2) = Goal
+                if (x == 0 && y == 0)
+                {
+                    csv += "V"; // Veverka at position (0,0)
+                }
+                else if (x == 0 && y == 1)
+                {
+                    csv += "N"; // Nut at position (0,1)
+                }
+                else if (x == 0 && y == 2)
+                {
+                    csv += "G"; // Goal at position (0,2)
+                }
+                else
+                {
+                    csv += "."; // Empty road everywhere else
+                }
+
                 if (x < width - 1)
                 {
                     csv += ",";
