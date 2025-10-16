@@ -180,6 +180,7 @@ public static class TileParser
             ObstacleType[,] obstacleGrid = new ObstacleType[width, height];
             RoadType[,] roadGrid = new RoadType[width, height];
             string[,] validationGrid = new string[width, height];
+            int[] rowLengths = new int[height];
 
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"TileParser: Loading level '{levelData.name}' with size (width, height): {width}, {height}");
 
@@ -187,6 +188,7 @@ public static class TileParser
             for (int y = 0; y < height; y++)
             {
                 string[] row = validLines[height - 1 - y].Split(",");
+                rowLengths[y] = row.Length; // Cache actual row length for validation
 
                 if (row.Length != width)
                 {
@@ -214,7 +216,7 @@ public static class TileParser
             }
 
             // Cache the grids in GridUtils
-            GridUtils.SetCachedGrids(nutGrid, goalGrid, obstacleGrid, roadGrid, validationGrid);
+            GridUtils.SetCachedGrids(nutGrid, goalGrid, obstacleGrid, roadGrid, validationGrid, rowLengths);
 
             return levelGrid;
         }

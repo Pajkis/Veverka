@@ -42,6 +42,7 @@ public static class ErrorMessages
             ErrorCode.NoGoalsFound => "No Goals found",
             ErrorCode.InvalidTileSymbol => "Invalid tile",
             ErrorCode.EmptyTileCell => "Empty tile",
+            ErrorCode.RowLengthMismatch => "Row has different length",
 
             // File System Errors
             ErrorCode.DirectoryCreationFailed => "Failed to create directory",

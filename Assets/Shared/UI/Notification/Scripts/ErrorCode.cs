@@ -28,6 +28,7 @@ public enum ErrorCode
     NoGoalsFound = 1013,            // No goals found in grid (need at least 1)
     InvalidTileSymbol = 1014,       // Unknown tile symbol at position
     EmptyTileCell = 1015,           // Empty cell (no symbol) at position
+    RowLengthMismatch = 1016,       // Row has different length than expected
 
     // File System Errors (1100-1199)
     DirectoryCreationFailed = 1100, // Failed to create directory

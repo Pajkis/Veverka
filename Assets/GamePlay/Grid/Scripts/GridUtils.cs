@@ -21,6 +21,11 @@ public static class GridUtils
     /// </summary>
     public static string[,] CachedValidationGrid { get; private set; }
 
+    /// <summary>
+    /// Row lengths from CSV - used for validation (detecting unequal row lengths)
+    /// </summary>
+    public static int[] CachedRowLengths { get; private set; }
+
 
     /// <summary>
     /// Clear all cached grids
@@ -32,18 +37,20 @@ public static class GridUtils
         CachedObstacleGrid = null;
         CachedRoadGrid = null;
         CachedValidationGrid = null;
+        CachedRowLengths = null;
     }
 
     /// <summary>
     /// Set cached grids (called by TileParser after loading)
     /// </summary>
-    public static void SetCachedGrids(NutType[,] nutGrid, GoalType[,] goalGrid, ObstacleType[,] obstacleGrid, RoadType[,] roadGrid, string[,] validationGrid)
+    public static void SetCachedGrids(NutType[,] nutGrid, GoalType[,] goalGrid, ObstacleType[,] obstacleGrid, RoadType[,] roadGrid, string[,] validationGrid, int[] rowLengths)
     {
         CachedNutGrid = nutGrid;
         CachedGoalGrid = goalGrid;
         CachedObstacleGrid = obstacleGrid;
         CachedRoadGrid = roadGrid;
         CachedValidationGrid = validationGrid;
+        CachedRowLengths = rowLengths;
     }
 
     /// <summary>
@@ -63,6 +70,37 @@ public static class GridUtils
         bool valid = true;
 
         var veverkaPositions = new System.Collections.Generic.List<Vector2Int>();
+
+        // Check row lengths - first row is used as reference
+        // This must be checked FIRST as mismatched rows cause misleading errors
+        if (CachedRowLengths != null && CachedRowLengths.Length > 0)
+        {
+            int expectedWidth = CachedRowLengths[0]; // First row determines expected width
+            bool hasRowLengthErrors = false;
+
+            for (int y = 0; y < CachedRowLengths.Length; y++)
+            {
+                if (CachedRowLengths[y] != expectedWidth)
+                {
+                    string errorMsg = ErrorMessages.Get(
+                        ErrorCode.RowLengthMismatch,
+                        $"Row {y}: expected {expectedWidth}, found {CachedRowLengths[y]} (Note: First row used as reference)"
+                    );
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(GridUtils)}: {errorMsg}");
+                    LevelValidationErrorManager.AddError(errorMsg);
+                    hasRowLengthErrors = true;
+                }
+            }
+
+            // If row lengths don't match, stop validation here
+            // Other errors (empty tiles, etc.) would be misleading
+            if (hasRowLengthErrors)
+            {
+                CachedGrid = null;
+                CachedGrid = grid;
+                return false;
+            }
+        }
 
         // First pass - count tiles and collect positions
         for (int x = 0; x < grid.GetLength(0); x++)
