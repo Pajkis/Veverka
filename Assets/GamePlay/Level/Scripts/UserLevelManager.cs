@@ -307,49 +307,36 @@ public class UserLevelManager : MonoBehaviour
     {
         DebugLogger.Log(DebugLogCategory.LevelSystem, $"Starting import for level {currentLevelNumber + 1}");
 
-#if UNITY_EDITOR
-        // Use Unity Editor file picker
-        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Level CSV", "", "csv");
-        if (!string.IsNullOrEmpty(path))
-        {
-            ImportLevelFromPath(path);
-        }
-        else
-        {
-            DebugLogger.Log(DebugLogCategory.LevelSystem, "File picker cancelled by user");
-        }
-#else
-        // For builds: Simple approach - look for file in expected location
-        ImportLevelFromExpectedLocation();
-#endif
+        // Use SimpleFileBrowser for all platforms (cross-platform solution)
+        SimpleFileBrowser.FileBrowser.SetFilters(true, new SimpleFileBrowser.FileBrowser.Filter("CSV Files", ".csv"));
+        SimpleFileBrowser.FileBrowser.SetDefaultFilter(".csv");
+
+        SimpleFileBrowser.FileBrowser.ShowLoadDialog(
+            onSuccess: (paths) =>
+            {
+                if (paths != null && paths.Length > 0)
+                {
+                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"File selected: {paths[0]}");
+                    ImportLevelFromPath(paths[0]);
+                }
+                else
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "No file selected");
+                }
+            },
+            onCancel: () =>
+            {
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "File picker cancelled by user");
+            },
+            pickMode: SimpleFileBrowser.FileBrowser.PickMode.Files,
+            allowMultiSelection: false,
+            initialPath: null,
+            initialFilename: null,
+            title: "Select Level CSV",
+            loadButtonText: "Import"
+        );
     }
 
-    /// <summary>
-    /// Import level from expected location (fallback for builds without NativeFilePicker)
-    /// </summary>
-    private void ImportLevelFromExpectedLocation()
-    {
-#if UNITY_ANDROID
-        string downloadsPath = "/storage/emulated/0/Download";
-#else
-        string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-        string downloadsPath = Path.Combine(documentsPath, "GetNuts");
-#endif
-
-        string expectedFileName = $"UserLevel{currentLevelNumber + 1}.csv";
-        string sourcePath = Path.Combine(downloadsPath, expectedFileName);
-
-        if (File.Exists(sourcePath))
-        {
-            ImportLevelFromPath(sourcePath);
-        }
-        else
-        {
-            string location = downloadsPath.Contains("Download") ? "Downloads" : "Documents\\GetNuts";
-            NotificationManager.ShowError(ErrorCode.FileNotFound, $"Place {expectedFileName} in {location}");
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Import file not found at: {sourcePath}");
-        }
-    }
 
     /// <summary>
     /// Import level from specified file path with basic validation
