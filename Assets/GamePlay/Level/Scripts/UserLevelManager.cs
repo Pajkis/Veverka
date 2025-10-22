@@ -340,31 +340,63 @@ public class UserLevelManager : MonoBehaviour
 
     /// <summary>
     /// Import level from specified file path with basic validation
+    /// Handles both regular file paths and Android Content URIs
     /// </summary>
     private void ImportLevelFromPath(string sourcePath)
     {
         try
         {
-            // Check if file exists
-            if (!File.Exists(sourcePath))
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Importing from path: {sourcePath}");
+
+            string csvContent = null;
+
+            // Check if it's an Android Content URI
+            if (sourcePath.StartsWith("content://"))
             {
-                NotificationManager.ShowError(ErrorCode.FileNotFound, sourcePath);
-                return;
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "Detected Android Content URI, using SimpleFileBrowser to read");
+
+                // Use SimpleFileBrowser's utility to read from Content URI
+                byte[] fileBytes = SimpleFileBrowser.FileBrowserHelpers.ReadBytesFromFile(sourcePath);
+
+                if (fileBytes == null || fileBytes.Length == 0)
+                {
+                    NotificationManager.ShowError(ErrorCode.FileNotFound, "Could not read file");
+                    DebugLogger.LogError(DebugLogCategory.LevelSystem, "Failed to read bytes from Content URI");
+                    return;
+                }
+
+                csvContent = System.Text.Encoding.UTF8.GetString(fileBytes);
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Read {fileBytes.Length} bytes from Content URI");
+            }
+            else
+            {
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "Using standard file system access");
+
+                // Check if file exists (standard file path)
+                if (!File.Exists(sourcePath))
+                {
+                    NotificationManager.ShowError(ErrorCode.FileNotFound, sourcePath);
+                    DebugLogger.LogError(DebugLogCategory.LevelSystem, $"File not found: {sourcePath}");
+                    return;
+                }
+
+                // Read CSV content (standard file path)
+                csvContent = File.ReadAllText(sourcePath);
             }
 
-            // Check if it's a CSV file
-            if (!sourcePath.EndsWith(".csv", System.StringComparison.OrdinalIgnoreCase))
-            {
-                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File must be .csv format");
-                return;
-            }
-
-            // Read CSV content
-            string csvContent = File.ReadAllText(sourcePath);
-
+            // Validate content
             if (string.IsNullOrEmpty(csvContent))
             {
                 NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File is empty");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, "CSV content is empty");
+                return;
+            }
+
+            // Check if it's a CSV file (by checking extension in path or content)
+            if (!sourcePath.ToLower().Contains(".csv"))
+            {
+                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File must be .csv format");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, "File is not CSV format");
                 return;
             }
 
@@ -377,7 +409,7 @@ public class UserLevelManager : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to import level from {sourcePath}: {ex.Message}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to import level from {sourcePath}: {ex.Message}\nStack trace: {ex.StackTrace}");
             NotificationManager.ShowError(ErrorCode.FileReadFailed, $"Level {currentLevelNumber + 1}");
         }
     }
