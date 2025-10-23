@@ -46,24 +46,33 @@ public class UserLevelManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Save manual to Downloads folder on Android
+    /// Save manual to Documents/GetNuts folder on Android
     /// </summary>
     private void SaveManualToDownloadsAndroid(string manualPath)
     {
         try
         {
-            string downloadsPath = "/storage/emulated/0/Download";
-            string destinationPath = Path.Combine(downloadsPath, MANUAL_FILE_NAME);
+            string documentsPath = "/storage/emulated/0/Documents";
+            string getNutsFolder = Path.Combine(documentsPath, "GetNuts");
+
+            // Create GetNuts folder if it doesn't exist
+            if (!Directory.Exists(getNutsFolder))
+            {
+                Directory.CreateDirectory(getNutsFolder);
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Created folder: {getNutsFolder}");
+            }
+
+            string destinationPath = Path.Combine(getNutsFolder, MANUAL_FILE_NAME);
 
             // Always overwrite to get latest version
             File.Copy(manualPath, destinationPath, overwrite: true);
 
-            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Manual saved to Downloads: {destinationPath}");
-            NotificationManager.ShowSuccess("Manual saved to Downloads folder");
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Manual saved to Documents/GetNuts: {destinationPath}");
+            NotificationManager.ShowSuccess("Manual saved to Documents/GetNuts folder");
         }
         catch (System.Exception ex)
         {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to save manual to Downloads: {ex.Message}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to save manual to Documents/GetNuts: {ex.Message}");
             NotificationManager.ShowError(ErrorCode.FileWriteFailed, "Manual");
         }
     }
@@ -108,7 +117,20 @@ public class UserLevelManager : MonoBehaviour
     #region Level Export Operations
 
     /// <summary>
-    /// Save all user levels to local storage (Downloads on Android, Documents on Windows)
+    /// Get the export path (Documents/GetNuts) for both Android and Windows
+    /// </summary>
+    private string GetExportPath()
+    {
+#if UNITY_ANDROID
+        string documentsPath = "/storage/emulated/0/Documents";
+#else
+        string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
+#endif
+        return Path.Combine(documentsPath, "GetNuts");
+    }
+
+    /// <summary>
+    /// Save all user levels to local storage (Documents/GetNuts on both Android and Windows)
     /// </summary>
     public void SaveAllLevels()
     {
@@ -116,6 +138,25 @@ public class UserLevelManager : MonoBehaviour
 
         int successCount = 0;
         int failCount = 0;
+
+        // Get Documents/GetNuts path for both platforms
+        string getNutsFolder = GetExportPath();
+
+        // Create folder if it doesn't exist
+        if (!Directory.Exists(getNutsFolder))
+        {
+            try
+            {
+                Directory.CreateDirectory(getNutsFolder);
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Created folder: {getNutsFolder}");
+            }
+            catch (System.Exception ex)
+            {
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to create export folder: {ex.Message}");
+                NotificationManager.ShowError(ErrorCode.InternalError, "Failed to create export folder");
+                return;
+            }
+        }
 
         for (int i = 0; i < 10; i++) // 10 user levels (0-9)
         {
@@ -130,40 +171,17 @@ public class UserLevelManager : MonoBehaviour
 
             try
             {
-#if UNITY_ANDROID
-                string downloadsPath = "/storage/emulated/0/Download";
-                string fileName = $"UserLevel{i + 1}.csv";
-                string destinationPath = Path.Combine(downloadsPath, fileName);
-
-                // Skip if file already exists
-                if (File.Exists(destinationPath))
-                {
-                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} already exists in Downloads, skipping");
-                    continue;
-                }
-
-                File.Copy(levelPath, destinationPath, overwrite: false);
-#else
-                string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-                string getNutsFolder = Path.Combine(documentsPath, "GetNuts");
-
-                if (!Directory.Exists(getNutsFolder))
-                {
-                    Directory.CreateDirectory(getNutsFolder);
-                }
-
                 string fileName = $"UserLevel{i + 1}.csv";
                 string destinationPath = Path.Combine(getNutsFolder, fileName);
 
                 // Skip if file already exists
                 if (File.Exists(destinationPath))
                 {
-                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} already exists in Documents\\GetNuts, skipping");
+                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} already exists in Documents/GetNuts, skipping");
                     continue;
                 }
 
                 File.Copy(levelPath, destinationPath, overwrite: false);
-#endif
 
                 DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level {i + 1} exported successfully");
                 successCount++;
@@ -178,12 +196,11 @@ public class UserLevelManager : MonoBehaviour
         // Show result notification
         if (failCount == 0)
         {
-#if UNITY_ANDROID
-            NotificationManager.ShowSuccess($"All {successCount} levels saved to Downloads");
-#else
-            System.Diagnostics.Process.Start("explorer.exe", Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "GetNuts"));
-            NotificationManager.ShowSuccess($"All {successCount} levels saved to Documents\\GetNuts");
+#if !UNITY_ANDROID
+            // Open Explorer on Windows
+            System.Diagnostics.Process.Start("explorer.exe", getNutsFolder);
 #endif
+            NotificationManager.ShowSuccess($"All {successCount} levels saved to Documents/GetNuts");
         }
         else if (successCount > 0)
         {
@@ -198,7 +215,7 @@ public class UserLevelManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Save current level to local storage (Downloads on Android, Documents on Windows)
+    /// Save current level to local storage (Documents/GetNuts on both Android and Windows)
     /// </summary>
     public void SaveLevel()
     {
@@ -213,55 +230,12 @@ public class UserLevelManager : MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.LevelSystem, $"Saving level {currentLevelNumber + 1} from: {levelPath}");
 
-#if UNITY_ANDROID
-        SaveLevelToDownloadsAndroid(levelPath);
-#else
-        SaveLevelWindows(levelPath);
-#endif
-    }
-
-    /// <summary>
-    /// Save level to Downloads folder on Android
-    /// </summary>
-    private void SaveLevelToDownloadsAndroid(string levelPath)
-    {
         try
         {
-            string downloadsPath = "/storage/emulated/0/Download";
-            string fileName = $"UserLevel{currentLevelNumber + 1}.csv";
-            string destinationPath = Path.Combine(downloadsPath, fileName);
+            // Get Documents/GetNuts path
+            string getNutsFolder = GetExportPath();
 
-            // Check if file already exists
-            if (File.Exists(destinationPath))
-            {
-                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {currentLevelNumber + 1} already exists in Downloads");
-                NotificationManager.ShowError(ErrorCode.FileAlreadyExists, $"Level {currentLevelNumber + 1} in Downloads");
-                return;
-            }
-
-            File.Copy(levelPath, destinationPath, overwrite: false);
-
-            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level saved to Downloads: {destinationPath}");
-            NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} saved to Downloads");
-        }
-        catch (System.Exception ex)
-        {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to save level to Downloads: {ex.Message}");
-            NotificationManager.ShowError(ErrorCode.FileWriteFailed, $"Level {currentLevelNumber + 1}");
-        }
-    }
-
-    /// <summary>
-    /// Copy level to Documents folder on Windows
-    /// </summary>
-    private void SaveLevelWindows(string levelPath)
-    {
-        try
-        {
-            // Create GetNuts folder in Documents
-            string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-            string getNutsFolder = Path.Combine(documentsPath, "GetNuts");
-
+            // Create folder if it doesn't exist
             if (!Directory.Exists(getNutsFolder))
             {
                 Directory.CreateDirectory(getNutsFolder);
@@ -275,8 +249,8 @@ public class UserLevelManager : MonoBehaviour
             // Check if file already exists
             if (File.Exists(destinationPath))
             {
-                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {currentLevelNumber + 1} already exists in Documents\\GetNuts");
-                NotificationManager.ShowError(ErrorCode.FileAlreadyExists, $"Level {currentLevelNumber + 1} in Documents\\GetNuts");
+                DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"Level {currentLevelNumber + 1} already exists in Documents/GetNuts");
+                NotificationManager.ShowError(ErrorCode.FileAlreadyExists, $"Level {currentLevelNumber + 1} in Documents/GetNuts");
                 return;
             }
 
@@ -284,10 +258,12 @@ public class UserLevelManager : MonoBehaviour
 
             DebugLogger.Log(DebugLogCategory.LevelSystem, $"Level copied to: {destinationPath}");
 
-            // Open Explorer at the folder
+#if !UNITY_ANDROID
+            // Open Explorer at the folder on Windows
             System.Diagnostics.Process.Start("explorer.exe", getNutsFolder);
+#endif
 
-            NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} saved to Documents\\GetNuts");
+            NotificationManager.ShowSuccess($"Level {currentLevelNumber + 1} saved to Documents/GetNuts");
         }
         catch (System.Exception ex)
         {
@@ -307,77 +283,96 @@ public class UserLevelManager : MonoBehaviour
     {
         DebugLogger.Log(DebugLogCategory.LevelSystem, $"Starting import for level {currentLevelNumber + 1}");
 
-#if UNITY_EDITOR
-        // Use Unity Editor file picker
-        string path = UnityEditor.EditorUtility.OpenFilePanel("Select Level CSV", "", "csv");
-        if (!string.IsNullOrEmpty(path))
-        {
-            ImportLevelFromPath(path);
-        }
-        else
-        {
-            DebugLogger.Log(DebugLogCategory.LevelSystem, "File picker cancelled by user");
-        }
-#else
-        // For builds: Simple approach - look for file in expected location
-        ImportLevelFromExpectedLocation();
-#endif
+        // Use SimpleFileBrowser for all platforms (cross-platform solution)
+        SimpleFileBrowser.FileBrowser.SetFilters(true, new SimpleFileBrowser.FileBrowser.Filter("CSV Files", ".csv"));
+        SimpleFileBrowser.FileBrowser.SetDefaultFilter(".csv");
+
+        SimpleFileBrowser.FileBrowser.ShowLoadDialog(
+            onSuccess: (paths) =>
+            {
+                if (paths != null && paths.Length > 0)
+                {
+                    DebugLogger.Log(DebugLogCategory.LevelSystem, $"File selected: {paths[0]}");
+                    ImportLevelFromPath(paths[0]);
+                }
+                else
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "No file selected");
+                }
+            },
+            onCancel: () =>
+            {
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "File picker cancelled by user");
+            },
+            pickMode: SimpleFileBrowser.FileBrowser.PickMode.Files,
+            allowMultiSelection: false,
+            initialPath: null,
+            initialFilename: null,
+            title: "Select Level CSV",
+            loadButtonText: "Import"
+        );
     }
 
-    /// <summary>
-    /// Import level from expected location (fallback for builds without NativeFilePicker)
-    /// </summary>
-    private void ImportLevelFromExpectedLocation()
-    {
-#if UNITY_ANDROID
-        string downloadsPath = "/storage/emulated/0/Download";
-#else
-        string documentsPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments);
-        string downloadsPath = Path.Combine(documentsPath, "GetNuts");
-#endif
-
-        string expectedFileName = $"UserLevel{currentLevelNumber + 1}.csv";
-        string sourcePath = Path.Combine(downloadsPath, expectedFileName);
-
-        if (File.Exists(sourcePath))
-        {
-            ImportLevelFromPath(sourcePath);
-        }
-        else
-        {
-            string location = downloadsPath.Contains("Download") ? "Downloads" : "Documents\\GetNuts";
-            NotificationManager.ShowError(ErrorCode.FileNotFound, $"Place {expectedFileName} in {location}");
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Import file not found at: {sourcePath}");
-        }
-    }
 
     /// <summary>
     /// Import level from specified file path with basic validation
+    /// Handles both regular file paths and Android Content URIs
     /// </summary>
     private void ImportLevelFromPath(string sourcePath)
     {
         try
         {
-            // Check if file exists
-            if (!File.Exists(sourcePath))
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"Importing from path: {sourcePath}");
+
+            string csvContent = null;
+
+            // Check if it's an Android Content URI
+            if (sourcePath.StartsWith("content://"))
             {
-                NotificationManager.ShowError(ErrorCode.FileNotFound, sourcePath);
-                return;
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "Detected Android Content URI, using SimpleFileBrowser to read");
+
+                // Use SimpleFileBrowser's utility to read from Content URI
+                byte[] fileBytes = SimpleFileBrowser.FileBrowserHelpers.ReadBytesFromFile(sourcePath);
+
+                if (fileBytes == null || fileBytes.Length == 0)
+                {
+                    NotificationManager.ShowError(ErrorCode.FileNotFound, "Could not read file");
+                    DebugLogger.LogError(DebugLogCategory.LevelSystem, "Failed to read bytes from Content URI");
+                    return;
+                }
+
+                csvContent = System.Text.Encoding.UTF8.GetString(fileBytes);
+                DebugLogger.Log(DebugLogCategory.LevelSystem, $"Read {fileBytes.Length} bytes from Content URI");
+            }
+            else
+            {
+                DebugLogger.Log(DebugLogCategory.LevelSystem, "Using standard file system access");
+
+                // Check if file exists (standard file path)
+                if (!File.Exists(sourcePath))
+                {
+                    NotificationManager.ShowError(ErrorCode.FileNotFound, sourcePath);
+                    DebugLogger.LogError(DebugLogCategory.LevelSystem, $"File not found: {sourcePath}");
+                    return;
+                }
+
+                // Read CSV content (standard file path)
+                csvContent = File.ReadAllText(sourcePath);
             }
 
-            // Check if it's a CSV file
-            if (!sourcePath.EndsWith(".csv", System.StringComparison.OrdinalIgnoreCase))
-            {
-                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File must be .csv format");
-                return;
-            }
-
-            // Read CSV content
-            string csvContent = File.ReadAllText(sourcePath);
-
+            // Validate content
             if (string.IsNullOrEmpty(csvContent))
             {
                 NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File is empty");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, "CSV content is empty");
+                return;
+            }
+
+            // Check if it's a CSV file (by checking extension in path or content)
+            if (!sourcePath.ToLower().Contains(".csv"))
+            {
+                NotificationManager.ShowError(ErrorCode.InvalidLevelFormat, "File must be .csv format");
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, "File is not CSV format");
                 return;
             }
 
@@ -390,7 +385,7 @@ public class UserLevelManager : MonoBehaviour
         }
         catch (System.Exception ex)
         {
-            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to import level from {sourcePath}: {ex.Message}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"Failed to import level from {sourcePath}: {ex.Message}\nStack trace: {ex.StackTrace}");
             NotificationManager.ShowError(ErrorCode.FileReadFailed, $"Level {currentLevelNumber + 1}");
         }
     }
