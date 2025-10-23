@@ -38,7 +38,11 @@ public class UserLevelSet : LevelSet
     {
         string userLevelsPath = GetUserLevelsPath();
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"===== INITIALIZE USER LEVELS CALLED =====");
         DebugLogger.Log(DebugLogCategory.LevelSystem, $"Initializing user levels at: {userLevelsPath}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"DisplayConfig provided: {(displayConfig == null ? "NULL" : "NOT NULL")}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Manual provided: {(manualTextAsset == null ? "NULL" : "NOT NULL")}");
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"STACK TRACE:\n{UnityEngine.StackTraceUtility.ExtractStackTrace()}");
 
         // Create directory if it doesn't exist
         if (!Directory.Exists(userLevelsPath))
@@ -53,9 +57,14 @@ public class UserLevelSet : LevelSet
 
         // Get grid size from DisplayConfig
         Vector2Int gridSize = new Vector2Int(15, 11); // Fallback
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"DisplayConfig is null: {displayConfig == null}");
+
         if (displayConfig != null)
         {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, "DisplayConfig is not null, attempting to resolve profile");
             var profile = displayConfig.ResolveProfile();
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"ResolveProfile returned: {(profile == null ? "NULL" : "valid profile")}");
+
             if (profile != null)
             {
                 gridSize = profile.maxStaticScreenSize;
@@ -70,6 +79,8 @@ public class UserLevelSet : LevelSet
         {
             DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "DisplayConfig is null, using fallback grid size 15x11");
         }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"Final grid size for user level initialization: {gridSize.x}x{gridSize.y}");
 
         // Create empty CSV files for each level if they don't exist
         int createdCount = 0;
@@ -136,7 +147,11 @@ public class UserLevelSet : LevelSet
     /// </summary>
     private static string CreateEmptyGridCSV(int width, int height)
     {
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"CreateEmptyGridCSV called with width={width}, height={height}");
+
         string csv = "";
+        int vCount = 0, nCount = 0, gCount = 0;
+
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
@@ -146,14 +161,17 @@ public class UserLevelSet : LevelSet
                 if (x == 0 && y == 0)
                 {
                     csv += "V"; // Veverka at position (0,0)
+                    vCount++;
                 }
                 else if (x == 0 && y == 1)
                 {
                     csv += "N"; // Nut at position (0,1)
+                    nCount++;
                 }
                 else if (x == 0 && y == 2)
                 {
                     csv += "G"; // Goal at position (0,2)
+                    gCount++;
                 }
                 else
                 {
@@ -167,6 +185,16 @@ public class UserLevelSet : LevelSet
             }
             csv += "\n";
         }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"CreateEmptyGridCSV generated CSV with V={vCount}, N={nCount}, G={gCount}, total length={csv.Length}");
+
+        // Log first few lines for debugging
+        string[] lines = csv.Split('\n');
+        if (lines.Length >= 3)
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"First 3 lines:\n  Line 0: {lines[0]}\n  Line 1: {lines[1]}\n  Line 2: {lines[2]}");
+        }
+
         return csv;
     }
 
