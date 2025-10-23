@@ -9,11 +9,13 @@ Major feature release introducing **User-Created Levels** with import/export, co
 ### ➕ Added:
 **User Level System:**
 - User-created level support with persistent storage in Application.persistentDataPath
-- Import/export functionality with CSV format (platform-specific paths: Documents/GetNuts on Windows, Downloads on Android)
+- Import/export functionality with unified path: Documents/GetNuts on both platforms
+- SimpleFileBrowser for cross-platform file picker (Windows, Android, Editor)
+- Android Content URI support for Scoped Storage compatibility
+- Android Auto Backup disabled via AndroidManifest to prevent data corruption
 - UserLevelManager, UserLevelSet, UserLevelInitializer for level management
 - LevelInitData and LevelSelection ScriptableObjects for level configuration
-- 335-line UserLevelManual.txt with CSV format specification
-- Tutorial levels (01_TutorialRoad, 01_TutorialTest)
+- UserLevelManual.txt v1.2 with CSV format specification and data loss warnings
 
 **Grid System Refactor:**
 - Extracted GameGrid into modular components: GridBuilder, GridData, GridRuntime
