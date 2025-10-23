@@ -10,6 +10,9 @@ public class LevelSetManager : ScriptableObject
     [Header("Available Level Sets")]
     [SerializeField] private List<LevelSet> levelSets = new List<LevelSet>();
 
+    [Header("User Levels")]
+    [SerializeField] private UserLevelSet userLevelSet;
+
     // Dictionary for faster lookups
     private Dictionary<LevelSetType, LevelSet> setLookup;
 
@@ -34,7 +37,7 @@ public class LevelSetManager : ScriptableObject
             {
                 if (setLookup.ContainsKey(levelSet.setType))
                 {
-                    Debug.LogWarning($"Duplicate level set type found: {levelSet.setType}");
+                    DebugLogger.LogWarning(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: Duplicate level set type found: {levelSet.setType}");
                     continue;
                 }
                 setLookup[levelSet.setType] = levelSet;
@@ -49,6 +52,20 @@ public class LevelSetManager : ScriptableObject
     /// <returns>LevelSet or null if not found</returns>
     public LevelSet GetLevelSet(LevelSetType setType)
     {
+        // Handle UserLevels specially
+        if (setType == LevelSetType.User)
+        {
+            if (userLevelSet == null)
+            {
+                DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: UserLevelSet is not assigned!");
+                return null;
+            }
+
+            // NOTE: User levels are initialized by UserLevelInitializer during GameInit
+            // Do NOT initialize here to avoid creating levels with wrong/null DisplayConfig
+            return userLevelSet;
+        }
+
         // Ensure lookup is initialized
         if (setLookup == null)
         {
@@ -59,7 +76,7 @@ public class LevelSetManager : ScriptableObject
 
         if (levelSet == null)
         {
-            Debug.LogError($"Level set of type {setType} not found!");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"{nameof(LevelSetManager)}: Level set of type {setType} not found!");
         }
 
         return levelSet;

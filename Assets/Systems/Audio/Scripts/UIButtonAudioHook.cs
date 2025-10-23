@@ -9,9 +9,6 @@ public class UIButtonAudioHook : MonoBehaviour
 {
     [SerializeField] private AudioEvents audioEvents;
 
-    [Header("Debug")]
-    [SerializeField] private bool logButtonProcessing = false;
-
     // Hook all buttons with audio
     void Start()
     {
@@ -26,8 +23,7 @@ public class UIButtonAudioHook : MonoBehaviour
 
         Button[] buttons = GetComponentsInChildren<Button>(includeInactive: true);
 
-        if (logButtonProcessing)
-            Debug.Log($"UIButtonAudioHook processing {buttons.Length} buttons");
+        DebugLogger.Log(DebugLogCategory.Audio, $"UIButtonAudioHook processing {buttons.Length} buttons", this);
 
         foreach (Button button in buttons)
         {
@@ -62,18 +58,17 @@ public class UIButtonAudioHook : MonoBehaviour
 
         // add listener only if not already present - prevents duplicate sounds
         if (!hasAudioListener)
-        {            
+        {
             button.onClick.AddListener(() =>
             {
                 audioEvents?.Raise(new AudioEventPayload { EventType = AudioEventType.PlayUi, Ui = UiType.ButtonClick });
             });
 
-            if (logButtonProcessing)
-                Debug.Log($"Added audio to button: {button.name}");
+            DebugLogger.Log(DebugLogCategory.Audio, $"Added audio to button: {button.name}", this);
         }
-        else if (logButtonProcessing)
+        else
         {
-            Debug.Log($"Button {button.name} already has audio listeners");
+            DebugLogger.Log(DebugLogCategory.Audio, $"Button {button.name} already has audio listeners", this);
         }
     }
 
@@ -111,7 +106,6 @@ public class UIButtonAudioHook : MonoBehaviour
 
         trigger.triggers.Add(entryHover);
 
-        if (logButtonProcessing)
-            Debug.Log($"Added hover sound to button: {buttonObj.name}");
+        DebugLogger.Log(DebugLogCategory.Audio, $"Added hover sound to button: {buttonObj.name}", this);
     }
 }

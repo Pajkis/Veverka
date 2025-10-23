@@ -1,0 +1,347 @@
+================================================================================
+                        USER LEVEL CREATION MANUAL
+                              Get Nuts Game
+================================================================================
+
+Welcome to the User Level Creation Guide! This manual will teach you everything
+you need to know about creating custom levels for Get Nuts.
+
+================================================================================
+                            BASIC TUTORIAL
+================================================================================
+-------------------
+1. WHAT ARE USER LEVELS?
+-------------------
+User levels are custom game levels stored as simple text files (.csv format).
+You can create, edit, and share them with other players!
+
+-------------------
+2. FILE FORMAT
+-------------------
+Each level is a CSV (Comma-Separated Values) file with a grid layout.
+- Each cell contains a tile symbol
+- Cells are separated by commas (,)
+- Each row ends with a new line
+- NO extra empty lines at the end of file
+
+Example of a simple 5x3 level:
+W,W,W,W,W
+W,V,N,G,W
+W,W,W,W,W
+
+-------------------
+3. BASIC TILE SYMBOLS
+-------------------
+Here are the essential symbols you need to create a simple level:
+
+.   = Empty Road (walkable space)
+V   = Veverka (player starting position) - REQUIRED, use only ONE
+N   = Basic Nut (collectible item) - REQUIRED, use at least ONE
+G   = Goal (destination where nuts are delivered) - REQUIRED, use at least ONE
+W   = Basic Wall (blocks movement)
+
+IMPORTANT RULES:
+- Every level MUST have exactly ONE Veverka (V)
+- Every level MUST have at least ONE Goal (G)
+- Every level MUST have at least ONE Nut (N, NS, or NW)
+
+-------------------
+4. YOUR FIRST LEVEL
+-------------------
+Let's create a simple level step by step:
+
+Step 1: Open UserLevel1.csv with a text editor (Notepad, Notepad++, etc.)
+Step 2: Delete all existing content
+Step 3: Copy and paste this example:
+
+W,W,W,W,W,W,W
+W,V,.,N,.,G,W
+W,W,W,W,W,W,W
+
+Step 4: Make sure there are NO empty lines after the last row
+Step 5: Save the file
+Step 6: Launch the game and select User Levels tab
+Step 7: Play UserLevel1!
+
+-------------------
+5. BASIC DESIGN TIPS
+--------------------
+✓ Start small - create simple levels first
+✓ Test your level - make sure it's solvable!
+✓ Grid must be rectangular or square - all rows same length
+✓ Every cell must have a symbol (no empty cells)
+✓ Design tip: Start from the goal and work backwards!
+
+EDITING TOOLS:
+- MS Excel, Google Sheets, Libre office are recommended tools, but you can use any text editor (Notepad, Notepad++, VS Code, etc.)
+- TIP: Open the .csv file in Excel or similar spreadsheet program for easier
+  visual editing! Each cell becomes one grid tile - much easier to see!
+- In Excel: Save as CSV (Comma delimited) when done
+
+================================================================================
+                          ADVANCED TUTORIAL
+================================================================================
+
+6. ALL TILE SYMBOLS
+-------------------
+
+ROADS (Walkable):
+  .     Empty Road - Walkable space without any visuals
+  R     Basic Road - TBD
+  RS    Stone Road - TBD
+  HS   Stone Filled Hole 
+
+PLAYER:
+  V     Veverka (player start)
+
+NUTS (Collectibles):
+  N     Basic Nut
+  NS    Stone Nut
+  NW    Water Nut
+
+GOAL:
+  G     Basic Goal
+
+OBSTACLES:
+  W     Basic Wall
+  WS    Stone Wall
+  H     Hole
+  HW    Water Hole
+
+
+7. NUT & HOLE INTERACTIONS
+---------------------------
+
+N + H/HW   → Ooops (nut lost, hole stays)
+NS + H     → Fills hole → RSF road
+NS + HW    → Fills hole + splash → RSF road
+NW + H     → Creates HW (water hole)
+NW + HW    → Splash only (HW stays)
+
+SPLASH: Pushes adjacent water and baisc nuts (stone nuts are too heavy!) away (up/down/left/right, not diagonal)
+
+
+8. GRID SIZE & CAMERA
+----------------------
+
+- Grid can be rectangular or square
+- Up to 15×11: Static camera (entire level visible)
+- Larger than 15×11: Camera follows Veverka (Character)
+- Very large grids possible - you can try the limits and let us know!
+
+
+9. LEVEL DESIGN
+----------------
+
+REQUIREMENTS:
+- Exactly 1 Veverka (V)
+- At least 1 Goal (G)
+- At least 1 Nut (N, NS, or NW)
+- All rows same length (rectangular or square)
+- Every cell must have a symbol
+- No walls needed on edges (game handles boundaries)
+
+DESIGN STRATEGY:
+- Place Goals first
+- Work backwards to determine nut positions
+- Add Veverka start position
+- Add obstacles and challenges
+- Test for solvability
+
+
+10. IMPORT / EXPORT LEVELS
+--------------------------
+
+The game includes built-in Import/Export functionality in the User Levels tab!
+
+EXPORT LEVELS:
+1. Go to User Levels → Create tab
+2. Select level number from dropdown (1-10)
+3. Click "Export" to save selected level
+4. OR click "Export All" to save all 10 levels at once
+5. Files are saved to:
+   - Windows: Documents\GetNuts\
+   - Android: Downloads folder
+
+IMPORT LEVELS:
+1. Go to User Levels → Create tab
+2. Select level number you want to replace (1-10)
+3. Click "Import"
+4. Windows Editor: File picker opens - select your .csv file
+5. Windows/Android Build: Place .csv file in Documents\GetNuts or Downloads,
+   then click Import (file must be named UserLevel[1-10].csv)
+
+IMPORTANT NOTES:
+- Import OVERWRITES the selected level slot
+- Export will NOT overwrite existing files (prevents data loss)
+- If export file already exists, you'll get an error - delete or rename old file
+- Exported files are named: UserLevel1.csv, UserLevel2.csv, etc.
+
+⚠ DATA LOSS WARNINGS:
+- UNINSTALLING the game will DELETE all your User Levels permanently!
+- REINSTALLING may DELETE all your User Levels (depends on device backup settings)
+- ALWAYS EXPORT your levels regularly to keep backups safe!
+- Exported files in Documents\GetNuts are safe even if game is uninstalled
+
+BACKUP STRATEGY:
+✓ Export important levels to Documents\GetNuts (or Downloads on some devices)
+✓ Copy exported .csv files to cloud storage (Google Drive, Dropbox, etc.)
+✓ Keep backups on PC if possible
+✓ Before uninstalling: Export ALL your custom levels!
+
+SHARING WORKFLOW:
+1. Export your level from the game
+2. Share the .csv file (Discord, forums, email, Google Drive, etc.)
+3. Recipient imports the file into their game
+4. Play and enjoy!
+
+MANUAL FILE LOCATIONS:
+If you want to manually access level files:
+- Windows: C:\Users\[YourUsername]\AppData\LocalLow\Veverka\GetNuts\UserLevels\
+- Android: /storage/emulated/0/Android/data/com.Veverka.GetNuts/files/UserLevels/
+
+
+================================================================================
+                           TROUBLESHOOTING
+================================================================================
+
+11. LEVEL VALIDATION & ERROR MESSAGES
+--------------------------------------
+
+WHEN VALIDATION RUNS:
+- Validation happens automatically when you start playing a level
+- If errors are found, you'll see an error overlay with up to 3 error messages
+- Fix the errors and try again - the game will show the next errors if any remain
+
+ERROR MESSAGES INCLUDE:
+- Exact position where the problem occurs
+- Description of what's wrong
+- For invalid symbols: shows the symbol that caused the error
+
+COORDINATE SYSTEM (Important for Excel users!):
+When working in Excel or spreadsheet programs:
+- Position [0, 0] is at the BOTTOM LEFT corner
+- First number (X) = Column (horizontal position, left to right)
+- Second number (Y) = Row (vertical position, bottom to top)
+- Counting starts from ZERO (not 1!)
+
+Example:
+  If error says "Invalid tile at (2, 3)" in Excel:
+  - Look at Column 2 (third column from left, counting from 0)
+  - Look at Row 3 (fourth row from bottom, counting from 0)
+
+12. WHEN LEVEL FAILS TO LOAD
+-----------------------------
+
+If your level has validation errors, the game will show an error overlay
+listing the problems found. Fix them and try loading the level again.
+
+COMMON VALIDATION ERRORS:
+
+✗ "No Veverka (V) found"
+  → Level must have exactly ONE V (player start position)
+
+✗ "Multiple Veverkas found at (x, y), (x, y)"
+  → Only ONE V allowed - remove extras at shown positions
+
+✗ "No Nuts found"
+  → Must have at least 1 Nut (N, NS, or NW)
+
+✗ "No Goals found"
+  → Must have at least 1 Goal (G)
+
+✗ "Invalid tile at (x, y): 'symbol'"
+  → Unknown symbol at position - check section 6 for valid symbols
+  → Must be UPPERCASE: V, N, G, W (not v, n, g, w)
+
+✗ "Empty tile at (x, y)"
+  → Cell has no symbol - every cell needs a symbol
+  → Use . (dot) for empty walkable space
+
+✗ "Row has different length: Row Y: expected X, found Z"
+  → Not all rows have same number of cells
+  → First row (top in Excel, bottom in game) is used as reference
+  → Note: First row may also be incorrect if other rows differ
+
+ADDITIONAL WARNINGS:
+(Validation will detect these, but error messages may be confusing)
+
+⚠ Extra commas / Row length mismatches
+  → Validation shows "Empty tile at (X, Y)" or "Row has different length"
+  → LibreOffice may add trailing commas when some rows are longer
+  → MANY rows affected (most rows have trailing comma):
+     - Probable cause: One or more rows are longer than others
+     - LibreOffice added commas to match the longest row
+     - Solution: Open CSV in text editor, check which rows are actually longer
+     - Remove trailing commas from all rows OR add missing symbols
+  → FEW rows affected (only few rows have trailing comma):
+     - Probable cause: Missing symbol in those specific rows
+     - Solution: Add missing symbol or remove extra comma
+  → Always check CSV in text editor (Notepad, VS Code) to see actual commas
+
+⚠ Tabs instead of commas
+  → If you use TAB key instead of commas, validation will show:
+     "Row has different length" or "Invalid tile" errors
+  → Solution: Use commas (,) between symbols
+  → In Excel/LibreOffice: Always "Save as CSV (Comma delimited)"
+
+⚠ File encoding issues
+  → If file contains special characters or wrong encoding, validation will show:
+     "Invalid tile" errors with strange symbols
+  → Solution: Use plain text editors (Notepad, Notepad++)
+  → Save as UTF-8 or ASCII encoding
+  → If problems persist: Copy content to new file in Notepad
+  → Save as "CSV (Comma delimited)" when done
+
+✓ Validation auto-handles:
+  → Spaces before/after symbols (automatically trimmed)
+  → Extra empty lines at end of file (automatically removed)
+  → Lowercase symbols (shows "Invalid tile" error)
+
+✓ Quick checks before testing:
+  → Grid is perfect rectangle/square
+  → No empty cells (use . for walkable space)
+  → All symbols are UPPERCASE
+
+
+13. QUICK REFERENCE
+--------------------
+
+REQUIRED:
+  1× V (Veverka)
+  1+ G (Goal)
+  1+ Nuts (N, NS, or NW)
+
+SYMBOLS:
+  ROADS:     . R RS HS
+  PLAYER:    V
+  NUTS:      N NS NW
+  GOAL:      G
+  OBSTACLES: W WS H HW
+
+INTERACTIONS:
+  N + H/HW   → Ooops
+  NS + H     → HS road
+  NS + HW    → HS + splash
+  NW + H     → HW
+  NW + HW    → Splash
+
+FILE FORMAT:
+  ✓ .csv with commas between symbols
+  ✓ All rows same length
+  ✓ Rectangular or square
+  ✓ Every cell has symbol
+  ✓ NO empty lines at end
+  ✓ UPPERCASE only
+
+================================================================================
+                           END OF MANUAL
+================================================================================
+
+Happy Level Creating!
+
+If your level doesn't load, check the Troubleshooting section!
+
+Design Tip: Start from the goal and work backwards!
+
+Version 1.2

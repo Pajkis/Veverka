@@ -4,7 +4,7 @@
 public enum GoalEventsType
 {
     GoalSet,
-    GoalResolved,
+    GoalResolve,
     NutInGoalDone
 }
 
@@ -30,9 +30,11 @@ public enum RoadEventType
 }
 
 /// <summary>
-/// Enum defining different types of wall events.
+/// Enum defining different types of obstacle events.
 /// </summary>
-public enum WallEventType
+public enum ObstacleEventsType
 {
-    WallSet
+    ObstacleSet,
+    ObstacleResolve,
+    ObstacleActionDone
 }

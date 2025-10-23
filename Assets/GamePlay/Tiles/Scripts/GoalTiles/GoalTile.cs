@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -6,12 +7,13 @@ using UnityEngine;
 public abstract class GoalTile : TileObject
 {
     protected GoalType goalType;
-    
+    protected bool shouldRemoveGoal = false;
+
     #region events
     [SerializeField] protected NutEvents nutEvents;
     [SerializeField] protected GoalEvents goalEvents;
-    [SerializeField] protected WallEvents wallEvents;
-    [SerializeField] protected RoadEvents roadEvents;
+    [SerializeField] protected ObstacleEvents obstacleEvents;
+    [SerializeField] protected RoadEvents roadEvents; 
     #endregion
    
     #region Init
@@ -60,18 +62,49 @@ public abstract class GoalTile : TileObject
         }
     }
 
+    /// <summary>
+    /// Invoked when a nut reaches the goal. This method can be overridden to provide custom behavior.
+    /// </summary>
+    /// <remarks>The default implementation starts a coroutine to handle post-goal processing based on the
+    /// nut's current position. Override this method to customize the behavior when a nut reaches the goal.</remarks>
+    /// <param name="payload">The event payload containing information about the nut, including its current position.</param>
     protected virtual void OnNutInGoal(NutEventPayload payload)
     {
+        StartCoroutine(OnNutInGoalDone(payload.CurrentPosition));
         DebugLogger.Log(DebugLogCategory.GoalSystem, $"{goalType} goal processing {payload.NutType} nut - sending NutInGoalDone event", this);
+    }
+        
+    /// <summary>
+    /// Handles the completion of processing a nut in the goal and raises the corresponding event.
+    /// </summary>
+    /// <remarks>This method ensures that all processing related to the nut in the goal is complete before
+    /// raising the <see cref="GoalEventsType.NutInGoalDone"/> event. The event notifies listeners that the nut's
+    /// interaction with the goal has concluded. If shouldRemoveGoal is true, destroys the goal tile.</remarks>
+    /// <param name="position">The grid position of the goal where the nut was processed.</param>
+    /// <returns>An enumerator for the coroutine, which waits a frame before raising the event.</returns>
+    private IEnumerator OnNutInGoalDone(Vector2Int position)
+    {
+        //wait a frame to ensure all processing is complete before continuing
+        yield return null;
 
         // Raise nut in goal done event to notify that all interaction with goal are complete
         goalEvents.Raise(new GoalEventPayload
         {
             EventType = GoalEventsType.NutInGoalDone,
-            Position = payload.CurrentPosition,
+            Position = position,
             ScoreValue = 0,
-            GoalRemove = false,
+            GoalRemove = shouldRemoveGoal,
         });
+
+        // Destroy goal tile if marked for removal
+        if (shouldRemoveGoal)
+        {
+            DebugLogger.Log(DebugLogCategory.GoalSystem, $"{goalType} goal at {position} marked for removal - destroying", this);
+            Destroy(gameObject);
+        }
     }
     #endregion
 }
+
+
+

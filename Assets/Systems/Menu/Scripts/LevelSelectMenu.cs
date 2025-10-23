@@ -9,7 +9,7 @@ public class LevelSelectMenu : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private UniversalTabManager tabManager;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     [Header("Level Set Mapping")]
@@ -30,6 +30,9 @@ public class LevelSelectMenu : MonoBehaviour
 
     void Start()
     {
+        // Check if validation errors should be displayed
+        LevelValidationErrorManager.ShowErrorOverlayIfPending();
+
         // Subscribe to tab manager events
         if (tabManager != null)
         {
@@ -49,17 +52,17 @@ public class LevelSelectMenu : MonoBehaviour
     /// </summary>
     private void SetInitialTab()
     {
-        if (levelDatabase != null && tabManager != null)
+        if (levelSelection != null && tabManager != null)
         {
-            int tabValue = GetTabValueForLevelSet(levelDatabase.LevelSetType);
+            int tabValue = GetTabValueForLevelSet(levelSelection.LevelSetType);
             if (tabValue != -1)
             {
                 tabManager.ShowTabByValue(tabValue);
-                DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Initial tab set to level set {levelDatabase.LevelSetType}", this);
+                DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Initial tab set to level set {levelSelection.LevelSetType}", this);
             }
             else
             {
-                DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"No tab mapping found for level set: {levelDatabase.LevelSetType}", this);
+                DebugLogger.LogWarning(DebugLogCategory.SceneManager, $"No tab mapping found for level set: {levelSelection.LevelSetType}", this);
             }
         }
     }
@@ -70,14 +73,14 @@ public class LevelSelectMenu : MonoBehaviour
     /// <param name="tabIndex">Index of newly selected tab</param>
     private void OnTabChanged(int tabIndex)
     {
-        if (levelDatabase != null && tabManager != null)
+        if (levelSelection != null && tabManager != null)
         {
             int tabValue = tabManager.GetCurrentTabValue();
             LevelSetType levelSetType = GetLevelSetForTabValue(tabValue);
 
-            if (levelSetType != levelDatabase.LevelSetType)
+            if (levelSetType != levelSelection.LevelSetType)
             {
-                levelDatabase.LevelSetType = levelSetType;
+                levelSelection.LevelSetType = levelSetType;
                 DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Level set changed to {levelSetType}", this);
             }
         }
@@ -119,20 +122,21 @@ public class LevelSelectMenu : MonoBehaviour
     /// <param name="levelNumber">Level number to load (0-based index)</param>
     public void HandleLevelButtonClick(int levelNumber)
     {
-        if (levelDatabase != null && sceneNavigationEvents != null)
+        if (levelSelection != null && sceneNavigationEvents != null)
         {
-            levelDatabase.CurrentLevelIndex = levelNumber;
+            levelSelection.CurrentLevelIndex = levelNumber;
+            levelSelection.CurrentAction = LevelAction.Load;
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.GoToScene,
-                Scene = SceneType.LoadLevel
+                Scene = SceneType.LevelTransition
             });
 
-            DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Loading level {levelNumber} from set {levelDatabase.LevelSetType}", this);
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelSelectMenu: Loading level {levelNumber} from set {levelSelection.LevelSetType}", this);
         }
         else
         {
-            DebugLogger.LogError(DebugLogCategory.SceneManager, "LevelDatabase or SceneNavigationEvent not assigned to LevelSelectMenu!", this);
+            DebugLogger.LogError(DebugLogCategory.SceneManager, "LevelSelection or SceneNavigationEvent not assigned to LevelSelectMenu!", this);
         }
     }
 
@@ -245,9 +249,9 @@ public class LevelSelectMenu : MonoBehaviour
     /// </summary>
     public void RefreshTabState()
     {
-        if (levelDatabase != null && tabManager != null)
+        if (levelSelection != null && tabManager != null)
         {
-            int targetTabValue = GetTabValueForLevelSet(levelDatabase.LevelSetType);
+            int targetTabValue = GetTabValueForLevelSet(levelSelection.LevelSetType);
             int currentTabValue = tabManager.GetCurrentTabValue();
 
             if (targetTabValue != currentTabValue && targetTabValue != -1)
@@ -261,9 +265,9 @@ public class LevelSelectMenu : MonoBehaviour
     [ContextMenu("Debug - Level Set Mappings")]
     private void DebugLevelSetMappings()
     {
-        Debug.Log("=== LEVEL SET MAPPINGS ===");
-        Debug.Log($"Current Level Set: {(levelDatabase != null ? levelDatabase.LevelSetType.ToString() : "NULL")}");
-        Debug.Log($"Current Tab Value: {(tabManager != null ? tabManager.GetCurrentTabValue() : -1)}");
+        DebugLogger.Log(DebugLogCategory.UI, "=== LEVEL SET MAPPINGS ===", this);
+        DebugLogger.Log(DebugLogCategory.UI, $"Current Level Set: {(levelSelection != null ? levelSelection.LevelSetType.ToString() : "NULL")}", this);
+        DebugLogger.Log(DebugLogCategory.UI, $"Current Tab Value: {(tabManager != null ? tabManager.GetCurrentTabValue() : -1)}", this);
 
         for (int i = 0; i < levelSetMappings.Length; i++)
 
@@ -271,7 +275,7 @@ public class LevelSelectMenu : MonoBehaviour
         {
             var mapping = levelSetMappings[i];
             bool isUnlocked = IsLevelSetUnlocked(mapping.setType);
-            Debug.Log($"Mapping {i}: {mapping.setType} → Tab Value {mapping.tabValue} | Unlocked: {isUnlocked} | {mapping.description}");
+            DebugLogger.Log(DebugLogCategory.UI, $"Mapping {i}: {mapping.setType} → Tab Value {mapping.tabValue} | Unlocked: {isUnlocked} | {mapping.description}", this);
         }
     }
 

@@ -1,3 +1,119 @@
+# Changelog v0.14.0
+
+### 📅 Date: `2025-10-19`
+### 🔖 Git Version: `**v0.14.0**`
+### 📦 Area: `[User Levels / Grid System / Notifications / Tiles / Debug System / UI]`
+### 📝 Description:
+Major feature release introducing **User-Created Levels** with import/export, complete **Grid System Refactor** for modularity, **Notification System** for user feedback, **Obstacle System** unification, new **Stone Road Tiles**, comprehensive **Level Validation**, and **Debug Logger** integration across all systems.
+
+### ➕ Added:
+**User Level System:**
+- User-created level support with persistent storage in Application.persistentDataPath
+- Import/export functionality with unified path: Documents/GetNuts on both platforms
+- SimpleFileBrowser for cross-platform file picker (Windows, Android, Editor)
+- Android Content URI support for Scoped Storage compatibility
+- Android Auto Backup disabled via AndroidManifest to prevent data corruption
+- UserLevelManager, UserLevelSet, UserLevelInitializer for level management
+- LevelInitData and LevelSelection ScriptableObjects for level configuration
+- UserLevelManual.txt v1.2 with CSV format specification and data loss warnings
+
+**Grid System Refactor:**
+- Extracted GameGrid into modular components: GridBuilder, GridData, GridRuntime
+- New TileParser system with configurable tile symbol mapping via TileParsingConfig SO
+- Improved grid construction, data storage, and runtime operations
+- Enhanced GridUtils with expanded utility functions
+
+**Notification System:**
+- NotificationOverlay with NotificationManager for user feedback
+- ErrorCode enum (37 codes) with ErrorMessages for user-friendly error display
+- NotificationType enum (Success, Error, Info)
+- Visual notification sprites and UI components
+
+**Level Validation:**
+- LevelValidationOverlay with LevelValidationErrorManager
+- Row length mismatch detection for CSV format validation
+- Comprehensive error reporting with visual feedback
+
+**Tile System:**
+- ObstacleTile base class for unified obstacle handling
+- Stone road tiles (Tile_RoadStone prefab with sprite)
+- Stone-filled hole tiles (Tile_HoleStone sprite)
+
+**Debug System:**
+- DebugLoggerInitializer for global debug logger initialization
+- Category-based logging integrated across 20+ scripts (replacing Debug.Log)
+- Enhanced DebugLogConfig with reorganized categories
+
+**UI Components:**
+- HideOnTabActive and TabDependentVisibility for tab-based UI control
+- Simple menu button prefab with sprites
+- Enhanced tab management system
+
+### ♻️ Updated / Refactored:
+**Grid System:**
+- GameGrid refactored from monolithic class to delegating architecture (GridBuilder/GridData/GridRuntime)
+- Enhanced GridUtils and GridUtilsTests with improved functionality and test coverage
+
+**Obstacle System:**
+- Unified HoleTile and WaterHoleTile under ObstacleTile base class
+- Moved obstacle scripts from GoalTiles/ to ObstacleTiles/ folder
+- Renamed WallEvents → ObstacleEvents, WallEventPayload → ObstacleEventPayload
+- Reorganized obstacle sprites from Goals/ and Wall/ folders to unified Obstacle/ folder
+
+**Goal System:**
+- Refactored BasicGoalTile and GoalTile for improved goal resolution
+- Enhanced GoalEventPayload structure
+
+**Level System:**
+- Enhanced LevelLoader and LevelUnloader with improved error handling
+- Added User level set type to LevelSetType enum
+- Major UI overhaul in LevelSelect scene
+
+**Scene Management:**
+- Renamed LevelLoad → LevelTransition scene
+- Added NotificationOverlay and LevelValidationOverlay to OverlayType enum
+- Enhanced Bootstrap scene initialization
+
+**Character & Turn System:**
+- Integrated DebugLogger across Character, TurnControl systems
+- Removed obsolete Debug.Log calls from TurnRecorder and UndoController
+
+**UI System:**
+- Enhanced UniversalTabManager, RandomTipsDisplay, LevelSelectMenu
+- Updated menu systems (LevelFinishedMenu, InGameMenu, PauseMenu)
+
+**Sprite Organization:**
+- Renamed InGameBorder_* → Frame_* for all background frames
+- Renamed ButtonMenuCommon → ButtonMenuNutLeafs
+- Renamed TipMessageFrame → Frame_TipMessage
+- Renamed Shared/UI/Sprites/ → Shared/UI/SpriteSupport/
+- Optimized nut sprites (BasicNut, StoneNut, 14 water nuts - avg 30% size reduction)
+
+**Android:**
+- Updated minimum and target SDK versions
+
+**Debug Integration:**
+- Replaced Debug.Log with DebugLogger across BubbleMessageManager, Character, GamePlay, AudioManager, UIButtonAudioHook, CameraFollow, DisplaySettings
+
+## 🛠️ BugFixes:
+- Fixed level row length mismatches in CSV parsing
+- Fixed level validation inconsistencies and improved error reporting
+- Fixed level loading/unloading flow issues
+- Fixed tile parsing edge cases and grid query performance
+- Fixed tab visibility state inconsistencies
+- Fixed button state handling and overlay display timing
+- Fixed duplicate sprite references and sprite import settings
+
+### 🔥 Removed:
+- LevelDatabase.cs/asset replaced by LevelInitData
+- WallEventPayload replaced by ObstacleEventPayload
+- WallEvents.asset replaced by ObstacleEvents.asset
+- LevelUnload.unity scene removed from build
+- Obsolete Debug.Log calls from TurnRecorder, UndoController
+- Temporary button sprites (Button_NotPressed_Temp, Button_Pressed_Temp)
+- Obsolete frame sprite (InGameBorder_3)
+- Redundant sprite assets cleaned up
+
 # Changelog v0.13.0
 
 ### **📅 Date: `2025-09-26`**

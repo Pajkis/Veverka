@@ -2,46 +2,72 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Level unloading manager
+/// Event-driven level unloading manager
+/// Listens for scene navigation events and handles level cleanup
 /// </summary>
 public class LevelUnloader : MonoBehaviour
 {
     [SerializeField] private GridEvents gridEvents;
-
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
-
     [SerializeField] private AudioEvents audioEvents;
+    [SerializeField] private LevelSelection levelSelection;
 
-    void Start()
+    /// <summary>
+    /// Start is called before update - checks LevelAction and proceeds if Unload
+    /// </summary>
+    private void Start()
     {
-        // raise reset event
-        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.ResetGrid });
-        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Menu });
+        // Only proceed if CurrentAction is Unload
+        if (levelSelection == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, "LevelSelection is not assigned!", this);
+            return;
+        }
+
+        if (levelSelection.CurrentAction != LevelAction.Unload)
+        {
+            DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelUnloader: CurrentAction is {levelSelection.CurrentAction}, skipping unload", this);
+            return;
+        }
+
+        DebugLogger.Log(DebugLogCategory.LevelSystem, $"LevelUnloader: CurrentAction is Unload, proceeding with level unloading", this);
         StartCoroutine(UnloadLevelCoroutine());
     }
 
     /// <summary>
-    /// Load and validate level from file
+    /// Unload level and clean up resources
     /// </summary>
-    /// <returns></returns>
-    IEnumerator UnloadLevelCoroutine()
+    private IEnumerator UnloadLevelCoroutine()
     {
-        yield return null; // wait one frame so the scene is fully loaded
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Starting level unload process", this);
 
-        float minLoadingTime = 2f;
+        // Reset grid
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Resetting grid", this);
+        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.ResetGrid });
+
+        // Switch to menu music
+        DebugLogger.Log(DebugLogCategory.Audio, "Switching to menu music", this);
+        audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlayMusic, Music = MusicType.Menu });
+
+        yield return null; // Wait one frame for cleanup
+
+        float minUnloadTime = 0.5f;
         float startTime = Time.time;
 
-        // Wait for loading to pass
+        // Wait for minimum unload time
         float timeElapsed = Time.time - startTime;
-        if (timeElapsed < minLoadingTime)
-            yield return new WaitForSeconds(minLoadingTime - timeElapsed);
+        if (timeElapsed < minUnloadTime)
+        {
+            yield return new WaitForSeconds(minUnloadTime - timeElapsed);
+        }
 
+        DebugLogger.Log(DebugLogCategory.LevelSystem, "Level unload complete - transitioning to LevelSelect", this);
+
+        // Navigate to LevelSelect scene
         sceneNavigationEvents.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.MainMenu
+            Scene = SceneType.LevelSelect
         });
-     }
-
-
+    }
 }

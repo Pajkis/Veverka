@@ -14,16 +14,14 @@ public class GoalEventPayload
     public GoalTile GoalTile;
 
     [Header("Replacement Creation")]
-    public bool GoalRemove; 
-    public bool CreateReplacement; 
+    public bool GoalRemove;
+    public bool CreateReplacement;
+    public bool InstantiateTile;
     public TileType ReplacementType;
     public RoadType ReplacementRoadType;
-    public WallType ReplacementWallType;
+    public ObstacleType ReplacementObstacleType;
     public GoalType ReplacementGoalType;
-
-    //Instantiate replacement tile
-    public bool InstantiateTile = false; // Default: most goals just remove, don't create
-
+    
     [Header("Special Effects")]
     public bool TriggerSplash;
 
@@ -44,9 +42,9 @@ public class GoalEventPayload
     public bool IsValid()
     {
         // If creating replacement, should have valid replacement type
-        if (CreateReplacement && ReplacementType == TileType.Empty)
+        if (CreateReplacement && ReplacementType == TileType.ErrorTile)
         {
-            DebugLogger.LogWarning(DebugLogCategory.GoalSystem, "GoalEventPayload creating replacement but ReplacementType is Empty");
+            DebugLogger.LogWarning(DebugLogCategory.GoalSystem, "GoalEventPayload creating replacement but ReplacementType is ErrorTile");
         }
 
         return true;

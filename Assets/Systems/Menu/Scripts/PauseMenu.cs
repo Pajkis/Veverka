@@ -7,8 +7,10 @@ public class PauseMenu : MonoBehaviour
 {
     #region fields
 
-     [SerializeField]
+    [SerializeField]
     private SceneNavigationEvents sceneNavigationEvent;
+    [SerializeField]
+    private LevelSelection levelSelection;
     #endregion
 
     #region methods
@@ -37,10 +39,11 @@ public class PauseMenu : MonoBehaviour
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Restart button clicked - reloading current level", this);
         Time.timeScale = 1;
+        levelSelection.CurrentAction = LevelAction.Load;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.LoadLevel
+            Scene = SceneType.LevelTransition
         });
        // Destroy(gameObject);
     }
@@ -63,12 +66,13 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Quit button clicked - unloading level and returning to menu", this);
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Quit button clicked - unloading level and returning to level select", this);
         Time.timeScale = 1;
+        levelSelection.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
-            Scene = SceneType.UnloadLevel
+            Scene = SceneType.LevelTransition
         });
 
       //  Destroy(gameObject);

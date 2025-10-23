@@ -259,25 +259,21 @@ public abstract class Character : MonoBehaviour
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)
         {
-            Debug.LogError($"[Character Init] SmoothMover component missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.CharacterMovement, $"SmoothMover component missing on {gameObject.name}", this);
             return;
         }
         smoothRotate = GetComponent<SmoothRotate>();
         if (smoothRotate == null)
         {
-            Debug.LogError($"[Character Init] SmoothRotate component missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.Rotation, $"SmoothRotate component missing on {gameObject.name}", this);
             return;
         }
         smoothRotate.Rotate(gridPosition, facingDirection, facingDirection, 0f,
-            onStart: null, onComplete: null);    
-        // Rotate(facingDirection);
+            onStart: null, onComplete: null);
 
-        Debug.Log($"[Character INIT] tilePos: {gridPosition}, worldPos: {transform.position}");
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Character initialized - GridPos: {gridPosition}, WorldPos: {transform.position}", this);
   
-    
-    
-    }
-  
+    }  
 
     /// <summary>
     /// Move of a character over a distance in set direction
@@ -286,11 +282,7 @@ public abstract class Character : MonoBehaviour
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
     protected virtual void Move(Direction direction, int distance, float duration)
-    {
-        //do not execute move when already moving
-      //  if (smoothMover.IsMoving) return;
-        
-
+    { 
         // decide position to move
         Vector3 currentPosition = transform.position;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
@@ -310,10 +302,10 @@ public abstract class Character : MonoBehaviour
               ResponseData = false,
           };
 
-        //Raise move started event
-        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Sending MoveStarted event for {GetType().Name}", this);
+        //Raise move started event      
         characterEvents.Raise(payload);
-        DebugLogger.Log(DebugLogCategory.EventSystem, $"MoveStarted event sent for {GetType().Name}", this);
+        DebugLogger.Log(DebugLogCategory.EventSystem, $"{GetType().Name} move start to {gridPosition}", this);
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"MoveStarted  for {GetType().Name}", this);
 
         // execute smooth movement
         smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
@@ -337,17 +329,15 @@ public abstract class Character : MonoBehaviour
         // Update facing direction to the movement direction
         this.facingDirection = payload.CurrentDirection;
 
-        Debug.Log($"[{this.GetType().Name} Move Complete] Now at grid pos: {gridPosition}");
-
         // Update payload for MoveCompleted event
         payload.EventType = CharacterEventType.MoveCompleted;
         payload.CurrentPosition = targetPosition;
         // CurrentDirection and PreviousDirection are already set from MoveStarted
 
-        // Raise move completed event - this will be handled by EventBasedTurnRecorder
-        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Sending MoveCompleted event for {GetType().Name}", this);
+        // Raise move completed event - this will be handled by EventBasedTurnRecorder    
         characterEvents.Raise(payload);
         DebugLogger.Log(DebugLogCategory.EventSystem, $"MoveCompleted event sent for {GetType().Name}", this);
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"{GetType().Name} move complete to {gridPosition}", this);
 
     }
     #endregion
@@ -373,6 +363,4 @@ public abstract class Character : MonoBehaviour
     {
         //Default: nothing
     }
-
-
 }

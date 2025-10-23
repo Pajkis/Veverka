@@ -120,7 +120,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02571d8b951d127428d7ec3c1ecca41f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDatabase: {fileID: 11400000, guid: b69c7d4f04597dc4c927f2bb7f68a504, type: 2}
+  levelSelection: {fileID: 11400000, guid: 9d05985cbb43a63468aaede41e0a2a79, type: 2}
   sceneNavigationEvent: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
 --- !u!114 &763656222236711846
 MonoBehaviour:
@@ -135,7 +135,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  logButtonProcessing: 0
 --- !u!114 &4686649228107062448
 MonoBehaviour:
   m_ObjectHideFlags: 0

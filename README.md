@@ -5,10 +5,11 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 **Key Features:**
 
 - Grid-based movement and puzzle mechanics
-- 20 challenging levels with progressive difficulty
+- 30 challenging levels with progressive difficulty
+- User-created levels with import/export functionality
 - Undo system for strategic gameplay
 - Complete audio system with music and sound effects
-- Multi-platform support (Windows & Android 12+)
+- Multi-platform support (Windows & Android 13+)
 - Professional UI/UX with smooth transitions
 - Configurable game settings
 - Lightweight menu and level flow system
@@ -20,7 +21,7 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 - Key packages: `com.unity.feature.2d`, `com.unity.textmeshpro`, `com.unity.test-framework`
 - ScriptableObject-based configuration system
 - Event-driven architecture
-- Clean scene flow management with 6 dedicated scenes
+- Clean scene flow management with 5 dedicated scenes
 - Addressable asset system integration
 - Comprehensive testing framework support
 
@@ -29,8 +30,7 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 - `Bootstrap` - Game bootstrap and initialization
 - `MainMenu` - Main menu navigation
 - `LevelSelect` - Level selection interface
-- `LevelLoad` - Level loading sequence
-- `LevelUnload` - Level cleanup
+- `LevelTransition` - Level loading and transition sequence
 - `GamePlay` - Core gameplay experience
 
 **How to Play:**
@@ -43,7 +43,7 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 **Installation & Running:**
 
 - **Windows:** Download `VeverkaGame_WinVx.x.x.zip`, extract and run `Veverka.exe`
-- **Android 12+:** Download `VeverkaGame_AndroidVx.x.x.apk` and install
+- **Android 13+:** Download `VeverkaGame_AndroidVx.x.x.apk` and install
 
 **Asset Structure:**
 
@@ -61,12 +61,12 @@ A complete 2D Unity puzzle game featuring Sokoban-style gameplay mechanics. The 
 2. In Unity Hub, click **Add project** and select the `Veverka/` folder
 3. Open scene `Bootstrap` to start the game flow
 4. For development, explore scenes in `Assets/Scenes/` directory
-5. Build via **File → Build Settings** (ensure all 6 scenes are added in correct order)
+5. Build via **File → Build Settings** (ensure all 5 scenes are added in correct order)
 
 ### Building for Distribution
 
 1. Open **File → Build Settings** in Unity Editor
-2. Add scenes in this order: `Bootstrap`, `MainMenu`, `LevelSelect`, `LevelLoad`, `LevelUnload`, `GamePlay`
+2. Add scenes in this order: `Bootstrap`, `MainMenu`, `LevelSelect`, `LevelTransition`, `GamePlay`
 3. Select target platform (Windows/Android)
 4. Configure platform-specific settings
 5. Click **Build** to generate executable
@@ -105,5 +105,5 @@ This project is licensed under the MIT License.
 
 ## Version
 
-Current version: v0.12.0
-Release date: 2025-09-04
+Current version: v0.14.0
+Release date: 2025-10-19

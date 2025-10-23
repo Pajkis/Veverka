@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Movable object setup and control
@@ -147,7 +147,7 @@ public abstract class NutTile : TileObject
         smoothMover = GetComponent<SmoothMover>();
         if (smoothMover == null)
         {
-            Debug.LogError($"MovableTile: SmoothMover component is missing on {gameObject.name}");
+            DebugLogger.LogError(DebugLogCategory.NutMovement, $"SmoothMover component is missing on {gameObject.name}", this);
             return;
         }
 
@@ -275,24 +275,15 @@ public abstract class NutTile : TileObject
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"NutRemoved sent for position: {payload.PreviousPosition}", this);
 
-        // Check if the nut reached the goal
+        // Check if the nut reached a goal or obstacle
         TileQueryPayload query = new() { Position = targetPosition };
         gridEvents.Raise(new GridEventPayload
         {
             EventType = GridEventType.TileQuery,
             Query = query
         });
-        if (query.TileType != TileType.Goal)
-        {
-            nutEvents.Raise(new NutEventPayload
-            {
-                EventType = NutEventType.NutSet,
-                CurrentPosition = targetPosition,
-                NutType = this.nutType,
-                NutTile = this,
-            });
-        }
-        else
+
+        if (query.TileType == TileType.Goal || query.TileType == TileType.Obstacle)
         {
             // First send NutEnteringGoal event for TurnControl to start goal action
             nutEvents.Raise(new NutEventPayload
@@ -304,7 +295,7 @@ public abstract class NutTile : TileObject
                 NutTile = this,
             });
 
-            // Then send NutInGoal event for GoalTile to process
+            // Then send NutInGoal event for GoalTile/ObstacleTile to process
             nutEvents.Raise(new NutEventPayload
             {
                 EventType = NutEventType.NutInGoal,
@@ -314,6 +305,16 @@ public abstract class NutTile : TileObject
                 NutTile = this,
             });
             Destroy(gameObject);
+        }
+        else
+        {
+            nutEvents.Raise(new NutEventPayload
+            {
+                EventType = NutEventType.NutSet,
+                CurrentPosition = targetPosition,
+                NutType = this.nutType,
+                NutTile = this,
+            });
         }
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"UPDATE GridPosition: {GridPosition} → {targetPosition}", this);

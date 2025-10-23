@@ -18,11 +18,11 @@ public class LevelSet : ScriptableObject
     /// </summary>
     /// <param name="levelNumber">Level number (0-based index)</param>
     /// <returns>TextAsset containing the CSV data, or null if not found</returns>
-    public TextAsset GetLevelCsv(int levelNumber)
+    public virtual TextAsset GetLevelCsv(int levelNumber)
     {
         if (levelNumber < 0 || levelNumber >= levelCsvFiles.Length)
         {
-            Debug.LogError($"Level {levelNumber} not found in set {setType}. Available levels: 0-{levelCsvFiles.Length - 1}");
+            DebugLogger.LogError(DebugLogCategory.LevelSystem, $"LevelSet: Level {levelNumber} not found in set {setType}. Available levels: 0-{levelCsvFiles.Length - 1}");
             return null;
         }
 
@@ -32,14 +32,14 @@ public class LevelSet : ScriptableObject
     /// <summary>
     /// Get the total number of levels in this set
     /// </summary>
-    public int LevelCount => levelCsvFiles.Length;
+    public virtual int LevelCount => levelCsvFiles.Length;
 
     /// <summary>
     /// Check if a level number exists in this set
     /// </summary>
     /// <param name="levelNumber">Level number to check</param>
     /// <returns>True if level exists</returns>
-    public bool HasLevel(int levelNumber)
+    public virtual bool HasLevel(int levelNumber)
     {
         return levelNumber >= 0 && levelNumber < levelCsvFiles.Length;
     }

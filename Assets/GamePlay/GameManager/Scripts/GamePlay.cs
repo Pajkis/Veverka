@@ -23,7 +23,8 @@ public class GamePlay : MonoBehaviour
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
 
     [Header("Level Data")]
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelSelection levelSelection;
+    [SerializeField] private LevelInitData levelInitData;
 
     [Header("Turn Undo Logic")]
     [SerializeField] private UndoController undoController;
@@ -113,18 +114,24 @@ public class GamePlay : MonoBehaviour
         turnsDisplay.DisplayNumber(turnCount);
         DebugLogger.Log(DebugLogCategory.Gameplay, $"Turn count initialized to {turnCount}", this);
 
-        if (levelDatabase == null || levelDatabase.GoalsCount == 0)
+        if (levelInitData == null || levelInitData.StartGoalsCount == 0)
         {
-            DebugLogger.LogError(DebugLogCategory.Gameplay, "LevelDatabase is null or no goals set - cannot initialize level", this);
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "LevelInitData is null or no goals set - cannot initialize level", this);
             return;
         }
 
-        levelNumDisplay.DisplayNumber(levelDatabase.CurrentLevelIndex + 1);
-        levelTypeDisplay.DisplayEnum<LevelSetType>(levelDatabase.LevelSetType);
-        levelGoalCount = levelDatabase.GoalsCount; // payload.GoalCount;
+        if (levelSelection == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "LevelSelection is null - cannot initialize level display", this);
+            return;
+        }
+
+        levelNumDisplay.DisplayNumber(levelSelection.CurrentLevelIndex + 1);
+        levelTypeDisplay.DisplayEnum<LevelSetType>(levelSelection.LevelSetType);
+        levelGoalCount = levelInitData.StartGoalsCount;
         goalDisplay.DisplayNumber(levelGoalCount);
 
-        DebugLogger.Log(DebugLogCategory.Gameplay, $"Level initialized - Level: {levelDatabase.CurrentLevelIndex + 1}, Type: {levelDatabase.LevelSetType}, Goals remaining: {levelGoalCount}", this);
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Level initialized - Level: {levelSelection.CurrentLevelIndex + 1}, Type: {levelSelection.LevelSetType}, Goals remaining: {levelGoalCount}", this);
     }
 
     /// <summary>
@@ -132,7 +139,7 @@ public class GamePlay : MonoBehaviour
     /// </summary>
     void UpdateGoalCount(GoalEventPayload payload)
     {
-        if (payload.EventType != GoalEventsType.GoalResolved) return;
+        if (payload.EventType != GoalEventsType.GoalResolve) return;
 
         int previousGoalCount = levelGoalCount;
         levelGoalCount -= payload.ScoreValue;

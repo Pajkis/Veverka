@@ -16,3 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 011663504963b054aabebb54dfa9a085, type: 2}
   - {fileID: 11400000, guid: 1e4fdb0a127582f4ea9112f999e5a8c3, type: 2}
   - {fileID: 11400000, guid: f947ebd93b677d1498753f9f62a3b617, type: 2}
+  userLevelSet: {fileID: 11400000, guid: e821c42569c04e54893cf9ef5e91fc3e, type: 2}
+  displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}

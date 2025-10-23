@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// Camera follows target and clamps within GameGrid bounds.
@@ -8,7 +8,7 @@ public class CameraFollow : MonoBehaviour
 {
     [Header("Config (SO)")]
     [SerializeField] private DisplayConfig displayConfig;
-    [SerializeField] private LevelDatabase levelDatabase;
+    [SerializeField] private LevelInitData levelInitData;
 
     [Header("Events")]
     [SerializeField] private CharacterEvents characterEvents;
@@ -44,13 +44,13 @@ public class CameraFollow : MonoBehaviour
     {
         ApplyConfig();
 
-        if (levelDatabase == null || levelDatabase.gridOrigin == null ||
-            levelDatabase.gridCenterStartTarget == null || levelDatabase.gridSize == null)
+        if (levelInitData == null || levelInitData.gridOrigin == null ||
+            levelInitData.gridCenterStartTarget == null || levelInitData.gridSize == null)
         {
-            Debug.LogError("LevelDatabase or its paramateres is not set in CameraFollow. Please assign it or set values.");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: LevelInitData or its parameters is not set. Please assign it or set values.", this);
             return;
         }
-        Init(levelDatabase.gridCenterStartTarget, levelDatabase.gridOrigin, levelDatabase.gridSize);
+        Init(levelInitData.gridCenterStartTarget, levelInitData.gridOrigin, levelInitData.gridSize);
     }
 
     /// <summary>
@@ -93,14 +93,14 @@ public class CameraFollow : MonoBehaviour
     {
         if (displayConfig == null)
         {
-            Debug.LogError("DisplayConfig is not assigned in CameraFollow!");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: DisplayConfig is not assigned!", this);
             return;
         }
 
         var profile = displayConfig.ResolveProfile();
         if (profile == null)
         {
-            Debug.LogError("No suitable display profile found!");
+            DebugLogger.LogError(DebugLogCategory.Display, $"{nameof(CameraFollow)}: No suitable display profile found!", this);
             return;
         }
 

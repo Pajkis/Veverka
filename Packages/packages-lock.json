@@ -189,6 +189,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.mobile.android-logcat": {
+      "version": "1.4.6",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.scriptablebuildpipeline": {
       "version": "1.21.25",
       "depth": 1,
@@ -246,6 +253,27 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "com.yasirkula.nativefilepicker": {
+      "version": "https://github.com/yasirkula/UnityNativeFilePicker.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "de7bbba0dbbdde9a87f0be0c504fc8ed81426a7f"
+    },
+    "com.yasirkula.nativeshare": {
+      "version": "https://github.com/yasirkula/UnityNativeShare.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "99559c82d9ef7fa2e2c588b91b1995f117f754b2"
+    },
+    "com.yasirkula.simplefilebrowser": {
+      "version": "https://github.com/yasirkula/UnitySimpleFileBrowser.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "bce53b258059a5e6563e0be233f804a4f189649e"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

@@ -3,13 +3,12 @@
 /// </summary>
 public enum TileType
 {
-    Empty,
+    ErrorTile,  // Default value (0) - uninitialized or invalid tile
     Road,
-    Wall,
+    Obstacle,
     Nut,
     Veverka,
-    Goal,
-    ErrorTile
+    Goal
 }
 
 /// <summary>
@@ -30,18 +29,18 @@ public enum GoalType
 {
     None,        // No goal (default/empty)
     BasicGoal,
-    HoleGoal,
-    WaterHoleGoal
 }
 
 /// <summary>
-/// Enumeration of wall types
+/// Enumeration of obstacle types
 /// </summary>
-public enum WallType
+public enum ObstacleType
 {
-    None,        // No wall (default/empty)
+    None,           // No obstacle (default/empty)
     BasicWall,
-    StoneWall
+    StoneWall,
+    Hole,
+    WaterHole
 }
 
 /// <summary>
@@ -50,6 +49,7 @@ public enum WallType
 public enum RoadType
 {
     None,           // No road (default/empty)
+    Empty,          // Empty walkable tile (background only)
     BasicRoad,
     StoneRoad,
     StoneFilledHole,

@@ -5,6 +5,7 @@ public class GameInit : MonoBehaviour
 {
     [SerializeField] private AudioEvents audioEvents;
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
+    [SerializeField] private UserLevelInitializer userLevelInitializer;
 
     /// <summary>
     /// Ensures the initializer persists across scene loads.
@@ -38,6 +39,18 @@ public class GameInit : MonoBehaviour
         float minLoadingTime = 2f;
         float startTime = Time.time;
 
+        // Initialize user levels if initializer is assigned
+        if (userLevelInitializer != null)
+        {
+            DebugLogger.Log(DebugLogCategory.SceneManager, "Initializing user levels", this);
+            yield return StartCoroutine(userLevelInitializer.InitializeUserLevels());
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "UserLevelInitializer not assigned - skipping user level initialization", this);
+        }
+
+        // Ensure minimum loading time
         float timeElapsed = Time.time - startTime;
         if (timeElapsed < minLoadingTime)
         {

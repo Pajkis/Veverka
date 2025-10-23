@@ -8,6 +8,7 @@ public class BubbleMessageManager : MonoBehaviour
     #region Fields
     [Header("Events")]
     [SerializeField] GoalEvents goalEvents;
+    [SerializeField] ObstacleEvents obstacleEvents;
     [SerializeField] CharacterEvents characterEvents;
 
     [Header("Prefab bubble")]
@@ -15,7 +16,7 @@ public class BubbleMessageManager : MonoBehaviour
 
     Transform gridRoot;
     Vector2Int characterPosition;
-    bool hasShownGoalMessageThisTurn = false;
+    bool hasShownMessageThisTurn = false;
     #endregion
 
     #region Methods
@@ -27,7 +28,7 @@ public class BubbleMessageManager : MonoBehaviour
         gridRoot = GameObject.Find("GridRoot")?.transform;
         if (gridRoot == null)
         {
-            Debug.LogError("GridRoot not found in the scene. Please make sure there is a GameObject named 'GridRoot'.");
+            DebugLogger.LogError(DebugLogCategory.Gameplay, "GridRoot not found in the scene. Please make sure there is a GameObject named 'GridRoot'.", this);
         }
     }
 
@@ -37,6 +38,7 @@ public class BubbleMessageManager : MonoBehaviour
     private void OnEnable()
     {
         goalEvents.AddListener(OnGoalEvent);
+        obstacleEvents.AddListener(OnObstacleEvent);
         characterEvents.AddListener(OnCharacterEvent);
     }
 
@@ -46,6 +48,7 @@ public class BubbleMessageManager : MonoBehaviour
     private void OnDisable()
     {
         goalEvents.RemoveListener(OnGoalEvent);
+        obstacleEvents.RemoveListener(OnObstacleEvent);
         characterEvents.RemoveListener(OnCharacterEvent);
     }
 
@@ -58,8 +61,8 @@ public class BubbleMessageManager : MonoBehaviour
         if (payload.EventType == CharacterEventType.MoveCompleted)
         {
             characterPosition = payload.CurrentPosition;
-            // Reset goal message flag for new turn
-            hasShownGoalMessageThisTurn = false;
+            // Reset message flag for new turn
+            hasShownMessageThisTurn = false;
         }
         else if (payload.EventType == CharacterEventType.DataResponse)
         {
@@ -77,16 +80,34 @@ public class BubbleMessageManager : MonoBehaviour
     /// <param name="payload"></param>
     private void OnGoalEvent(GoalEventPayload payload)
     {
-        if (payload.EventType != GoalEventsType.GoalResolved) return;
+        if (payload.EventType != GoalEventsType.GoalResolve) return;
 
-        // Show only first goal message per turn
-        if (hasShownGoalMessageThisTurn) return;
-        hasShownGoalMessageThisTurn = true;
+        // Show only first message per turn (shared flag with obstacles)
+        if (hasShownMessageThisTurn) return;
+        hasShownMessageThisTurn = true;
 
         // Calculate bubble position behind character relative to goal
         Vector2Int bubbleOffset = CalculateBubbleOffset(payload.Position, characterPosition);
         Vector2Int bubblePos = characterPosition + bubbleOffset;
         CreateBubble(bubblePos, payload.GoalMessage, payload.GoalMessageTime);
+    }
+
+    /// <summary>
+    /// on obstacle resolved event handler
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnObstacleEvent(ObstacleEventPayload payload)
+    {
+        if (payload.EventType != ObstacleEventsType.ObstacleResolve) return;
+
+        // Show only first message per turn (shared flag with goals)
+        if (hasShownMessageThisTurn) return;
+        hasShownMessageThisTurn = true;
+
+        // Calculate bubble position behind character relative to obstacle
+        Vector2Int bubbleOffset = CalculateBubbleOffset(payload.Position, characterPosition);
+        Vector2Int bubblePos = characterPosition + bubbleOffset;
+        CreateBubble(bubblePos, payload.ObstacleMessage, payload.ObstacleMessageTime);
     }
 
 
