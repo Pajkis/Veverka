@@ -177,6 +177,18 @@ IMPORTANT NOTES:
 - If export file already exists, you'll get an error - delete or rename old file
 - Exported files are named: UserLevel1.csv, UserLevel2.csv, etc.
 
+⚠ DATA LOSS WARNINGS:
+- UNINSTALLING the game will DELETE all your User Levels permanently!
+- REINSTALLING may DELETE all your User Levels (depends on device backup settings)
+- ALWAYS EXPORT your levels regularly to keep backups safe!
+- Exported files in Documents\GetNuts are safe even if game is uninstalled
+
+BACKUP STRATEGY:
+✓ Export important levels to Documents\GetNuts (or Downloads on some devices)
+✓ Copy exported .csv files to cloud storage (Google Drive, Dropbox, etc.)
+✓ Keep backups on PC if possible
+✓ Before uninstalling: Export ALL your custom levels!
+
 SHARING WORKFLOW:
 1. Export your level from the game
 2. Share the .csv file (Discord, forums, email, Google Drive, etc.)
