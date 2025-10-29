@@ -43,7 +43,8 @@ public class SceneFlowManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the specified scene.
+    /// Loads the specified scene with smooth transition effects.
+    /// Uses TransitionManager if available, otherwise falls back to direct loading.
     /// </summary>
     /// <param name="scene">Scene to load.</param>
     private void GoToScene(SceneType scene)
@@ -64,8 +65,18 @@ public class SceneFlowManager : MonoBehaviour
             return;
         }
 
-        DebugLogger.Log(DebugLogCategory.SceneManager, $"Loading scene {scene} via Addressables", this);
-        sceneRef.LoadSceneAsync();
+        // Use TransitionManager for smooth scene transitions if available
+        if (TransitionManager.Instance != null)
+        {
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Loading scene {scene} with transition", this);
+            TransitionManager.Instance.TransitionToScene(scene, sceneRef);
+        }
+        else
+        {
+            // Fallback to direct loading if TransitionManager not available
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "TransitionManager not found - loading scene directly without transition", this);
+            sceneRef.LoadSceneAsync();
+        }
     }
 
     /// <summary>
