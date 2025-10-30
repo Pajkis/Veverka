@@ -31,6 +31,7 @@ public class TransitionManager : MonoBehaviour
 
     // Transition state
     private bool isTransitioning = false;
+    private MusicType currentMusicType = MusicType.Menu; // Track current music type, starts with Menu
 
     #region Initialization
 
@@ -158,20 +159,34 @@ public class TransitionManager : MonoBehaviour
             yield return FadeOut(settings.fadeOutDuration, settings.fadeOutCurve);
         }
 
-        // 2. TRIGGER MUSIC CROSSFADE
+        // 2. TRIGGER MUSIC CROSSFADE (only if music type changes)
         MusicType newMusicType = GetMusicTypeForScene(sceneType);
-        if (audioEvents != null)
+
+        if (newMusicType != currentMusicType)
         {
-            DebugLogger.Log(DebugLogCategory.SceneManager, $"Triggering music crossfade to: {newMusicType}", this);
-            audioEvents.Raise(new AudioEventPayload
+            // Music type is changing, trigger crossfade
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Music type changing from {currentMusicType} to {newMusicType} - triggering crossfade", this);
+
+            if (audioEvents != null)
             {
-                EventType = AudioEventType.PlayMusic,
-                Music = newMusicType
-            });
+                audioEvents.Raise(new AudioEventPayload
+                {
+                    EventType = AudioEventType.PlayMusic,
+                    Music = newMusicType
+                });
+
+                // Update tracked music type
+                currentMusicType = newMusicType;
+            }
+            else
+            {
+                DebugLogger.LogWarning(DebugLogCategory.SceneManager, "AudioEvents not assigned - cannot change music", this);
+            }
         }
         else
         {
-            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "AudioEvents not assigned - skipping music crossfade", this);
+            // Music type unchanged, no crossfade needed
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Music type unchanged ({currentMusicType}) - no crossfade needed", this);
         }
 
         // 3. LOAD SCENE ASYNCHRONOUSLY
@@ -281,9 +296,9 @@ public class TransitionManager : MonoBehaviour
         return scene switch
         {
             SceneType.GamePlay => MusicType.Game,
+            SceneType.LevelTransition => MusicType.Game, // Loading screen plays game music
             SceneType.MainMenu => MusicType.Menu,
             SceneType.LevelSelect => MusicType.Menu,
-            SceneType.LevelTransition => MusicType.Menu, // Keep menu music during loading
             SceneType.PlayerMenu => MusicType.Menu,
             SceneType.HighScoreMenu => MusicType.Menu,
             _ => MusicType.Menu // Default to menu music

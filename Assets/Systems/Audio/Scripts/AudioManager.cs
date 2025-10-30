@@ -264,6 +264,14 @@ public class AudioManager : MonoBehaviour
         if (backgroundMusicSource == null)
             return;
 
+        // Check if already playing this music type - don't change songs
+        if (musicType == currentMusicType && backgroundMusicSource.isPlaying)
+        {
+            DebugLogger.Log(DebugLogCategory.Audio,
+                $"Already playing {musicType} music - continuing current song", this);
+            return;
+        }
+
         AudioClip oldClip = backgroundMusicSource.clip;
         AudioClip newClip;
 
