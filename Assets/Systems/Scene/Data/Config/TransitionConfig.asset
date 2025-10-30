@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fadeOutDuration: 0.4
   fadeInDuration: 0.3
-  fadeColor: {r: 0, g: 0, b: 0, a: 1}
   fadeOutCurve:
     serializedVersion: 2
     m_Curve:
@@ -63,60 +62,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  musicCrossfadeOffset: 0.5
-  sceneOverrides:
-  - sceneType: 5
-    settings:
-      fadeOutDuration: 0.4
-      fadeInDuration: 0.3
-      fadeColor: {r: 0, g: 0, b: 0, a: 0}
-      fadeOutCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      fadeInCurve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      enableFadeOut: 1
-      enableFadeIn: 0
+  fadeColor: {r: 0, g: 0, b: 0, a: 1}
+  enableFadeOut: 1
+  enableFadeIn: 1
+  sceneOverrides: []
+  overlayOverrides: []

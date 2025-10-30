@@ -80,7 +80,7 @@ public class SceneFlowManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Opens the specified overlay.
+    /// Opens the specified overlay with animation.
     /// </summary>
     /// <param name="overlay">Overlay to open.</param>
     private void OpenOverlay(OverlayType overlay)
@@ -102,6 +102,17 @@ public class SceneFlowManager : MonoBehaviour
         }
 
         DebugLogger.Log(DebugLogCategory.SceneManager, $"Instantiating overlay {overlay} from prefab: {prefab.name}", this);
-        Object.Instantiate(prefab);
+        GameObject instance = Object.Instantiate(prefab);
+
+        // Add or get OverlayAnimationController for smooth animations
+        OverlayAnimationController animController = instance.GetComponent<OverlayAnimationController>();
+        if (animController == null)
+        {
+            animController = instance.AddComponent<OverlayAnimationController>();
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Added OverlayAnimationController to {overlay}", this);
+        }
+
+        // Set overlay type so controller knows which settings to use
+        animController.SetOverlayType(overlay);
     }
 }

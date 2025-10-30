@@ -17,9 +17,6 @@ public class TransitionManager : MonoBehaviour
     /// </summary>
     public static TransitionManager Instance { get; private set; }
 
-    [Header("Configuration")]
-    [SerializeField] private TransitionConfig config;
-
     [Header("Events")]
     [SerializeField] private AudioEvents audioEvents;
 
@@ -97,7 +94,7 @@ public class TransitionManager : MonoBehaviour
 
         // Add Image component for fade effect
         fadeImage = fadePanel.AddComponent<Image>();
-        fadeImage.color = config != null ? config.fadeColor : Color.black;
+        fadeImage.color = Color.black; // Will be updated per-transition from config
         fadeImage.raycastTarget = true;
 
         DebugLogger.Log(DebugLogCategory.SceneManager, "Transition canvas created and configured", this);
@@ -120,9 +117,9 @@ public class TransitionManager : MonoBehaviour
             return;
         }
 
-        if (config == null)
+        if (TransitionConfigProvider.Instance == null || TransitionConfigProvider.Instance.GetConfig() == null)
         {
-            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "TransitionConfig not assigned - loading scene directly without transition", this);
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "TransitionConfigProvider or config not available - loading scene directly without transition", this);
             sceneRef.LoadSceneAsync();
             return;
         }
@@ -143,7 +140,7 @@ public class TransitionManager : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.SceneManager, $"Starting transition to scene: {sceneType}", this);
 
         // Get settings for this specific scene (may have overrides)
-        SceneTransitionSettings settings = config.GetSettingsForScene(sceneType);
+        TransitionSettings settings = TransitionConfigProvider.Instance.GetSettingsForScene(sceneType);
 
         // Update fade color in case it changed
         fadeImage.color = settings.fadeColor;
@@ -303,8 +300,9 @@ public class TransitionManager : MonoBehaviour
     [ContextMenu("Test Fade Out")]
     private void TestFadeOut()
     {
-        if (config != null)
+        if (TransitionConfigProvider.Instance != null && TransitionConfigProvider.Instance.GetConfig() != null)
         {
+            var config = TransitionConfigProvider.Instance.GetConfig();
             StartCoroutine(FadeOut(config.fadeOutDuration, config.fadeOutCurve));
         }
     }
@@ -315,8 +313,9 @@ public class TransitionManager : MonoBehaviour
     [ContextMenu("Test Fade In")]
     private void TestFadeIn()
     {
-        if (config != null)
+        if (TransitionConfigProvider.Instance != null && TransitionConfigProvider.Instance.GetConfig() != null)
         {
+            var config = TransitionConfigProvider.Instance.GetConfig();
             StartCoroutine(FadeIn(config.fadeInDuration, config.fadeInCurve));
         }
     }

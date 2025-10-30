@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 /// <summary>
-/// Configuration for scene transition visual effects and timing.
-/// Supports global defaults and per-scene overrides (e.g., disable fade-in for loading screens).
+/// Unified configuration for all transitions in the game.
+/// Handles both scene transitions and overlay animations with shared defaults and per-item overrides.
 /// </summary>
 [CreateAssetMenu(fileName = "TransitionConfig", menuName = "Configs/TransitionConfig")]
 public class TransitionConfig : ScriptableObject
@@ -17,31 +17,33 @@ public class TransitionConfig : ScriptableObject
     [Range(0.1f, 2f)]
     public float fadeInDuration = 0.3f;
 
-    [Tooltip("Color to fade to/from (usually black)")]
-    public Color fadeColor = Color.black;
-
     [Tooltip("Animation curve for fade out (0 to 1)")]
     public AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Tooltip("Animation curve for fade in (0 to 1)")]
     public AnimationCurve fadeInCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [Tooltip("Enable fade out before scene loads (default behavior)")]
+    [Tooltip("Color to fade to/from (Scene transitions only - overlays use alpha fade)")]
+    public Color fadeColor = Color.black;
+
+    [Tooltip("Enable fade out before transition/open (default behavior)")]
     public bool enableFadeOut = true;
 
-    [Tooltip("Enable fade in after scene loads (default behavior)")]
+    [Tooltip("Enable fade in after transition/open (default behavior)")]
     public bool enableFadeIn = true;
 
-    [Header("Per-Scene Overrides")]
+    [Header("Scene Transition Overrides")]
     [Tooltip("Scene-specific transition settings (overrides defaults)")]
     public List<SceneTransitionOverride> sceneOverrides = new List<SceneTransitionOverride>();
 
+    [Header("Overlay Animation Overrides")]
+    [Tooltip("Overlay-specific transition settings (overrides defaults)")]
+    public List<OverlayTransitionOverride> overlayOverrides = new List<OverlayTransitionOverride>();
+
     /// <summary>
-    /// Gets the transition settings for a specific scene, using overrides if available.
+    /// Gets transition settings for a specific scene, using overrides if available.
     /// </summary>
-    /// <param name="sceneType">The scene to get settings for</param>
-    /// <returns>Transition settings (either override or defaults)</returns>
-    public SceneTransitionSettings GetSettingsForScene(SceneType sceneType)
+    public TransitionSettings GetSettingsForScene(SceneType sceneType)
     {
         // Check for scene-specific override
         foreach (var overrideSettings in sceneOverrides)
@@ -53,13 +55,40 @@ public class TransitionConfig : ScriptableObject
         }
 
         // Return default settings
-        return new SceneTransitionSettings
+        return new TransitionSettings
         {
             fadeOutDuration = this.fadeOutDuration,
             fadeInDuration = this.fadeInDuration,
-            fadeColor = this.fadeColor,
             fadeOutCurve = this.fadeOutCurve,
             fadeInCurve = this.fadeInCurve,
+            fadeColor = this.fadeColor,
+            enableFadeOut = this.enableFadeOut,
+            enableFadeIn = this.enableFadeIn
+        };
+    }
+
+    /// <summary>
+    /// Gets transition settings for a specific overlay, using overrides if available.
+    /// </summary>
+    public TransitionSettings GetSettingsForOverlay(OverlayType overlayType)
+    {
+        // Check for overlay-specific override
+        foreach (var overrideSettings in overlayOverrides)
+        {
+            if (overrideSettings.overlayType == overlayType)
+            {
+                return overrideSettings.settings;
+            }
+        }
+
+        // Return default settings
+        return new TransitionSettings
+        {
+            fadeOutDuration = this.fadeOutDuration,
+            fadeInDuration = this.fadeInDuration,
+            fadeOutCurve = this.fadeOutCurve,
+            fadeInCurve = this.fadeInCurve,
+            fadeColor = this.fadeColor,
             enableFadeOut = this.enableFadeOut,
             enableFadeIn = this.enableFadeIn
         };
@@ -76,14 +105,27 @@ public class SceneTransitionOverride
     public SceneType sceneType;
 
     [Tooltip("Custom transition settings for this scene")]
-    public SceneTransitionSettings settings;
+    public TransitionSettings settings;
 }
 
 /// <summary>
-/// Transition settings that can be customized per scene.
+/// Per-overlay transition settings override.
 /// </summary>
 [System.Serializable]
-public class SceneTransitionSettings
+public class OverlayTransitionOverride
+{
+    [Tooltip("Which overlay these settings apply to")]
+    public OverlayType overlayType;
+
+    [Tooltip("Custom transition settings for this overlay")]
+    public TransitionSettings settings;
+}
+
+/// <summary>
+/// Transition settings that can be customized per scene or overlay.
+/// </summary>
+[System.Serializable]
+public class TransitionSettings
 {
     [Tooltip("Duration of fade out animation in seconds")]
     [Range(0.1f, 2f)]
@@ -93,18 +135,18 @@ public class SceneTransitionSettings
     [Range(0.1f, 2f)]
     public float fadeInDuration = 0.3f;
 
-    [Tooltip("Color to fade to/from")]
-    public Color fadeColor = Color.black;
-
     [Tooltip("Animation curve for fade out")]
     public AnimationCurve fadeOutCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Tooltip("Animation curve for fade in")]
     public AnimationCurve fadeInCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
-    [Tooltip("Enable fade out before scene loads (disable to skip fade out)")]
+    [Tooltip("Color to fade to/from (Scene transitions only)")]
+    public Color fadeColor = Color.black;
+
+    [Tooltip("Enable fade out before scene loads or overlay opens")]
     public bool enableFadeOut = true;
 
-    [Tooltip("Enable fade in after scene loads (disable for loading screens with visible background)")]
+    [Tooltip("Enable fade in after scene loads or overlay opens")]
     public bool enableFadeIn = true;
 }
