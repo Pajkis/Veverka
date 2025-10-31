@@ -41,8 +41,7 @@ public class TransitionManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            DebugLogger.Log(DebugLogCategory.SceneManager, "TransitionManager initialized - persisting across scene loads", this);
+            DebugLogger.Log(DebugLogCategory.SceneManager, "TransitionManager initialized", this);
         }
         else if (Instance != this)
         {
@@ -63,7 +62,6 @@ public class TransitionManager : MonoBehaviour
         // Create canvas GameObject
         GameObject canvasObject = new GameObject("TransitionCanvas");
         canvasObject.transform.SetParent(transform);
-        DontDestroyOnLoad(canvasObject);
 
         // Add and configure Canvas component
         transitionCanvas = canvasObject.AddComponent<Canvas>();

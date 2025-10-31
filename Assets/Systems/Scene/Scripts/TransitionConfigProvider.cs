@@ -21,8 +21,7 @@ public class TransitionConfigProvider : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            DebugLogger.Log(DebugLogCategory.SceneManager, "TransitionConfigProvider initialized - persisting across scene loads", this);
+            DebugLogger.Log(DebugLogCategory.SceneManager, "TransitionConfigProvider initialized", this);
         }
         else if (Instance != this)
         {
