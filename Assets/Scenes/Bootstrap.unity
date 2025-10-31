@@ -642,6 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
 --- !u!4 &716192307
 Transform:
   m_ObjectHideFlags: 0
@@ -670,6 +671,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneNavigationEvents: {fileID: 11400000, guid: c6328ed327ba4fae8d45e378b3061c68, type: 2}
+  audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
 --- !u!1 &745832932
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,7 +1005,7 @@ MonoBehaviour:
   veverkaMove: {fileID: 8300000, guid: 786703596d5398742b0546fb2a51f1d9, type: 3}
   nutMove: {fileID: 8300000, guid: 2ea1a876dd39bf64ca740b7b653b94d6, type: 3}
   goalReached: {fileID: 8300000, guid: c1e21b8b0192f6443b7eff4486a30ab0, type: 3}
-  levelFinished: {fileID: 0}
+  levelFinished: {fileID: 8300000, guid: 8f9bfcd3151aad8439de09bbf6a758fc, type: 3}
   veverkaRotate: {fileID: 8300000, guid: 91e5bbd5696730241b74ddd4697bb091, type: 3}
   Undo: {fileID: 8300000, guid: 61e3a8bd67b054d43a50c4bf207c6243, type: 3}
   WaterSplash: {fileID: 8300000, guid: 3313f807ab8f72641800406f7c4f8b55, type: 3}
@@ -1015,6 +1017,8 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
   buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
   sliderMove: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
+  notification: {fileID: 0}
+  error: {fileID: 0}
   menuSongs:
   - {fileID: 8300000, guid: 2e1e454dab9664549a7320a8d38c16f3, type: 3}
   - {fileID: 8300000, guid: 0c939b759de1712418b1d28473f25919, type: 3}

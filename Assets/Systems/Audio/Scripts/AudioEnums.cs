@@ -44,7 +44,9 @@ public enum UiType
 {
   ButtonClick,
   ButtonHover,
-  Slider
+  Slider,
+  Notification,
+  Error
 }
 
 /// <summary>

@@ -23,7 +23,7 @@ MonoBehaviour:
   gridSystemLog: 0
   tileInteractionLog: 0
   goalSystemLog: 0
-  levelSystemLog: 1
+  levelSystemLog: 0
   uiLog: 0
   inputLog: 0
   sceneManagerLog: 0
