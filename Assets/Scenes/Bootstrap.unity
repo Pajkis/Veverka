@@ -1017,8 +1017,8 @@ MonoBehaviour:
   buttonClick: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
   buttonHover: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
   sliderMove: {fileID: 8300000, guid: e22fa74b6bfcb14479a9553454718183, type: 3}
-  notification: {fileID: 0}
-  error: {fileID: 0}
+  notification: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
+  error: {fileID: 8300000, guid: b6f5ac9f08de234439eedfec8ca3d3ac, type: 3}
   menuSongs:
   - {fileID: 8300000, guid: 2e1e454dab9664549a7320a8d38c16f3, type: 3}
   - {fileID: 8300000, guid: 0c939b759de1712418b1d28473f25919, type: 3}
