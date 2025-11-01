@@ -281,6 +281,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadBackground
       objectReference: {fileID: 0}
+    - target: {fileID: 4383802402332945273, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 220
+      objectReference: {fileID: 0}
     - target: {fileID: 5572173992726777165, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Pivot.x
       value: 0

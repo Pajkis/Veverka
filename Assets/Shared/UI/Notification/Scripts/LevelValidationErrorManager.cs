@@ -11,6 +11,7 @@ public class LevelValidationErrorManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
+    [SerializeField] private AudioEvents audioEvents;
 
     private static List<string> currentErrors = new List<string>();
     private static bool shouldShowValidationErrors = false;
@@ -101,6 +102,16 @@ public class LevelValidationErrorManager : MonoBehaviour
             DebugLogger.LogWarning(DebugLogCategory.LevelSystem, "Validation errors marked for display but no errors found");
             shouldShowValidationErrors = false;
             return;
+        }
+
+        // Play error sound
+        if (instance.audioEvents != null)
+        {
+            instance.audioEvents.Raise(new AudioEventPayload
+            {
+                EventType = AudioEventType.PlayUi,
+                Ui = UiType.Error
+            });
         }
 
         if (instance.sceneNavigationEvents != null)

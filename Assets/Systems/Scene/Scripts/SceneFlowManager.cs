@@ -43,7 +43,8 @@ public class SceneFlowManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Loads the specified scene.
+    /// Loads the specified scene with smooth transition effects.
+    /// Uses TransitionManager if available, otherwise falls back to direct loading.
     /// </summary>
     /// <param name="scene">Scene to load.</param>
     private void GoToScene(SceneType scene)
@@ -64,12 +65,22 @@ public class SceneFlowManager : MonoBehaviour
             return;
         }
 
-        DebugLogger.Log(DebugLogCategory.SceneManager, $"Loading scene {scene} via Addressables", this);
-        sceneRef.LoadSceneAsync();
+        // Use TransitionManager for smooth scene transitions if available
+        if (TransitionManager.Instance != null)
+        {
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Loading scene {scene} with transition", this);
+            TransitionManager.Instance.TransitionToScene(scene, sceneRef);
+        }
+        else
+        {
+            // Fallback to direct loading if TransitionManager not available
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager, "TransitionManager not found - loading scene directly without transition", this);
+            sceneRef.LoadSceneAsync();
+        }
     }
 
     /// <summary>
-    /// Opens the specified overlay.
+    /// Opens the specified overlay with animation.
     /// </summary>
     /// <param name="overlay">Overlay to open.</param>
     private void OpenOverlay(OverlayType overlay)
@@ -91,6 +102,17 @@ public class SceneFlowManager : MonoBehaviour
         }
 
         DebugLogger.Log(DebugLogCategory.SceneManager, $"Instantiating overlay {overlay} from prefab: {prefab.name}", this);
-        Object.Instantiate(prefab);
+        GameObject instance = Object.Instantiate(prefab);
+
+        // Add or get OverlayAnimationController for smooth animations
+        OverlayAnimationController animController = instance.GetComponent<OverlayAnimationController>();
+        if (animController == null)
+        {
+            animController = instance.AddComponent<OverlayAnimationController>();
+            DebugLogger.Log(DebugLogCategory.SceneManager, $"Added OverlayAnimationController to {overlay}", this);
+        }
+
+        // Set overlay type so controller knows which settings to use
+        animController.SetOverlayType(overlay);
     }
 }
