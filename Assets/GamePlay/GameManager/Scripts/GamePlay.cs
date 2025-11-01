@@ -150,6 +150,17 @@ public class GamePlay : MonoBehaviour
         if (levelGoalCount <= 0)
         {
             DebugLogger.Log(DebugLogCategory.Gameplay, "All goals completed - level finished! Opening completion menu", this);
+
+            // Play level finished sound
+            if (audioEvents != null)
+            {
+                audioEvents.Raise(new AudioEventPayload
+                {
+                    EventType = AudioEventType.PlaySfx,
+                    Sfx = SfxType.LevelFinished
+                });
+            }
+
             sceneNavigationEvents.Raise(new SceneNavigationEventPayload
             {
                 EventType = SceneNavigationEventType.OpenOverlay,
