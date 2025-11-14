@@ -48,10 +48,10 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: UI_Background
+  - name: Background
     uniqueID: 1458667267
     locked: 0
-  - name: UI_Frame
+  - name: Frame_UI
     uniqueID: 1344883739
     locked: 0
   - name: IG_StaticTiles
@@ -60,12 +60,12 @@ TagManager:
   - name: IG_MovableTiles
     uniqueID: 1847477145
     locked: 0
-  - name: UI_Frame
+  - name: Frame_InGame
     uniqueID: 3306920313
     locked: 0
-  - name: UI_Buttons
+  - name: Buttons
     uniqueID: 541054781
     locked: 0
-  - name: UI_LoadingScreen
+  - name: LoadingScreen
     uniqueID: 3565474087
     locked: 0
