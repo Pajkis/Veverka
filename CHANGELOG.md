@@ -1,3 +1,49 @@
+# Changelog v0.14.1
+
+### 📅 Date: `2025-11-01`
+### 🔖 Git Version: `v0.14.1`
+### 📦 Area: `[Scene Transitions / Audio System / UI]`
+### 📝 Description:
+Quality-of-life update introducing **Smooth Scene Transitions & Overlay Animations** with configurable fade effects, **Smart Music Management** preventing unwanted song changes, and **Audio Feedback** for UI overlays.
+
+### ➕ Added:
+**Scene Transitions & Overlay Animations:**
+- Smooth fade transitions between scenes with configurable durations, animation curves, and colors
+- Animated overlay open/close with fade effects
+- Per-scene and per-overlay transition settings with default + override pattern
+- Music crossfade integration (only triggers when crossing Menu↔Game boundaries)
+- Unscaled time support (transitions work during pause with Time.timeScale = 0)
+- Independent fade-in/fade-out enable flags for instant transitions when needed
+
+**Audio System Enhancements:**
+- Smart music management: prevents song changes when staying within same music type (Menu or Game)
+- Audio feedback for notifications (UiType.Notification)
+- Audio feedback for validation errors (UiType.Error)
+- Audio feedback for level completion (SfxType.LevelFinished)
+
+### ♻️ Updated / Refactored:
+**Scene Flow:**
+- Scene transitions now use fade effects instead of instant loading
+- Overlays open/close with smooth animations
+- Music only crossfades when switching between Menu and Game music types
+
+**Singleton Persistence:**
+- Removed DontDestroyOnLoad from child components (rely on parent GameObject)
+- Cleaner hierarchy without duplicate persistence calls
+
+**Config Organization:**
+- Moved all config ScriptableObjects to Data/Config folders for better project structure
+
+### 🛠️ BugFixes:
+- Fixed music changing unnecessarily when transitioning between scenes with same MusicType
+- Fixed screen staying black when both fade-in and fade-out disabled
+- Fixed DontDestroyOnLoad warnings for child GameObjects
+
+### 🔥 Removed:
+*None*
+
+---
+
 # Changelog v0.14.0
 
 ### 📅 Date: `2025-10-19`

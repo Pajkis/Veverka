@@ -31,6 +31,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip buttonClick;
     [SerializeField] private AudioClip buttonHover;
     [SerializeField] private AudioClip sliderMove;
+    [SerializeField] private AudioClip notification;
+    [SerializeField] private AudioClip error;
 
     [Header("Music")]  
     [SerializeField] private List<AudioClip> menuSongs;
@@ -163,6 +165,8 @@ public class AudioManager : MonoBehaviour
         clips[UiType.ButtonClick] = buttonClick;
         clips[UiType.ButtonHover] = buttonHover;
         clips[UiType.Slider] = sliderMove;
+        clips[UiType.Notification] = notification;
+        clips[UiType.Error] = error;
 
         //Map music
         musicPlaylists = new Dictionary<MusicType, List<AudioClip>>
@@ -263,6 +267,14 @@ public class AudioManager : MonoBehaviour
 
         if (backgroundMusicSource == null)
             return;
+
+        // Check if already playing this music type - don't change songs
+        if (musicType == currentMusicType && backgroundMusicSource.isPlaying)
+        {
+            DebugLogger.Log(DebugLogCategory.Audio,
+                $"Already playing {musicType} music - continuing current song", this);
+            return;
+        }
 
         AudioClip oldClip = backgroundMusicSource.clip;
         AudioClip newClip;

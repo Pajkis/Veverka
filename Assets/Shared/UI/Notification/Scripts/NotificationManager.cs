@@ -11,6 +11,7 @@ public class NotificationManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private SceneNavigationEvents sceneNavigationEvents;
+    [SerializeField] private AudioEvents audioEvents;
 
     private Queue<NotificationData> notificationQueue = new Queue<NotificationData>();
     private bool isShowingNotification = false;
@@ -116,6 +117,16 @@ public class NotificationManager : MonoBehaviour
 
         // Store current notification data for the overlay to access
         CurrentNotification = data;
+
+        // Play notification sound
+        if (audioEvents != null)
+        {
+            audioEvents.Raise(new AudioEventPayload
+            {
+                EventType = AudioEventType.PlayUi,
+                Ui = UiType.Notification
+            });
+        }
 
         // Open notification overlay via your system
         if (sceneNavigationEvents != null)
