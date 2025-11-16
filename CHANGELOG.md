@@ -1,3 +1,27 @@
+# Changelog v0.14.2
+
+### 📅 Date: `2025-11-15`
+### 🔖 Git Version: `v0.14.2`
+### 📦 Area: `[Tiles / Visuals]`
+### 📝 Description:
+Minor update adding **Stone Road Tile** variant for visual variety and fixing rendering layer bug.
+
+### ➕ Added:
+- Stone road tile variant (Tile_RoadStone.prefab) with new sprite
+- Updated 01_TutorialRoad level to showcase new tile type
+
+### ♻️ Updated / Refactored:
+- Tile_Road and Tile_Background prefabs - minor adjustments for consistency
+
+### 🛠️ Bug Fixes:
+- [[Scene_GamePlay]] - Fixed rendering layer configuration where tiles were displaying over game frame
+- TagManager - Corrected layer settings for proper Z-ordering
+
+### 🔥 Removed:
+*None*
+
+---
+
 # Changelog v0.14.1
 
 ### 📅 Date: `2025-11-01`
