@@ -7,17 +7,26 @@ using UnityEngine.UI;
 /// </summary>
 public class DisplaySettings : MonoBehaviour
 {
+    public static DisplaySettings Instance { get; private set; }
+
     [Header("ConfigSO")]
     [SerializeField] private DisplayConfig displayConfig;
 
     // active profile
     private DisplayConfigPars _active;
+    public DisplayConfigPars ActiveProfile => _active;
 
     /// <summary>
     /// initialization - don't destroy on load and init display settings
     /// </summary>
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
         DontDestroyOnLoad(gameObject);
         Init();
     }
