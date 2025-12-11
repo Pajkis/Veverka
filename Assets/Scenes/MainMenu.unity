@@ -392,7 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  logButtonProcessing: 0
 --- !u!1 &559265877
 GameObject:
   m_ObjectHideFlags: 0

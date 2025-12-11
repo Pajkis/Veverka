@@ -75,4 +75,8 @@ public class DisplayConfigPars
     public float bottomRowButtonY = -425f;
     [Tooltip("Android specific middle row position")]
     public float androidMiddleRowButtonY = -225f;
+
+    [Header("Cursor Settings")]
+    [Tooltip("Custom cursor hotspot offset")]
+    public Vector2 cursorHotspot = new Vector2(50f, -50f);
 }
