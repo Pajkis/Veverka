@@ -12,11 +12,11 @@ public class GoalEventPayload
     public Vector2Int Position;
     public GoalType GoalType;
     public GoalTile GoalTile;
+    public bool InstantiateTile; // instinatiate goal tile during runtime
 
     [Header("Replacement Creation")]
     public bool GoalRemove;
-    public bool CreateReplacement;
-    public bool InstantiateTile;
+    public bool CreateReplacement; // create remplacement tile after goal reach
     public TileType ReplacementType;
     public RoadType ReplacementRoadType;
     public ObstacleType ReplacementObstacleType;
@@ -25,7 +25,7 @@ public class GoalEventPayload
     [Header("Special Effects")]
     public bool TriggerSplash;
 
-    [Header("UI Messages")]
+    [Header("Bubble Messages")]
     public BubbleMessageType GoalMessage;
     public float GoalMessageTime;
     public bool ShowBubbleMessage;

@@ -55,8 +55,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
 
                 // fill goal payload - stone nut related actions
-                goalPayload.CreateReplacement = true;
-                goalPayload.InstantiateTile = true;
+                goalPayload.CreateReplacement = true;            
                 goalPayload.ReplacementType = TileType.Obstacle;
                 goalPayload.ReplacementObstacleType = ObstacleType.StoneWall;
 
@@ -84,8 +83,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
                 // fill goal payload - stone nut related actions
-                goalPayload.CreateReplacement = true;
-                goalPayload.InstantiateTile = true;
+                goalPayload.CreateReplacement = true;           
                 goalPayload.ReplacementType = TileType.Obstacle;
                 goalPayload.ReplacementObstacleType = ObstacleType.GoldenStatue;
 
