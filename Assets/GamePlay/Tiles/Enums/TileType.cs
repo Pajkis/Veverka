@@ -19,7 +19,8 @@ public enum NutType
     None,        // No nut (default/empty)
     BasicNut,
     StoneNut,
-    WaterNut
+    WaterNut,
+    GoldenNut
 }
 
 /// <summary>
@@ -29,6 +30,7 @@ public enum GoalType
 {
     None,        // No goal (default/empty)
     BasicGoal,
+    GoldenGoal
 }
 
 /// <summary>
@@ -40,7 +42,8 @@ public enum ObstacleType
     BasicWall,
     StoneWall,
     Hole,
-    WaterHole
+    WaterHole,
+    GoldenStatue,
 }
 
 /// <summary>
