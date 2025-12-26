@@ -1,10 +1,11 @@
+using UnityEngine;
+
 /// <summary>
-/// stone nut tile class - nut tile type that can be pushed into goals or holes
+/// Class for the nut Tile - basic push to goal tile.
 /// </summary>
-public class WaterNutTile : NutTile
+public class GoldenNutTile : NutTile
 {
     #region methods
-   
     /// <summary>
     /// On Move start action
     /// </summary>
@@ -15,6 +16,7 @@ public class WaterNutTile : NutTile
         base.OnMoveStart();
         audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.NutMove });
     }
-    #endregion  
+ 
+    #endregion
 }
 
