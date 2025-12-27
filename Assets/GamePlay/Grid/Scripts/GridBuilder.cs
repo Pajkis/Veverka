@@ -24,19 +24,33 @@ public class GridBuilder : MonoBehaviour
 
     #region Prefabs
     [Header("Tile Prefabs")]
+    
+    // road prefabs
     [SerializeField] private GameObject emptyPrefab;
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneRoadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
+    
+    // character prefab
     [SerializeField] private GameObject veverkaPrefab;
+    
+    // nut prefabs
     [SerializeField] private GameObject nutPrefab;
     [SerializeField] private GameObject nutStonePrefab;
     [SerializeField] private GameObject nutWaterPrefab;
+    [SerializeField] private GameObject nutGoldenPrefab;
+
+    // obstacle prefabs
     [SerializeField] private GameObject wallPrefab;
     [SerializeField] private GameObject wallStonePrefab;
     [SerializeField] private GameObject holePrefab;
     [SerializeField] private GameObject waterHolePrefab;
+    [SerializeField] private GameObject goldenStatuePrefab;
+
+    // goal prefab
     [SerializeField] private GameObject goalPrefab;
+    [SerializeField] private GameObject goldenGoalPrefab;
+
 
     [Header("Other Prefabs")]
     [SerializeField] private GameObject backgroundPrefab;
@@ -148,7 +162,7 @@ public class GridBuilder : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 Vector2Int pos = new(x, y);
-                if (gridData.GetTileType(pos) == TileType.Goal && gridData.GetGoalType(pos) == GoalType.BasicGoal)
+                if (gridData.GetTileType(pos) == TileType.Goal) // && gridData.GetGoalType(pos) == GoalType.BasicGoal)
                 {
                     goalCount++;
                 }
@@ -278,12 +292,18 @@ public class GridBuilder : MonoBehaviour
                             tile.transform.SetParent(gridRoot, false);
                             tile.transform.localPosition = worldTilePos;
                         }
-                        else // BasicWall
+                        else if (obstacleType == ObstacleType.BasicWall)
                         {
                             GameObject tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                             tile.transform.SetParent(gridRoot, false);
                             tile.transform.localPosition = worldTilePos;
                         }
+                        else if (obstacleType == ObstacleType.GoldenStatue)
+                        {
+                            GameObject tile = Instantiate(goldenStatuePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            tile.transform.SetParent(gridRoot, false);
+                            tile.transform.localPosition = worldTilePos;
+                        }                        
                         gridData.SetTileType(tilePos, TileType.Obstacle);
                         break;
 
@@ -325,6 +345,13 @@ public class GridBuilder : MonoBehaviour
                             waterNutTile.transform.localPosition = worldTilePos;
                             waterNutTile.Init(tileType, tilePos, NutType.WaterNut);
                         }
+                        else if (nutType == NutType.GoldenNut)
+                        {
+                            GoldenNutTile goldenNutTile = Instantiate(nutGoldenPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoldenNutTile>();
+                            goldenNutTile.transform.SetParent(gridRoot, false);
+                            goldenNutTile.transform.localPosition = worldTilePos;
+                            goldenNutTile.Init(tileType, tilePos, NutType.GoldenNut);
+                        }
                         break;
 
                     case TileType.Goal:
@@ -335,6 +362,13 @@ public class GridBuilder : MonoBehaviour
                             goalTile.transform.SetParent(gridRoot, false);
                             goalTile.transform.localPosition = worldTilePos;
                             goalTile.Init(tileType, tilePos, GoalType.BasicGoal);
+                        }
+                        else if (goalType == GoalType.GoldenGoal)
+                        {
+                            GoldenGoalTile goldenGoalTile = Instantiate(goldenGoalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoldenGoalTile>();
+                            goldenGoalTile.transform.SetParent(gridRoot, false);
+                            goldenGoalTile.transform.localPosition = worldTilePos;
+                            goldenGoalTile.Init(tileType, tilePos, GoalType.GoldenGoal);
                         }
                         break;
 

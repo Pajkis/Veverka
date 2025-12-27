@@ -324,11 +324,14 @@ MonoBehaviour:
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
   nutWaterPrefab: {fileID: 5049554270686572608, guid: 6ecba3ec68f43ea439dececdfc7ac805, type: 3}
+  nutGoldenPrefab: {fileID: 5049554270686572608, guid: bd939d80b96d6cb4ea11b3652bb72024, type: 3}
   wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
   waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
+  goldenStatuePrefab: {fileID: 3663485978142913648, guid: 900f43c5dc2b6b5449f8b8ad985bc5d6, type: 3}
   goalPrefab: {fileID: 7474811582496385836, guid: 2e49a39d5bbfab640a268bb3905414ed, type: 3}
+  goldenGoalPrefab: {fileID: 7474811582496385836, guid: 70f2cbca542fcf2468ad14015d0ad3d5, type: 3}
   backgroundPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
 --- !u!4 &170640414
 Transform:
@@ -396,6 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorImage: {fileID: 265896549}
+  hotspot: {x: 0, y: 0}
 --- !u!114 &265896551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1358,12 +1362,13 @@ MonoBehaviour:
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   obstacleEvents: {fileID: 11400000, guid: 486b4ca6ce5b0fc489f25f6307032575, type: 2}
   roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
-  wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
-  wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
+  wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
+  wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}
   holePrefab: {fileID: 7474811582496385836, guid: e87d7ebd8054bf649b4bf07168dc3e08, type: 3}
+  goldenStatuePrefab: {fileID: 3663485978142913648, guid: 900f43c5dc2b6b5449f8b8ad985bc5d6, type: 3}
 --- !u!4 &1709886640
 Transform:
   m_ObjectHideFlags: 0

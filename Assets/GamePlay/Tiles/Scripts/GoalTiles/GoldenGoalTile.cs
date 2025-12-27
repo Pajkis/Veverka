@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// goal tile abstract class
 /// </summary>
-public abstract class GoldenGoalTile : GoalTile, INutInteractive
+public class GoldenGoalTile : GoalTile, INutInteractive
 {
     #region INutInteractive
     public Vector2Int GridPos => base.GridPosition;

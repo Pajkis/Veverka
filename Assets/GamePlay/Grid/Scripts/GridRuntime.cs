@@ -24,12 +24,16 @@ public class GridRuntime : MonoBehaviour
 
     #region Prefabs for Runtime Spawning
     [Header("Runtime Tile Prefabs")]
-    [SerializeField] private GameObject wallPrefab;
-    [SerializeField] private GameObject wallStonePrefab;
+    // roads
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
+
+    // Obstacles
+    [SerializeField] private GameObject wallPrefab;
+    [SerializeField] private GameObject wallStonePrefab;
     [SerializeField] private GameObject waterHolePrefab;
     [SerializeField] private GameObject holePrefab;
+    [SerializeField] private GameObject goldenStatuePrefab;
     #endregion
 
     #region Unity Lifecycle
@@ -300,6 +304,9 @@ public class GridRuntime : MonoBehaviour
                 break;
             case ObstacleType.WaterHole:
                 tile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
+            case ObstacleType.GoldenStatue:
+                tile = Instantiate(goldenStatuePrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 break;
             default:
                 DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnObstacleSet: Unsupported ObstacleType {obstacleType} at {position}", this);
