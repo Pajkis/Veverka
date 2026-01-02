@@ -78,5 +78,7 @@ public class DisplayConfigPars
 
     [Header("Cursor Settings")]
     [Tooltip("Custom cursor hotspot offset")]
-    public Vector2 cursorHotspot = new Vector2(50f, -50f);
+    public Vector2 cursorHotspot = new Vector2(40f, -40f);
+    [Tooltip("Custom cursor image size (width, height, depth)")]
+    public Vector3 cursorImageSize = new Vector3(80f, 80f, 0f);
 }
