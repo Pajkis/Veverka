@@ -33,8 +33,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
             ScoreValue = 1,
             GoalRemove = true,
             CreateReplacement = false,
-            GoalMessage = BubbleMessageType.Yatta,
-            GoalMessageTime = gameplayConfig.goalBubbleTime,
+            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime),
+            PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal

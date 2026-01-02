@@ -27,6 +27,7 @@ public class GridRuntime : MonoBehaviour
     // roads
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
+    [SerializeField] private GameObject roadGoldenGoalScoredPrefab;
 
     // Obstacles
     [SerializeField] private GameObject wallPrefab;
@@ -407,9 +408,15 @@ public class GridRuntime : MonoBehaviour
          case RoadType.BasicRoad:
             tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
             break;
+
         case RoadType.StoneFilledHole:
             tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
             break;
+
+        case RoadType.RoadGoldenGoalScored:
+            tile = Instantiate(roadGoldenGoalScoredPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+            break;
+
         default:
             DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnRoadSet: Unsupported RoadType {roadType} at {position}, defaulting to basic road", this);
             break;

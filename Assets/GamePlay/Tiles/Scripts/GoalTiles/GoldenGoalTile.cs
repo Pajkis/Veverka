@@ -12,6 +12,21 @@ public class GoldenGoalTile : GoalTile, INutInteractive
     public GridEvents GridEvents => gridEvents;
     #endregion
 
+    #region Popout Configuration
+    [Header("Popout Animation Settings")]
+    [Tooltip("Offset from grid position (in world units)")]
+    [SerializeField] private Vector2 popoutPositionOffset = Vector2.zero;
+
+    [Tooltip("Delay before popout animation starts (in seconds)")]
+    [SerializeField] private float popoutStartDelay = 0f;
+
+    [Tooltip("Scale multiplier for the popout image")]
+    [SerializeField] private float popoutScale = 1.0f;
+
+    [Tooltip("Tint color for the popout image")]
+    [SerializeField] private Color popoutTintColor = Color.white;
+    #endregion
+
     #region methods
     /// <summary>
     /// On nut in goal event settlement
@@ -34,8 +49,8 @@ public class GoldenGoalTile : GoalTile, INutInteractive
             ScoreValue = 0,
             GoalRemove = false,
             CreateReplacement = false,
-            GoalMessage = BubbleMessageType.Ooops,
-            GoalMessageTime = gameplayConfig.goalBubbleTime,
+            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime),
+            PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal
@@ -79,14 +94,26 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 break;
 
             case NutType.GoldenNut: // golden nut falls into the goal, open the way
-               
+
                 // Play special goal reached sound effect
-                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
-                
-                // fill goal payload - golden nut related actions               
-                goalPayload.GoalMessage = BubbleMessageType.Yatta;
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
+
+                // fill goal payload - golden nut related actions
+                goalPayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime);
                 goalPayload.ScoreValue = 1;
                 goalPayload.GoalRemove = true;
+
+                // Configure popout image sub-payload - SPECIFY IMAGE TYPE
+                goalPayload.PopoutImage = PopoutImageEventPayload.CreateForSubPayload(
+                    PopoutImageType.GoldenGoal,
+                    gameplayConfig
+                );
+
+                // Apply custom settings from inspector (per-tile overrides)
+                goalPayload.PopoutImage.PositionOffset = popoutPositionOffset;
+                goalPayload.PopoutImage.StartDelay = popoutStartDelay;
+                goalPayload.PopoutImage.Scale = popoutScale;
+                goalPayload.PopoutImage.TintColor = popoutTintColor;
 
                 // debug log
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} -> remove both {payload.CurrentPosition}", this);

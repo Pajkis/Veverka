@@ -320,6 +320,7 @@ MonoBehaviour:
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneRoadPrefab: {fileID: 7956215929776309704, guid: cfdd64b144f77404082e0908ab28d67d, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
+  roadGoldenGoalScoredPrefab: {fileID: 0}
   veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
@@ -1364,6 +1365,7 @@ MonoBehaviour:
   roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
   roadPrefab: {fileID: 2330171183859072926, guid: 0facdbfbab9322e49b28f0e99fad51e2, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
+  roadGoldenGoalScoredPrefab: {fileID: 0}
   wallPrefab: {fileID: 3663485978142913648, guid: a21818a18ff6c2146a0e445dd37af285, type: 3}
   wallStonePrefab: {fileID: 3663485978142913648, guid: 058a56d7cbca04247afed8618501600a, type: 3}
   waterHolePrefab: {fileID: 7474811582496385836, guid: 10fb1819974348e488d892a848f1a2cc, type: 3}

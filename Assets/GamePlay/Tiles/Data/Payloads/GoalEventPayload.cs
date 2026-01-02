@@ -25,10 +25,9 @@ public class GoalEventPayload
     [Header("Special Effects")]
     public bool TriggerSplash;
 
-    [Header("Bubble Messages")]
-    public BubbleMessageType GoalMessage;
-    public float GoalMessageTime;
-    public bool ShowBubbleMessage;
+    [Header("UI Effects")]
+    public BubbleMessageEventPayload BubbleMessage;
+    public PopoutImageEventPayload PopoutImage;
 
     [Header("Gameplay Impact")]
     public int ScoreValue; 
@@ -63,8 +62,10 @@ public class GoalEventPayload
             description += $"Create {ReplacementType}, ";
         if (TriggerSplash)
             description += "Trigger splash, ";
-        if (ShowBubbleMessage)
-            description += $"Show {GoalMessage}, ";
+        if (BubbleMessage != null && BubbleMessage.ShouldShow)
+            description += $"Show {BubbleMessage.MessageType}, ";
+        if (PopoutImage != null && PopoutImage.ShouldShow)
+            description += $"Popout {PopoutImage.ImageType}, ";
         if (ScoreValue > 0)
             description += $"Score: {ScoreValue}";
 

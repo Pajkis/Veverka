@@ -43,7 +43,7 @@ public enum ObstacleType
     StoneWall,
     Hole,
     WaterHole,
-    GoldenStatue,
+    GoldenStatue, // Golden nut enters wrong goal creates a golden statue obstacle
 }
 
 /// <summary>
@@ -56,5 +56,6 @@ public enum RoadType
     BasicRoad,
     StoneRoad,
     StoneFilledHole,
-    BranchRoad
+    BranchRoad,
+    RoadGoldenGoalScored,
 }

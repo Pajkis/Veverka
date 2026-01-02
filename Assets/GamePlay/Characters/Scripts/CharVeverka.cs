@@ -89,8 +89,8 @@ public class CharVeverka : Character
                 Duration = moveDuration,
                 RequestData = false,
                 ResponseData = true,
-                CharacterBubbleMessage = BubbleMessageType.LetsStart,
-                CharacterBubbleMessageTime = gameplayConfig.characterBubbleTime
+                BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.LetsStart, gameplayConfig.characterBubbleTime),
+                PopoutImage = PopoutImageEventPayload.None
             });
         }
     }
@@ -135,8 +135,8 @@ public class CharVeverka : Character
             Duration = moveDuration,
             RequestData = false,
             ResponseData = true,
-            CharacterBubbleMessage = BubbleMessageType.LetsStart,
-            CharacterBubbleMessageTime = 0f
+            BubbleMessage = BubbleMessageEventPayload.None,
+            PopoutImage = PopoutImageEventPayload.None
         });
     }
 

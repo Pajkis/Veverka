@@ -30,7 +30,8 @@ public class GridBuilder : MonoBehaviour
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneRoadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
-    
+    [SerializeField] private GameObject roadGoldenGoalScoredPrefab;
+
     // character prefab
     [SerializeField] private GameObject veverkaPrefab;
     
@@ -393,16 +394,24 @@ public class GridBuilder : MonoBehaviour
                             roadTile.transform.localPosition = worldTilePos;
                             gridData.SetTileType(tilePos, TileType.Road);
                         }
-                        else // BasicRoad
+                        else if (roadType == RoadType.BasicRoad) // BasicRoad
                         {
                             GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
                             roadTile.transform.SetParent(gridRoot, false);
                             roadTile.transform.localPosition = worldTilePos;
                             gridData.SetTileType(tilePos, TileType.Road);
                         }
+                        else if (roadType == RoadType.RoadGoldenGoalScored)
+                        {
+                            GameObject roadTile = Instantiate(roadGoldenGoalScoredPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                            roadTile.transform.SetParent(gridRoot, false);
+                            roadTile.transform.localPosition = worldTilePos;
+                            gridData.SetTileType(tilePos, TileType.Road);
+                        }
                         break;
 
-                    default: break;
+                    default: 
+                        break;
                 }
             }
         }

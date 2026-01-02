@@ -23,8 +23,7 @@ public class ObstacleEventPayload
     public RoadType ReplacementRoadType;
     public GoalType ReplacementGoalType;
 
-    [Header("Bubble Messages")]
-    public BubbleMessageType ObstacleMessage;
-    public float ObstacleMessageTime;
-    public bool ShowBubbleMessage;
+    [Header("UI Effects")]
+    public BubbleMessageEventPayload BubbleMessage;
+    public PopoutImageEventPayload PopoutImage;
 }

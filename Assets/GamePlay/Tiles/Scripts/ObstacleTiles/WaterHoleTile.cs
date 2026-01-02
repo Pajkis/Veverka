@@ -32,7 +32,8 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
             Position = payload.CurrentPosition,
             ObstacleRemove = false,
             CreateReplacement = false,
-            ObstacleMessageTime = gameplayConfig.goalBubbleTime,
+            BubbleMessage = BubbleMessageEventPayload.None,
+            PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal
@@ -45,7 +46,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
 
                 //fill obstacle payload - basic nut related actions
                 obstaclePayload.ObstacleRemove = false;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Ooops;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime);
 
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} fell into {this.obstacleType} at {payload.CurrentPosition} - showing Ooops message", this);
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Obstacle Event: {payload.NutType} in {this.obstacleType} -> Nothing happens (Ooops) at {payload.CurrentPosition}", this);
@@ -63,7 +64,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
 
                 // fill obstacle payload - stone nut related actions
                 obstaclePayload.ObstacleRemove = true;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Splash;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Splash, gameplayConfig.goalBubbleTime);
                 obstaclePayload.CreateReplacement = true;
                 obstaclePayload.ReplacementType = TileType.Road;
                 obstaclePayload.ReplacementRoadType = RoadType.StoneFilledHole;
@@ -83,7 +84,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
 
                 // fill obstacle payload - water nut related actions
                 obstaclePayload.ObstacleRemove = false;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Splash;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Splash, gameplayConfig.goalBubbleTime);
 
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} in {this.obstacleType} - splash at {payload.CurrentPosition}", this);
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Obstacle Event: {payload.NutType} in {this.obstacleType} - splash at {payload.CurrentPosition}", this);
