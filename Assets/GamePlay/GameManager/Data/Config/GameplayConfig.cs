@@ -47,10 +47,10 @@ public class GameplayConfig : ScriptableObject
     public Direction popoutImageDefaultDirection = Direction.Up;
 
     [Tooltip("Default distance for popout image to travel in world units")]
-    public float popoutImageDefaultDistance = 1.5f;
+    public float popoutImageDefaultDistance = 1.0f;
 
     [Tooltip("Default duration for entire popout animation")]
-    public float popoutImageDefaultDuration = 1.5f;
+    public float popoutImageDefaultDuration = 1.0f;
 
     [Tooltip("Time to start fading (0 = fade immediately, duration = fade at end)")]
     public float popoutImageDefaultFadeStartTime = 0.5f;
