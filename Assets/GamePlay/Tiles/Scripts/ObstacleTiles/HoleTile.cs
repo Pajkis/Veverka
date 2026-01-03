@@ -32,11 +32,12 @@ public class HoleTile : ObstacleTile
         switch (payload.NutType)
         {
             case NutType.BasicNut:  // basic nut falls into the hole with no effect
+            case NutType.GoldenNut:  // golden nut falls into the hole with no effect
 
                 // Play sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-                //fill obstacle payload - basic nut related actions
+                //fill obstacle payload
                 obstaclePayload.ObstacleRemove = false;
                 obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime);
 

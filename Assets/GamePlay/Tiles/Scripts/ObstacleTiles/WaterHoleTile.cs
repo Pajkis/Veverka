@@ -39,12 +39,13 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
         // handle nut type specific actions to resolve the goal
         switch (payload.NutType)
         {
-            case NutType.BasicNut:  // basic nut falls into the hole with no effect
-              
+            case NutType.BasicNut: // basic nut falls into the hole with no effect
+            case NutType.GoldenNut:  // golden nut falls into the hole with no effect
+
                 // Play nut In Water sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.NutInWater });
 
-                //fill obstacle payload - basic nut related actions
+                //fill obstacle payload
                 obstaclePayload.ObstacleRemove = false;
                 obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime);
 
@@ -89,7 +90,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} in {this.obstacleType} - splash at {payload.CurrentPosition}", this);
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Obstacle Event: {payload.NutType} in {this.obstacleType} - splash at {payload.CurrentPosition}", this);
                 break;
-
+        
             default:
                 DebugLogger.LogWarning(DebugLogCategory.TileInteraction, $"OnNutInObstacle (WaterHoleTile) - Invalid NutType: {payload.NutType} at Position: {payload.CurrentPosition}", this);
                 return; // exit if invalid nut type
