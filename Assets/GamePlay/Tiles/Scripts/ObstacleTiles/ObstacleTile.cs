@@ -28,7 +28,7 @@ public abstract class ObstacleTile : TileObject
         base.Init(tileType, gridPosition);
         this.obstacleType = obstacleType;
 
-        DebugLogger.Log(DebugLogCategory.TileInteraction, $"Initialized {obstacleType} obstacle at position: {gridPosition}", this);
+        DebugLogger.Log(DebugLogCategory.TileInteraction, $"Initialized {obstacleType} at position: {gridPosition}", this);
     }
 
     /// <summary>

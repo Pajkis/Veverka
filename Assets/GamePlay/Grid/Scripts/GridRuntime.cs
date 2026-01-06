@@ -24,12 +24,17 @@ public class GridRuntime : MonoBehaviour
 
     #region Prefabs for Runtime Spawning
     [Header("Runtime Tile Prefabs")]
-    [SerializeField] private GameObject wallPrefab;
-    [SerializeField] private GameObject wallStonePrefab;
+    // roads
     [SerializeField] private GameObject roadPrefab;
     [SerializeField] private GameObject stoneFilledHolePrefab;
+    [SerializeField] private GameObject roadGoldenGoalScoredPrefab;
+
+    // Obstacles
+    [SerializeField] private GameObject wallPrefab;
+    [SerializeField] private GameObject wallStonePrefab;
     [SerializeField] private GameObject waterHolePrefab;
     [SerializeField] private GameObject holePrefab;
+    [SerializeField] private GameObject goldenStatuePrefab;
     #endregion
 
     #region Unity Lifecycle
@@ -301,6 +306,9 @@ public class GridRuntime : MonoBehaviour
             case ObstacleType.WaterHole:
                 tile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
                 break;
+            case ObstacleType.GoldenStatue:
+                tile = Instantiate(goldenStatuePrefab, Vector3.zero, Quaternion.identity, gridRoot);
+                break;
             default:
                 DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnObstacleSet: Unsupported ObstacleType {obstacleType} at {position}", this);
             break;
@@ -400,9 +408,15 @@ public class GridRuntime : MonoBehaviour
          case RoadType.BasicRoad:
             tile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
             break;
+
         case RoadType.StoneFilledHole:
             tile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
             break;
+
+        case RoadType.RoadGoldenGoalScored:
+            tile = Instantiate(roadGoldenGoalScoredPrefab, Vector3.zero, Quaternion.identity, gridRoot);
+            break;
+
         default:
             DebugLogger.LogWarning(DebugLogCategory.GridSystem, $"OnRoadSet: Unsupported RoadType {roadType} at {position}, defaulting to basic road", this);
             break;

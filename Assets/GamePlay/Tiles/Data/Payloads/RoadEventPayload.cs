@@ -5,13 +5,12 @@ using UnityEngine;
 /// </summary>
 [System.Serializable]
 public class RoadEventPayload
-{
+{    
     public RoadEventType EventType;
 
-    // Basic road data
+    [Header("Basic Road Data")]
     public Vector2Int Position;
     public RoadType RoadType;
     public TileObject RoadTile;
-
     public bool InstantiateTile;
 }

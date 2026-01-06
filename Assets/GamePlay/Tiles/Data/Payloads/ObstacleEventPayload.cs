@@ -8,12 +8,14 @@ public class ObstacleEventPayload
 {
     public ObstacleEventsType EventType;
 
-    // Basic obstacle data
+    [Header("Basic Obstacle Data")]
     public Vector2Int Position;
     public ObstacleType ObstacleType;
     public TileObject ObstacleTile;
+    public bool InstantiateTile;
 
     // Removal & Replacement (similar to GoalEventPayload)
+    [Header("Replacement Creation")]
     public bool ObstacleRemove;
     public bool CreateReplacement;
     public TileType ReplacementType;
@@ -21,10 +23,7 @@ public class ObstacleEventPayload
     public RoadType ReplacementRoadType;
     public GoalType ReplacementGoalType;
 
-    // Messages
-    public BubbleMessageType ObstacleMessage;
-    public float ObstacleMessageTime;
-
-    // Legacy/compatibility
-    public bool InstantiateTile;
+    [Header("UI Effects")]
+    public BubbleMessageEventPayload BubbleMessage;
+    public PopoutImageEventPayload PopoutImage;
 }
