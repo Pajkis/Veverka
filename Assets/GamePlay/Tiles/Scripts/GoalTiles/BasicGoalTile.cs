@@ -45,6 +45,18 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 // Play goal reached sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
+                 // Configure popout image sub-payload - SPECIFY IMAGE TYPE
+                goalPayload.PopoutImage = PopoutImageEventPayload.CreateForSubPayload(
+                    PopoutImageType.BasicGoal,
+                    gameplayConfig
+                );
+
+                // Apply custom settings from inspector (per-tile overrides)
+                goalPayload.PopoutImage.PositionOffset = popoutPositionOffset;
+                goalPayload.PopoutImage.StartDelay = popoutStartDelay;
+                goalPayload.PopoutImage.Scale = popoutScale;
+                goalPayload.PopoutImage.TintColor = popoutTintColor;
+
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} -> remove goal at {payload.CurrentPosition}", this);
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove goal at  {payload.CurrentPosition}", this);
                 break;

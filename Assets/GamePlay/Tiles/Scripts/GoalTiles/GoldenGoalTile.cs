@@ -12,20 +12,7 @@ public class GoldenGoalTile : GoalTile, INutInteractive
     public GridEvents GridEvents => gridEvents;
     #endregion
 
-    #region Popout Configuration
-    [Header("Popout Animation Settings")]
-    [Tooltip("Offset from grid position (in world units)")]
-    [SerializeField] private Vector2 popoutPositionOffset = Vector2.zero;
 
-    [Tooltip("Delay before popout animation starts (in seconds)")]
-    [SerializeField] private float popoutStartDelay = 0f;
-
-    [Tooltip("Scale multiplier for the popout image")]
-    [SerializeField] private float popoutScale = 1.0f;
-
-    [Tooltip("Tint color for the popout image")]
-    [SerializeField] private Color popoutTintColor = Color.white;
-    #endregion
 
     #region methods
     /// <summary>
@@ -46,10 +33,10 @@ public class GoldenGoalTile : GoalTile, INutInteractive
             GoalType = this.goalType,
             EventType = GoalEventsType.GoalResolve,
             Position = payload.CurrentPosition,
-            ScoreValue = 0,
-            GoalRemove = false,
+            ScoreValue = 1,
+            GoalRemove = true,
             CreateReplacement = false,
-            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime),
+            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime),
             PopoutImage = PopoutImageEventPayload.None,
         });
 
@@ -97,11 +84,6 @@ public class GoldenGoalTile : GoalTile, INutInteractive
 
                 // Play special goal reached sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
-
-                // fill goal payload - golden nut related actions
-                goalPayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime);
-                goalPayload.ScoreValue = 1;
-                goalPayload.GoalRemove = true;
 
                 // Configure popout image sub-payload - SPECIFY IMAGE TYPE
                 goalPayload.PopoutImage = PopoutImageEventPayload.CreateForSubPayload(
