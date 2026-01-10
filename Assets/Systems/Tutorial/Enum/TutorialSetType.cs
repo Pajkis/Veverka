@@ -8,7 +8,7 @@ public enum TutorialSetType
 {
     Controls = 0,
     Basic = 1,
-    Goldem = 2,
+    Golden = 2,
     Stone = 3,
     Water = 4,
 }

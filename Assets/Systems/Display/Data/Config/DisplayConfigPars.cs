@@ -15,12 +15,12 @@ public class DisplayConfigPars
     public DevicePlatformType platform = DevicePlatformType.Auto;
 
     [Header("UI scaling")]
-    public Vector2Int referenceResolution = new Vector2Int(1920, 1080);
+    public Vector2Int referenceResolution = new(1920, 1080);
     [Range(0f, 1f)] public float uiMatchWidthOrHeight = 1f; // 0=width, 1 = height, 0.5 = both equally
 
     [Header("Aspect & Bars")]
     public bool useLetterboxing = true;
-    public Vector2 targetAspect = new Vector2(16, 9); // 16:9 aspect ratio
+    public Vector2 targetAspect = new(16, 9); // 16:9 aspect ratio
 
     [Header("Orientation")]
     public bool forceOrientation = true;
@@ -44,9 +44,9 @@ public class DisplayConfigPars
     [Tooltip("Camera smooth follow time")]
     public float cameraFollowTime = 0.2f;
     [Tooltip("Camera follow offset when character moves")]
-    public Vector3 cameraFollowOffset = new Vector3(2.6666f, 0, -10f);
+    public Vector3 cameraFollowOffset = new(2.6666f, 0, -10f);
     [Tooltip("Screen offset for dual-screen layout")]
-    public Vector3 screenToPlayOffset = new Vector3(2.1666f, -0.5f, -10f);
+    public Vector3 screenToPlayOffset = new(2.1666f, -0.5f, -10f);
     [Tooltip("Offset for even tile count grids")]
     public float evenTilesOffset = 0.5f;
 
@@ -55,7 +55,7 @@ public class DisplayConfigPars
     [Tooltip("Size of each tile in world units")]
     public float tileSize = 1f;
     [Tooltip("Max grid size before camera becomes static")]
-    public Vector2Int maxStaticScreenSize = new Vector2Int(15, 11);
+    public Vector2Int maxStaticScreenSize = new(15, 11);
 
     // === UI LAYOUT POSITIONS ===
     [Header("UI Layout - Button Columns")]
@@ -78,7 +78,12 @@ public class DisplayConfigPars
 
     [Header("Cursor Settings")]
     [Tooltip("Custom cursor hotspot offset")]
-    public Vector2 cursorHotspot = new Vector2(40f, -40f);
+    public Vector2 cursorHotspot = new(40f, -40f);
     [Tooltip("Custom cursor image size (width, height, depth)")]
-    public Vector3 cursorImageSize = new Vector3(80f, 80f, 0f);
+    public Vector3 cursorImageSize = new(80f, 80f, 0f);
+
+    // === TUTORIAL SETTINGS ===
+    [Header("Tutorial Settings")]
+    [Tooltip("Tutorial screen tile size")]
+    public Vector2Int tutorialScreenTileSize = new(7, 5);
 }
