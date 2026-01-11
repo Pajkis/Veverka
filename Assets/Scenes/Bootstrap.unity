@@ -321,7 +321,7 @@ MonoBehaviour:
   stoneRoadPrefab: {fileID: 7956215929776309704, guid: cfdd64b144f77404082e0908ab28d67d, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
   roadGoldenGoalScoredPrefab: {fileID: 0}
-  veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
+  veverkaPrefab: {fileID: 5527226075235502776, guid: 77ef064342b140841a96a3152db9c22b, type: 3}
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
   nutWaterPrefab: {fileID: 5049554270686572608, guid: 6ecba3ec68f43ea439dececdfc7ac805, type: 3}
@@ -401,6 +401,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorImage: {fileID: 265896549}
   hotspot: {x: 0, y: 0}
+  cursorSize: {x: 80, y: 80, z: 0}
 --- !u!114 &265896551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -533,6 +534,7 @@ MonoBehaviour:
   creditsPrefab: {fileID: 3636506746201861303, guid: 171486bcfd41e67459628f5294fe9350, type: 3}
   notificationPrefab: {fileID: 9187378460226002792, guid: 8d5eed3dc9354264dbf6fc98cd1ee5fd, type: 3}
   levelValidationPrefab: {fileID: 907536609874866753, guid: 1c7877f0b30a8564faf71f8b095ed9d8, type: 3}
+  TutorialPrefab: {fileID: 2135444659379405984, guid: 0878e476ed0475149acfdaf63d87c12b, type: 3}
 --- !u!1 &438281641
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   setType: 1
   setDisplayName: Basic
-  tutorialCsvFiles: []
+  tutorialCsvFiles:
+  - {fileID: 4900000, guid: 334ab3133f1ad594c8bf6e903903bf32, type: 3}

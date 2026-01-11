@@ -19,6 +19,7 @@ public class OverlayPrefabProvider : MonoBehaviour
     [SerializeField] private GameObject creditsPrefab;
     [SerializeField] private GameObject notificationPrefab;
     [SerializeField] private GameObject levelValidationPrefab;
+    [SerializeField] private GameObject TutorialPrefab;
 
     private void Awake()
     {
@@ -48,6 +49,7 @@ public class OverlayPrefabProvider : MonoBehaviour
             OverlayType.Credits => creditsPrefab,
             OverlayType.Notification => notificationPrefab,
             OverlayType.LevelValidationError => levelValidationPrefab,
+            OverlayType.Tutorial => TutorialPrefab,
             _ => null,
         };            
     }

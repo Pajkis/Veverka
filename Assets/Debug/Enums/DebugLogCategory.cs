@@ -21,5 +21,6 @@ public enum DebugLogCategory
     BubbleMessage,
     GoalSystem,
     SceneManager,
-    Display
+    Display,
+    Tutorial
 }
