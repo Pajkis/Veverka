@@ -534,7 +534,7 @@ MonoBehaviour:
   creditsPrefab: {fileID: 3636506746201861303, guid: 171486bcfd41e67459628f5294fe9350, type: 3}
   notificationPrefab: {fileID: 9187378460226002792, guid: 8d5eed3dc9354264dbf6fc98cd1ee5fd, type: 3}
   levelValidationPrefab: {fileID: 907536609874866753, guid: 1c7877f0b30a8564faf71f8b095ed9d8, type: 3}
-  TutorialPrefab: {fileID: 2135444659379405984, guid: 0878e476ed0475149acfdaf63d87c12b, type: 3}
+  TutorialPrefab: {fileID: 3354387032497311946, guid: 9d9b94872e0033842bd2b3850aca08e5, type: 3}
 --- !u!1 &438281641
 GameObject:
   m_ObjectHideFlags: 0
@@ -884,6 +884,41 @@ Transform:
   - {fileID: 3327448}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &869378465
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 869378466}
+  m_Layer: 0
+  m_Name: TutorialRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &869378466
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 869378465}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035706281}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &878312288
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,6 +963,86 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1805298381}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1035706279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1035706281}
+  - component: {fileID: 1035706280}
+  - component: {fileID: 1035706282}
+  m_Layer: 0
+  m_Name: TutorialGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1035706280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035706279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c18ffdca0aaa6e48bfe9ffca54a3d4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  emptyPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
+  roadPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
+  stoneRoadPrefab: {fileID: 7956215929776309704, guid: 82f2a9fdf20d4564292d0896b5abf87f, type: 3}
+  stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 8ec5e2bf9d74c2942babb05097217a5a, type: 3}
+  roadGoldenGoalScoredPrefab: {fileID: 2927861946428358931, guid: d7497b1d9d9cb324d83ce2e15dfda195, type: 3}
+  veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
+  nutPrefab: {fileID: 5049554270686572608, guid: 3aed852664a95904d8529ce0fdb18192, type: 3}
+  nutStonePrefab: {fileID: 5049554270686572608, guid: 253162aa5519e1e41a66ad5cae99922d, type: 3}
+  nutWaterPrefab: {fileID: 5049554270686572608, guid: ad0b8cb9f36e91a4db6fb6c9557c70de, type: 3}
+  nutGoldenPrefab: {fileID: 5049554270686572608, guid: e0a131a8c27120d46b9503fbfaad7641, type: 3}
+  wallPrefab: {fileID: 3663485978142913648, guid: 09b14deeb4d04af4594ccefb7562dada, type: 3}
+  wallStonePrefab: {fileID: 3663485978142913648, guid: 025d6a2f0e9e98f48b0036ff99e9bb91, type: 3}
+  holePrefab: {fileID: 7474811582496385836, guid: 55f1e8c6f7ddfa0449b69a4c16032408, type: 3}
+  waterHolePrefab: {fileID: 7474811582496385836, guid: 9dfa02b0c47aeff46b39b568e8fde09b, type: 3}
+  goldenStatuePrefab: {fileID: 3663485978142913648, guid: d1f2e9fc816f9734f8d8ee0efc4d5001, type: 3}
+  goalPrefab: {fileID: 7474811582496385836, guid: 709d9e348c5ec6a429eb9effdc2fee46, type: 3}
+  goldenGoalPrefab: {fileID: 7474811582496385836, guid: c0eb8e5f5f7fdaf43be0eab9ea043ed0, type: 3}
+  backgroundPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
+  gridRoot: {fileID: 869378466}
+--- !u!4 &1035706281
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035706279}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 869378466}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1035706282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1035706279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df02b61b02cfc1b44b0897447738b8ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
+  tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
+  gridBuilder: {fileID: 1035706280}
 --- !u!1 &1108175487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1455,3 +1570,4 @@ SceneRoots:
   - {fileID: 716192307}
   - {fileID: 1498983319}
   - {fileID: 1371669554}
+  - {fileID: 1035706281}

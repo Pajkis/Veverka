@@ -1,15 +1,14 @@
 using UnityEngine;
 
 /// <summary>
-/// Loads tutorials based on current selection from TutorialSelectData.
-/// Similar to LevelLoader but simpler - just loads tutorial grid directly without events.
+/// Tutorial overlay controller - raises events to communicate with persistent TutorialManager.
+/// Lives on TutorialOverlay prefab, sends commands via TutorialEvents.
 /// </summary>
 public class TutorialLoader : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TutorialSelectData tutorialSelection;
-    [SerializeField] private TutorialSetManager tutorialSetManager;
-    [SerializeField] private TutorialGridBuilder gridBuilder;
+    [SerializeField] private TutorialEvents tutorialEvents;
 
     /// <summary>
     /// Load tutorial when overlay starts
@@ -20,7 +19,7 @@ public class TutorialLoader : MonoBehaviour
     }
 
     /// <summary>
-    /// Load the currently selected tutorial from TutorialSelectData
+    /// Load the currently selected tutorial by raising event
     /// </summary>
     private void LoadCurrentTutorial()
     {
@@ -30,64 +29,42 @@ public class TutorialLoader : MonoBehaviour
             return;
         }
 
-        if (tutorialSetManager == null)
+        if (tutorialEvents == null)
         {
-            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialSetManager is not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialEvents is not assigned!", this);
             return;
         }
 
-        if (gridBuilder == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialGridBuilder is not assigned!", this);
-            return;
-        }
-
-        // 1. Read current selection
+        // Read current selection
         TutorialSetType setType = tutorialSelection.TutorialSetType;
         int tutorialIndex = tutorialSelection.TutorialIndex;
 
         DebugLogger.Log(DebugLogCategory.Tutorial,
-            $"TutorialLoader: Reading selection - Set={setType}, Index={tutorialIndex}", this);
+            $"TutorialLoader: Raising LoadTutorial event - Set={setType}, Index={tutorialIndex}", this);
 
-        // 2. Get CSV data from tutorial set manager
-        TextAsset csvData = tutorialSetManager.GetTutorialCsv(setType, tutorialIndex);
-
-        if (csvData == null)
+        // Raise event for persistent TutorialManager to handle
+        tutorialEvents.Raise(new TutorialEventPayload
         {
-            DebugLogger.LogError(DebugLogCategory.Tutorial,
-                $"Tutorial CSV not found: {setType}[{tutorialIndex}]", this);
-            return;
-        }
-
-        DebugLogger.Log(DebugLogCategory.Tutorial, "CSV data loaded successfully - parsing grid", this);
-
-        // 3. Parse grid from CSV
-        TileType[,] grid = TileParser.LoadGridFromTextAsset(csvData);
-
-        if (grid == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.Tutorial,
-                $"Failed to parse CSV for tutorial {setType}[{tutorialIndex}]", this);
-            return;
-        }
-
-        DebugLogger.Log(DebugLogCategory.Tutorial,
-            $"Grid parsed successfully - Size: {grid.GetLength(0)}x{grid.GetLength(1)}", this);
-
-        // 4. Build tutorial grid (simple direct call, no events needed)
-        gridBuilder.BuildTutorialGrid(grid);
-
-        DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial load complete", this);
+            EventType = TutorialEventType.LoadTutorial,
+            SetType = setType,
+            TutorialIndex = tutorialIndex
+        });
     }
 
     /// <summary>
-    /// Replay button handler - clears grid and rebuilds tutorial
+    /// Replay button handler - raises replay event
     /// </summary>
     public void OnReplayButtonClick()
     {
-        DebugLogger.Log(DebugLogCategory.Tutorial, "Replay button clicked - reloading tutorial", this);
+        if (tutorialSelection == null || tutorialEvents == null) return;
 
-        gridBuilder.ClearGrid();
-        LoadCurrentTutorial();
+        DebugLogger.Log(DebugLogCategory.Tutorial, "Replay button clicked - raising replay event", this);
+
+        tutorialEvents.Raise(new TutorialEventPayload
+        {
+            EventType = TutorialEventType.ReplayTutorial,
+            SetType = tutorialSelection.TutorialSetType,
+            TutorialIndex = tutorialSelection.TutorialIndex
+        });
     }
 }

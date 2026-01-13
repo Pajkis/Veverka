@@ -45,6 +45,12 @@ public class TutorialGridBuilder : MonoBehaviour
     #region References
     [Header("Grid Root")]
     [SerializeField] private Transform gridRoot;
+
+    /// <summary>
+    /// Public getter for grid root transform.
+    /// Used by TutorialManager to pass to TutorialTileSortingSetter.
+    /// </summary>
+    public Transform GridRoot => gridRoot;
     #endregion
 
     #region Local State
