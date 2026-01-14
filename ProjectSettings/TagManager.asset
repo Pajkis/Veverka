@@ -4,13 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Veverka
-  - Nut
-  - Liskacek
-  - PauseMenu
   - UIButton
   - UISlider
-  - MenuOverlay
+  - Frame
+  - FrameComponent
+  - Background
+  - Static
+  - Movable
   layers:
   - Default
   - TransparentFX
@@ -51,21 +51,96 @@ TagManager:
   - name: Background
     uniqueID: 1458667267
     locked: 0
-  - name: Frame_UI
+  - name: UIFrame
     uniqueID: 1344883739
     locked: 0
-  - name: IG_StaticTiles
+  - name: Static
     uniqueID: 1154779117
     locked: 0
-  - name: IG_MovableTiles
+  - name: Movable
     uniqueID: 1847477145
     locked: 0
-  - name: Frame_InGame
+  - name: MainFrame
     uniqueID: 3306920313
     locked: 0
-  - name: Buttons
+  - name: MainFrameComponent
     uniqueID: 541054781
+    locked: 0
+  - name: Overlay1Background
+    uniqueID: 3976458081
+    locked: 0
+  - name: Overlay1UIFrame
+    uniqueID: 2842682327
+    locked: 0
+  - name: Overlay1Static
+    uniqueID: 576738537
+    locked: 0
+  - name: Overlay1Movable
+    uniqueID: 3087747537
+    locked: 0
+  - name: Overlay1Frame
+    uniqueID: 2461311315
+    locked: 0
+  - name: Overlay1FrameComponent
+    uniqueID: 1938325009
+    locked: 0
+  - name: Overlay2Background
+    uniqueID: 1102880663
+    locked: 0
+  - name: Overlay2UIFrame
+    uniqueID: 1461830893
+    locked: 0
+  - name: Overlay2Static
+    uniqueID: 314677761
+    locked: 0
+  - name: Overlay2Movable
+    uniqueID: 3711487641
+    locked: 0
+  - name: Overlay2Frame
+    uniqueID: 794043551
+    locked: 0
+  - name: Overlay2FrameComponent
+    uniqueID: 305901631
+    locked: 0
+  - name: Overlay3Background
+    uniqueID: 2450508045
+    locked: 0
+  - name: Overlay3UIFrame
+    uniqueID: 1506043229
+    locked: 0
+  - name: Overlay3Static
+    uniqueID: 1326425511
+    locked: 0
+  - name: Overlay3Movable
+    uniqueID: 1369664195
+    locked: 0
+  - name: Overlay3Frame
+    uniqueID: 1459862019
+    locked: 0
+  - name: Overlay3FrameComponent
+    uniqueID: 436029199
+    locked: 0
+  - name: Overlay4Background
+    uniqueID: 2602053299
+    locked: 0
+  - name: Overlay4UIFrame
+    uniqueID: 3465320091
+    locked: 0
+  - name: Overlay4Static
+    uniqueID: 967736431
+    locked: 0
+  - name: Overlay4Movable
+    uniqueID: 1335126657
+    locked: 0
+  - name: Overlay4Frame
+    uniqueID: 4110263107
+    locked: 0
+  - name: Overlay4FrameComponent
+    uniqueID: 3631094533
     locked: 0
   - name: LoadingScreen
     uniqueID: 3565474087
+    locked: 0
+  - name: LoadingScreenComponents
+    uniqueID: 1998383489
     locked: 0

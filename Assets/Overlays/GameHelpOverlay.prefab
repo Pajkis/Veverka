@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 5130127539585057196}
   m_Layer: 5
   m_Name: ImageNut
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 7309937863394657643}
   m_Layer: 5
   m_Name: LabelLine
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1299,7 +1299,7 @@ GameObject:
   - component: {fileID: 1896553917456855066}
   m_Layer: 5
   m_Name: ImageNut (1)
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1888,8 +1888,8 @@ GameObject:
   - component: {fileID: 162909286318118203}
   - component: {fileID: 8860884283363099185}
   m_Layer: 5
-  m_Name: BackgroundFrame
-  m_TagString: Untagged
+  m_Name: Frame
+  m_TagString: Frame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2790,6 +2790,7 @@ GameObject:
   - component: {fileID: 7131106050040021032}
   - component: {fileID: 4451034296246099691}
   - component: {fileID: 3016050867045878182}
+  - component: {fileID: 6880494166881633787}
   m_Layer: 5
   m_Name: GameHelpOverlay
   m_TagString: Untagged
@@ -2830,7 +2831,7 @@ Canvas:
   m_GameObject: {fileID: 3636506746201861303}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -2911,6 +2912,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
   fallbackAspect: {x: 16, y: 9}
+--- !u!114 &6880494166881633787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23ed4a5cf303a428f4c87d16543dd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayLevel: 1
+  canvas: {fileID: 6248224110833447180}
+  backgroundSprite: {fileID: 0}
 --- !u!1 &3741132242309268229
 GameObject:
   m_ObjectHideFlags: 0
@@ -4844,7 +4860,7 @@ GameObject:
   - component: {fileID: 7622150803341070092}
   m_Layer: 5
   m_Name: LabelLine_NutGoal
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4982,7 +4998,7 @@ GameObject:
   - component: {fileID: 5844993314656995291}
   m_Layer: 5
   m_Name: LabelLine_Basic
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5437,7 +5453,7 @@ GameObject:
   - component: {fileID: 6189027882002332942}
   m_Layer: 5
   m_Name: ImageNutGoal
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5670,7 +5686,7 @@ GameObject:
   - component: {fileID: 3301254723647026572}
   m_Layer: 5
   m_Name: LabelLine_1
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6377,7 +6393,7 @@ GameObject:
   - component: {fileID: 4396073284563373128}
   m_Layer: 5
   m_Name: ImageCharacter_1
-  m_TagString: Untagged
+  m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7260,6 +7276,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Water
       objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
+      objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7476,6 +7496,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Rules
       objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
+      objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
       value: 0.41651386
@@ -7592,6 +7616,10 @@ PrefabInstance:
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Name
       value: Button_MenuSimple
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -7731,6 +7759,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Controls
       objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
+      objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7852,6 +7884,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Button_Stone
       objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
+      objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -7961,6 +7997,10 @@ PrefabInstance:
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Name
       value: Button_Basic
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
       objectReference: {fileID: 0}
     - target: {fileID: 5175955389477125388, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -8090,6 +8130,10 @@ PrefabInstance:
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Name
       value: Button_Golden
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_TagString
+      value: FrameComponent
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
