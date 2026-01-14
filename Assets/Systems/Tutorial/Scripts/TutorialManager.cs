@@ -11,7 +11,6 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private TutorialEvents tutorialEvents;
     [SerializeField] private TutorialSetManager tutorialSetManager;
     [SerializeField] private TutorialGridBuilder gridBuilder;
-    [SerializeField] private TutorialTileSortingSetter sortingSetter;
 
     private void Awake()
     {
@@ -97,18 +96,6 @@ public class TutorialManager : MonoBehaviour
 
         // Build tutorial grid
         gridBuilder.BuildTutorialGrid(grid);
-
-        // Set sorting layers for tutorial tiles (Overlay3Static/Overlay3Movable)
-        if (sortingSetter != null)
-        {
-            Transform tutorialRoot = gridBuilder.GridRoot;
-            sortingSetter.SetTutorialSortingLayers(tutorialRoot);
-        }
-        else
-        {
-            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
-                "TutorialTileSortingSetter not assigned - tutorial tiles may not render correctly", this);
-        }
 
         DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial load complete", this);
     }

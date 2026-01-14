@@ -48,7 +48,6 @@ public class TutorialGridBuilder : MonoBehaviour
 
     /// <summary>
     /// Public getter for grid root transform.
-    /// Used by TutorialManager to pass to TutorialTileSortingSetter.
     /// </summary>
     public Transform GridRoot => gridRoot;
     #endregion
