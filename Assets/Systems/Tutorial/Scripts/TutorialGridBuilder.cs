@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,6 +46,9 @@ public class TutorialGridBuilder : MonoBehaviour
     #region References
     [Header("Grid Root")]
     [SerializeField] private Transform gridRoot;
+
+    [Header("Config")]
+    [SerializeField] private DisplaySettings displaySettings;
 
     /// <summary>
     /// Public getter for grid root transform.
@@ -135,11 +139,32 @@ public class TutorialGridBuilder : MonoBehaviour
             surroundingObstacles = null  // Tutorial doesn't need surrounding obstacles
         };
 
+        // Hide grid root before spawning (will show after delay)
+        gridRoot.gameObject.SetActive(false);
+
         // Use shared GridSpawner helper to spawn grid
         DebugLogger.Log(DebugLogCategory.Tutorial, "Spawning tutorial grid using GridSpawner helper", this);
         GridSpawner.SpawnGrid(tutorialGridData, config);
 
+        // Show grid after delay (synced with overlay fade-in)
+        StartCoroutine(ShowGridAfterDelay());
+
         DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial grid build complete", this);
+    }
+
+    /// <summary>
+    /// Shows the grid root after a configurable delay to sync with overlay fade-in.
+    /// </summary>
+    private IEnumerator ShowGridAfterDelay()
+    {
+        float delay = displaySettings != null
+            ? displaySettings.ActiveProfile.tutorialGridShowDelay
+            : 0.5f;
+
+        yield return new WaitForSeconds(delay);
+
+        gridRoot.gameObject.SetActive(true);
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"Tutorial grid shown after {delay}s delay", this);
     }
 
     /// <summary>
@@ -189,6 +214,11 @@ public class TutorialGridBuilder : MonoBehaviour
     }
 
     #region Unity Lifecycle
+    private void Start()
+    {
+        InitializeGridRootPosition();
+    }
+
     private void OnDestroy()
     {
         // Clean up tutorial GridData GameObject when component is destroyed
@@ -196,6 +226,33 @@ public class TutorialGridBuilder : MonoBehaviour
         {
             Destroy(tutorialGridDataObject);
         }
+    }
+    #endregion
+
+    #region Initialization
+    /// <summary>
+    /// Sets the grid root position from DisplayConfig.
+    /// </summary>
+    private void InitializeGridRootPosition()
+    {
+        if (gridRoot == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "GridRoot is not assigned!", this);
+            return;
+        }
+
+        if (displaySettings == null)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "DisplaySettings not assigned - using default grid root position", this);
+            return;
+        }
+
+        Vector2 position = displaySettings.ActiveProfile.tutorialGridRootPosition;
+        gridRoot.localPosition = new Vector3(position.x, position.y, 0f);
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"Tutorial grid root position set to: {position}", this);
     }
     #endregion
 }

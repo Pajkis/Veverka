@@ -86,4 +86,8 @@ public class DisplayConfigPars
     [Header("Tutorial Settings")]
     [Tooltip("Tutorial screen tile size")]
     public Vector2Int tutorialScreenTileSize = new(7, 5);
+    [Tooltip("Tutorial grid root position offset")]
+    public Vector2 tutorialGridRootPosition = new(-3.02f, -2f);
+    [Tooltip("Delay before showing tutorial grid (for overlay fade-in sync)")]
+    public float tutorialGridShowDelay = 0.5f;
 }
