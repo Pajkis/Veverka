@@ -70,6 +70,9 @@ public class DebugLogConfig : ScriptableObject
     [Tooltip("Enable display and camera system logging")]
     public bool displayLog = false;
 
+    [Tooltip("Enable tutorial system logging")]
+    public bool tutorialLog = false;
+
     [Header("Debug Utilities")]
     [Tooltip("Enable all debug logs at once (overrides individual settings)")]
     public bool enableAllLogs = false;
@@ -105,6 +108,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.GoalSystem => goalSystemLog,
             DebugLogCategory.SceneManager => sceneManagerLog,
             DebugLogCategory.Display => displayLog,
+            DebugLogCategory.Tutorial => tutorialLog,
             _ => false
         };
     }
@@ -137,6 +141,7 @@ public class DebugLogConfig : ScriptableObject
             DebugLogCategory.GoalSystem => "#FFD700",  // Gold
             DebugLogCategory.SceneManager => "#9370DB", // Medium Purple
             DebugLogCategory.Display => "#00BFFF",  // Deep Sky Blue
+            DebugLogCategory.Tutorial => "#7FFF00", // Chartreuse
             _ => "#FFFFFF" // White
         };
     }

@@ -90,4 +90,16 @@ public class DisplayConfigPars
     public Vector2 tutorialGridRootPosition = new(-3.02f, -2f);
     [Tooltip("Delay before showing tutorial grid (for overlay fade-in sync)")]
     public float tutorialGridShowDelay = 0.5f;
+
+    [Header("Tutorial Action Settings")]
+    [Tooltip("Default message display time")]
+    public float tutorialDefaultMessageTime = 2f;
+    [Tooltip("Delay between actions")]
+    public float tutorialActionDelay = 0.3f;
+    [Tooltip("Message fade in duration")]
+    public float tutorialMessageFadeIn = 0.2f;
+    [Tooltip("Message fade out duration")]
+    public float tutorialMessageFadeOut = 0.2f;
+    [Tooltip("Extra delay after grid spawn before starting sequence")]
+    public float tutorialSequenceStartBuffer = 0.2f;
 }

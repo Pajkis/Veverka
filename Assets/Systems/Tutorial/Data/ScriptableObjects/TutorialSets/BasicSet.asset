@@ -16,3 +16,5 @@ MonoBehaviour:
   setDisplayName: Basic
   tutorialCsvFiles:
   - {fileID: 4900000, guid: 334ab3133f1ad594c8bf6e903903bf32, type: 3}
+  tutorialSequences:
+  - {fileID: 11400000, guid: 0e12cfc886c0caa4a9306f3ae36709f8, type: 2}

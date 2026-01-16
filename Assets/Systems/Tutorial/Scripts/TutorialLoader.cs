@@ -9,6 +9,7 @@ public class TutorialLoader : MonoBehaviour
     [Header("References")]
     [SerializeField] private TutorialSelectData tutorialSelection;
     [SerializeField] private TutorialEvents tutorialEvents;
+    [SerializeField] private TutorialActionSequencer actionSequencer;
 
     /// <summary>
     /// Load tutorial when overlay starts
@@ -49,6 +50,37 @@ public class TutorialLoader : MonoBehaviour
             SetType = setType,
             TutorialIndex = tutorialIndex
         });
+
+        // Start action sequence after grid delay
+        StartActionSequence();
+    }
+
+    /// <summary>
+    /// Start action sequence with delay to wait for grid spawn
+    /// </summary>
+    private void StartActionSequence()
+    {
+        Debug.Log($"[TUTORIAL] TutorialLoader.StartActionSequence called, actionSequencer={actionSequencer}");
+
+        if (actionSequencer == null)
+        {
+            Debug.LogWarning("[TUTORIAL] ActionSequencer not assigned - skipping sequence playback");
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial, "ActionSequencer not assigned - skipping sequence playback", this);
+            return;
+        }
+
+        float gridDelay = DisplaySettings.Instance.ActiveProfile.tutorialGridShowDelay;
+        float buffer = DisplaySettings.Instance.ActiveProfile.tutorialSequenceStartBuffer;
+        float totalDelay = gridDelay + buffer;
+
+        Debug.Log($"[TUTORIAL] Starting sequence with delay: {totalDelay}s (gridDelay={gridDelay}, buffer={buffer})");
+        Invoke(nameof(StartSequenceDelayed), totalDelay);
+    }
+
+    private void StartSequenceDelayed()
+    {
+        Debug.Log("[TUTORIAL] StartSequenceDelayed called - invoking actionSequencer.StartSequence()");
+        actionSequencer.StartSequence();
     }
 
     /// <summary>

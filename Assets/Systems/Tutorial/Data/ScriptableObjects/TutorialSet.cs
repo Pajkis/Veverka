@@ -13,6 +13,9 @@ public class TutorialSet : ScriptableObject
     [Header("Tutorial CSV Files")]
     [SerializeField] private TextAsset[] tutorialCsvFiles;
 
+    [Header("Tutorial Sequence Data")]
+    [SerializeField] private TutorialSequenceData[] tutorialSequences;
+
     /// <summary>
     /// Get the CSV file for a specific tutorial number
     /// </summary>
@@ -42,5 +45,19 @@ public class TutorialSet : ScriptableObject
     public virtual bool HasTutorial(int tutorialNumber)
     {
         return tutorialNumber >= 0 && tutorialNumber < tutorialCsvFiles.Length;
+    }
+
+    /// <summary>
+    /// Get the sequence data for a specific tutorial number
+    /// </summary>
+    /// <param name="tutorialNumber">Tutorial number (0-based index)</param>
+    /// <returns>TutorialSequenceData or null if not found</returns>
+    public virtual TutorialSequenceData GetTutorialSequence(int tutorialNumber)
+    {
+        if (tutorialSequences == null || tutorialNumber < 0 || tutorialNumber >= tutorialSequences.Length)
+        {
+            return null;
+        }
+        return tutorialSequences[tutorialNumber];
     }
 }

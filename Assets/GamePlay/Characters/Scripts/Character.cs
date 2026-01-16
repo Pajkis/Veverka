@@ -62,13 +62,23 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     public Direction FacingDirection
     {
-        get { return facingDirection; }      
+        get { return facingDirection; }
     }
 
     public Vector2Int GridPosition
     {
         get { return gridPosition; }
     }
+
+    /// <summary>
+    /// Public accessor for SmoothMover component
+    /// </summary>
+    public SmoothMover SmoothMover => smoothMover;
+
+    /// <summary>
+    /// Public accessor for SmoothRotate component
+    /// </summary>
+    public SmoothRotate SmoothRotate => smoothRotate;
     #endregion
 
     #region event handling

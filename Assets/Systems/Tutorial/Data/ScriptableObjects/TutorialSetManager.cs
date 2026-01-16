@@ -114,4 +114,20 @@ public class TutorialSetManager : ScriptableObject
     {
         return new List<TutorialSet>(tutorialSets);
     }
+
+    /// <summary>
+    /// Get sequence data for a specific tutorial
+    /// </summary>
+    /// <param name="setType">Type of the tutorial set</param>
+    /// <param name="tutorialNumber">Tutorial number within the set</param>
+    /// <returns>TutorialSequenceData or null if not found</returns>
+    public TutorialSequenceData GetTutorialSequence(TutorialSetType setType, int tutorialNumber)
+    {
+        var tutorialSet = GetTutorialSet(setType);
+        if (tutorialSet == null)
+        {
+            return null;
+        }
+        return tutorialSet.GetTutorialSequence(tutorialNumber);
+    }
 }

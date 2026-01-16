@@ -47,9 +47,6 @@ public class TutorialGridBuilder : MonoBehaviour
     [Header("Grid Root")]
     [SerializeField] private Transform gridRoot;
 
-    [Header("Config")]
-    [SerializeField] private DisplaySettings displaySettings;
-
     /// <summary>
     /// Public getter for grid root transform.
     /// </summary>
@@ -66,9 +63,26 @@ public class TutorialGridBuilder : MonoBehaviour
     /// <summary>
     /// Builds a tutorial grid from the provided grid data.
     /// Creates isolated GridData instance and uses GridSpawner helper with tutorial prefabs.
+    /// Spawns after configurable delay to sync with overlay fade-in.
     /// </summary>
     public void BuildTutorialGrid(TileType[,] grid)
     {
+        StartCoroutine(BuildTutorialGridDelayed(grid));
+    }
+
+    /// <summary>
+    /// Delayed grid building coroutine - waits for overlay fade-in before spawning.
+    /// </summary>
+    private IEnumerator BuildTutorialGridDelayed(TileType[,] grid)
+    {
+        // Wait for overlay fade-in before spawning grid
+        float delay = DisplaySettings.Instance != null
+            ? DisplaySettings.Instance.ActiveProfile.tutorialGridShowDelay
+            : 0.5f;
+
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"Waiting {delay}s for overlay fade-in before spawning grid", this);
+        yield return new WaitForSeconds(delay);
+
         // Get grid dimensions
         int width = grid.GetLength(0);
         int height = grid.GetLength(1);
@@ -89,7 +103,7 @@ public class TutorialGridBuilder : MonoBehaviour
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
-            {
+            { 
                 Vector2Int pos = new(x, y);
                 tutorialGridData.SetTileType(pos, grid[x, y]);
                 tutorialGridData.SetNutType(pos, GridUtils.CachedNutGrid[x, y]);
@@ -139,32 +153,11 @@ public class TutorialGridBuilder : MonoBehaviour
             surroundingObstacles = null  // Tutorial doesn't need surrounding obstacles
         };
 
-        // Hide grid root before spawning (will show after delay)
-        gridRoot.gameObject.SetActive(false);
-
         // Use shared GridSpawner helper to spawn grid
         DebugLogger.Log(DebugLogCategory.Tutorial, "Spawning tutorial grid using GridSpawner helper", this);
         GridSpawner.SpawnGrid(tutorialGridData, config);
 
-        // Show grid after delay (synced with overlay fade-in)
-        StartCoroutine(ShowGridAfterDelay());
-
         DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial grid build complete", this);
-    }
-
-    /// <summary>
-    /// Shows the grid root after a configurable delay to sync with overlay fade-in.
-    /// </summary>
-    private IEnumerator ShowGridAfterDelay()
-    {
-        float delay = displaySettings != null
-            ? displaySettings.ActiveProfile.tutorialGridShowDelay
-            : 0.5f;
-
-        yield return new WaitForSeconds(delay);
-
-        gridRoot.gameObject.SetActive(true);
-        DebugLogger.Log(DebugLogCategory.Tutorial, $"Tutorial grid shown after {delay}s delay", this);
     }
 
     /// <summary>
@@ -241,14 +234,14 @@ public class TutorialGridBuilder : MonoBehaviour
             return;
         }
 
-        if (displaySettings == null)
+        if (DisplaySettings.Instance == null)
         {
             DebugLogger.LogWarning(DebugLogCategory.Tutorial,
-                "DisplaySettings not assigned - using default grid root position", this);
+                "DisplaySettings.Instance not available - using default grid root position", this);
             return;
         }
 
-        Vector2 position = displaySettings.ActiveProfile.tutorialGridRootPosition;
+        Vector2 position = DisplaySettings.Instance.ActiveProfile.tutorialGridRootPosition;
         gridRoot.localPosition = new Vector3(position.x, position.y, 0f);
 
         DebugLogger.Log(DebugLogCategory.Tutorial,
