@@ -2908,7 +2908,7 @@ GameObject:
   - component: {fileID: -9189373331571226303}
   - component: {fileID: -1740198119061125203}
   m_Layer: 0
-  m_Name: GameHelpOverlay
+  m_Name: GameHelpOverlay_Old
   m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
