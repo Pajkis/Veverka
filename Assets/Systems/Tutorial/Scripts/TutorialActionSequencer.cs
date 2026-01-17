@@ -23,7 +23,7 @@ public class TutorialActionSequencer : MonoBehaviour
     private int currentActionIndex;
     private bool isPlaying;
     private bool isAutoplay = true;
-    private bool isSkipRequested;
+    private bool isSkipRequested; 
     private Coroutine playbackCoroutine;
     private CharVeverka tutorialCharacter;
 
@@ -43,12 +43,9 @@ public class TutorialActionSequencer : MonoBehaviour
     /// </summary>
     public void StartSequence()
     {
-        Debug.Log("[TUTORIAL] TutorialActionSequencer.StartSequence() called");
-
         // Load sequence data from TutorialSetManager
         if (tutorialSetManager == null || tutorialSelection == null)
         {
-            Debug.LogError($"[TUTORIAL] TutorialSetManager={tutorialSetManager}, TutorialSelectData={tutorialSelection} - one is null!");
             DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialSetManager or TutorialSelectData not assigned!", this);
             return;
         }
@@ -57,11 +54,9 @@ public class TutorialActionSequencer : MonoBehaviour
         int tutorialIndex = tutorialSelection.TutorialIndex;
 
         sequenceData = tutorialSetManager.GetTutorialSequence(setType, tutorialIndex);
-        Debug.Log($"[TUTORIAL] Got sequenceData: {sequenceData} for Set={setType}, Index={tutorialIndex}");
 
         if (sequenceData == null)
         {
-            Debug.LogWarning($"[TUTORIAL] No sequence data for Set={setType}, Index={tutorialIndex}");
             DebugLogger.LogWarning(DebugLogCategory.Tutorial,
                 $"No sequence data for Set={setType}, Index={tutorialIndex}", this);
             return;
@@ -69,12 +64,10 @@ public class TutorialActionSequencer : MonoBehaviour
 
         if (sequenceData.actions == null || sequenceData.actions.Count == 0)
         {
-            Debug.LogWarning($"[TUTORIAL] No actions in sequence (actions={sequenceData.actions}, count={sequenceData.actions?.Count})");
             DebugLogger.LogWarning(DebugLogCategory.Tutorial, "No actions in sequence", this);
             return;
         }
 
-        Debug.Log($"[TUTORIAL] Loaded sequence '{sequenceData.tutorialId}' for Set={setType}, Index={tutorialIndex}");
         DebugLogger.Log(DebugLogCategory.Tutorial,
             $"Loaded sequence '{sequenceData.tutorialId}' for Set={setType}, Index={tutorialIndex}", this);
 
@@ -188,7 +181,6 @@ public class TutorialActionSequencer : MonoBehaviour
             yield break;
         }
 
-        Debug.Log($"[TUTORIAL] Animation action: {direction}");
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Animation action: {direction}", this);
 
         // Raise direction event
@@ -199,16 +191,8 @@ public class TutorialActionSequencer : MonoBehaviour
             tutorialCharacter.SmoothMover != null &&
             tutorialCharacter.SmoothRotate != null)
         {
-            Debug.Log($"[TUTORIAL] Before wait - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}");
-            DebugLogger.Log(DebugLogCategory.Tutorial,
-                $"Before wait - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}", this);
-
             // Wait one frame for event to be processed and animation to start
             yield return null;
-
-            Debug.Log($"[TUTORIAL] After 1 frame - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}");
-            DebugLogger.Log(DebugLogCategory.Tutorial,
-                $"After 1 frame - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}", this);
 
             // Wait until animation starts (moving or rotating) - with timeout
             float timeout = 0.5f;
@@ -220,10 +204,6 @@ public class TutorialActionSequencer : MonoBehaviour
                 elapsed += Time.deltaTime;
                 yield return null;
             }
-
-            Debug.Log($"[TUTORIAL] After wait for start (elapsed: {elapsed:F2}s) - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}");
-            DebugLogger.Log(DebugLogCategory.Tutorial,
-                $"After wait for start (elapsed: {elapsed:F2}s) - IsMoving: {tutorialCharacter.SmoothMover.IsMoving}, IsRotating: {tutorialCharacter.SmoothRotate.IsRotating}", this);
 
             // Wait until animation finishes
             yield return new WaitUntil(() =>

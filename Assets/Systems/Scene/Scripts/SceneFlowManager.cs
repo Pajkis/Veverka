@@ -12,7 +12,7 @@ public class SceneFlowManager : MonoBehaviour
     void Awake()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "SceneFlowManager initialized - persisting across scene loads", this);
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); 
     }
 
     private void OnEnable()

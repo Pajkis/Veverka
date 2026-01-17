@@ -12,7 +12,6 @@ TagManager:
   - Static
   - Movable
   - Veverka
-  - PauseMenu
   layers:
   - Default
   - TransparentFX
