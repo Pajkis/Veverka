@@ -4,16 +4,23 @@ using UnityEngine;
 /// Generic overlay setup script - assigns camera and sorting layers based on overlay level.
 /// Works for all overlay types (PauseMenu=1, Settings=2, Tutorial=3, Notification=4).
 ///
-/// Expected Canvas structure (children of this GameObject):
-/// - CanvasBackground (or name contains "Background") → Overlay{X}Background
-/// - CanvasFrame (or name contains "Frame" but not "FrameComponent") → Overlay{X}Frame
-/// - CanvasFrameComponent (or name contains "FrameComponent") → Overlay{X}FrameComponent
+/// Expected Canvas structure:
+/// - Root GameObject with Canvas → Overlay{X}Background (tag: Background)
+/// - CanvasFrame (or tag "Frame") → Overlay{X}Frame
+/// - CanvasContent (or tag "Content") → Overlay{X}Content
+///
+/// Detection priority: Tag > Name contains keyword
 /// </summary>
 public class OverlaySetup : MonoBehaviour
 {
     [Header("Overlay Configuration")]
     [SerializeField] private int overlayLevel = 1; // 1-4
     [Tooltip("1=PauseMenu/LevelFinished/Credits, 2=Settings/HowToPlay, 3=Tutorial, 4=Notification/LevelValidation")]
+
+    // Tag constants
+    private const string TAG_BACKGROUND = "Background";
+    private const string TAG_FRAME = "Frame";
+    private const string TAG_CONTENT = "Content";
 
     private void Start()
     {
@@ -32,50 +39,86 @@ public class OverlaySetup : MonoBehaviour
 
         int backgroundCount = 0;
         int frameCount = 0;
-        int componentCount = 0;
+        int contentCount = 0;
 
-        // Find all Canvas components in children
+        // Setup root canvas first (this GameObject)
+        Canvas rootCanvas = GetComponent<Canvas>();
+        if (rootCanvas != null)
+        {
+            rootCanvas.worldCamera = mainCamera;
+            rootCanvas.sortingLayerName = $"Overlay{overlayLevel}Background";
+            rootCanvas.sortingOrder = 0;
+            backgroundCount++;
+
+            DebugLogger.Log(DebugLogCategory.UI,
+                $"Root Canvas '{rootCanvas.name}' → {rootCanvas.sortingLayerName}", this);
+        }
+
+        // Find all Canvas components in children (excluding root)
         Canvas[] allCanvases = GetComponentsInChildren<Canvas>(true);
 
         foreach (var canvas in allCanvases)
         {
+            // Skip root canvas (already handled)
+            if (canvas.gameObject == gameObject)
+                continue;
+
             // Assign camera to all canvases
             canvas.worldCamera = mainCamera;
 
-            string canvasName = canvas.name;
+            // Determine sorting layer by tag first, then by name
+            string sortingLayer = DetermineSortingLayer(canvas.gameObject);
 
-            // Check canvas name to determine sorting layer
-            // Order matters: check FrameComponent BEFORE Frame (since "FrameComponent" contains "Frame")
-            if (canvasName.Contains("FrameComponent"))
+            if (!string.IsNullOrEmpty(sortingLayer))
             {
-                canvas.sortingLayerName = $"Overlay{overlayLevel}FrameComponent";
+                canvas.sortingLayerName = sortingLayer;
                 canvas.sortingOrder = 0;
-                componentCount++;
+
+                // Count by type
+                if (sortingLayer.Contains("Background"))
+                    backgroundCount++;
+                else if (sortingLayer.Contains("Frame"))
+                    frameCount++;
+                else if (sortingLayer.Contains("Content"))
+                    contentCount++;
 
                 DebugLogger.Log(DebugLogCategory.UI,
-                    $"Canvas '{canvasName}' → {canvas.sortingLayerName}", this);
-            }
-            else if (canvasName.Contains("Frame"))
-            {
-                canvas.sortingLayerName = $"Overlay{overlayLevel}Frame";
-                canvas.sortingOrder = 0;
-                frameCount++;
-
-                DebugLogger.Log(DebugLogCategory.UI,
-                    $"Canvas '{canvasName}' → {canvas.sortingLayerName}", this);
-            }
-            else if (canvasName.Contains("Background"))
-            {
-                canvas.sortingLayerName = $"Overlay{overlayLevel}Background";
-                canvas.sortingOrder = 0;
-                backgroundCount++;
-
-                DebugLogger.Log(DebugLogCategory.UI,
-                    $"Canvas '{canvasName}' → {canvas.sortingLayerName}", this);
+                    $"Canvas '{canvas.name}' → {sortingLayer}", this);
             }
         }
 
         DebugLogger.Log(DebugLogCategory.UI,
-            $"Overlay{overlayLevel}: Setup complete - {backgroundCount} background, {frameCount} frame, {componentCount} component canvases", this);
+            $"Overlay{overlayLevel}: Setup complete - {backgroundCount} background, {frameCount} frame, {contentCount} content canvases", this);
+    }
+
+    /// <summary>
+    /// Determines sorting layer based on tag (priority) or name.
+    /// </summary>
+    private string DetermineSortingLayer(GameObject obj)
+    {
+        // Check tag first (priority)
+        if (obj.CompareTag(TAG_CONTENT))
+            return $"Overlay{overlayLevel}Content";
+
+        if (obj.CompareTag(TAG_FRAME))
+            return $"Overlay{overlayLevel}Frame";
+
+        if (obj.CompareTag(TAG_BACKGROUND))
+            return $"Overlay{overlayLevel}Background";
+
+        // Fallback to name checking
+        // Order matters: check Content BEFORE Frame (in case name contains both)
+        string objName = obj.name;
+
+        if (objName.Contains("Content") || objName.Contains("FrameComponent"))
+            return $"Overlay{overlayLevel}Content";
+
+        if (objName.Contains("Frame"))
+            return $"Overlay{overlayLevel}Frame";
+
+        if (objName.Contains("Background"))
+            return $"Overlay{overlayLevel}Background";
+
+        return null;
     }
 }

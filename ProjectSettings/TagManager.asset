@@ -7,7 +7,7 @@ TagManager:
   - UIButton
   - UISlider
   - Frame
-  - FrameComponent
+  - Content
   - Background
   - Static
   - Movable
@@ -65,7 +65,7 @@ TagManager:
   - name: MainFrame
     uniqueID: 3306920313
     locked: 0
-  - name: MainFrameComponent
+  - name: MainContent
     uniqueID: 541054781
     locked: 0
   - name: Overlay1Background
@@ -83,7 +83,7 @@ TagManager:
   - name: Overlay1Frame
     uniqueID: 2461311315
     locked: 0
-  - name: Overlay1FrameComponent
+  - name: Overlay1Content
     uniqueID: 1938325009
     locked: 0
   - name: Overlay2Background
@@ -101,7 +101,7 @@ TagManager:
   - name: Overlay2Frame
     uniqueID: 794043551
     locked: 0
-  - name: Overlay2FrameComponent
+  - name: Overlay2Content
     uniqueID: 305901631
     locked: 0
   - name: Overlay3Background
@@ -119,7 +119,7 @@ TagManager:
   - name: Overlay3Frame
     uniqueID: 1459862019
     locked: 0
-  - name: Overlay3FrameComponent
+  - name: Overlay3Content
     uniqueID: 436029199
     locked: 0
   - name: Overlay4Background
@@ -137,7 +137,7 @@ TagManager:
   - name: Overlay4Frame
     uniqueID: 4110263107
     locked: 0
-  - name: Overlay4FrameComponent
+  - name: Overlay4Content
     uniqueID: 3631094533
     locked: 0
   - name: LoadingScreen

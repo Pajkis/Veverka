@@ -7,15 +7,13 @@ public class CloseOverlay : MonoBehaviour
     /// </summary>
     public void HandleQuitButtonOnClickEvent()
     {
-        // Find the parent canvas of this menu
-        Canvas parentCanvas = gameObject.GetComponentInParent<Canvas>();
-        if (parentCanvas == null)
+        // Find the root canvas (the one with OverlaySetup or the topmost canvas)
+        GameObject overlay = FindRootOverlay();
+        if (overlay == null)
         {
             DebugLogger.LogWarning(DebugLogCategory.SceneManager, "Overlay menu does not include canvas - cannot close overlay", this);
             return;
         }
-
-        GameObject overlay = parentCanvas.gameObject;
         DebugLogger.Log(DebugLogCategory.SceneManager, $"Closing overlay: {overlay.name}", this);
 
         // Try to close with animation
@@ -33,4 +31,27 @@ public class CloseOverlay : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Finds the root overlay GameObject by looking for OverlaySetup component
+    /// or the topmost Canvas in the hierarchy.
+    /// </summary>
+    private GameObject FindRootOverlay()
+    {
+        // First try to find OverlaySetup (definitive root marker)
+        OverlaySetup overlaySetup = gameObject.GetComponentInParent<OverlaySetup>();
+        if (overlaySetup != null)
+        {
+            return overlaySetup.gameObject;
+        }
+
+        // Fallback: find the topmost canvas in hierarchy
+        Canvas[] parentCanvases = gameObject.GetComponentsInParent<Canvas>();
+        if (parentCanvases.Length > 0)
+        {
+            // Last in array is the topmost (root) canvas
+            return parentCanvases[parentCanvases.Length - 1].gameObject;
+        }
+
+        return null;
+    }
 }
