@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7160965749411434189}
   - component: {fileID: 8209682303772133101}
   - component: {fileID: 2179749356851314014}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageRestart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 2305484870240360274}
   - component: {fileID: 6059773192856022619}
   - component: {fileID: 673451855470649050}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   - component: {fileID: 4312978853852788840}
   - component: {fileID: 7844486392309422465}
   - component: {fileID: 3995102040171148125}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   - component: {fileID: 5172867461855943649}
   - component: {fileID: 7445998452964789206}
   - component: {fileID: 8785581620637265312}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 8687480069612572728}
   - component: {fileID: 1431995954560029287}
   - component: {fileID: 3907350368245083738}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   - component: {fileID: 3875329773028199248}
   - component: {fileID: 6604005783648840019}
   - component: {fileID: 5130127539585057196}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 8447114470500625893}
   - component: {fileID: 8554430605294988706}
   - component: {fileID: 442928622122792107}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Frame
   m_TagString: Frame
   m_Icon: {fileID: 0}
@@ -488,7 +488,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0, y: 0}
 --- !u!223 &5859499727677159762
 Canvas:
@@ -578,7 +578,7 @@ GameObject:
   - component: {fileID: 2699943936595056523}
   - component: {fileID: 5532016655077208280}
   - component: {fileID: 7309937863394657643}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -712,7 +712,7 @@ GameObject:
   - component: {fileID: 6041333605068523454}
   - component: {fileID: 6357653396403105359}
   - component: {fileID: 257667825386278142}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageRoadStone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -787,7 +787,7 @@ GameObject:
   - component: {fileID: 7463845952291142897}
   - component: {fileID: 3023967857540381673}
   - component: {fileID: 7562204083630262807}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -862,7 +862,7 @@ GameObject:
   - component: {fileID: 3766028682001665835}
   - component: {fileID: 4279385660715054022}
   - component: {fileID: 8881129328099969349}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -937,7 +937,7 @@ GameObject:
   - component: {fileID: 1827366163009650672}
   - component: {fileID: 4642219552692482228}
   - component: {fileID: 1612460413409041584}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageArrow_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1010,7 +1010,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7818239231028609351}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Images
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1051,7 +1051,7 @@ GameObject:
   - component: {fileID: 4315288736436195384}
   - component: {fileID: 6737413173484659576}
   - component: {fileID: 1312864816137891383}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Intro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1189,7 +1189,7 @@ GameObject:
   - component: {fileID: 3264035235902834386}
   - component: {fileID: 3405101454203684830}
   - component: {fileID: 399723119222596154}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1264,7 +1264,7 @@ GameObject:
   - component: {fileID: 4863373856027751727}
   - component: {fileID: 3163397476988502384}
   - component: {fileID: 103138576353225522}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageArrow_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1339,7 +1339,7 @@ GameObject:
   - component: {fileID: 1124192312425878650}
   - component: {fileID: 2026057258898864006}
   - component: {fileID: 7740063141611081272}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1414,7 +1414,7 @@ GameObject:
   - component: {fileID: 7621913236032122587}
   - component: {fileID: 2410648834456691664}
   - component: {fileID: 1896553917456855066}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut (1)
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -1489,7 +1489,7 @@ GameObject:
   - component: {fileID: 3816404721618911877}
   - component: {fileID: 7138451362369664031}
   - component: {fileID: 7258218348617483545}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1564,7 +1564,7 @@ GameObject:
   - component: {fileID: 8906201190600023978}
   - component: {fileID: 244179876866009693}
   - component: {fileID: 6284825353799231326}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1637,7 +1637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2293542055667201521}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Images
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1697,7 +1697,7 @@ GameObject:
   - component: {fileID: 4973296719704343907}
   - component: {fileID: 8589003576787245357}
   - component: {fileID: 4614662004125006619}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1772,7 +1772,7 @@ GameObject:
   - component: {fileID: 970360368815036983}
   - component: {fileID: 5308020002097105409}
   - component: {fileID: 3145522069851951881}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1847,7 +1847,7 @@ GameObject:
   - component: {fileID: 3063125005759220805}
   - component: {fileID: 8238982381337478505}
   - component: {fileID: 6869946024917949193}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Basic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1869,7 +1869,6 @@ RectTransform:
   - {fileID: 1390994805118334765}
   - {fileID: 2699943936595056523}
   - {fileID: 3478174296094432431}
-  - {fileID: 6247338877163642583}
   m_Father: {fileID: 8019752272889819940}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1926,7 +1925,7 @@ GameObject:
   - component: {fileID: 1772917833892909799}
   - component: {fileID: 3396352403496698039}
   - component: {fileID: 7168446045012339280}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Stone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2004,7 +2003,7 @@ GameObject:
   - component: {fileID: 874112324928651835}
   - component: {fileID: 162909286318118203}
   - component: {fileID: 8860884283363099185}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Image_Frame
   m_TagString: Frame
   m_Icon: {fileID: 0}
@@ -2079,7 +2078,7 @@ GameObject:
   - component: {fileID: 6573285212368170015}
   - component: {fileID: 461698000456373740}
   - component: {fileID: 981626080473252480}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Key
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2214,7 +2213,7 @@ GameObject:
   - component: {fileID: 711352436791639937}
   - component: {fileID: 1164942813135240141}
   - component: {fileID: 8098859206320646899}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageArrow_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2289,7 +2288,7 @@ GameObject:
   - component: {fileID: 6845896335639634295}
   - component: {fileID: 4958519015939458115}
   - component: {fileID: 6797697112194608741}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2364,7 +2363,7 @@ GameObject:
   - component: {fileID: 7995446460934363599}
   - component: {fileID: 588374634073142152}
   - component: {fileID: 13827326709761481}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2498,7 +2497,7 @@ GameObject:
   - component: {fileID: 6463027892553395346}
   - component: {fileID: 1693001575430396400}
   - component: {fileID: 5772273796135643202}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Rules
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2575,7 +2574,7 @@ GameObject:
   - component: {fileID: 1247438962808205387}
   - component: {fileID: 3939940216181664830}
   - component: {fileID: 1310967970514185225}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2649,7 +2648,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8019752272889819940}
   - component: {fileID: 4291525418292315179}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: TabContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2723,7 +2722,7 @@ GameObject:
   - component: {fileID: 2293695983885559987}
   - component: {fileID: 2263798728966787924}
   - component: {fileID: 1307407792053883442}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Intro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2859,7 +2858,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3979486209982746792}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Images
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2903,9 +2902,14 @@ GameObject:
   m_Component:
   - component: {fileID: 3438409125668876638}
   - component: {fileID: 6880494166881633787}
-  m_Layer: 5
+  - component: {fileID: -630396441154620074}
+  - component: {fileID: 4209555247667900070}
+  - component: {fileID: 1638478785270109867}
+  - component: {fileID: -9189373331571226303}
+  - component: {fileID: -1740198119061125203}
+  m_Layer: 0
   m_Name: GameHelpOverlay
-  m_TagString: Untagged
+  m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2944,6 +2948,96 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlayLevel: 1
+--- !u!223 &-630396441154620074
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 1
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!114 &4209555247667900070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 1
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &1638478785270109867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &-9189373331571226303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e00294a39ee00f045ad479ad29c0a860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
+  fallbackAspect: {x: 16, y: 9}
+--- !u!114 &-1740198119061125203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f23ed4a5cf303a428f4c87d16543dd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayLevel: 3
 --- !u!1 &3741132242309268229
 GameObject:
   m_ObjectHideFlags: 0
@@ -2955,7 +3049,7 @@ GameObject:
   - component: {fileID: 4644267783911881375}
   - component: {fileID: 542033276549319034}
   - component: {fileID: 8611974194252260299}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageUndo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3030,7 +3124,7 @@ GameObject:
   - component: {fileID: 8817707437414770053}
   - component: {fileID: 7714479300692883083}
   - component: {fileID: 316486724861198011}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3105,7 +3199,7 @@ GameObject:
   - component: {fileID: 8179096436827334680}
   - component: {fileID: 7530362776095883890}
   - component: {fileID: 7321835709842888458}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3180,7 +3274,7 @@ GameObject:
   - component: {fileID: 6996902099517463267}
   - component: {fileID: 4511556981147352797}
   - component: {fileID: 7198072704729404705}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageStoneWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3255,7 +3349,7 @@ GameObject:
   - component: {fileID: 36317758461263294}
   - component: {fileID: 3963243090222277537}
   - component: {fileID: 3388887215942173796}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_GoldenOther
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3391,7 +3485,7 @@ GameObject:
   - component: {fileID: 5599349314659070522}
   - component: {fileID: 8586984590006245755}
   - component: {fileID: 5285360312843772224}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Golden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3536,7 +3630,7 @@ GameObject:
   - component: {fileID: 9023714378100281491}
   - component: {fileID: 7446641821664415735}
   - component: {fileID: 3174356338477355450}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: FrameComponent
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -3667,7 +3761,7 @@ GameObject:
   - component: {fileID: 2163293509340324305}
   - component: {fileID: 8296042119769999024}
   - component: {fileID: 3808290402438353234}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3742,7 +3836,7 @@ GameObject:
   - component: {fileID: 6781946267875380700}
   - component: {fileID: 3215753265689550693}
   - component: {fileID: 182700625457473952}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Controls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3818,7 +3912,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8314322495869950389}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Images
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3878,7 +3972,7 @@ GameObject:
   - component: {fileID: 8563483416573409639}
   - component: {fileID: 2253908354625658908}
   - component: {fileID: 4284257101490880106}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3953,7 +4047,7 @@ GameObject:
   - component: {fileID: 6378883817414314062}
   - component: {fileID: 8120496436401246290}
   - component: {fileID: 8728483203014877160}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4028,7 +4122,7 @@ GameObject:
   - component: {fileID: 1399443269750908355}
   - component: {fileID: 7485371903782725322}
   - component: {fileID: 1558084772027366613}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImagePause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4103,7 +4197,7 @@ GameObject:
   - component: {fileID: 7310678552334042873}
   - component: {fileID: 2945768455678537524}
   - component: {fileID: 6307939215643467405}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageStoneWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4178,7 +4272,7 @@ GameObject:
   - component: {fileID: 1507258583243933138}
   - component: {fileID: 1697699836185960513}
   - component: {fileID: 6156155002024920689}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4253,7 +4347,7 @@ GameObject:
   - component: {fileID: 7530276816220466914}
   - component: {fileID: 3502285558383457976}
   - component: {fileID: 4491461368175624263}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageArrow_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4328,7 +4422,7 @@ GameObject:
   - component: {fileID: 5729345693396174661}
   - component: {fileID: 6913635683946142045}
   - component: {fileID: 1335193058797208377}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4403,7 +4497,7 @@ GameObject:
   - component: {fileID: 2475928236496827955}
   - component: {fileID: 6862112193824302819}
   - component: {fileID: 2974303081409512145}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4478,7 +4572,7 @@ GameObject:
   - component: {fileID: 2827958634011894222}
   - component: {fileID: 1417184284575153648}
   - component: {fileID: 8636674497192142806}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageRoadStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4553,7 +4647,7 @@ GameObject:
   - component: {fileID: 6605236841913868012}
   - component: {fileID: 4431805526691750647}
   - component: {fileID: 6568876465086930400}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4628,7 +4722,7 @@ GameObject:
   - component: {fileID: 6021008500576456467}
   - component: {fileID: 3388268964025930881}
   - component: {fileID: 6939927288504813332}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Golden
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4706,7 +4800,7 @@ GameObject:
   - component: {fileID: 7240262161453601500}
   - component: {fileID: 2477315405284865239}
   - component: {fileID: 7525983210520650811}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4781,7 +4875,7 @@ GameObject:
   - component: {fileID: 5095299467287097053}
   - component: {fileID: 259400389924108713}
   - component: {fileID: 3988318608509718036}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4856,7 +4950,7 @@ GameObject:
   - component: {fileID: 185159181313286260}
   - component: {fileID: 833570752590927846}
   - component: {fileID: 6323579781332779970}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Panel_Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4934,7 +5028,7 @@ GameObject:
   - component: {fileID: 981401458225061527}
   - component: {fileID: 7146387899295318409}
   - component: {fileID: 2078556070969691153}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageHole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4998,144 +5092,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &6324235239745462038
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6247338877163642583}
-  - component: {fileID: 1329247462010270577}
-  - component: {fileID: 7622150803341070092}
-  m_Layer: 5
-  m_Name: LabelLine_NutGoal
-  m_TagString: FrameComponent
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6247338877163642583
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6324235239745462038}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3063125005759220805}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -876, y: 1089.4}
-  m_SizeDelta: {x: 1305, y: 615.405}
-  m_Pivot: {x: 0, y: 1}
---- !u!222 &1329247462010270577
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6324235239745462038}
-  m_CullTransparentMesh: 1
---- !u!114 &7622150803341070092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6324235239745462038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: "    +     = goal\n    +     = goal and wall\n    +     /      = Nothing!
-    You just throwed a nut!\n    +     = fill with stones     -> road\n    +    
-    = fill with stones     -> splash and  road\n    +     = goal and splash\n   
-    +     = splash\n    +     = fill with water\nsplash -> moves neighbour   /   
-    out from center of splash"
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4279708223
-  m_fontColor: {r: 0.24705882, g: 0.16470589, b: 0.09019608, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 48
-  m_fontSizeBase: 48
-  m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 24
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 1
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: -0.000061035156, y: 0, z: -11.508667, w: 0.08465576}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!1 &6350347268295292119
 GameObject:
   m_ObjectHideFlags: 0
@@ -5147,7 +5103,7 @@ GameObject:
   - component: {fileID: 3478174296094432431}
   - component: {fileID: 5106160392454166418}
   - component: {fileID: 5844993314656995291}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Basic
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -5282,7 +5238,7 @@ GameObject:
   - component: {fileID: 2107003398097819665}
   - component: {fileID: 6297551034440151120}
   - component: {fileID: 4277728704641279293}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5355,7 +5311,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3470995546371051074}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Texts
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5393,7 +5349,7 @@ GameObject:
   - component: {fileID: 4252204365795343203}
   - component: {fileID: 8211788313477906955}
   - component: {fileID: 4488854386514225729}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5527,7 +5483,7 @@ GameObject:
   - component: {fileID: 610055883442722537}
   - component: {fileID: 4563572732413219218}
   - component: {fileID: 1456699340143782629}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5602,7 +5558,7 @@ GameObject:
   - component: {fileID: 817363167995872781}
   - component: {fileID: 3861107222693696377}
   - component: {fileID: 6189027882002332942}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -5676,7 +5632,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6969734066225823983}
   - component: {fileID: 1801448637381326493}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: TabManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5760,7 +5716,7 @@ GameObject:
   - component: {fileID: 1451664504606662267}
   - component: {fileID: 3881699162960278733}
   - component: {fileID: 3134350847146056751}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5835,7 +5791,7 @@ GameObject:
   - component: {fileID: 2480044931585339151}
   - component: {fileID: 6685367039404682790}
   - component: {fileID: 3301254723647026572}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_1
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -5976,7 +5932,7 @@ GameObject:
   - component: {fileID: 3818724775596629176}
   - component: {fileID: 1122694738421058755}
   - component: {fileID: 5826112163323333339}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6049,7 +6005,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4002436864523249518}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: TabButtons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6092,7 +6048,7 @@ GameObject:
   - component: {fileID: 2708005014444434568}
   - component: {fileID: 7104887323079092462}
   - component: {fileID: 466396365569365734}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNut
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6167,7 +6123,7 @@ GameObject:
   - component: {fileID: 4957256710994292388}
   - component: {fileID: 5742663425507037807}
   - component: {fileID: 4368208379432398361}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6242,7 +6198,7 @@ GameObject:
   - component: {fileID: 2232004056533147785}
   - component: {fileID: 6188285838887608792}
   - component: {fileID: 2922020499505086553}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6317,7 +6273,7 @@ GameObject:
   - component: {fileID: 6410210679383471221}
   - component: {fileID: 8751301359910853587}
   - component: {fileID: 1892728031719423932}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageRoadStone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6392,7 +6348,7 @@ GameObject:
   - component: {fileID: 7131765010375236370}
   - component: {fileID: 3236909696334302143}
   - component: {fileID: 2749155876182530089}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageVeverka
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6467,7 +6423,7 @@ GameObject:
   - component: {fileID: 6187814127724316598}
   - component: {fileID: 1931429253914295661}
   - component: {fileID: 8461331403767464568}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6542,7 +6498,7 @@ GameObject:
   - component: {fileID: 1159070006960677606}
   - component: {fileID: 1199649700881025222}
   - component: {fileID: 4396073284563373128}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageCharacter_1
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
@@ -6617,7 +6573,7 @@ GameObject:
   - component: {fileID: 894149133260214058}
   - component: {fileID: 5952908505029098934}
   - component: {fileID: 2249520606373621825}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageRoadStone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6692,7 +6648,7 @@ GameObject:
   - component: {fileID: 2678628690098603102}
   - component: {fileID: 8586937926110508516}
   - component: {fileID: 2052463358683790057}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_NutGoal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6830,7 +6786,7 @@ GameObject:
   - component: {fileID: 5535330353442676895}
   - component: {fileID: 5919968315112294075}
   - component: {fileID: 8092165448477885591}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutGoal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6905,7 +6861,7 @@ GameObject:
   - component: {fileID: 261849062987982256}
   - component: {fileID: 9190340554939375018}
   - component: {fileID: 6883324120297505780}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6980,7 +6936,7 @@ GameObject:
   - component: {fileID: 3955053111246380469}
   - component: {fileID: 5091303911524188636}
   - component: {fileID: 7991223954274170564}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: LabelLine_NutGoal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7118,7 +7074,7 @@ GameObject:
   - component: {fileID: 8379688384417394499}
   - component: {fileID: 6835500096023035920}
   - component: {fileID: 3197688440641210889}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterHole_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7193,7 +7149,7 @@ GameObject:
   - component: {fileID: 8050044851813924690}
   - component: {fileID: 7559490112636046621}
   - component: {fileID: 5607757033803827592}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7268,7 +7224,7 @@ GameObject:
   - component: {fileID: 8275157028298885733}
   - component: {fileID: 475151613875810732}
   - component: {fileID: 6845810833924233993}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageNutStone_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7343,7 +7299,7 @@ GameObject:
   - component: {fileID: 2434058616292812955}
   - component: {fileID: 5368277060869679503}
   - component: {fileID: 8665746564308622709}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageWaterNut_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7428,8 +7384,16 @@ PrefabInstance:
       value: Button_Water
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
@@ -7613,6 +7577,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonMenuBack
       objectReference: {fileID: 0}
+    - target: {fileID: 3596253083485113582, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6325462185350732126, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6463698331245674392, guid: 3e54a85ae7a60a1409dd03bec07aa784, type: 3}
       propertyPath: m_sharedMaterial
       value: 
@@ -7648,8 +7620,16 @@ PrefabInstance:
       value: Button_Rules
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
@@ -7769,8 +7749,16 @@ PrefabInstance:
       value: Button_MenuSimple
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -7911,8 +7899,16 @@ PrefabInstance:
       value: Button_Controls
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
@@ -8036,8 +8032,16 @@ PrefabInstance:
       value: Button_Stone
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x
@@ -8150,8 +8154,16 @@ PrefabInstance:
       value: Button_Basic
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5175955389477125388, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -8283,8 +8295,16 @@ PrefabInstance:
       value: Button_Golden
       objectReference: {fileID: 0}
     - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_TagString
       value: FrameComponent
+      objectReference: {fileID: 0}
+    - target: {fileID: 4659850946657121177, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_Pivot.x

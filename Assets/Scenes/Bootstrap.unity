@@ -606,7 +606,7 @@ MonoBehaviour:
   pauseMenuPrefab: {fileID: 3636506746201861303, guid: 0bee78c77c6e4144191013752c86f62a, type: 3}
   levelFinishedMenuPrefab: {fileID: 2626405333016797077, guid: ce00f5013661a8e47a54789320a27448, type: 3}
   settingsMenuPrefab: {fileID: 3636506746201861303, guid: 790556a0848b1204da261a48dbb1740c, type: 3}
-  gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
+  gameHelpPrefab: {fileID: 6074556739069430682, guid: 9b1797c762190704db0a1ce58fe0a6e2, type: 3}
   creditsPrefab: {fileID: 3636506746201861303, guid: 171486bcfd41e67459628f5294fe9350, type: 3}
   notificationPrefab: {fileID: 9187378460226002792, guid: 8d5eed3dc9354264dbf6fc98cd1ee5fd, type: 3}
   levelValidationPrefab: {fileID: 907536609874866753, guid: 1c7877f0b30a8564faf71f8b095ed9d8, type: 3}
