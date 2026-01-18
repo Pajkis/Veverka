@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// Represents the configuration parameters for display settings, including platform mapping, UI scaling, aspect ratio,
 /// orientation, performance, safe area handling, camera settings, grid settings, and UI layout positions.
@@ -39,7 +40,7 @@ public class DisplayConfigPars
     [Tooltip("re-apply after new screen is loaded")]
     public bool autoApplyOnSceneLoaded = true;
 
-    // === GAME CAMERA SETTINGS ===
+    // GAME CAMERA SETTINGS
     [Header("Camera Settings")]
     [Tooltip("Camera smooth follow time")]
     public float cameraFollowTime = 0.2f;
@@ -50,14 +51,18 @@ public class DisplayConfigPars
     [Tooltip("Offset for even tile count grids")]
     public float evenTilesOffset = 0.5f;
 
-    // === GRID & TILE SETTINGS ===
+    // CANVAS SETTINGS
+    [Header("Canvas Settings")]
+   
+
+    // GRID & TILE SETTINGS
     [Header("Grid Settings")]
     [Tooltip("Size of each tile in world units")]
     public float tileSize = 1f;
     [Tooltip("Max grid size before camera becomes static")]
     public Vector2Int maxStaticScreenSize = new(15, 11);
 
-    // === UI LAYOUT POSITIONS ===
+    // GAME UI LAYOUT POSITIONS
     [Header("UI Layout - Button Columns")]
     [Tooltip("Left column button X position for this platform")]
     public float leftColumnButtonX = 585f;
@@ -82,7 +87,7 @@ public class DisplayConfigPars
     [Tooltip("Custom cursor image size (width, height, depth)")]
     public Vector3 cursorImageSize = new(80f, 80f, 0f);
 
-    // === TUTORIAL SETTINGS ===
+    // TUTORIAL UI  SETTINGS
     [Header("Tutorial Settings")]
     [Tooltip("Tutorial screen tile size")]
     public Vector2Int tutorialScreenTileSize = new(7, 5);

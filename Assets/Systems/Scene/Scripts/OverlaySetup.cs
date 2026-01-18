@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Generic overlay setup script - assigns camera and sorting layers based on overlay level.
@@ -13,16 +14,20 @@ using UnityEngine;
 /// </summary>
 public class OverlaySetup : MonoBehaviour
 {
+    [Header("Display Configuration")]
+    [SerializeField] private DisplaySettings displaySettings;
+
     [Header("Overlay Configuration")]
-    [SerializeField] private int overlayLevel = 1; // 1-4
     [Tooltip("1=PauseMenu/LevelFinished/Credits, 2=Settings/HowToPlay, 3=Tutorial, 4=Notification/LevelValidation")]
+    [SerializeField] private int overlayLevel = 1; // 1-4
+    
 
     // Tag constants
     private const string TAG_BACKGROUND = "Background";
     private const string TAG_FRAME = "Frame";
     private const string TAG_CONTENT = "Content";
 
-    private void Start()
+    private void Awake()
     {
         SetupCanvases();
     }
@@ -52,6 +57,16 @@ public class OverlaySetup : MonoBehaviour
 
             DebugLogger.Log(DebugLogCategory.UI,
                 $"Root Canvas '{rootCanvas.name}' → {rootCanvas.sortingLayerName}", this);
+        }
+
+        // Setup CanvasScaler on root
+        CanvasScaler rootScaler = GetComponent<CanvasScaler>();
+        if (rootScaler != null)
+        {
+            rootScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            rootScaler.referenceResolution = new Vector2(1920, 1080);
+            rootScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            rootScaler.matchWidthOrHeight = 1f; // Balanced
         }
 
         // Find all Canvas components in children (excluding root)
@@ -87,8 +102,20 @@ public class OverlaySetup : MonoBehaviour
             }
         }
 
+        CanvasScaler[] allScalers = GetComponentsInChildren<CanvasScaler>(true);
+        foreach (var scaler in allScalers)
+        {
+            // Unified settings for all CanvasScalers in the overlay
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1920, 1080);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 1f; 
+        }
+
         DebugLogger.Log(DebugLogCategory.UI,
             $"Overlay{overlayLevel}: Setup complete - {backgroundCount} background, {frameCount} frame, {contentCount} content canvases", this);
+   
+       
     }
 
     /// <summary>

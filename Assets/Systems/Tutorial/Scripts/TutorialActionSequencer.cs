@@ -10,11 +10,12 @@ using TMPro;
 public class TutorialActionSequencer : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private TutorialGridBuilder gridBuilder;
+    [SerializeField] private GridBuilder gridBuilder;
     [SerializeField] private DirectionEvent tutorialDirectionEvent;
     [SerializeField] private TextMeshProUGUI messageText;
     [SerializeField] private TutorialSetManager tutorialSetManager;
     [SerializeField] private TutorialSelectData tutorialSelection;
+    [SerializeField] private TurnControlEvents tutorialTurnControlEvents;
 
     // Runtime loaded sequence data
     private TutorialSequenceData sequenceData;
@@ -23,9 +24,10 @@ public class TutorialActionSequencer : MonoBehaviour
     private int currentActionIndex;
     private bool isPlaying;
     private bool isAutoplay = true;
-    private bool isSkipRequested; 
+    private bool isSkipRequested;
     private Coroutine playbackCoroutine;
     private CharVeverka tutorialCharacter;
+    private bool turnCompleted;
 
     // Properties
     public bool IsPlaying => isPlaying;
@@ -34,6 +36,28 @@ public class TutorialActionSequencer : MonoBehaviour
         get => isAutoplay;
         set => isAutoplay = value;
     }
+
+    #region Unity Lifecycle
+
+    private void OnEnable()
+    {
+        tutorialTurnControlEvents?.AddListener(OnTurnControlEvent);
+    }
+
+    private void OnDisable()
+    {
+        tutorialTurnControlEvents?.RemoveListener(OnTurnControlEvent);
+    }
+
+    private void OnTurnControlEvent(TurnControlEventPayload payload)
+    {
+        if (payload.EventType == TurnControlEventType.TurnCompleted)
+        {
+            turnCompleted = true;
+        }
+    }
+
+    #endregion
 
     #region Public Methods
 
@@ -76,7 +100,7 @@ public class TutorialActionSequencer : MonoBehaviour
         isSkipRequested = false;
 
         // Find tutorial character
-        tutorialCharacter = gridBuilder.FindTutorialCharacter();
+        tutorialCharacter = gridBuilder.FindCharacter();
 
         if (playbackCoroutine != null)
         {
@@ -183,39 +207,36 @@ public class TutorialActionSequencer : MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Animation action: {direction}", this);
 
-        // Raise direction event
+        // Reset turn completed flag before raising direction event
+        turnCompleted = false;
+
+        // Raise direction event - this triggers the character movement/rotation
+        // which will be tracked by TurnControl
         tutorialDirectionEvent.Raise(direction);
 
-        // Wait for character animation
-        if (tutorialCharacter != null &&
-            tutorialCharacter.SmoothMover != null &&
-            tutorialCharacter.SmoothRotate != null)
+        // Wait for TurnCompleted event from TurnControl
+        // This handles all chain reactions (character move, nut push, goal animation, etc.)
+        if (tutorialTurnControlEvents != null)
         {
-            // Wait one frame for event to be processed and animation to start
-            yield return null;
-
-            // Wait until animation starts (moving or rotating) - with timeout
-            float timeout = 0.5f;
-            float elapsed = 0f;
-            while (elapsed < timeout &&
-                   !tutorialCharacter.SmoothMover.IsMoving &&
-                   !tutorialCharacter.SmoothRotate.IsRotating)
-            {
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
-
-            // Wait until animation finishes
-            yield return new WaitUntil(() =>
-                !tutorialCharacter.SmoothMover.IsMoving &&
-                !tutorialCharacter.SmoothRotate.IsRotating);
-
-            DebugLogger.Log(DebugLogCategory.Tutorial, "Animation finished", this);
+            yield return new WaitUntil(() => turnCompleted);
+            DebugLogger.Log(DebugLogCategory.Tutorial, "Turn completed (via TurnControlEvents)", this);
         }
         else
         {
+            // Fallback - wait for character animation only (no chain reaction support)
             DebugLogger.LogWarning(DebugLogCategory.Tutorial,
-                $"Character null check failed - char: {tutorialCharacter != null}, mover: {tutorialCharacter?.SmoothMover != null}, rotate: {tutorialCharacter?.SmoothRotate != null}", this);
+                "TutorialTurnControlEvents not assigned - falling back to direct animation wait", this);
+
+            if (tutorialCharacter != null &&
+                tutorialCharacter.SmoothMover != null &&
+                tutorialCharacter.SmoothRotate != null)
+            {
+                yield return null; // Wait one frame for animation to start
+
+                yield return new WaitUntil(() =>
+                    !tutorialCharacter.SmoothMover.IsMoving &&
+                    !tutorialCharacter.SmoothRotate.IsRotating);
+            }
         }
 
         // Delay between actions

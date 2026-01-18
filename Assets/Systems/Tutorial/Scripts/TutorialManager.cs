@@ -10,7 +10,7 @@ public class TutorialManager : MonoBehaviour
     [Header("References")]
     [SerializeField] private TutorialEvents tutorialEvents;
     [SerializeField] private TutorialSetManager tutorialSetManager;
-    [SerializeField] private TutorialGridBuilder gridBuilder;
+    [SerializeField] private GridBuilder gridBuilder;
 
     private void Awake()
     {
@@ -65,7 +65,7 @@ public class TutorialManager : MonoBehaviour
 
         if (gridBuilder == null)
         {
-            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialGridBuilder not assigned!", this);
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "GridBuilder not assigned!", this);
             return;
         }
 
@@ -95,7 +95,7 @@ public class TutorialManager : MonoBehaviour
             $"Grid parsed - Size: {grid.GetLength(0)}x{grid.GetLength(1)}", this);
 
         // Build tutorial grid
-        gridBuilder.BuildTutorialGrid(grid);
+        gridBuilder.BuildLevel(grid);
 
         DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial load complete", this);
     }
@@ -108,7 +108,7 @@ public class TutorialManager : MonoBehaviour
         if (gridBuilder != null)
         {
             DebugLogger.Log(DebugLogCategory.Tutorial, "Clearing tutorial grid", this);
-            gridBuilder.ClearGrid();
+            gridBuilder.ResetLevel();
         }
     }
 

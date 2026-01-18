@@ -8,6 +8,12 @@ using UnityEngine;
 /// </summary>
 public class GridBuilder : MonoBehaviour
 {
+    #region Mode
+    [Header("Mode")]
+    [Tooltip("Enable for tutorial overlay - skips surroundings and goal counting")]
+    [SerializeField] private bool isTutorial = false;
+    #endregion
+
     #region References
     [Header("Core References")]
     [SerializeField] private GridData gridData;
@@ -65,14 +71,14 @@ public class GridBuilder : MonoBehaviour
     #region Unity Lifecycle
     private void OnEnable()
     {
-        levelSelectEvent.AddListener(OnLevelSelected);
-        gridEvents.AddListener(OnGridEvent);
+        levelSelectEvent?.AddListener(OnLevelSelected);
+        gridEvents?.AddListener(OnGridEvent);
     }
 
     private void OnDisable()
     {
-        levelSelectEvent.RemoveListener(OnLevelSelected);
-        gridEvents.RemoveListener(OnGridEvent);
+        levelSelectEvent?.RemoveListener(OnLevelSelected);
+        gridEvents?.RemoveListener(OnGridEvent);
     }
     #endregion
 
@@ -112,10 +118,17 @@ public class GridBuilder : MonoBehaviour
                 resetRequested = false
             });
 
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelSelection.CurrentLevelIndex}", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelSelection?.CurrentLevelIndex}", this);
             return;
         }
     }
+    #endregion
+
+    #region Properties
+    /// <summary>
+    /// Gets the grid root transform.
+    /// </summary>
+    public Transform GridRoot => gridRoot;
     #endregion
 
     #region Public Methods
@@ -151,29 +164,62 @@ public class GridBuilder : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.GridSystem, "Starting level build from grid data", this);
         BuildLevelFromGrid();
 
-        // Add surrounding obstacles where grid does not fill the screen
-        DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
-        BuildSurroundings();
-
-        // Initialize level init data
-        levelInitData.gridSize = gridData.GridSize;
-        int goalCount = 0;
-        for (int x = 0; x < width; x++)
+        // Add surrounding obstacles where grid does not fill the screen (gameplay only)
+        if (!isTutorial)
         {
-            for (int y = 0; y < height; y++)
+            DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
+            BuildSurroundings();
+        }
+
+        // Initialize level init data (if assigned)
+        if (levelInitData != null)
+        {
+            levelInitData.gridSize = gridData.GridSize;
+            levelInitData.gridOrigin = transform;
+
+            // Count goals (gameplay only)
+            if (!isTutorial)
             {
-                Vector2Int pos = new(x, y);
-                if (gridData.GetTileType(pos) == TileType.Goal) // && gridData.GetGoalType(pos) == GoalType.BasicGoal)
+                int goalCount = 0;
+                for (int x = 0; x < width; x++)
                 {
-                    goalCount++;
+                    for (int y = 0; y < height; y++)
+                    {
+                        Vector2Int pos = new(x, y);
+                        if (gridData.GetTileType(pos) == TileType.Goal)
+                        {
+                            goalCount++;
+                        }
+                    }
                 }
+                levelInitData.StartGoalsCount = goalCount;
             }
         }
-        levelInitData.StartGoalsCount = goalCount;
-        levelInitData.gridOrigin = transform;
 
         // Raise event to notify build completion
-        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
+        gridEvents?.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
+    }
+
+    /// <summary>
+    /// Finds the character (Veverka) in the grid.
+    /// Used by tutorial for scripted movement.
+    /// </summary>
+    public CharVeverka FindCharacter()
+    {
+        if (gridRoot == null) return null;
+
+        CharVeverka character = gridRoot.GetComponentInChildren<CharVeverka>();
+
+        if (character != null)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Found character at position {character.GridPosition}", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, "Character (Veverka) not found in grid!", this);
+        }
+
+        return character;
     }
 
     /// <summary>

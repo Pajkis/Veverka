@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3966762273501909306}
   - component: {fileID: 8537831837299784974}
   m_Layer: 0
-  m_Name: CanvasFrameComponent
+  m_Name: Content
   m_TagString: FrameComponent
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,12 +115,12 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1222297623526901554}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3452127286799516762}
+  m_Father: {fileID: 8103983656701604034}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 8391857758595203626}
   - component: {fileID: 4841940689386575838}
   m_Layer: 0
-  m_Name: CanvasFrame
+  m_Name: Frame
   m_TagString: Frame
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -368,7 +368,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1 &5042579920311926798
+--- !u!1 &3972138848025929048
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -376,60 +376,38 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3452127286799516762}
-  - component: {fileID: 6269589936602125352}
-  - component: {fileID: 2836726264975712251}
-  - component: {fileID: 6297990688911201654}
-  - component: {fileID: -5724745659833788830}
-  - component: {fileID: 3291334250883573435}
+  - component: {fileID: 8103983656701604034}
+  - component: {fileID: 1982708305268804973}
   m_Layer: 0
-  m_Name: TutorialOverlay
+  m_Name: GridBuilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3452127286799516762
+--- !u!4 &8103983656701604034
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042579920311926798}
+  m_GameObject: {fileID: 3972138848025929048}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8850282877754582348}
-  - {fileID: 2857086335494184775}
-  - {fileID: 4456191076336890479}
   - {fileID: 6819587065254481410}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 3452127286799516762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6269589936602125352
+--- !u!114 &1982708305268804973
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042579920311926798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd5e0904e0f2e8642a0bfd421a57b288, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
-  tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
-  actionSequencer: {fileID: 3291334250883573435}
---- !u!114 &2836726264975712251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042579920311926798}
+  m_GameObject: {fileID: 3972138848025929048}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c18ffdca0aaa6e48bfe9ffca54a3d4f, type: 3}
@@ -454,13 +432,63 @@ MonoBehaviour:
   goldenGoalPrefab: {fileID: 7474811582496385836, guid: c0eb8e5f5f7fdaf43be0eab9ea043ed0, type: 3}
   backgroundPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
   gridRoot: {fileID: 6819587065254481410}
---- !u!114 &6297990688911201654
+--- !u!1 &4308823529886211594
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4927278164726477011}
+  - component: {fileID: 1458748630235472704}
+  - component: {fileID: 2745733197231899302}
+  - component: {fileID: 6792220225984136034}
+  - component: {fileID: 7981046149917758701}
+  m_Layer: 0
+  m_Name: TutorialControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4927278164726477011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4308823529886211594}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3452127286799516762}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1458748630235472704
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042579920311926798}
+  m_GameObject: {fileID: 4308823529886211594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd5e0904e0f2e8642a0bfd421a57b288, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
+  tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
+  actionSequencer: {fileID: 6792220225984136034}
+--- !u!114 &2745733197231899302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4308823529886211594}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df02b61b02cfc1b44b0897447738b8ba, type: 3}
@@ -468,7 +496,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
   tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
-  gridBuilder: {fileID: 2836726264975712251}
+  gridBuilder: {fileID: 1982708305268804973}
+--- !u!114 &6792220225984136034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4308823529886211594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b004b60b5d8b68c4aa99dae4fadf59ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridBuilder: {fileID: 0}
+  tutorialDirectionEvent: {fileID: 11400000, guid: 3a331465deef70b4393b1ff65925b34c, type: 2}
+  messageText: {fileID: 2435007253834644109}
+  tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
+  tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
+  tutorialTurnControlEvents: {fileID: 11400000, guid: e71ed2134e2386d4e81352550706b2c2, type: 2}
+--- !u!114 &7981046149917758701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4308823529886211594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea71ebec2f1b4034bb54416bd901bda8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterEvents: {fileID: 11400000, guid: d754ac43accc9e5488a80aaab654838f, type: 2}
+  nutEvents: {fileID: 11400000, guid: 762bf64cd7fad5d4f8ef7c36916b6c26, type: 2}
+  goalEvents: {fileID: 11400000, guid: ee7c72c2f1cab7b4a8ed7267c0ea2047, type: 2}
+  obstacleEvents: {fileID: 11400000, guid: 2c218b013eb84e544ad91a51c7f86f47, type: 2}
+  turnControlEvents: {fileID: 11400000, guid: e71ed2134e2386d4e81352550706b2c2, type: 2}
+  debugConfig: {fileID: 11400000, guid: eee286a70396c2543b86897540c600a1, type: 2}
+  characterTriggerTimeout: 0.5
+  gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
+--- !u!1 &5042579920311926798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3452127286799516762}
+  - component: {fileID: -5724745659833788830}
+  m_Layer: 0
+  m_Name: TutorialOverlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3452127286799516762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5042579920311926798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4927278164726477011}
+  - {fileID: 8850282877754582348}
+  - {fileID: 2857086335494184775}
+  - {fileID: 4456191076336890479}
+  - {fileID: 8103983656701604034}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-5724745659833788830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,23 +585,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlayLevel: 3
---- !u!114 &3291334250883573435
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5042579920311926798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b004b60b5d8b68c4aa99dae4fadf59ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridBuilder: {fileID: 2836726264975712251}
-  tutorialDirectionEvent: {fileID: 11400000, guid: 3a331465deef70b4393b1ff65925b34c, type: 2}
-  messageText: {fileID: 2435007253834644109}
-  tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
-  tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
 --- !u!1 &5227008396550648105
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,7 +596,7 @@ GameObject:
   - component: {fileID: 8850282877754582348}
   - component: {fileID: 1437843375587343037}
   m_Layer: 0
-  m_Name: CanvasBackground
+  m_Name: Background
   m_TagString: Background
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
