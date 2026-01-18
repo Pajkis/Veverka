@@ -377,9 +377,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8103983656701604034}
-  - component: {fileID: 1982708305268804973}
+  - component: {fileID: 9062242187823996541}
+  - component: {fileID: 7222104215661270542}
+  - component: {fileID: 8115337959418199480}
   m_Layer: 0
-  m_Name: GridBuilder
+  m_Name: GridData
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -401,7 +403,7 @@ Transform:
   - {fileID: 6819587065254481410}
   m_Father: {fileID: 3452127286799516762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1982708305268804973
+--- !u!114 &9062242187823996541
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -410,11 +412,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 3972138848025929048}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c18ffdca0aaa6e48bfe9ffca54a3d4f, type: 3}
+  m_Script: {fileID: 11500000, guid: f1c9698fb16723341ac0ce03ca1401cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7222104215661270542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3972138848025929048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5644e9e42caf14044ad6d7b16a31de3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isTutorial: 1
+  gridData: {fileID: 9062242187823996541}
+  gridRoot: {fileID: 6819587065254481410}
+  levelSelection: {fileID: 0}
+  levelInitData: {fileID: 0}
+  gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
+  levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   emptyPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
-  roadPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
+  roadPrefab: {fileID: 2330171183859072926, guid: ef7015975128ed848adf7b3f9c53e27e, type: 3}
   stoneRoadPrefab: {fileID: 7956215929776309704, guid: 82f2a9fdf20d4564292d0896b5abf87f, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 8ec5e2bf9d74c2942babb05097217a5a, type: 3}
   roadGoldenGoalScoredPrefab: {fileID: 2927861946428358931, guid: d7497b1d9d9cb324d83ce2e15dfda195, type: 3}
@@ -431,7 +452,33 @@ MonoBehaviour:
   goalPrefab: {fileID: 7474811582496385836, guid: 709d9e348c5ec6a429eb9effdc2fee46, type: 3}
   goldenGoalPrefab: {fileID: 7474811582496385836, guid: c0eb8e5f5f7fdaf43be0eab9ea043ed0, type: 3}
   backgroundPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
+--- !u!114 &8115337959418199480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3972138848025929048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0b1ba8fc230ed4fa8c1452107f6c4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 9062242187823996541}
   gridRoot: {fileID: 6819587065254481410}
+  gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
+  nutEvents: {fileID: 11400000, guid: 762bf64cd7fad5d4f8ef7c36916b6c26, type: 2}
+  goalEvents: {fileID: 11400000, guid: ee7c72c2f1cab7b4a8ed7267c0ea2047, type: 2}
+  obstacleEvents: {fileID: 11400000, guid: 2c218b013eb84e544ad91a51c7f86f47, type: 2}
+  roadEvents: {fileID: 11400000, guid: fc583c98cc08d36419543097c0d0a441, type: 2}
+  roadPrefab: {fileID: 2330171183859072926, guid: ef7015975128ed848adf7b3f9c53e27e, type: 3}
+  stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 8ec5e2bf9d74c2942babb05097217a5a, type: 3}
+  roadGoldenGoalScoredPrefab: {fileID: 2927861946428358931, guid: d7497b1d9d9cb324d83ce2e15dfda195, type: 3}
+  wallPrefab: {fileID: 3663485978142913648, guid: 09b14deeb4d04af4594ccefb7562dada, type: 3}
+  wallStonePrefab: {fileID: 3663485978142913648, guid: 025d6a2f0e9e98f48b0036ff99e9bb91, type: 3}
+  waterHolePrefab: {fileID: 7474811582496385836, guid: 9dfa02b0c47aeff46b39b568e8fde09b, type: 3}
+  holePrefab: {fileID: 7474811582496385836, guid: 55f1e8c6f7ddfa0449b69a4c16032408, type: 3}
+  goldenStatuePrefab: {fileID: 3663485978142913648, guid: d1f2e9fc816f9734f8d8ee0efc4d5001, type: 3}
 --- !u!1 &4308823529886211594
 GameObject:
   m_ObjectHideFlags: 0
@@ -496,7 +543,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
   tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
-  gridBuilder: {fileID: 1982708305268804973}
+  gridBuilder: {fileID: 7222104215661270542}
 --- !u!114 &6792220225984136034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -509,7 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b004b60b5d8b68c4aa99dae4fadf59ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridBuilder: {fileID: 0}
+  gridBuilder: {fileID: 7222104215661270542}
   tutorialDirectionEvent: {fileID: 11400000, guid: 3a331465deef70b4393b1ff65925b34c, type: 2}
   messageText: {fileID: 2435007253834644109}
   tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
@@ -584,6 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f23ed4a5cf303a428f4c87d16543dd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  displaySettings: {fileID: 0}
   overlayLevel: 3
 --- !u!1 &5227008396550648105
 GameObject:
