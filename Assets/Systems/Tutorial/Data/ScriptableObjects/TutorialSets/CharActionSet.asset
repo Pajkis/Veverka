@@ -10,8 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d010e5109f548d4aab4b5454dfdec78, type: 3}
-  m_Name: ControlsSet
+  m_Name: CharActionSet
   m_EditorClassIdentifier: 
   setType: 0
-  setDisplayName: Controls
-  tutorialCsvFiles: []
+  setDisplayName: Character Action
+  tutorialCsvFiles:
+  - {fileID: 4900000, guid: 164a0f11ded1e0247a1c5b3947d13f77, type: 3}
+  - {fileID: 4900000, guid: 903964822687b724da0d9281a6fa08c6, type: 3}
+  tutorialSequences:
+  - {fileID: 11400000, guid: b797266828618e646b7378d6018235c9, type: 2}
+  - {fileID: 11400000, guid: 2b69d8d159a1f694ca756187d521da1f, type: 2}

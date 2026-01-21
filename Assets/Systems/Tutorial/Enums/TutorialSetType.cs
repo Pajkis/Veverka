@@ -6,7 +6,7 @@
 /// distinct tutorial set types that may affect content or behavior in the application.</remarks>
 public enum TutorialSetType
 {
-    Controls = 0,
+    CharacterAction = 0,
     Basic = 1,
     Golden = 2,
     Stone = 3,
@@ -18,11 +18,12 @@ public enum TutorialSetType
 /// </summary>
 /// <remarks>Use this enumeration to identify or configure the control actions presented to the user during a
 /// tutorial. Each value represents a distinct control type that may be required for user interaction.</remarks>
-public enum TutorialControlType
+public enum TutorialCharacterActionType
 {
-    MoveCharacter = 0,
-    MoveToObstacle = 1, // Move to wall, hole and water hole
-    PushNut = 2, // Push nut, Push nut to wall
+    BasicMoveAndGoal = 0,
+    PushNutsToWalls = 1,
+    Jump = 2,
+    FireSuit = 3,     
 }
 
 /// <summary>
