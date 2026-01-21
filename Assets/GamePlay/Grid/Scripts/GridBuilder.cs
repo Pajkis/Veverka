@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -133,8 +134,10 @@ public class GridBuilder : MonoBehaviour
 
     #region Public Methods
     /// <summary>
-    /// Build a new level from grid data
+    /// Build a new level from grid data.
+    /// Spawn animation is handled automatically by GameObjectAnimator on each prefab.
     /// </summary>
+    /// <param name="grid">The grid data to build from</param>
     public void BuildLevel(TileType[,] grid)
     {
         // Get grid size
@@ -249,7 +252,8 @@ public class GridBuilder : MonoBehaviour
     #region Private Build Methods
 
     /// <summary>
-    /// Build a level from grid data using GridSpawner helper
+    /// Build a level from grid data using GridSpawner helper.
+    /// Spawn animation is handled automatically by GameObjectAnimator on each prefab.
     /// </summary>
     private void BuildLevelFromGrid()
     {

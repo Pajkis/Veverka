@@ -74,7 +74,10 @@ public static class GridSpawner
     /// <summary>
     /// Spawns a grid using the provided GridData and SpawnConfig.
     /// This is the core spawn logic shared between main game and tutorial.
+    /// GameObjectAnimator on each prefab handles spawn animation automatically.
     /// </summary>
+    /// <param name="gridData">The grid data containing tile information</param>
+    /// <param name="config">The spawn configuration with prefabs and pools</param>
     public static void SpawnGrid(GridData gridData, SpawnConfig config)
     {
         Vector2Int gridSize = gridData.GridSize;
