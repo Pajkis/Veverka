@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3809879422071789965}
   - component: {fileID: 959817345349971074}
   - component: {fileID: 2989435592743957411}
-  - component: {fileID: -5874814441928063257}
   - component: {fileID: -6820149608666228007}
+  - component: {fileID: -2032006767006310069}
   m_Layer: 0
   m_Name: Tile_WaterNut
   m_TagString: Untagged
@@ -120,21 +120,6 @@ MonoBehaviour:
   moveDuration: 0.15
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   undoEvents: {fileID: 11400000, guid: 8c461a7f8da005f40a3e1079e727c730, type: 2}
---- !u!114 &-5874814441928063257
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5049554270686572608}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 355bee659d924a0408a8f91550a762b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pulseSpeed: 2
-  scaleMultiplier: 0.15
-  contrastMultiplier: 0.3
 --- !u!114 &-6820149608666228007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,3 +147,51 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9b373ab7c9cb5d84092817cd733cf3ac, type: 3}
   - {fileID: 21300000, guid: fefc05781afce104bb3b6bb971924e25, type: 3}
   - {fileID: 21300000, guid: 616ab28c794c6ca4395af9f1a39faa69, type: 3}
+--- !u!114 &-2032006767006310069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5049554270686572608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configAsset: {fileID: 11400000, guid: 349d3b1d19fcf214da93f26d171470fb, type: 2}
+  useCustomSettings: 1
+  enableFadeIn: 1
+  fadeInDuration: 0.3
+  fadeInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  initialAlpha: 0
+  targetAlpha: 1
+  customRuntimeEffects:
+  - effectType: 1
+    enabled: 1
+    pulseSpeed: 2
+    scaleMultiplier: 0.15
+    contrastMultiplier: 0.3

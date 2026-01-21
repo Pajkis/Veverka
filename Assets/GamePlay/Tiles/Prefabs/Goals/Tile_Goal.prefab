@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3149419950693609241}
   - component: {fileID: 8714559050590053425}
   - component: {fileID: -636044033625955510}
-  - component: {fileID: -192291133178817755}
+  - component: {fileID: 2670142048491629768}
   m_Layer: 0
   m_Name: Tile_Goal
   m_TagString: Untagged
@@ -110,7 +110,7 @@ MonoBehaviour:
   goalEvents: {fileID: 11400000, guid: 81e0ce6acb744b5184ca3c7419f1056f, type: 2}
   obstacleEvents: {fileID: 11400000, guid: 486b4ca6ce5b0fc489f25f6307032575, type: 2}
   roadEvents: {fileID: 11400000, guid: 4be42f9abeec764439358531a12a4e19, type: 2}
---- !u!114 &-192291133178817755
+--- !u!114 &2670142048491629768
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,9 +119,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 7474811582496385836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 355bee659d924a0408a8f91550a762b7, type: 3}
+  m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulseSpeed: 2
-  scaleMultiplier: 0.2
-  contrastMultiplier: 0.2
+  configAsset: {fileID: 11400000, guid: 349d3b1d19fcf214da93f26d171470fb, type: 2}
+  useCustomSettings: 1
+  enableFadeIn: 1
+  fadeInDuration: 0.3
+  fadeInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  initialAlpha: 0
+  targetAlpha: 0.78
+  customRuntimeEffects:
+  - effectType: 1
+    enabled: 1
+    pulseSpeed: 2
+    scaleMultiplier: 0.2
+    contrastMultiplier: 0.3
