@@ -292,9 +292,9 @@ public abstract class Character : MonoBehaviour
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
     protected virtual void Move(Direction direction, int distance, float duration)
-    { 
+    {
         // decide position to move
-        Vector3 currentPosition = transform.position;
+        Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
         float moveDuration = (duration * distance) / animationSpeed;

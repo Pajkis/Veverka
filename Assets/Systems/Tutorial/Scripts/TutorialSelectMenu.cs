@@ -1,5 +1,5 @@
 using UnityEngine;
-using static TutorialSelectMenu;
+
 
 /// <summary>
 /// Simple tutorial selector - provides public functions callable from button onClick events.

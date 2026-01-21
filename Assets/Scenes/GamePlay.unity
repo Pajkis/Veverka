@@ -682,6 +682,7 @@ MonoBehaviour:
   displayConfig: {fileID: 11400000, guid: d47c9e61e16f33545b92b5e593d1a1a3, type: 2}
   levelInitData: {fileID: 11400000, guid: ea37cadc23184384fbeec0ce51e35441, type: 2}
   characterEvents: {fileID: 11400000, guid: 591b7c5f4db248728c9eb45be32f7630, type: 2}
+  tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
   target: {fileID: 0}
   minBounds: {x: 0, y: 0}
   maxBounds: {x: 0, y: 0}

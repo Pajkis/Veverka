@@ -721,6 +721,8 @@ GameObject:
   - component: {fileID: 459992455779383716}
   - component: {fileID: 6880387193730597741}
   - component: {fileID: 7328115511579111764}
+  - component: {fileID: 7643131344490709445}
+  - component: {fileID: 6149587215767077504}
   m_Layer: 0
   m_Name: NotificationOverlay
   m_TagString: Background
@@ -865,6 +867,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlayLevel: 4
+--- !u!225 &7643131344490709445
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9187378460226002792}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6149587215767077504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9187378460226002792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f312b40a3f6e054597c157b304d55a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayType: 5
 --- !u!1 &9195154084633545079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1001,18 +1028,18 @@ PrefabInstance:
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 4119813519661915473}
+      objectReference: {fileID: 6149587215767077504}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: HandleQuitButtonOnClickEvent
+      value: OnCloseButton_AnimatedDestroy
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: CloseOverlay, Assembly-CSharp
+      value: OverlayAnimationController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5847195177206558838, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -1101,30 +1128,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 4119813519661915473}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
 --- !u!224 &1886118712928404047 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5937411907749957028, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
   m_PrefabInstance: {fileID: 5208758584783720427}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &6608000797954021476 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1440430476094396303, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
-  m_PrefabInstance: {fileID: 5208758584783720427}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4119813519661915473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6608000797954021476}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d6ea6c9ff93fee45a06f5bea7f9a0f2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

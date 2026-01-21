@@ -14,14 +14,10 @@ using UnityEngine.UI;
 /// </summary>
 public class OverlaySetup : MonoBehaviour
 {
-    [Header("Display Configuration")]
-    [SerializeField] private DisplaySettings displaySettings;
-
     [Header("Overlay Configuration")]
     [Tooltip("1=PauseMenu/LevelFinished/Credits, 2=Settings/HowToPlay, 3=Tutorial, 4=Notification/LevelValidation")]
     [SerializeField] private int overlayLevel = 1; // 1-4
     
-
     // Tag constants
     private const string TAG_BACKGROUND = "Background";
     private const string TAG_FRAME = "Frame";

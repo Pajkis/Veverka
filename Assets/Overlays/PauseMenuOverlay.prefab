@@ -16,6 +16,8 @@ GameObject:
   - component: {fileID: 6935047262844824697}
   - component: {fileID: 8688080608805635819}
   - component: {fileID: 662923173757678701}
+  - component: {fileID: 7645623452768883000}
+  - component: {fileID: 6606960114209299553}
   m_Layer: 5
   m_Name: PauseMenuOverlay
   m_TagString: Background
@@ -161,6 +163,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   overlayLevel: 1
+--- !u!225 &7645623452768883000
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &6606960114209299553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636506746201861303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f312b40a3f6e054597c157b304d55a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  overlayType: 0
 --- !u!1 &4818613565627423721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1010,18 +1037,18 @@ PrefabInstance:
     - target: {fileID: 3253936299739061598, guid: 26fe4881ddd28044da9192b1a6c28a08, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 7204721748076937770}
+      objectReference: {fileID: 6606960114209299553}
     - target: {fileID: 3253936299739061598, guid: 26fe4881ddd28044da9192b1a6c28a08, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3253936299739061598, guid: 26fe4881ddd28044da9192b1a6c28a08, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: HandleResumeButtonOnClickEvent
+      value: OnCloseButton_AnimatedDestroy
       objectReference: {fileID: 0}
     - target: {fileID: 3253936299739061598, guid: 26fe4881ddd28044da9192b1a6c28a08, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PauseMenu, Assembly-CSharp
+      value: OverlayAnimationController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3253936299739061598, guid: 26fe4881ddd28044da9192b1a6c28a08, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

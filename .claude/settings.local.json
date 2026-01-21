@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(dir /s \"c:\\\\01_Projects\\\\Unity\\\\01_MyGames\\\\VeverkaRep\\\\Assets\\\\Systems\\\\Tutorial\\\\Data\\\\Events\")",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }
