@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5948521871156702908}
   - component: {fileID: 7831638260638527116}
   - component: {fileID: -1180573280779066491}
+  - component: {fileID: 5428292234959682750}
   m_Layer: 0
   m_Name: Tutorial_Tile_Background
   m_TagString: Untagged
@@ -99,3 +100,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   possibleSprites:
   - {fileID: 21300000, guid: 2ffbc2c239b5891499e905840f43bce4, type: 3}
+--- !u!114 &5428292234959682750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2927861946428358931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configAsset: {fileID: 11400000, guid: d3f3a76ecd74c964f920060d5781631b, type: 2}
+  useCustomSettings: 0
+  enableFadeIn: 0
+  fadeInDuration: 0.3
+  fadeInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  initialAlpha: 0
+  targetAlpha: 1
+  customRuntimeEffects: []

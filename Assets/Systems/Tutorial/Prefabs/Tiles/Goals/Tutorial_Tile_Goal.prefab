@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3149419950693609241}
   - component: {fileID: 8714559050590053425}
   - component: {fileID: -636044033625955510}
-  - component: {fileID: -192291133178817755}
+  - component: {fileID: 9057889726830731799}
   m_Layer: 0
   m_Name: Tutorial_Tile_Goal
   m_TagString: Untagged
@@ -110,7 +110,7 @@ MonoBehaviour:
   goalEvents: {fileID: 11400000, guid: ee7c72c2f1cab7b4a8ed7267c0ea2047, type: 2}
   obstacleEvents: {fileID: 11400000, guid: 2c218b013eb84e544ad91a51c7f86f47, type: 2}
   roadEvents: {fileID: 11400000, guid: fc583c98cc08d36419543097c0d0a441, type: 2}
---- !u!114 &-192291133178817755
+--- !u!114 &9057889726830731799
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -119,9 +119,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 7474811582496385836}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 355bee659d924a0408a8f91550a762b7, type: 3}
+  m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pulseSpeed: 2
-  scaleMultiplier: 0.2
-  contrastMultiplier: 0.2
+  configAsset: {fileID: 11400000, guid: d3f3a76ecd74c964f920060d5781631b, type: 2}
+  useCustomSettings: 0
+  enableFadeIn: 1
+  fadeInDuration: 0.3
+  fadeInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  initialAlpha: 0
+  targetAlpha: 0.78
+  customRuntimeEffects:
+  - effectType: 1
+    enabled: 1
+    pulseSpeed: 2
+    scaleMultiplier: 0.2
+    contrastMultiplier: 0.3
