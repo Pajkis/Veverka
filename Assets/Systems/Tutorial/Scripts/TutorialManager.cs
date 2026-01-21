@@ -14,8 +14,9 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        DebugLogger.Log(DebugLogCategory.Tutorial, "TutorialManager initialized - persisting across scenes", this);
+        // TutorialManager is part of overlay - no longer needs to be persistent
+        // It will be destroyed when overlay is destroyed
+        DebugLogger.Log(DebugLogCategory.Tutorial, "TutorialManager initialized", this);
     }
 
     private void OnEnable()
@@ -94,22 +95,21 @@ public class TutorialManager : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.Tutorial,
             $"Grid parsed - Size: {grid.GetLength(0)}x{grid.GetLength(1)}", this);
 
-        // Build tutorial grid
+        // Build tutorial grid (spawn animation handled by GameObjectAnimator on each prefab)
         gridBuilder.BuildLevel(grid);
 
         DebugLogger.Log(DebugLogCategory.Tutorial, "Tutorial load complete", this);
     }
 
     /// <summary>
-    /// Clear tutorial grid
+    /// Clear tutorial grid - Don't destroy tiles here, they will be destroyed with overlay
+    /// This just exits tutorial mode (camera, flags)
     /// </summary>
     private void ClearTutorial()
     {
-        if (gridBuilder != null)
-        {
-            DebugLogger.Log(DebugLogCategory.Tutorial, "Clearing tutorial grid", this);
-            gridBuilder.ResetLevel();
-        }
+        // Tiles are children of overlay and will be destroyed when overlay is destroyed
+        // We only need to signal exit tutorial mode (handled by CameraFollow listener)
+        DebugLogger.Log(DebugLogCategory.Tutorial, "Exiting tutorial mode - overlay will handle tile destruction", this);
     }
 
     /// <summary>
