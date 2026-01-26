@@ -118,7 +118,7 @@ MonoBehaviour:
   moveDistance: 1
   moveDuration: 0.15
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
-  undoEvents: {fileID: 11400000, guid: 8c461a7f8da005f40a3e1079e727c730, type: 2}
+  undoEvents: {fileID: 11400000, guid: 66cbb61528d47a04082bdf3df69c0379, type: 2}
 --- !u!114 &8977368017940338069
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 00_CharActionsBasics
   m_EditorClassIdentifier: 
   tutorialId: 0
-  titleText: vvvv
+  titleText: Basic Controls
   actions:
   - ActionType: 1
     AnimationDirection: 1

@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   configAsset: {fileID: 11400000, guid: d3f3a76ecd74c964f920060d5781631b, type: 2}
-  useCustomSettings: 0
+  useCustomSettings: 1
   enableFadeIn: 1
   fadeInDuration: 0.3
   fadeInCurve:
