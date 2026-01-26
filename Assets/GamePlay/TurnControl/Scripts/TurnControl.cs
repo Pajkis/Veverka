@@ -160,6 +160,12 @@ public class TurnControl : MonoBehaviour
 
         // No need to stop timeout coroutine as it's not started during undo
 
+        // Raise TurnCompleted event
+        turnControlEvents?.Raise(new TurnControlEventPayload
+        {
+            EventType = TurnControlEventType.TurnCompleted
+        });
+
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked after undo operation", this);
     }
     #endregion

@@ -16,6 +16,7 @@ public class TutorialActionSequencer : MonoBehaviour
     [SerializeField] private TutorialSetManager tutorialSetManager;
     [SerializeField] private TutorialSelectData tutorialSelection;
     [SerializeField] private TurnControlEvents tutorialTurnControlEvents;
+    [SerializeField] private UndoController undoController;
 
     // Runtime loaded sequence data
     private TutorialSequenceData sequenceData;
@@ -194,6 +195,10 @@ public class TutorialActionSequencer : MonoBehaviour
                     : GetDefaultMessageTime();
                 yield return ExecuteMessage(action.MessageText, duration);
                 break;
+
+            case TutorialActionType.Undo:
+                yield return ExecuteUndo();
+                break;
         }
     }
 
@@ -237,6 +242,46 @@ public class TutorialActionSequencer : MonoBehaviour
                     !tutorialCharacter.SmoothMover.IsMoving &&
                     !tutorialCharacter.SmoothRotate.IsRotating);
             }
+        }
+
+        // Delay between actions
+        yield return new WaitForSeconds(GetActionDelay());
+    }
+
+    private IEnumerator ExecuteUndo()
+    {
+        if (undoController == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "UndoController is not assigned!", this);
+            yield break;
+        }
+
+        if (!undoController.CanUndo())
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial, "Cannot undo - no turn history available", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial, "Undo action triggered", this);
+
+        // Reset turn completed flag before requesting undo
+        turnCompleted = false;
+
+        // Request undo - this triggers the undo process
+        // which will be tracked by TurnControl
+        undoController.RequestUndo();
+
+        // Wait for TurnCompleted event from TurnControl
+        // UndoController handles unlocking input after completion
+        if (tutorialTurnControlEvents != null)
+        {
+            yield return new WaitUntil(() => turnCompleted);
+            DebugLogger.Log(DebugLogCategory.Tutorial, "Undo completed (via TurnControlEvents)", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "TutorialTurnControlEvents not assigned - cannot wait for undo completion", this);
         }
 
         // Delay between actions

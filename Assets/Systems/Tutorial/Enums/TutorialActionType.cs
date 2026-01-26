@@ -3,9 +3,8 @@
 /// </summary>
 public enum TutorialActionType
 {
-    /// <summary>Direction input to move/rotate character.</summary>
-    Animation,
-
-    /// <summary>Display text message in overlay UI.</summary>
-    Message
+    Animation, // Direction input to move/rotate character.
+    Message,  // Display text message in overlay UI.
+    Undo,  // trigger undo action during tutorial.
+    ActionImage, // Show action image in overlay UI.
 }
