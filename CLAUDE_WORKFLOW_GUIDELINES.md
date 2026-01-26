@@ -4,7 +4,7 @@
 
 **Planning Phase:**
 - Na začátku vždy společně vytvoříme plán v češtině nebo angličtině pro novou feature
-- **Označit oblasti, které se budou změny týkat a řádně je prostudovat**
+- Označit oblasti, které se budou změny týkat a řádně je prostudovat
 - Identifikovat ovlivněné soubory/systémy před začátkem implementace
 - Rozbít větší features na menší, testovatelné kroky
 - Ověřit existující patterns v codebase (jak podobné věci už jsou řešené)
