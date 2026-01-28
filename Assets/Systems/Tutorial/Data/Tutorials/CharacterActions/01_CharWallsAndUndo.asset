@@ -20,114 +20,230 @@ MonoBehaviour:
     MessageText: So you know how to move the squirell and score a goal! Good, but
       it is not always gonna be so easy.
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 0
     MessageText: Squirell can push the nuts in front of itself. In open field you
       can easily push the nut where you want.
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 3
     MessageText: 'But what about walls?  You can''t move through them and you can"t
       push nuts through them also! '
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 1
     MessageText: See? No way you can push it through a tree wall. No matter how small
       you are, you have no chance!
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 3
     MessageText: To get the nut to the goal you have to push it around the wall.
       Lets move the nut up cause it is  closer way to the goal.
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 2
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 2
     MessageText: 
     MessageDisplayTime: 0
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 2
     AnimationDirection: 1
     MessageText: Undo
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 0
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 0
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 0
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 0
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 3
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 3
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 0
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 0
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 1
     MessageText: Oh no! I can't move the nut from the wall! This nut can be moved
       only along the wall.
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 1
     MessageText: 'Let"s try something, move it a little bit. '
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 0
     AnimationDirection: 1
     MessageText: 
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 1
     MessageText: And now I am totally screwed! If the but ends in corner, then there
       is no way how to move it out of there. Be carefull about that!
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   - ActionType: 1
     AnimationDirection: 1
     MessageText: Undo
     MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
+  - ActionType: 0
+    AnimationDirection: 1
+    MessageText: Undo
+    MessageDisplayTime: 3
+    ActionImage: {fileID: 0}
+    ExecuteWithMessage: 0
+    ImageActionType: 0
+    ActionImageDisplayTime: 0
   autoplayEnabled: 1

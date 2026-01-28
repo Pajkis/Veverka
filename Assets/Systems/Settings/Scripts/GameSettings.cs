@@ -98,7 +98,7 @@ public class GameSettings: MonoBehaviour
             }
         }
 
-        //get init values for PlayerPrefab
+        //get init values for PlayerPrefs
         DebugLogger.Log(DebugLogCategory.Settings, "Loading or initializing default settings from config", this);
         gameSettings =  GameSettingsUtils.LoadOrInitializeDefaults(config);
 
