@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ public class GridBuilder : MonoBehaviour
     [SerializeField] private Transform gridRoot;
     [SerializeField] private LevelSelection levelSelection;
     [SerializeField] private LevelInitData levelInitData;
+    [SerializeField] private GameplayConfig gameplayConfig;
     #endregion
 
     #region Events
@@ -223,6 +225,52 @@ public class GridBuilder : MonoBehaviour
         }
 
         return character;
+    }
+
+    /// <summary>
+    /// Fade out all grid objects before resetting (for tutorial restart).
+    /// </summary>
+    public IEnumerator FadeOutGrid()
+    {
+        if (gridRoot == null)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, "GridRoot is null, skipping fade out", this);
+            ResetLevel();
+            yield break;
+        }
+
+        // Get all GameObjectAnimator components in grid
+        GameObjectAnimator[] animators = gridRoot.GetComponentsInChildren<GameObjectAnimator>();
+
+        if (animators.Length == 0)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, "No animators found, skipping fade", this);
+            ResetLevel();
+            yield break;
+        }
+
+        // Get fade duration from config
+        float fadeDuration = gameplayConfig.tileFadeOutDuration;
+
+        DebugLogger.Log(DebugLogCategory.GridSystem,
+            $"Fading out {animators.Length} objects with duration {fadeDuration}s", this);
+
+        // Start fade out for all animators
+        foreach (var animator in animators)
+        {
+            if (animator != null && animator.gameObject.activeInHierarchy)
+            {
+                StartCoroutine(animator.FadeOut(fadeDuration, AnimationCurve.EaseInOut(0, 0, 1, 1)));
+            }
+        }
+
+        // Wait for fade to complete
+        yield return new WaitForSeconds(fadeDuration);
+
+        // Reset level after fade
+        ResetLevel();
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Grid fade out complete", this);
     }
 
     /// <summary>
