@@ -121,6 +121,27 @@ public class GameSettings: MonoBehaviour
     }
     #endregion
 
+    #region public properties
+
+    /// <summary>
+    /// Gets the animation speed as a multiplier for gameplay.
+    /// </summary>
+    /// <returns>Animation speed multiplier (1.0x, 2.0x, 3.0x)</returns>
+    public float AnimationSpeedMultiplier
+    {
+        get
+        {
+            if (!gameSettings.TryGetValue(GameSettingsEnum.AnimationSpeed, out int value))
+            {
+                DebugLogger.LogWarning(DebugLogCategory.Settings, "AnimationSpeed not found in gameSettings, returning default 1.0x", this);
+                return 1.0f;
+            }
+            return (float)value;
+        }
+    }
+
+    #endregion
+
     #region event handlers
 
     /// <summary>
