@@ -20,5 +20,10 @@ public class NutEventPayload
     // Push query data
     public Direction Direction;
     public int Distance;
-    public float Duration;    
+    public float SpeedMultiplier;
+
+    // Splash data
+    [Header("Splash effect data")]
+    public bool IsSplash;
+    public float SplashSpeedFactor;    
 }

@@ -82,7 +82,7 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
                 // splash water to move nuts around
-                this.SplashWater();
+                this.SplashWater(payload.SpeedMultiplier, gameplayConfig.splashSpeedFactor);
 
                 // debug logger
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition} -> remove goal and splash", this);

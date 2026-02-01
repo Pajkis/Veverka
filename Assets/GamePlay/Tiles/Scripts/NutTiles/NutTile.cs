@@ -8,8 +8,8 @@ public abstract class NutTile : TileObject
     #region Fields
     [SerializeField] protected int moveDistance = 1;
     [SerializeField] protected float moveDuration = 0.15f;
-    protected float animationSpeed;
-
+   
+  //  protected float speedMultiplier = 1f;
     protected NutEventPayload payload = new();
     protected SmoothMover smoothMover;
     protected NutType nutType;
@@ -26,12 +26,6 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        settingEvents.AddListener(OnSettingEvent);
-        settingEvents.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
         nutEvents.AddListener(OnNutEvent);
         undoEvents?.AddListener(OnUndoEvent);
     }
@@ -40,24 +34,10 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnDisable()
     {
-        settingEvents.RemoveListener(OnSettingEvent);
         nutEvents.RemoveListener(OnNutEvent);
         undoEvents?.RemoveListener(OnUndoEvent);
     }
-
-    /// <summary>
-    /// get animation speed from settings
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnSettingEvent(SettingEventPayload payload)
-    {
-        if (payload.EventType == SettingsEventType.DataBroadcast &&
-            payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            animationSpeed = payload.Value;
-        }
-    }
-
+    
     /// <summary>
     /// Handle undo events for this nut
     /// </summary>
@@ -183,12 +163,17 @@ public abstract class NutTile : TileObject
         }
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Position match - calling Move()", this);
-        // check if nut can be pushed
-       // payload.CanBePushed = CanBePushed(payload.Direction);
-      //  if (payload.CanBePushed)
-      //  {
-            Move(payload.Direction, payload.Distance, payload.Duration);
-      //  }
+
+        // Calculate effective speed multiplier based on splash effect
+        float effectiveSpeedMultiplier = payload.SpeedMultiplier;
+        if (payload.IsSplash)
+        {
+            effectiveSpeedMultiplier *= payload.SplashSpeedFactor;
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Splash push - applying factor {payload.SplashSpeedFactor} (effective: {effectiveSpeedMultiplier})", this);
+        }
+
+        Move(payload.Direction, payload.Distance, effectiveSpeedMultiplier);
+      
      }
 
     /// <summary>
@@ -218,7 +203,7 @@ public abstract class NutTile : TileObject
     /// <param name="direction">direction of movemebt</param>
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
-    public virtual void Move(Direction direction, int distance, float duration)
+    public virtual void Move(Direction direction, int distance, float speedMultiplier)
     {
        // if (smoothMover.IsMoving) return;
 
@@ -230,8 +215,7 @@ public abstract class NutTile : TileObject
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(GridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float moveDuration = (duration * distance) / animationSpeed;
-
+        
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Move CALC - From: {GridPosition} To: {targetPosVec2Int}", this);
 
         // prepare movement payload for events and turn records
@@ -241,13 +225,13 @@ public abstract class NutTile : TileObject
             NutTile = this,
             CurrentPosition = targetPosVec2Int,
             PreviousPosition = previousPosition,
-            Duration = moveDuration,
+            SpeedMultiplier = speedMultiplier,
         };
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}", this);
 
         // execute smooth movement
-        smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
+        smoothMover.Move(currentPosition, targetPosition, moveDuration / speedMultiplier, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
      
     /// <summary>
