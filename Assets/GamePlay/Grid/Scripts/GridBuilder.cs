@@ -249,8 +249,8 @@ public class GridBuilder : MonoBehaviour
             yield break;
         }
 
-        // Get fade duration from config
-        float fadeDuration = gameplayConfig.tileFadeOutDuration;
+        // Get fade duration from config (use default if config not assigned)
+        float fadeDuration = gameplayConfig != null ? gameplayConfig.tileFadeOutDuration : 0.5f;
 
         DebugLogger.Log(DebugLogCategory.GridSystem,
             $"Fading out {animators.Length} objects with duration {fadeDuration}s", this);

@@ -789,6 +789,7 @@ MonoBehaviour:
   gridRoot: {fileID: 6819587065254481410}
   levelSelection: {fileID: 0}
   levelInitData: {fileID: 0}
+  gameplayConfig: {fileID: 0}
   gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   emptyPrefab: {fileID: 2927861946428358931, guid: 79c2c0a777bbace4180f4b4cf4a91bb8, type: 3}
