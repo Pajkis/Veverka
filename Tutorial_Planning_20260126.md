@@ -46,7 +46,6 @@ Tutorial settings jsou **oddělené od GameSettings** pro lepší:
 
 #### 1.1 TutorialSettings (NOVÝ)
 **Lokace**: `Assets/Systems/Tutorial/Data/Settings/TutorialSettings.cs`
-
 **Co vytvořit**:
 - ScriptableObject class (singleton pattern)
 - Static Instance property s lazy initialization

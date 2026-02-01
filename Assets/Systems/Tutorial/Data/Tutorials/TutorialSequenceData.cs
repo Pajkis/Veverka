@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Sequence of actions for a tutorial. Linked to TutorialSet via TutorialSetType and index.
 /// </summary>
-[CreateAssetMenu(fileName = "TutorialSequence", menuName = "Tutorial/Sequence Data")]
+[CreateAssetMenu(fileName = "TutorialSequence", menuName = "Tutorial/Config/Sequence")]
 public class TutorialSequenceData : ScriptableObject
 {
     [Header("Identity")]
