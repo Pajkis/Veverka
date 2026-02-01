@@ -17,6 +17,7 @@ public class TutorialActionSequencer : MonoBehaviour
     [SerializeField] private TutorialSelectData tutorialSelection;
     [SerializeField] private TurnControlEvents tutorialTurnControlEvents;
     [SerializeField] private UndoController undoController;
+    [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
 
     // Runtime loaded sequence data
     private TutorialSequenceData sequenceData;
@@ -103,9 +104,9 @@ public class TutorialActionSequencer : MonoBehaviour
             $"Loaded sequence '{sequenceData.tutorialId}' for Set={setType}, Index={tutorialIndex}", this);
 
         // Load tutorial settings from config (user preferences)
-        isAutoplay = TutorialSettingsConfig.Instance.AutoplayEnable;
-        textSpeedIndex = TutorialSettingsConfig.Instance.TextSpeedIndex;
-        animSpeedIndex = TutorialSettingsConfig.Instance.AnimSpeedIndex;
+        isAutoplay = tutorialSettingsConfig.AutoplayEnable;
+        textSpeedIndex = tutorialSettingsConfig.TextSpeedIndex;
+        animSpeedIndex = tutorialSettingsConfig.AnimSpeedIndex;
 
         currentActionIndex = 0;
         isSkipRequested = false;
@@ -195,7 +196,7 @@ public class TutorialActionSequencer : MonoBehaviour
     public void ToggleAutoplay()
     {
         isAutoplay = !isAutoplay;
-        TutorialSettingsConfig.Instance.TutorialSetAutoplay(isAutoplay);
+        tutorialSettingsConfig.TutorialSetAutoplay(isAutoplay);
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Autoplay: {isAutoplay}", this);
     }
 
@@ -213,7 +214,7 @@ public class TutorialActionSequencer : MonoBehaviour
     public void SetTextSpeed(TutorialAnimSpeedType speed)
     {
         textSpeedIndex = speed;
-        TutorialSettingsConfig.Instance.TutorialSetTextSpeed(speed);
+        tutorialSettingsConfig.TutorialSetTextSpeed(speed);
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Text speed: {speed}", this);
     }
 
@@ -223,7 +224,7 @@ public class TutorialActionSequencer : MonoBehaviour
     public void SetAnimSpeed(TutorialAnimSpeedType speed)
     {
         animSpeedIndex = speed;
-        TutorialSettingsConfig.Instance.TutorialSetAnimSpeed(speed);
+        tutorialSettingsConfig.TutorialSetAnimSpeed(speed);
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Animation speed: {speed}", this);
     }
 

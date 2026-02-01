@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using UnityEngine;
 
 /// <summary>
@@ -92,26 +91,6 @@ public class TutorialSettingsConfig : ScriptableObject
         TutorialSaveToPlayerPrefs(TutorialSettingsType.Tutorial_TextSpeed, (int)value);
     }
 
-    #endregion
-
-    #region Static instance
-    private static TutorialSettingsConfig instance;
-
-    public static TutorialSettingsConfig Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = Resources.Load<TutorialSettingsConfig>("Tutorial/TutorialSettingsConfig");
-                if (instance == null)
-                {
-                    Debug.LogError("TutorialSettingsConfig asset not found in Resources!");
-                }
-            }
-            return instance;
-        }
-    }
     #endregion
 
 }

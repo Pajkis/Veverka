@@ -841,6 +841,7 @@ MonoBehaviour:
   tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
   tutorialTurnControlEvents: {fileID: 11400000, guid: e71ed2134e2386d4e81352550706b2c2, type: 2}
   undoController: {fileID: 7743572679373759533}
+  tutorialSettingsConfig: {fileID: 11400000, guid: 0a0bedd47f438ad49bb81564380547a5, type: 2}
 --- !u!114 &4478150438314494464
 MonoBehaviour:
   m_ObjectHideFlags: 0

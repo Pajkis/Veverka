@@ -10,10 +10,12 @@ public class TutorialControlPanel : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TutorialActionSequencer tutorialActionSequencer;
+    [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
 
     [Header("Buttons")]
     [SerializeField] private Button autoplayToggleButton;
     [SerializeField] private Button nextButton;
+    [SerializeField] private Button restartButton;
     [SerializeField] private Button textSpeedButton;
     [SerializeField] private Button animSpeedButton;
 
@@ -110,27 +112,27 @@ public class TutorialControlPanel : MonoBehaviour
     /// </summary>
     private void RefreshUI()
     {
-        if (TutorialSettingsConfig.Instance == null) return;
+        if (tutorialSettingsConfig == null) return;
 
         // Update mode display
         if (modeDisplayText != null)
         {
-            bool isAutoplay = TutorialSettingsConfig.Instance.AutoplayEnable;
-            modeDisplayText.text = isAutoplay ? "Mode: Auto" : "Mode: Manual";
+            bool isAutoplay = tutorialSettingsConfig.AutoplayEnable;
+            modeDisplayText.text = isAutoplay ? "Auto" : "Man";
         }
 
         // Update text speed label
         if (textSpeedLabel != null)
         {
-            TutorialAnimSpeedType textSpeed = TutorialSettingsConfig.Instance.TextSpeedIndex;
-            textSpeedLabel.text = $"Text: {SpeedToString(textSpeed)}";
+            TutorialAnimSpeedType textSpeed = tutorialSettingsConfig.TextSpeedIndex;
+            textSpeedLabel.text = $"{SpeedToString(textSpeed)}";
         }
 
         // Update animation speed label
         if (animSpeedLabel != null)
         {
-            TutorialAnimSpeedType animSpeed = TutorialSettingsConfig.Instance.AnimSpeedIndex;
-            animSpeedLabel.text = $"Anim: {SpeedToString(animSpeed)}";
+            TutorialAnimSpeedType animSpeed = tutorialSettingsConfig.AnimSpeedIndex;
+            animSpeedLabel.text = $"{SpeedToString(animSpeed)}";
         }
     }
 
