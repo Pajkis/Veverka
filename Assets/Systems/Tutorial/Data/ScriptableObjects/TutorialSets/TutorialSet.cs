@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ScriptableObject representing a set of tutorials (e.g., Stone set, Basic set)
 /// </summary>
-[CreateAssetMenu(menuName = "Data/Tutorial/TutorialSet")]
+[CreateAssetMenu(menuName = "Tutorial/Config/Set")]
 public class TutorialSet : ScriptableObject
 {
     [Header("Set Information")]

@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manager for handling all tutorial sets
 /// </summary>
-[CreateAssetMenu(menuName = "Data/Tutorial/TutorialSetManager")]
+[CreateAssetMenu(menuName = "Tutorial/Config/Manager")]
 public class TutorialSetManager : ScriptableObject
 {
     [Header("Available Tutorial Sets")]

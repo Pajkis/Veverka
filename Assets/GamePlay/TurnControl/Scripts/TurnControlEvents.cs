@@ -4,7 +4,7 @@ using UnityEngine;
 /// ScriptableObject event for TurnControl state changes.
 /// Used to notify listeners when a turn starts or completes.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/TurnControlEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/TurnControl")]
 public class TurnControlEvents : GameEventSO<TurnControlEventPayload>
 {
 }

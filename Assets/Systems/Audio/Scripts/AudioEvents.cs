@@ -4,7 +4,7 @@ using UnityEngine;
 /// Unified ScriptableObject event system for all audio related events
 /// (initialization, music, sound effects and UI sounds).
 /// </summary>
-[CreateAssetMenu(menuName = "Events/AudioEvents")]
+[CreateAssetMenu(menuName = "Systems/Events/Audio")]
 public class AudioEvents : GameEventSO<AudioEventPayload>
 {
     /// <summary>

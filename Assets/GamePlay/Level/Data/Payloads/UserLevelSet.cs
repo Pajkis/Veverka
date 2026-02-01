@@ -4,7 +4,7 @@ using System.IO;
 /// <summary>
 /// Special LevelSet for user-created levels stored in persistent storage
 /// </summary>
-[CreateAssetMenu(menuName = "Data/UserLevelSet")]
+[CreateAssetMenu(menuName = "Level/Config/UserSet")]
 public class UserLevelSet : LevelSet
 {
     private const int USER_LEVEL_COUNT = 10;

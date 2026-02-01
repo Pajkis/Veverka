@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Gameplay configuration settings for the game.
 /// </summary>
-[CreateAssetMenu(fileName = "GameplayConfig", menuName = "Configs/GameplayConfig")]
+[CreateAssetMenu(fileName = "GameplayConfig", menuName = "Gameplay/Config/Main")]
 public class GameplayConfig : ScriptableObject
 {
     [Header("Characters")]

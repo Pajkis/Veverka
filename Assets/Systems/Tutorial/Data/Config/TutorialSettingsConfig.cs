@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Scriptable object storing default values for game settings.
 /// </summary>
-[CreateAssetMenu(fileName = "TutorialSettingsConfig", menuName = "Configs/TutorialSettingsConfig")]
+[CreateAssetMenu(fileName = "TutorialSettingsConfig", menuName = "Tutorial/Config/Settings")]
 public class TutorialSettingsConfig : ScriptableObject
 {
     #region fields

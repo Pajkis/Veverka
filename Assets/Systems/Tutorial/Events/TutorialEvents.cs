@@ -4,7 +4,7 @@ using UnityEngine;
 /// ScriptableObject event channel for tutorial system communication
 /// Allows overlay (UI) to communicate with persistent TutorialGrid
 /// </summary>
-[CreateAssetMenu(menuName = "Events/Tutorial/TutorialEvents")]
+[CreateAssetMenu(menuName = "Tutorial/Events/Main")]
 public class TutorialEvents : ScriptableObject
 {
     private System.Action<TutorialEventPayload> listeners;

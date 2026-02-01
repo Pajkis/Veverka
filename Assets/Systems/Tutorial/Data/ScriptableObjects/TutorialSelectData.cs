@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 /// <remarks>This class is intended to be used as a Unity <see cref="ScriptableObject"/> asset for configuring
 /// tutorial selection in the editor.</remarks>
-[CreateAssetMenu(menuName = "Data/Tutorial/TutorialSelectData")]
+[CreateAssetMenu(menuName = "Tutorial/Config/SelectData")]
 public class TutorialSelectData : ScriptableObject
 {
     [Header("Tutorial Selection Data")]

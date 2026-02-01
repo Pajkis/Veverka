@@ -4,7 +4,7 @@ using UnityEngine;
 /// Unified ScriptableObject event system for all character-related events
 /// Replaces CharacterDataRequestEvent and CharacterMovedEvent
 /// </summary>
-[CreateAssetMenu(menuName = "Events/CharacterEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Character")]
 public class CharacterEvents : GameEventSO<CharacterEventPayload>
 {
     #region Event Filtering Methods

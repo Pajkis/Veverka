@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all setting-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/SettingEvents")]
+[CreateAssetMenu(menuName = "Systems/Events/Settings")]
 public class SettingEvents : GameEventSO<SettingEventPayload>
 {
     /// <summary>

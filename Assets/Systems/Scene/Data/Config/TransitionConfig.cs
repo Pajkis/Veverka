@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// Unified configuration for all transitions in the game.
 /// Handles both scene transitions and overlay animations with shared defaults and per-item overrides.
 /// </summary>
-[CreateAssetMenu(fileName = "TransitionConfig", menuName = "Configs/TransitionConfig")]
+[CreateAssetMenu(fileName = "TransitionConfig", menuName = "Systems/Config/Transition")]
 public class TransitionConfig : ScriptableObject
 {
     [Header("Default Transition Settings")]

@@ -6,7 +6,7 @@ using UnityEngine;
 /// Used by GameObjectAnimator component to control fade-in animation and visual effects.
 /// Create asset via: Assets -> Create -> Config -> GameObject Configuration
 /// </summary>
-[CreateAssetMenu(fileName = "GameObjectConfiguration", menuName = "Config/GameObject Configuration")]
+[CreateAssetMenu(fileName = "GameObjectConfiguration", menuName = "Shared/Config/SpawnAnimation")]
 public class GameObjectConfiguration : ScriptableObject
 {
     [Header("Spawn Animation Settings")]

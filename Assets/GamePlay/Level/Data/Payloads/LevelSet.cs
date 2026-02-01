@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ScriptableObject representing a set of levels (e.g., Stone set, Basic set)
 /// </summary>
-[CreateAssetMenu(menuName = "Data/LevelSet")]
+[CreateAssetMenu(menuName = "Level/Config/Set")]
 public class LevelSet : ScriptableObject
 {
     [Header("Set Information")]

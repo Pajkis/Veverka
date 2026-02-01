@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all nut-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/NutEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Nut")]
 public class NutEvents : GameEventSO<NutEventPayload>
 {
     /// <summary>
