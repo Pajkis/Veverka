@@ -27,7 +27,7 @@
 - Komentáře v kódu vždy v AJ
 - Pro logy používat DebugLogger
 - Separovat logiku UI a hry/herních objektů
-- **Žádná magická čísla** - vždy použít konfigurační soubor (pokud si nejsem jistý, konzultovat)
+- **Žádná magická čísla** - vždy použít konfigurační soubor (pokud si nejsem jistý ktery, konzultovat)
 - Upozornit na nalezená magická čísla v existujícím kódu
 
 ## Best Practices:
@@ -40,3 +40,4 @@
 - Validovat public/serialized fields (RequireComponent, null checks)
 - Assertions pro kritické předpoklady
 - Editor debug tools (Gizmos) kde to dává smysl
+- Nepouzivat Resources -> zvazit jine moznosti (SO, CSV, JSON)

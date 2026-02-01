@@ -1395,6 +1395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f312b40a3f6e054597c157b304d55a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overlayType: 0
 --- !u!225 &1651925651
 CanvasGroup:
   m_ObjectHideFlags: 0
