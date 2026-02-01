@@ -30,6 +30,12 @@ public class TutorialActionSequencer : MonoBehaviour
     private CharVeverka tutorialCharacter;
     private bool turnCompleted;
 
+    // Speed control
+    private TutorialAnimSpeedType textSpeedIndex = TutorialAnimSpeedType.Normal;
+    private TutorialAnimSpeedType animSpeedIndex = TutorialAnimSpeedType.Normal;
+    private bool isWaitingForNext;
+    private bool currentMessageFadedIn;
+
     // Properties
     public bool IsPlaying => isPlaying;
     public bool IsAutoplay
@@ -96,9 +102,14 @@ public class TutorialActionSequencer : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.Tutorial,
             $"Loaded sequence '{sequenceData.tutorialId}' for Set={setType}, Index={tutorialIndex}", this);
 
-        isAutoplay = sequenceData.autoplayEnabled;
+        // Load tutorial settings from config (user preferences)
+        isAutoplay = TutorialSettingsConfig.Instance.AutoplayEnable;
+        textSpeedIndex = TutorialSettingsConfig.Instance.TextSpeedIndex;
+        animSpeedIndex = TutorialSettingsConfig.Instance.AnimSpeedIndex;
+
         currentActionIndex = 0;
         isSkipRequested = false;
+        isWaitingForNext = false;
 
         // Find tutorial character
         tutorialCharacter = gridBuilder.FindCharacter();
@@ -135,26 +146,103 @@ public class TutorialActionSequencer : MonoBehaviour
     }
 
     /// <summary>
-    /// Replay the sequence from beginning.
+    /// Replay the sequence from beginning with fade out transition.
     /// </summary>
     public void Replay()
     {
+        StartCoroutine(ReplayCoroutine());
+    }
+
+    private IEnumerator ReplayCoroutine()
+    {
+        // Stop current playback
         if (playbackCoroutine != null)
         {
             StopCoroutine(playbackCoroutine);
         }
 
+        // Hide message immediately
         HideMessage();
+
+        // Fade out grid
+        yield return StartCoroutine(gridBuilder.FadeOutGrid());
+
+        // Get CSV data and parse grid for rebuild
+        TutorialSetType setType = tutorialSelection.TutorialSetType;
+        int tutorialIndex = tutorialSelection.TutorialIndex;
+        TextAsset csvData = tutorialSetManager.GetTutorialCsv(setType, tutorialIndex);
+
+        if (csvData != null)
+        {
+            TileType[,] grid = TileParser.LoadGridFromTextAsset(csvData);
+            if (grid != null)
+            {
+                // Build level (fade-in handled by GameObjectAnimator automatically)
+                gridBuilder.BuildLevel(grid);
+            }
+        }
+
+        // Wait a frame for build to complete
+        yield return null;
+
+        // Restart sequence
         StartSequence();
     }
 
     /// <summary>
-    /// Toggle autoplay mode.
+    /// Toggle autoplay mode and save to config.
     /// </summary>
     public void ToggleAutoplay()
     {
         isAutoplay = !isAutoplay;
+        TutorialSettingsConfig.Instance.TutorialSetAutoplay(isAutoplay);
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Autoplay: {isAutoplay}", this);
+    }
+
+    /// <summary>
+    /// Request next action (called by Next button in manual mode).
+    /// </summary>
+    public void RequestNext()
+    {
+        isSkipRequested = true;
+    }
+
+    /// <summary>
+    /// Set text speed and save to config.
+    /// </summary>
+    public void SetTextSpeed(TutorialAnimSpeedType speed)
+    {
+        textSpeedIndex = speed;
+        TutorialSettingsConfig.Instance.TutorialSetTextSpeed(speed);
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"Text speed: {speed}", this);
+    }
+
+    /// <summary>
+    /// Set animation speed and save to config.
+    /// </summary>
+    public void SetAnimSpeed(TutorialAnimSpeedType speed)
+    {
+        animSpeedIndex = speed;
+        TutorialSettingsConfig.Instance.TutorialSetAnimSpeed(speed);
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"Animation speed: {speed}", this);
+    }
+
+    /// <summary>
+    /// Get current text speed setting.
+    /// </summary>
+    public TutorialAnimSpeedType GetCurrentTextSpeed() => textSpeedIndex;
+
+    /// <summary>
+    /// Get current animation speed setting.
+    /// </summary>
+    public TutorialAnimSpeedType GetCurrentAnimSpeed() => animSpeedIndex;
+
+    /// <summary>
+    /// Check if Next button should be active (manual mode and message is visible or action complete).
+    /// </summary>
+    public bool IsNextButtonActive()
+    {
+        return !isAutoplay && (currentMessageFadedIn || !isPlaying);
     }
 
     #endregion
@@ -215,9 +303,14 @@ public class TutorialActionSequencer : MonoBehaviour
         // Reset turn completed flag before raising direction event
         turnCompleted = false;
 
-        // Raise direction event - this triggers the character movement/rotation
-        // which will be tracked by TurnControl
-        tutorialDirectionEvent.Raise(direction);
+        // Raise direction event with tutorial speedMultiplier
+        // This triggers the character movement/rotation which will be tracked by TurnControl
+        float tutorialAnimSpeed = (float)animSpeedIndex;
+        tutorialDirectionEvent.Raise(new DirectionPayload
+        {
+            direction = direction,
+            SpeedMultiplier = tutorialAnimSpeed
+        });
 
         // Wait for TurnCompleted event from TurnControl
         // This handles all chain reactions (character move, nut push, goal animation, etc.)
@@ -244,8 +337,9 @@ public class TutorialActionSequencer : MonoBehaviour
             }
         }
 
-        // Delay between actions
-        yield return new WaitForSeconds(GetActionDelay());
+        // Delay between actions (adjusted by animation speed)
+        float actionDelay = GetActionDelay() / tutorialAnimSpeed;
+        yield return new WaitForSeconds(actionDelay);
     }
 
     private IEnumerator ExecuteUndo()
@@ -284,22 +378,30 @@ public class TutorialActionSequencer : MonoBehaviour
                 "TutorialTurnControlEvents not assigned - cannot wait for undo completion", this);
         }
 
-        // Delay between actions
-        yield return new WaitForSeconds(GetActionDelay());
+        // Delay between actions (adjusted by animation speed)
+        float animMultiplier = (float)animSpeedIndex;
+        float actionDelay = GetActionDelay() / animMultiplier;
+        yield return new WaitForSeconds(actionDelay);
     }
 
     private IEnumerator ExecuteMessage(string text, float duration)
     {
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Message action: {text}", this);
 
+        // Apply text speed to all timings
+        float textMultiplier = (float)textSpeedIndex;
+        float fadeInDuration = GetMessageFadeIn() / textMultiplier;
+        float fadeOutDuration = GetMessageFadeOut() / textMultiplier;
+        float displayTime = duration / textMultiplier;
+
         // Show message with fade in
-        yield return ShowMessageWithFade(text);
+        yield return ShowMessageWithFade(text, fadeInDuration);
 
         if (isAutoplay)
         {
-            // Wait for duration or skip
+            // Autoplay mode: wait for duration or skip
             float elapsed = 0f;
-            while (elapsed < duration && !isSkipRequested)
+            while (elapsed < displayTime && !isSkipRequested)
             {
                 elapsed += Time.deltaTime;
                 yield return null;
@@ -307,57 +409,60 @@ public class TutorialActionSequencer : MonoBehaviour
         }
         else
         {
+            // Manual mode: message is faded in, activate Next button
+            currentMessageFadedIn = true;
+
             // Wait for manual skip
             yield return new WaitUntil(() => isSkipRequested);
+
+            currentMessageFadedIn = false;
         }
 
         isSkipRequested = false;
 
         // Hide message with fade out
-        yield return HideMessageWithFade();
+        yield return HideMessageWithFade(fadeOutDuration);
 
-        // Delay between actions
-        yield return new WaitForSeconds(GetActionDelay());
+        // Delay between actions (adjusted by text speed)
+        float actionDelay = GetActionDelay() / textMultiplier;
+        yield return new WaitForSeconds(actionDelay);
     }
 
     #endregion
 
     #region Message Display
 
-    private IEnumerator ShowMessageWithFade(string text)
+    private IEnumerator ShowMessageWithFade(string text, float fadeInDuration)
     {
         if (messageText == null) yield break;
 
         messageText.text = text;
         messageText.gameObject.SetActive(true);
 
-        // Fade in using text alpha
-        float fadeIn = GetMessageFadeIn();
+        // Fade in using text alpha (duration adjusted by text speed)
         SetTextAlpha(0f);
 
         float elapsed = 0f;
-        while (elapsed < fadeIn)
+        while (elapsed < fadeInDuration)
         {
             elapsed += Time.deltaTime;
-            SetTextAlpha(Mathf.Clamp01(elapsed / fadeIn));
+            SetTextAlpha(Mathf.Clamp01(elapsed / fadeInDuration));
             yield return null;
         }
 
         SetTextAlpha(1f);
     }
 
-    private IEnumerator HideMessageWithFade()
+    private IEnumerator HideMessageWithFade(float fadeOutDuration)
     {
         if (messageText == null) yield break;
 
-        // Fade out using text alpha
-        float fadeOut = GetMessageFadeOut();
-
+        // Fade out using text alpha (duration adjusted by text speed)
         float elapsed = 0f;
-        while (elapsed < fadeOut)
+        while (elapsed < fadeOutDuration)
         {
             elapsed += Time.deltaTime;
-            SetTextAlpha(Mathf.Clamp01(1f - (elapsed / fadeOut)));
+            SetTextAlpha(Mathf.Clamp01(1f - (elapsed / fadeOutDuration)));
             yield return null;
         }
 
