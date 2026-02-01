@@ -16,8 +16,7 @@ public abstract class Character : MonoBehaviour
     [SerializeField] protected float moveDuration = 0.15f;
     [SerializeField] protected float rotationDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
-    protected float animationSpeed;
-      protected CharacterEventPayload payload = new();
+    protected CharacterEventPayload payload = new();
 
     protected SmoothMover smoothMover;
     protected SmoothRotate smoothRotate;
@@ -27,14 +26,13 @@ public abstract class Character : MonoBehaviour
     #region Events
     [Header("Events")]
     [SerializeField] protected GridEvents gridEvents;
-    [SerializeField] protected AudioEvents audioEvents;
-    [SerializeField] protected SettingEvents settingEvents;
+    [SerializeField] protected AudioEvents audioEvents;   
     [SerializeField] protected CharacterEvents characterEvents;
     [SerializeField] protected UndoEvents undoEvents;
     #endregion
 
     #region Configs
-    [Header("Configs")]
+    [Header("Gameplay Configuration")]
     [SerializeField] protected GameplayConfig gameplayConfig;
     
     [Header("Debug")]
@@ -42,7 +40,7 @@ public abstract class Character : MonoBehaviour
     #endregion
 
 
-    #region Init & Properties
+    #region Init
 
     /// <summary>
     /// Initialize character with basic gameplay logging
@@ -91,18 +89,10 @@ public abstract class Character : MonoBehaviour
         // Initialize debug logger if config is available
         if (debugConfig != null) DebugLogger.Initialize(debugConfig);
 
-        // Register event listeners
-        settingEvents?.AddListener(OnSettingEvent);
+        // Register event listeners       
         undoEvents?.AddListener(OnUndoEvent);       
         characterEvents.AddListener(OnCharacterEvent);
-
-        // Request initial animation speed setting
-        settingEvents.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
-
+  
         // Listen for scene changes
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -111,8 +101,7 @@ public abstract class Character : MonoBehaviour
     /// On disable event handling
     /// </summary>
     protected virtual void OnDisable()
-    {
-        settingEvents?.RemoveListener(OnSettingEvent);
+    {       
         undoEvents?.RemoveListener(OnUndoEvent);      
         characterEvents.RemoveListener(OnCharacterEvent);
 
@@ -135,20 +124,7 @@ public abstract class Character : MonoBehaviour
     /// <param name="payload"></param>
     protected virtual void OnCharacterEvent(CharacterEventPayload payload)
     { }
-
-    /// <summary>
-    /// Get animation speed from settings
-    /// </summary>
-    /// <param name="payload"></param>
-    protected void OnSettingEvent(SettingEventPayload payload)
-    {
-        if (payload.EventType == SettingsEventType.DataBroadcast &&
-            payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            animationSpeed = payload.Value;
-        }
-    }
-
+    
     /// <summary>
     /// Handle undo events for this character
     /// </summary>
@@ -290,14 +266,16 @@ public abstract class Character : MonoBehaviour
     /// </summary>
     /// <param name="direction">direction of movement</param>
     /// <param name="distance">distance of movement in tiles</param>
-    /// <param name="duration">duration of movement</param>
+    /// <param name="duration">effective duration per tile (already adjusted by speedMultiplier in caller)</param>
     protected virtual void Move(Direction direction, int distance, float duration)
     {
         // decide position to move
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float moveDuration = (duration * distance) / animationSpeed;
+        float effectiveDuration = duration * distance;
+
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Move() preparing - gridPos={gridPosition}, transform.localPos={transform.localPosition}, currentPos={currentPosition}, targetPos={targetPosition}, effectiveDur={effectiveDuration}", this);
 
           // fill character moved payload for events - calling events in children classes
           payload = new CharacterEventPayload
@@ -312,13 +290,13 @@ public abstract class Character : MonoBehaviour
               ResponseData = false,
           };
 
-        //Raise move started event      
+        //Raise move started event
         characterEvents.Raise(payload);
         DebugLogger.Log(DebugLogCategory.EventSystem, $"{GetType().Name} move start to {gridPosition}", this);
         DebugLogger.Log(DebugLogCategory.CharacterMovement, $"MoveStarted  for {GetType().Name}", this);
 
         // execute smooth movement
-        smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
+        smoothMover.Move(currentPosition, targetPosition, effectiveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
 
     /// <summary>
@@ -367,8 +345,9 @@ public abstract class Character : MonoBehaviour
     /// <summary>
     /// rotation of object to the direction
     /// </summary>
-    /// <param name="direction"></param>
-    /// <returns></returns>
+    /// <param name="currentDirection">Current facing direction</param>
+    /// <param name="targetDirection">Target direction to rotate to</param>
+    /// <param name="duration">effective rotation duration (already adjusted by speedMultiplier in caller)</param>
     protected virtual void Rotate(Direction currentDirection, Direction targetDirection, float duration)
     {
         //Default: nothing
