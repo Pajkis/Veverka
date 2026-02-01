@@ -33,6 +33,9 @@ public class TutorialControlPanel : MonoBehaviour
         if (nextButton != null)
             nextButton.onClick.AddListener(OnNextClicked);
 
+        if (restartButton != null)
+            restartButton.onClick.AddListener(OnRestartClicked);
+
         if (textSpeedButton != null)
             textSpeedButton.onClick.AddListener(OnTextSpeedClicked);
 
@@ -76,6 +79,17 @@ public class TutorialControlPanel : MonoBehaviour
         if (tutorialActionSequencer != null)
         {
             tutorialActionSequencer.RequestNext();
+        }
+    }
+
+    /// <summary>
+    /// Restart tutorial from beginning with fade transition.
+    /// </summary>
+    private void OnRestartClicked()
+    {
+        if (tutorialActionSequencer != null)
+        {
+            tutorialActionSequencer.Replay();
         }
     }
 
