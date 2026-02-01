@@ -1,12 +1,15 @@
+using System;
 using UnityEngine;
 
 /// <summary>
-/// Polls keyboard arrow keys and raises a direction event with gameplay speed multiplier.
+/// Polls keyboard arrow keys and UI button arrows. Raises a direction event with gameplay speed multiplier.
 /// </summary>
 public class ArrowKeyInputManager : MonoBehaviour
 {
+    [Header("Events")]
     [SerializeField] private DirectionEvent arrowPressed;
     [SerializeField] private SettingEvents settingEvents;
+    [SerializeField] private DirectionEvent directionPressed;
 
     private float gameplaySpeedMultiplier = 1f;
 
@@ -45,12 +48,15 @@ public class ArrowKeyInputManager : MonoBehaviour
             DebugLogger.Log(DebugLogCategory.Settings, $"ArrowKeyInputManager received animation speed update: {gameplaySpeedMultiplier}", this);
         }
     }
-
+    /// <summary>
+    /// register input from arrow keys and raise direction event
+    /// </summary>
     void Update()
     {
         // Don't process input if pause menu is open
         if (FindAnyObjectByType<PauseMenu>() != null)
         {
+            DebugLogger.Log(DebugLogCategory.Input, $"Arrow key input blocker because pause menu is open", this);
             return;
         }
 
@@ -62,6 +68,39 @@ public class ArrowKeyInputManager : MonoBehaviour
             arrowPressed.Raise(new DirectionPayload { direction = Direction.Left, SpeedMultiplier = gameplaySpeedMultiplier });
         if (Input.GetKeyDown(KeyCode.RightArrow))
             arrowPressed.Raise(new DirectionPayload { direction = Direction.Right, SpeedMultiplier = gameplaySpeedMultiplier });
+    }
+
+    /// <summary>
+    /// Raises UI button arrow trigger direction event with gameplay speed multiplier
+    /// </summary>
+    public void ArrowButtonOnClickEvent(int directionInt)
+    {
+
+        // get direction from int
+        Direction direction = directionInt switch
+        {
+            0 => Direction.Up,
+            1 => Direction.Down,
+            2 => Direction.Left,
+            3 => Direction.Right,
+            _ => throw new ArgumentOutOfRangeException(nameof(directionInt), $"Invalid direction int value: {directionInt}")
+        };
+
+        // Don't process input if pause menu is open
+        if (FindAnyObjectByType<PauseMenu>() != null)
+        {
+            DebugLogger.Log(DebugLogCategory.Input, $"Arrow button {direction} clicked but pause menu is open - ignoring", this);
+            return;
+        }
+              
+
+        // raise direction event
+        directionPressed.Raise(new DirectionPayload
+        {
+            direction = direction,
+            SpeedMultiplier = gameplaySpeedMultiplier
+        });
+        DebugLogger.Log(DebugLogCategory.Input, $"Arrow pressed: {direction} with speedMultiplier: {gameplaySpeedMultiplier}", this);
     }
 }
 
