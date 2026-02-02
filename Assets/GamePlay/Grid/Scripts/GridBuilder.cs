@@ -238,8 +238,8 @@ public class GridBuilder : MonoBehaviour
             yield break;
         }
 
-        // Get all GameObjectAnimator components in grid
-        GameObjectAnimator[] animators = gridRoot.GetComponentsInChildren<GameObjectAnimator>();
+        // Get all SpawnAnimator components in grid
+        SpawnAnimator[] animators = gridRoot.GetComponentsInChildren<SpawnAnimator>();
 
         if (animators.Length == 0)
         {

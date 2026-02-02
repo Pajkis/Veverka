@@ -7,7 +7,7 @@ using UnityEngine;
 /// Automatically handles fade-in animation and runtime effect application on instantiate.
 /// Attach to any prefab that needs spawn animation.
 /// </summary>
-public class GameObjectAnimator : MonoBehaviour
+public class SpawnAnimator : MonoBehaviour
 {
     [Header("Configuration Source")]
     [Tooltip("Default configuration asset (centralized settings). Leave empty to use custom settings below.")]

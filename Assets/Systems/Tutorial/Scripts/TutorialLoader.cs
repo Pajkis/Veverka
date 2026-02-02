@@ -128,11 +128,11 @@ public class TutorialLoader : MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Starting close sequence - fade out duration: {fadeOutDuration}s", this);
 
-        // 1. Find all GameObjectAnimator components under GridRoot (tiles, character)
-        GameObjectAnimator[] tileAnimators = null;
+        // Find all SpawnAnimator components under GridRoot (tiles, character)
+        SpawnAnimator[] tileAnimators = null;
         if (gridRoot != null)
         {
-            tileAnimators = gridRoot.GetComponentsInChildren<GameObjectAnimator>();
+            tileAnimators = gridRoot.GetComponentsInChildren<SpawnAnimator>();
             DebugLogger.Log(DebugLogCategory.Tutorial, $"Found {tileAnimators.Length} GameObjectAnimators to fade out", this);
         }
         else
@@ -140,7 +140,7 @@ public class TutorialLoader : MonoBehaviour
             DebugLogger.LogWarning(DebugLogCategory.Tutorial, "GridRoot not assigned - tiles won't fade out!", this);
         }
 
-        // 2. Start fade-out for tiles and UI in parallel
+        //Start fade-out for tiles and UI in parallel
         if (tileAnimators != null && tileAnimators.Length > 0)
         {
             // Start tile fade-out coroutines (don't wait yet)
@@ -156,7 +156,7 @@ public class TutorialLoader : MonoBehaviour
         // Start UI fade-out (FadeOutAsync waits for completion)
         yield return animController.FadeOutAsync();
 
-        // 3. Tiles and UI are now invisible - raise ClearTutorial event (camera returns)
+        // Tiles and UI are now invisible - raise ClearTutorial event (camera returns)
         DebugLogger.Log(DebugLogCategory.Tutorial, "Fade-out complete - raising ClearTutorial event for camera transition", this);
         tutorialEvents.Raise(new TutorialEventPayload
         {
@@ -165,11 +165,11 @@ public class TutorialLoader : MonoBehaviour
             TutorialIndex = tutorialSelection.TutorialIndex
         });
 
-        // 4. Small delay to let camera move smoothly
+        // Small delay to let camera move smoothly
         DebugLogger.Log(DebugLogCategory.Tutorial, "Waiting for camera movement", this);
         yield return new WaitForSecondsRealtime(0.1f);
 
-        // 5. Destroy overlay
+        // Destroy overlay
         DebugLogger.Log(DebugLogCategory.Tutorial, "Destroying tutorial overlay", this);
         animController.DestroyImmediately();
     }
