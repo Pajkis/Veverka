@@ -11,7 +11,7 @@ public class GameObjectAnimator : MonoBehaviour
 {
     [Header("Configuration Source")]
     [Tooltip("Default configuration asset (centralized settings). Leave empty to use custom settings below.")]
-    [SerializeField] private GameObjectConfiguration configAsset;
+    [SerializeField] private SpawnAnimationConfig configAsset;
 
     [Tooltip("Use custom settings instead of config asset? If checked, values below override the asset.")]
     [SerializeField] private bool useCustomSettings = false;
