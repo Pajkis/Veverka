@@ -105,7 +105,6 @@ MonoBehaviour:
   moveDistance: 1
   gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  settingEvents: {fileID: 11400000, guid: 4ecf8a8f54239c84bbdbf8220fa75b23, type: 2}
   characterEvents: {fileID: 11400000, guid: d754ac43accc9e5488a80aaab654838f, type: 2}
   undoEvents: {fileID: 11400000, guid: 66cbb61528d47a04082bdf3df69c0379, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
@@ -148,7 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  configAsset: {fileID: 11400000, guid: 349d3b1d19fcf214da93f26d171470fb, type: 2}
+  configAsset: {fileID: 11400000, guid: 68113f675cb4d064495de8c846a03739, type: 2}
   useCustomSettings: 0
   enableFadeIn: 0
   fadeInDuration: 0.3

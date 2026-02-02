@@ -159,8 +159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  configAsset: {fileID: 11400000, guid: d3f3a76ecd74c964f920060d5781631b, type: 2}
-  useCustomSettings: 0
+  configAsset: {fileID: 11400000, guid: 68113f675cb4d064495de8c846a03739, type: 2}
+  useCustomSettings: 1
   enableFadeIn: 1
   fadeInDuration: 0.3
   fadeInCurve:
