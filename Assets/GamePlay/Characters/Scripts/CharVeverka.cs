@@ -168,124 +168,177 @@ public class CharVeverka : Character
         // Try to move in input arrow direction
         if (InputDirPayload.direction == facingDirection)
         {
-            int distance = moveDistance;
-            float moveSpeedMultiplier = InputDirPayload.SpeedMultiplier;
-            Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, InputDirPayload.direction, distance);
-            DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Movement attempt - From: {gridPosition} To: {targetPos} Direction: {InputDirPayload.direction}", this);
-
-            // Check if target position is in grid
-            var gridQuery = new TileQueryPayload { Position = targetPos };
-            gridEvents.Raise(new GridEventPayload
-            {
-                EventType = GridEventType.TileQuery,
-                Query = gridQuery
-            });
-
-            if (!gridQuery.IsInGrid) 
-            {
-                DebugLogger.Log(DebugLogCategory.CharacterMovement, "Target not in grid - sending MoveFailed event", this);
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    EventType = CharacterEventType.MoveFailed,
-                    CurrentPosition = gridPosition,
-                    CurrentDirection = InputDirPayload.direction,
-                });
-                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
-                return;
-            }
-
-            // If tile is walkable, move character
-            if (gridQuery.IsWalkable)
-            {
-                float effectiveDuration = moveDuration / InputDirPayload.SpeedMultiplier;
-                DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Tile is walkable - calling Move() with effectiveDuration: {effectiveDuration} (moveDuration: {moveDuration} / speedMultiplier: {InputDirPayload.SpeedMultiplier})", this);
-                Move(InputDirPayload.direction, distance, effectiveDuration);
-                return;
-            }
-
-            // Check if tile is pushable (only push nuts)
-            if (gridQuery.TileType != TileType.Nut)
-            {
-                DebugLogger.Log(DebugLogCategory.TileInteraction, "Tile is not a nut - sending MoveFailed event", this);
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    EventType = CharacterEventType.MoveFailed,
-                    CurrentPosition = gridPosition,
-                    CurrentDirection = InputDirPayload.direction,
-                });
-                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
-                return;
-            }
-
-            // Query if the nut can be pushed in this direction
-            Vector2Int targetPushPos = GridUtils.GetPositionInDir(targetPos, InputDirPayload.direction, distance);
-            var pushQuery = new TileQueryPayload
-            {
-                Position = targetPushPos,
-            };
-            DebugLogger.Log(DebugLogCategory.NutMovement, $"Checking if nut can be pushed to: {pushQuery.Position}", this);
-
-            gridEvents.Raise(new GridEventPayload
-            {
-                EventType = GridEventType.TileQuery,
-                Query = pushQuery
-            });
-
-            if (!pushQuery.IsInGrid) 
-            {
-                DebugLogger.Log(DebugLogCategory.NutMovement, "Push target not in grid - sending MoveFailed event", this);
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    EventType = CharacterEventType.MoveFailed,
-                    CurrentPosition = gridPosition,
-                    CurrentDirection = InputDirPayload.direction,
-                });
-                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
-                return;
-            }
-
-            // If the nut can be pushed, move both the nut and the character
-            if (pushQuery.IsPushable)
-            {
-                float effectiveDuration = moveDuration / InputDirPayload.SpeedMultiplier;
-                DebugLogger.Log(DebugLogCategory.NutMovement, $"Nut is pushable - calling Move() with effectiveDuration: {effectiveDuration} (moveDuration: {moveDuration} / speedMultiplier: {InputDirPayload.SpeedMultiplier})", this);
-                Move(InputDirPayload.direction, distance, effectiveDuration);
-
-                DebugLogger.Log(DebugLogCategory.NutMovement, $"Sending NutPush event - From: {targetPos} To: {targetPushPos}", this);
-                nutEvents.Raise(new NutEventPayload
-                {
-                    EventType = NutEventType.NutPush,
-                    PreviousPosition = targetPos,
-                    CurrentPosition = targetPushPos,
-                    Direction = InputDirPayload.direction,
-                    Distance = distance,
-                    SpeedMultiplier = InputDirPayload.SpeedMultiplier,
-                });
-            }
-            else
-            {
-                DebugLogger.Log(DebugLogCategory.NutMovement, "Nut cannot be pushed - sending MoveFailed event", this);
-                // move failed
-                characterEvents.Raise(new CharacterEventPayload
-                {
-                    EventType = CharacterEventType.MoveFailed,
-                    CurrentPosition = gridPosition,
-                    CurrentDirection = InputDirPayload.direction,
-                });
-                DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
-
-                // Cannot push - optionally animate failed push
-                DebugLogger.Log(DebugLogCategory.NutMovement, "Cannot push nut in this direction", this);
-            }
+            float effectiveDuration = moveDuration / InputDirPayload.SpeedMultiplier;
+            TryMoveToTarget(InputDirPayload, effectiveDuration);
         }
         // Rotate to input arrow direction
         else
         {
-            float effectiveDuration = rotationDuration / InputDirPayload.SpeedMultiplier;
-            DebugLogger.Log(DebugLogCategory.Rotation, $"Need to rotate - calling Rotate() with effectiveDuration: {effectiveDuration} (rotationDuration: {rotationDuration} / speedMultiplier: {InputDirPayload.SpeedMultiplier})", this);
-            // Rotate character to input arrow direction
-            Rotate(facingDirection, InputDirPayload.direction, effectiveDuration);
+            ExecuteRotation(InputDirPayload);
         }
+    }
+
+    /// <summary>
+    /// Raises MoveFailed event for character
+    /// </summary>
+    /// <param name="direction">Direction of failed movement attempt</param>
+    private void RaiseMoveFailed(Direction direction)
+    {
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, "Sending MoveFailed event", this);
+        characterEvents.Raise(new CharacterEventPayload
+        {
+            EventType = CharacterEventType.MoveFailed,
+            CurrentPosition = gridPosition,
+            CurrentDirection = direction,
+        });
+        DebugLogger.Log(DebugLogCategory.EventSystem, "MoveFailed event sent", this);
+    }
+
+    /// <summary>
+    /// Executes character movement with logging
+    /// </summary>
+    /// <param name="direction">Direction to move</param>
+    /// <param name="distance">Distance to move</param>
+    /// <param name="effectiveDuration">Effective duration (already adjusted by speedMultiplier)</param>
+    private void ExecuteMove(Direction direction, int distance, float effectiveDuration)
+    {
+        DebugLogger.Log(DebugLogCategory.CharacterMovement,
+            $"Calling Move() with effectiveDuration: {effectiveDuration}", this);
+        Move(direction, distance, effectiveDuration);
+    }
+
+    /// <summary>
+    /// Checks if position is valid in grid
+    /// </summary>
+    /// <param name="position">Position to check</param>
+    /// <param name="query">Output query payload with results</param>
+    /// <returns>True if position is in grid, false otherwise</returns>
+    private bool IsPositionValid(Vector2Int position, out TileQueryPayload query)
+    {
+        query = new TileQueryPayload { Position = position };
+        gridEvents.Raise(new GridEventPayload
+        {
+            EventType = GridEventType.TileQuery,
+            Query = query
+        });
+        return query.IsInGrid;
+    }
+
+    /// <summary>
+    /// Executes character rotation to input direction
+    /// </summary>
+    /// <param name="inputPayload">Input direction payload</param>
+    private void ExecuteRotation(DirectionPayload inputPayload)
+    {
+        float effectiveDuration = rotationDuration / inputPayload.SpeedMultiplier;
+        DebugLogger.Log(DebugLogCategory.Rotation, $"Need to rotate - calling Rotate() with effectiveDuration: {effectiveDuration} (rotationDuration: {rotationDuration} / speedMultiplier: {inputPayload.SpeedMultiplier})", this);
+        // Rotate character to input arrow direction
+        Rotate(facingDirection, inputPayload.direction, effectiveDuration);
+    }
+
+    /// <summary>
+    /// Executes both character move and nut push
+    /// </summary>
+    /// <param name="nutPos">Current nut position</param>
+    /// <param name="targetPos">Target nut position</param>
+    /// <param name="direction">Direction of push</param>
+    /// <param name="distance">Distance to push</param>
+    /// <param name="effectiveDuration">Effective duration for move</param>
+    /// <param name="speedMultiplier">Speed multiplier for nut animation</param>
+    private void ExecutePushMove(Vector2Int nutPos, Vector2Int targetPos, Direction direction, int distance, float effectiveDuration, float speedMultiplier)
+    {
+        ExecuteMove(direction, distance, effectiveDuration);
+
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Sending NutPush event - From: {nutPos} To: {targetPos}", this);
+        nutEvents.Raise(new NutEventPayload
+        {
+            EventType = NutEventType.NutPush,
+            PreviousPosition = nutPos,
+            CurrentPosition = targetPos,
+            Direction = direction,
+            Distance = distance,
+            SpeedMultiplier = speedMultiplier,
+        });
+    }
+
+    /// <summary>
+    /// Tries to push a nut in the specified direction
+    /// </summary>
+    /// <param name="nutPosition">Current nut position</param>
+    /// <param name="direction">Direction to push</param>
+    /// <param name="distance">Distance to push</param>
+    /// <param name="effectiveDuration">Effective duration for movement</param>
+    /// <param name="speedMultiplier">Speed multiplier for animation</param>
+    /// <returns>True if push succeeded, false otherwise</returns>
+    private bool TryPushNut(Vector2Int nutPosition, Direction direction, int distance, float effectiveDuration, float speedMultiplier)
+    {
+        // Query if the nut can be pushed in this direction
+        Vector2Int targetPushPos = GridUtils.GetPositionInDir(nutPosition, direction, distance);
+        DebugLogger.Log(DebugLogCategory.NutMovement, $"Checking if nut can be pushed to: {targetPushPos}", this);
+
+        if (!IsPositionValid(targetPushPos, out TileQueryPayload pushQuery))
+        {
+            DebugLogger.Log(DebugLogCategory.NutMovement, "Push target not in grid - sending MoveFailed event", this);
+            RaiseMoveFailed(direction);
+            return false;
+        }
+
+        // If the nut can be pushed, move both the nut and the character
+        if (pushQuery.IsPushable)
+        {
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Nut is pushable - effectiveDuration: {effectiveDuration}", this);
+            ExecutePushMove(nutPosition, targetPushPos, direction, distance, effectiveDuration, speedMultiplier);
+            return true;
+        }
+        else
+        {
+            DebugLogger.Log(DebugLogCategory.NutMovement, "Nut cannot be pushed - sending MoveFailed event", this);
+            RaiseMoveFailed(direction);
+
+            // Cannot push - optionally animate failed push
+            DebugLogger.Log(DebugLogCategory.NutMovement, "Cannot push nut in this direction", this);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attempts to move character to target position in given direction
+    /// Handles walkable tiles and nut pushing
+    /// </summary>
+    /// <param name="inputPayload">Input direction payload</param>
+    /// <param name="effectiveDuration">Effective duration for movement</param>
+    private void TryMoveToTarget(DirectionPayload inputPayload, float effectiveDuration)
+    {
+        int distance = moveDistance;
+        Vector2Int targetPos = GridUtils.GetPositionInDir(gridPosition, inputPayload.direction, distance);
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Movement attempt - From: {gridPosition} To: {targetPos} Direction: {inputPayload.direction}", this);
+
+        // Check if target position is in grid
+        if (!IsPositionValid(targetPos, out TileQueryPayload gridQuery))
+        {
+            DebugLogger.Log(DebugLogCategory.CharacterMovement, "Target not in grid - sending MoveFailed event", this);
+            RaiseMoveFailed(inputPayload.direction);
+            return;
+        }
+
+        // If tile is walkable, move character
+        if (gridQuery.IsWalkable)
+        {
+            DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Tile is walkable - effectiveDuration: {effectiveDuration} (moveDuration: {moveDuration} / speedMultiplier: {inputPayload.SpeedMultiplier})", this);
+            ExecuteMove(inputPayload.direction, distance, effectiveDuration);
+            return;
+        }
+
+        // Check if tile is pushable (only push nuts)
+        if (gridQuery.TileType != TileType.Nut)
+        {
+            DebugLogger.Log(DebugLogCategory.TileInteraction, "Tile is not a nut - sending MoveFailed event", this);
+            RaiseMoveFailed(inputPayload.direction);
+            return;
+        }
+
+        // Try to push the nut
+        TryPushNut(targetPos, inputPayload.direction, distance, effectiveDuration, inputPayload.SpeedMultiplier);
     }
 
     /// <summary>
