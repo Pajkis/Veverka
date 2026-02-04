@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fa36ff6e3d368b4c8c9f4ce3b5fa627, type: 3}
   m_Name: TutorialSpawnAnimConfig
   m_EditorClassIdentifier: 
-  enableFadeIn: 0
+  enableFadeIn: 1
   fadeInDuration: 0.3
   fadeInCurve:
     serializedVersion: 2

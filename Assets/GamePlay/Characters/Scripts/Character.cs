@@ -145,54 +145,60 @@ public abstract class Character : MonoBehaviour
         switch (payload.UndoData.ActionType)
         {
             case UndoActionType.CharacterMove:
-                ExecuteUndoMove(payload.UndoData, payload.RequestId);
+                ExecuteUndoMove(payload);
                 break;
             case UndoActionType.CharacterRotation:
-                ExecuteUndoRotation(payload.UndoData, payload.RequestId);
+                ExecuteUndoRotation(payload);
                 break;
         }
     }
 
-    private void ExecuteUndoMove(UndoData undoData, string requestId)
+    private void ExecuteUndoMove(UndoEventPayload payload)
     {
         if (smoothMover.IsMoving)
         {
             DebugLogger.LogWarning(DebugLogCategory.UndoLogic, "Character already moving, skipping undo", this);
-            CompleteUndoRequest(requestId);
+            CompleteUndoRequest(payload.RequestId);
             return;
         }
 
-        Vector3 fromWorld = GridUtils.GridToWorld(undoData.CurrentPosition);
-        Vector3 toWorld = GridUtils.GridToWorld(undoData.PreviousPosition);
+        Vector3 fromWorld = GridUtils.GridToWorld(payload.UndoData.CurrentPosition);
+        Vector3 toWorld = GridUtils.GridToWorld(payload.UndoData.PreviousPosition);
 
-        smoothMover.Move(fromWorld, toWorld, undoData.Duration,
+        // Calculate duration using SAME formula as normal movement
+        float effectiveDuration = moveDuration / payload.SpeedMultiplier;
+
+        smoothMover.Move(fromWorld, toWorld, effectiveDuration,
             onStart: null,
-            onComplete: () => OnUndoMoveComplete(undoData, requestId));
+            onComplete: () => OnUndoMoveComplete(payload.UndoData, payload.RequestId));
 
-        gridPosition = undoData.PreviousPosition;
-        facingDirection = undoData.CurrentDirection;
+        gridPosition = payload.UndoData.PreviousPosition;
+        facingDirection = payload.UndoData.CurrentDirection;
 
         DebugLogger.Log(DebugLogCategory.UndoLogic,
-            $"Started undo move from {undoData.CurrentPosition} to {undoData.PreviousPosition}", this);
+            $"Started undo move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with speed {payload.SpeedMultiplier}", this);
     }
 
-    private void ExecuteUndoRotation(UndoData undoData, string requestId)
+    private void ExecuteUndoRotation(UndoEventPayload payload)
     {
         if (smoothRotate != null)
         {
-            smoothRotate.Rotate(undoData.CurrentPosition, undoData.CurrentDirection, undoData.PreviousDirection, undoData.Duration,
-                onStart: null,
-                onComplete: () => OnUndoRotationComplete(undoData, requestId));
+            // Calculate rotation duration using SAME formula as normal movement
+            float effectiveDuration = rotationDuration / payload.SpeedMultiplier;
 
-            facingDirection = undoData.PreviousDirection;
+            smoothRotate.Rotate(payload.UndoData.CurrentPosition, payload.UndoData.CurrentDirection, payload.UndoData.PreviousDirection, effectiveDuration,
+                onStart: null,
+                onComplete: () => OnUndoRotationComplete(payload.UndoData, payload.RequestId));
+
+            facingDirection = payload.UndoData.PreviousDirection;
 
             DebugLogger.Log(DebugLogCategory.UndoLogic,
-                $"Started undo rotation from {undoData.CurrentDirection} to {undoData.PreviousDirection}", this);
+                $"Started undo rotation from {payload.UndoData.CurrentDirection} to {payload.UndoData.PreviousDirection} with speed {payload.SpeedMultiplier}", this);
         }
         else
         {
             DebugLogger.LogError(DebugLogCategory.UndoLogic, "SmoothRotate component not found", this);
-            CompleteUndoRequest(requestId);
+            CompleteUndoRequest(payload.RequestId);
         }
     }
 

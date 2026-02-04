@@ -10,6 +10,7 @@ public class UndoController : MonoBehaviour
     [Header("Events")]
     [SerializeField] private UndoEvents undoEvents;
     [SerializeField] private AudioEvents audioEvents;
+    [SerializeField] private SettingEvents settingEvents;
 
     [Header("Debug")]
     [SerializeField] private DebugLogConfig debugConfig;
@@ -17,6 +18,7 @@ public class UndoController : MonoBehaviour
     private TurnHistory turnHistory;
     private HashSet<string> expectedUndoCompletions = new();
     private bool isUndoInProgress = false;
+    private float gameplaySpeedMultiplier = 1f;
 
     private void Awake()
     {
@@ -32,6 +34,14 @@ public class UndoController : MonoBehaviour
         }
 
         undoEvents?.AddListener(OnUndoEvent);
+        settingEvents?.AddListener(OnSettingEvent);
+
+        // Request current animation speed value
+        settingEvents?.Raise(new SettingEventPayload
+        {
+            EventType = SettingsEventType.DataRequest,
+            Setting = GameSettingsEnum.AnimationSpeed
+        });
     }
 
     private void OnDisable()
@@ -42,6 +52,7 @@ public class UndoController : MonoBehaviour
         }
 
         undoEvents?.RemoveListener(OnUndoEvent);
+        settingEvents?.RemoveListener(OnSettingEvent);
     }
 
     public bool CanUndo()
@@ -81,6 +92,19 @@ public class UndoController : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.TurnRecord, "Turn completed and registered in history", this);
     }
 
+    /// <summary>
+    /// Handle setting change events - update cached speed multiplier
+    /// </summary>
+    private void OnSettingEvent(SettingEventPayload payload)
+    {
+        if (payload.EventType == SettingsEventType.DataBroadcast &&
+            payload.Setting == GameSettingsEnum.AnimationSpeed)
+        {
+            gameplaySpeedMultiplier = payload.Value;
+            DebugLogger.Log(DebugLogCategory.Settings, $"UndoController received animation speed update: {gameplaySpeedMultiplier}", this);
+        }
+    }
+
     private void StartUndoProcess(List<UndoData> turnData)
     {
         isUndoInProgress = true;
@@ -113,7 +137,8 @@ public class UndoController : MonoBehaviour
             {
                 EventType = eventType,
                 UndoData = undoData,
-                RequestId = requestId
+                RequestId = requestId,
+                SpeedMultiplier = gameplaySpeedMultiplier
             });
 
             DebugLogger.Log(DebugLogCategory.UndoLogic,
