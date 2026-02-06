@@ -13,6 +13,5 @@ public struct UndoEventPayload
 {
     public UndoEventType EventType;
     public UndoData UndoData;
-    public string RequestId; // For tracking completion
-    public float SpeedMultiplier; // Current speedMultiplier from game settings
+    public string RequestId; // For tracking completion   
 }

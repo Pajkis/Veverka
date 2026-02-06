@@ -5,5 +5,4 @@
 public struct DirectionPayload
 {
     public Direction direction;
-    public float SpeedMultiplier;
 }

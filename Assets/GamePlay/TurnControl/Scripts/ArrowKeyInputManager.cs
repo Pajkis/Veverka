@@ -6,12 +6,17 @@ using UnityEngine;
 /// </summary>
 public class ArrowKeyInputManager : MonoBehaviour
 {
+    #region serialized fields
     [Header("Events")]
     [SerializeField] private DirectionEvent arrowPressed;
     [SerializeField] private SettingEvents settingEvents;
     [SerializeField] private DirectionEvent directionPressed;
 
-    private float gameplaySpeedMultiplier = 1f;
+    [Header("Runtime Turn state")]
+    [SerializeField] private TurnState turnState;
+    #endregion
+
+    #region methods
 
     /// <summary>
     /// Subscribe to setting events and request initial animation speed
@@ -44,8 +49,8 @@ public class ArrowKeyInputManager : MonoBehaviour
         if (payload.EventType == SettingsEventType.DataBroadcast &&
             payload.Setting == GameSettingsEnum.AnimationSpeed)
         {
-            gameplaySpeedMultiplier = payload.Value;
-            DebugLogger.Log(DebugLogCategory.Settings, $"ArrowKeyInputManager received animation speed update: {gameplaySpeedMultiplier}", this);
+            turnState.CurrentSpeedMultiplier = payload.Value;
+            DebugLogger.Log(DebugLogCategory.Settings, $"ArrowKeyInputManager received animation speed for current turn: {turnState.CurrentSpeedMultiplier}", this);
         }
     }
     /// <summary>
@@ -61,13 +66,13 @@ public class ArrowKeyInputManager : MonoBehaviour
         }
 
         if (Input.GetKeyDown(KeyCode.UpArrow))
-            arrowPressed.Raise(new DirectionPayload { direction = Direction.Up, SpeedMultiplier = gameplaySpeedMultiplier });
+            arrowPressed.Raise(new DirectionPayload { direction = Direction.Up});
         if (Input.GetKeyDown(KeyCode.DownArrow))
-            arrowPressed.Raise(new DirectionPayload { direction = Direction.Down, SpeedMultiplier = gameplaySpeedMultiplier });
+            arrowPressed.Raise(new DirectionPayload { direction = Direction.Down });
         if (Input.GetKeyDown(KeyCode.LeftArrow))
-            arrowPressed.Raise(new DirectionPayload { direction = Direction.Left, SpeedMultiplier = gameplaySpeedMultiplier });
+            arrowPressed.Raise(new DirectionPayload { direction = Direction.Left });
         if (Input.GetKeyDown(KeyCode.RightArrow))
-            arrowPressed.Raise(new DirectionPayload { direction = Direction.Right, SpeedMultiplier = gameplaySpeedMultiplier });
+            arrowPressed.Raise(new DirectionPayload { direction = Direction.Right });
     }
 
     /// <summary>
@@ -75,7 +80,6 @@ public class ArrowKeyInputManager : MonoBehaviour
     /// </summary>
     public void ArrowButtonOnClickEvent(int directionInt)
     {
-
         // get direction from int
         Direction direction = directionInt switch
         {
@@ -91,16 +95,15 @@ public class ArrowKeyInputManager : MonoBehaviour
         {
             DebugLogger.Log(DebugLogCategory.Input, $"Arrow button {direction} clicked but pause menu is open - ignoring", this);
             return;
-        }
-              
+        }            
 
         // raise direction event
         directionPressed.Raise(new DirectionPayload
         {
-            direction = direction,
-            SpeedMultiplier = gameplaySpeedMultiplier
+            direction = direction,            
         });
-        DebugLogger.Log(DebugLogCategory.Input, $"Arrow pressed: {direction} with speedMultiplier: {gameplaySpeedMultiplier}", this);
+        DebugLogger.Log(DebugLogCategory.Input, $"Arrow pressed: {direction}", this);
     }
+    #endregion
 }
 
