@@ -102,6 +102,7 @@ MonoBehaviour:
   gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
+  turnState: {fileID: 11400000, guid: c3d2d3a15d54d3e469d7f3c6504f3f44, type: 2}
   popoutPositionOffset: {x: 0, y: 0}
   popoutStartDelay: 0
   popoutScale: 1

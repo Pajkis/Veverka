@@ -910,6 +910,7 @@ MonoBehaviour:
   tutorialTurnControlEvents: {fileID: 11400000, guid: e71ed2134e2386d4e81352550706b2c2, type: 2}
   undoController: {fileID: 7743572679373759533}
   tutorialSettingsConfig: {fileID: 11400000, guid: 0a0bedd47f438ad49bb81564380547a5, type: 2}
+  tutorialTurnState: {fileID: 11400000, guid: c3d2d3a15d54d3e469d7f3c6504f3f44, type: 2}
 --- !u!114 &4478150438314494464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1259,7 +1260,7 @@ GameObject:
   - component: {fileID: 6093280330879831745}
   - component: {fileID: 7571116996201178574}
   m_Layer: 0
-  m_Name: UI_ControlPanel
+  m_Name: ControlPanelUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1350,7 +1351,6 @@ MonoBehaviour:
   turnControl: {fileID: 6840930254752909630}
   undoEvents: {fileID: 11400000, guid: 66cbb61528d47a04082bdf3df69c0379, type: 2}
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
-  settingEvents: {fileID: 0}
   debugConfig: {fileID: 11400000, guid: eee286a70396c2543b86897540c600a1, type: 2}
 --- !u!1 &9221787206928354234
 GameObject:

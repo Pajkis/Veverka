@@ -100,14 +100,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8fb74a00b3a6b40bd0001d72be7d18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDuration: 0.3
-  rotationDuration: 0.15
+  baseMoveDuration: 0.15
+  baseRotationDuration: 0.15
   moveDistance: 1
   gridEvents: {fileID: 11400000, guid: 9c481eb0323f4cb48b870798b677e3ce, type: 2}
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   characterEvents: {fileID: 11400000, guid: d754ac43accc9e5488a80aaab654838f, type: 2}
   undoEvents: {fileID: 11400000, guid: 66cbb61528d47a04082bdf3df69c0379, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
+  turnState: {fileID: 11400000, guid: c3d2d3a15d54d3e469d7f3c6504f3f44, type: 2}
   debugConfig: {fileID: 11400000, guid: eee286a70396c2543b86897540c600a1, type: 2}
   onArrowPressed: {fileID: 11400000, guid: 3a331465deef70b4393b1ff65925b34c, type: 2}
   nutEvents: {fileID: 11400000, guid: 762bf64cd7fad5d4f8ef7c36916b6c26, type: 2}
