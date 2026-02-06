@@ -10,15 +10,13 @@ public class UndoController : MonoBehaviour
     [Header("Events")]
     [SerializeField] private UndoEvents undoEvents;
     [SerializeField] private AudioEvents audioEvents;
-    [SerializeField] private SettingEvents settingEvents;
 
     [Header("Debug")]
     [SerializeField] private DebugLogConfig debugConfig;
 
     private TurnHistory turnHistory;
     private HashSet<string> expectedUndoCompletions = new();
-    private bool isUndoInProgress = false;
-    private float gameplaySpeedMultiplier = 1f;
+    private bool isUndoInProgress = false;  
 
     private void Awake()
     {
@@ -33,15 +31,7 @@ public class UndoController : MonoBehaviour
             turnRecorder.OnTurnCompleted += OnTurnCompleted;
         }
 
-        undoEvents?.AddListener(OnUndoEvent);
-        settingEvents?.AddListener(OnSettingEvent);
-
-        // Request current animation speed value
-        settingEvents?.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
+        undoEvents?.AddListener(OnUndoEvent); 
     }
 
     private void OnDisable()
@@ -51,15 +41,21 @@ public class UndoController : MonoBehaviour
             turnRecorder.OnTurnCompleted -= OnTurnCompleted;
         }
 
-        undoEvents?.RemoveListener(OnUndoEvent);
-        settingEvents?.RemoveListener(OnSettingEvent);
+        undoEvents?.RemoveListener(OnUndoEvent);       
     }
 
+    /// <summary>
+    /// Check if Undo is possible - undo can be done until last goal or nut interaction
+    /// </summary>
+    /// <returns></returns>
     public bool CanUndo()
     {
         return turnHistory.TurnCount > 0 && !turnControl.IsInputLocked && !isUndoInProgress;
     }
 
+    /// <summary>
+    /// Request undo and start Undo if it possble
+    /// </summary>
     public void RequestUndo()
     {
         if (!CanUndo())
@@ -79,6 +75,9 @@ public class UndoController : MonoBehaviour
         StartUndoProcess(lastTurn);
     }
 
+    /// <summary>
+    /// Clear history and cancel turn - in case of scene unload or restart
+    /// </summary>
     public void ClearHistory()
     {
         turnHistory.ClearHistory();
@@ -91,20 +90,11 @@ public class UndoController : MonoBehaviour
         turnHistory.RegisterTurn(turnData);
         DebugLogger.Log(DebugLogCategory.TurnRecord, "Turn completed and registered in history", this);
     }
-
+      
     /// <summary>
-    /// Handle setting change events - update cached speed multiplier
+    /// Start execution of undo process
     /// </summary>
-    private void OnSettingEvent(SettingEventPayload payload)
-    {
-        if (payload.EventType == SettingsEventType.DataBroadcast &&
-            payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            gameplaySpeedMultiplier = payload.Value;
-            DebugLogger.Log(DebugLogCategory.Settings, $"UndoController received animation speed update: {gameplaySpeedMultiplier}", this);
-        }
-    }
-
+    /// <param name="turnData">list of data with undo</param>
     private void StartUndoProcess(List<UndoData> turnData)
     {
         isUndoInProgress = true;
@@ -137,8 +127,7 @@ public class UndoController : MonoBehaviour
             {
                 EventType = eventType,
                 UndoData = undoData,
-                RequestId = requestId,
-                SpeedMultiplier = gameplaySpeedMultiplier
+                RequestId = requestId,              
             });
 
             DebugLogger.Log(DebugLogCategory.UndoLogic,
@@ -169,7 +158,6 @@ public class UndoController : MonoBehaviour
             }
         }
     }
-
     private void CompleteUndoProcess()
     {
         isUndoInProgress = false;
