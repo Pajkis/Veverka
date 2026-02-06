@@ -7,7 +7,7 @@ public abstract class NutTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1;
-    [SerializeField] protected float moveDuration = 0.15f;
+    [SerializeField] protected float baseMoveDuration = 0.15f;
    
   //  protected float speedMultiplier = 1f;
     protected NutEventPayload payload = new();
@@ -70,10 +70,10 @@ public abstract class NutTile : TileObject
         Vector3 fromWorld = GridUtils.GridToWorld(payload.UndoData.CurrentPosition);
         Vector3 toWorld = GridUtils.GridToWorld(payload.UndoData.PreviousPosition);
 
-        // Calculate duration using SAME formula as normal movement
-        float effectiveDuration = moveDuration / payload.SpeedMultiplier;
+        // Calculate move duration
+        float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
 
-        smoothMover.Move(fromWorld, toWorld, effectiveDuration,
+        smoothMover.Move(fromWorld, toWorld, moveDuration,
             onStart: null,
             onComplete: () => OnUndoMoveComplete(payload.UndoData, payload.RequestId));
 
@@ -95,7 +95,7 @@ public abstract class NutTile : TileObject
         GridPosition = payload.UndoData.PreviousPosition;
 
         DebugLogger.Log(DebugLogCategory.UndoLogic,
-            $"Started undo nut move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with speed {payload.SpeedMultiplier}", this);
+            $"Started undo nut move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with duration {moveDuration}", this);
     }
 
     private void OnUndoMoveComplete(UndoData undoData, string requestId)
@@ -135,7 +135,7 @@ public abstract class NutTile : TileObject
         }
 
         // set configs
-        moveDuration = gameplayConfig.nutMoveTime;
+        baseMoveDuration = gameplayConfig.nutMoveTime;
 
         // base initialization
         base.Init(tileType, gridPosition);
@@ -164,19 +164,17 @@ public abstract class NutTile : TileObject
             DebugLogger.Log(DebugLogCategory.NutMovement, $"Position mismatch - GridPosition: {GridPosition} != PayloadPrevious: {payload.PreviousPosition}", this);
             return;
         }
-
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Position match - calling Move()", this);
 
         // Calculate effective speed multiplier based on splash effect
-        float effectiveSpeedMultiplier = payload.SpeedMultiplier;
+        float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
         if (payload.IsSplash)
         {
-            effectiveSpeedMultiplier *= payload.SplashSpeedFactor;
-            DebugLogger.Log(DebugLogCategory.NutMovement, $"Splash push - applying factor {payload.SplashSpeedFactor} (effective: {effectiveSpeedMultiplier})", this);
+            moveDuration /= payload.SplashSpeedFactor;
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Splash push - applying factor {payload.SplashSpeedFactor},move duration {moveDuration}", this);
         }
 
-        Move(payload.Direction, payload.Distance, effectiveSpeedMultiplier);
-      
+        Move(payload.Direction, payload.Distance, moveDuration);
      }
 
     /// <summary>
@@ -206,7 +204,7 @@ public abstract class NutTile : TileObject
     /// <param name="direction">direction of movemebt</param>
     /// <param name="distance">distance of movement in tiles</param>
     /// <param name="duration">duration of movement</param>
-    public virtual void Move(Direction direction, int distance, float speedMultiplier)
+    public virtual void Move(Direction direction, int distance, float duration)
     {
        // if (smoothMover.IsMoving) return;
 
@@ -228,13 +226,12 @@ public abstract class NutTile : TileObject
             NutTile = this,
             CurrentPosition = targetPosVec2Int,
             PreviousPosition = previousPosition,
-            SpeedMultiplier = speedMultiplier,
-        };
+         };
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}", this);
 
         // execute smooth movement
-        smoothMover.Move(currentPosition, targetPosition, moveDuration / speedMultiplier, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
+        smoothMover.Move(currentPosition, targetPosition, duration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
      
     /// <summary>

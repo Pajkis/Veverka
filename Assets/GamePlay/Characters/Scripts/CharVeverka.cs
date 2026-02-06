@@ -86,7 +86,7 @@ public class CharVeverka : Character
                 EventType = CharacterEventType.DataResponse,
                 CurrentPosition = gridPosition,
                 CurrentDirection = facingDirection,
-                Duration = moveDuration,
+               // Duration = baseMoveDuration,
                 RequestData = false,
                 ResponseData = true,
                 BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.LetsStart, gameplayConfig.characterBubbleTime),
@@ -132,7 +132,7 @@ public class CharVeverka : Character
             EventType = CharacterEventType.DataResponse,
             CurrentPosition = gridPosition,
             CurrentDirection = facingDirection,
-            Duration = moveDuration,
+           // Duration = baseMoveDuration,
             RequestData = false,
             ResponseData = true,
             BubbleMessage = BubbleMessageEventPayload.None,
@@ -151,9 +151,8 @@ public class CharVeverka : Character
     /// <param name="direction"></param>
     void HandleInput(DirectionPayload InputDirPayload)
     {
-        DebugLogger.Log(DebugLogCategory.Input, $"HandleInput called - Direction: {InputDirPayload.direction}, SpeedMultiplier: {InputDirPayload.SpeedMultiplier}", this);
-        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"moveDuration field: {moveDuration}, rotationDuration field: {rotationDuration}", this);
-
+        DebugLogger.Log(DebugLogCategory.Input, $"HandleInput called - Direction: {InputDirPayload.direction}", this);
+        
         // Use TurnControl instead of SmoothMover for input locking
         if (FindObjectOfType<TurnControl>()?.IsInputLocked == true) 
         {
@@ -168,8 +167,8 @@ public class CharVeverka : Character
         // Try to move in input arrow direction
         if (InputDirPayload.direction == facingDirection)
         {
-            float effectiveDuration = moveDuration / InputDirPayload.SpeedMultiplier;
-            TryMoveToTarget(InputDirPayload, effectiveDuration);
+            float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
+            TryMoveToTarget(InputDirPayload, moveDuration);
         }
         // Rotate to input arrow direction
         else
@@ -200,11 +199,11 @@ public class CharVeverka : Character
     /// <param name="direction">Direction to move</param>
     /// <param name="distance">Distance to move</param>
     /// <param name="effectiveDuration">Effective duration (already adjusted by speedMultiplier)</param>
-    private void ExecuteMove(Direction direction, int distance, float effectiveDuration)
+    private void ExecuteMove(Direction direction, int distance)
     {
         DebugLogger.Log(DebugLogCategory.CharacterMovement,
-            $"Calling Move() with effectiveDuration: {effectiveDuration}", this);
-        Move(direction, distance, effectiveDuration);
+            $"Calling Move() in {direction}", this);
+        Move(direction, distance, baseMoveDuration / turnState.CurrentSpeedMultiplier);
     }
 
     /// <summary>
@@ -230,10 +229,10 @@ public class CharVeverka : Character
     /// <param name="inputPayload">Input direction payload</param>
     private void ExecuteRotation(DirectionPayload inputPayload)
     {
-        float effectiveDuration = rotationDuration / inputPayload.SpeedMultiplier;
-        DebugLogger.Log(DebugLogCategory.Rotation, $"Need to rotate - calling Rotate() with effectiveDuration: {effectiveDuration} (rotationDuration: {rotationDuration} / speedMultiplier: {inputPayload.SpeedMultiplier})", this);
+        float rotationDuration = baseRotationDuration / turnState.CurrentSpeedMultiplier;
+        DebugLogger.Log(DebugLogCategory.Rotation, $"Need to rotate - calling Rotate() with Duration: {rotationDuration})", this);
         // Rotate character to input arrow direction
-        Rotate(facingDirection, inputPayload.direction, effectiveDuration);
+        Rotate(facingDirection, inputPayload.direction, rotationDuration);
     }
 
     /// <summary>
@@ -245,9 +244,9 @@ public class CharVeverka : Character
     /// <param name="distance">Distance to push</param>
     /// <param name="effectiveDuration">Effective duration for move</param>
     /// <param name="speedMultiplier">Speed multiplier for nut animation</param>
-    private void ExecutePushMove(Vector2Int nutPos, Vector2Int targetPos, Direction direction, int distance, float effectiveDuration, float speedMultiplier)
+    private void ExecutePushMove(Vector2Int nutPos, Vector2Int targetPos, Direction direction, int distance)
     {
-        ExecuteMove(direction, distance, effectiveDuration);
+        ExecuteMove(direction, distance);
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Sending NutPush event - From: {nutPos} To: {targetPos}", this);
         nutEvents.Raise(new NutEventPayload
@@ -257,7 +256,7 @@ public class CharVeverka : Character
             CurrentPosition = targetPos,
             Direction = direction,
             Distance = distance,
-            SpeedMultiplier = speedMultiplier,
+         
         });
     }
 
@@ -270,7 +269,7 @@ public class CharVeverka : Character
     /// <param name="effectiveDuration">Effective duration for movement</param>
     /// <param name="speedMultiplier">Speed multiplier for animation</param>
     /// <returns>True if push succeeded, false otherwise</returns>
-    private bool TryPushNut(Vector2Int nutPosition, Direction direction, int distance, float effectiveDuration, float speedMultiplier)
+    private bool TryPushNut(Vector2Int nutPosition, Direction direction, int distance)
     {
         // Query if the nut can be pushed in this direction
         Vector2Int targetPushPos = GridUtils.GetPositionInDir(nutPosition, direction, distance);
@@ -286,13 +285,13 @@ public class CharVeverka : Character
         // If the nut can be pushed, move both the nut and the character
         if (pushQuery.IsPushable)
         {
-            DebugLogger.Log(DebugLogCategory.NutMovement, $"Nut is pushable - effectiveDuration: {effectiveDuration}", this);
-            ExecutePushMove(nutPosition, targetPushPos, direction, distance, effectiveDuration, speedMultiplier);
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Nut is pushable from {nutPosition} to {targetPushPos}", this);
+            ExecutePushMove(nutPosition, targetPushPos, direction, distance);
             return true;
         }
         else
         {
-            DebugLogger.Log(DebugLogCategory.NutMovement, "Nut cannot be pushed - sending MoveFailed event", this);
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Nut cannot be pushed to {targetPushPos} - sending MoveFailed event", this);
             RaiseMoveFailed(direction);
 
             // Cannot push - optionally animate failed push
@@ -324,8 +323,8 @@ public class CharVeverka : Character
         // If tile is walkable, move character
         if (gridQuery.IsWalkable)
         {
-            DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Tile is walkable - effectiveDuration: {effectiveDuration} (moveDuration: {moveDuration} / speedMultiplier: {inputPayload.SpeedMultiplier})", this);
-            ExecuteMove(inputPayload.direction, distance, effectiveDuration);
+            DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Tile is walkable", this);
+            ExecuteMove(inputPayload.direction, distance);
             return;
         }
 
@@ -338,7 +337,7 @@ public class CharVeverka : Character
         }
 
         // Try to push the nut
-        TryPushNut(targetPos, inputPayload.direction, distance, effectiveDuration, inputPayload.SpeedMultiplier);
+        TryPushNut(targetPos, inputPayload.direction, distance);
     }
 
     /// <summary>

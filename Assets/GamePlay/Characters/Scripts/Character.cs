@@ -13,8 +13,8 @@ public abstract class Character : MonoBehaviour
     protected Vector2Int gridPosition;
     protected Direction facingDirection;
 
-    [SerializeField] protected float moveDuration = 0.15f;
-    [SerializeField] protected float rotationDuration = 0.15f;
+    [SerializeField] protected float baseMoveDuration = 0.15f;
+    [SerializeField] protected float baseRotationDuration = 0.15f;
     [SerializeField] protected int moveDistance = 1;
     protected CharacterEventPayload payload = new();
 
@@ -34,24 +34,12 @@ public abstract class Character : MonoBehaviour
     #region Configs
     [Header("Gameplay Configuration")]
     [SerializeField] protected GameplayConfig gameplayConfig;
-    
+
+    [Header("Runtime Turn state")]
+    [SerializeField] protected TurnState turnState;
+
     [Header("Debug")]
     [SerializeField] protected DebugLogConfig debugConfig;
-    #endregion
-
-
-    #region Init
-
-    /// <summary>
-    /// Initialize character with basic gameplay logging
-    /// </summary>
-    protected virtual void Awake()
-    {
-        DebugLogger.Log(DebugLogCategory.Gameplay, $"Character {characterType} created", this);
-        smoothMover = GetComponent<SmoothMover>();
-        smoothRotate = GetComponent<SmoothRotate>();
-    }
-
     #endregion
 
     #region properties
@@ -79,8 +67,59 @@ public abstract class Character : MonoBehaviour
     public SmoothRotate SmoothRotate => smoothRotate;
     #endregion
 
-    #region event handling
+    #region Init
 
+    /// <summary>
+    /// Initialize character with basic gameplay logging
+    /// </summary>
+    protected virtual void Awake()
+    {
+        DebugLogger.Log(DebugLogCategory.Gameplay, $"Character {characterType} created", this);
+        smoothMover = GetComponent<SmoothMover>();
+        smoothRotate = GetComponent<SmoothRotate>();
+    }
+
+    /// <summary>
+    /// Init Character in the grid
+    /// </summary>
+    /// <param name="tileType">type of tile in the grid </param>
+    /// <param name="characterType">character type</param>
+    /// <param name="gridPosition">position in the grid </param>
+    /// <param name="facingDirection">facing direction of the character</param>
+    public virtual void Init(TileType tileType, CharacterType characterType, Vector2Int gridPosition, Direction facingDirection = Direction.Down)
+    {
+        //Set initial values
+        this.tileType = tileType;
+        this.characterType = characterType;
+        this.gridPosition = gridPosition;
+        this.facingDirection = facingDirection;
+
+        //set configs
+        baseMoveDuration = gameplayConfig.characterMoveTime;
+        baseRotationDuration = gameplayConfig.characterRotateTime;
+
+        smoothMover = GetComponent<SmoothMover>();
+        if (smoothMover == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.CharacterMovement, $"SmoothMover component missing on {gameObject.name}", this);
+            return;
+        }
+        smoothRotate = GetComponent<SmoothRotate>();
+        if (smoothRotate == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Rotation, $"SmoothRotate component missing on {gameObject.name}", this);
+            return;
+        }
+        smoothRotate.Rotate(gridPosition, facingDirection, facingDirection, 0f,
+            onStart: null, onComplete: null);
+
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Character initialized - GridPos: {gridPosition}, WorldPos: {transform.position}", this);
+
+    }
+
+    #endregion
+
+    #region lifecycle
     /// <summary>
     /// On enable event handling
     /// </summary>
@@ -108,8 +147,10 @@ public abstract class Character : MonoBehaviour
         // Remove scene change listener
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
+    #endregion
 
 
+    #region event handling
     /// <summary>
     /// Called when a new scene is loaded
     /// </summary>
@@ -153,6 +194,15 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Undo methods
+
+    /// <summary>
+    /// Prepares and calculates undo movement of a character with parameters from payload. Prevents execution of next undo, until current undo is finished.
+    /// cals "smoothMover" to execute the movement and confirms its completition
+    /// </summary>
+    /// <param name="payload"></param>
     private void ExecuteUndoMove(UndoEventPayload payload)
     {
         if (smoothMover.IsMoving)
@@ -166,9 +216,9 @@ public abstract class Character : MonoBehaviour
         Vector3 toWorld = GridUtils.GridToWorld(payload.UndoData.PreviousPosition);
 
         // Calculate duration using SAME formula as normal movement
-        float effectiveDuration = moveDuration / payload.SpeedMultiplier;
+        float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
 
-        smoothMover.Move(fromWorld, toWorld, effectiveDuration,
+        smoothMover.Move(fromWorld, toWorld, moveDuration,
             onStart: null,
             onComplete: () => OnUndoMoveComplete(payload.UndoData, payload.RequestId));
 
@@ -176,24 +226,29 @@ public abstract class Character : MonoBehaviour
         facingDirection = payload.UndoData.CurrentDirection;
 
         DebugLogger.Log(DebugLogCategory.UndoLogic,
-            $"Started undo move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with speed {payload.SpeedMultiplier}", this);
+            $"Started undo move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with speed {moveDuration}", this);
     }
 
+    /// <summary>
+    /// Prepares and calculates undo rotation of a character with parameters from payload. Prevents execution of next undo, until current undo is finished.
+    /// cals "smoothRotate" to execute the rotation and confirms its completition
+    /// </summary>
+    /// <param name="payload"></param>
     private void ExecuteUndoRotation(UndoEventPayload payload)
     {
         if (smoothRotate != null)
         {
             // Calculate rotation duration using SAME formula as normal movement
-            float effectiveDuration = rotationDuration / payload.SpeedMultiplier;
+            float rotationDuration = baseRotationDuration / turnState.CurrentSpeedMultiplier;
 
-            smoothRotate.Rotate(payload.UndoData.CurrentPosition, payload.UndoData.CurrentDirection, payload.UndoData.PreviousDirection, effectiveDuration,
+            smoothRotate.Rotate(payload.UndoData.CurrentPosition, payload.UndoData.CurrentDirection, payload.UndoData.PreviousDirection, rotationDuration,
                 onStart: null,
                 onComplete: () => OnUndoRotationComplete(payload.UndoData, payload.RequestId));
 
             facingDirection = payload.UndoData.PreviousDirection;
 
             DebugLogger.Log(DebugLogCategory.UndoLogic,
-                $"Started undo rotation from {payload.UndoData.CurrentDirection} to {payload.UndoData.PreviousDirection} with speed {payload.SpeedMultiplier}", this);
+                $"Started undo rotation from {payload.UndoData.CurrentDirection} to {payload.UndoData.PreviousDirection} with duration {rotationDuration}", this);
         }
         else
         {
@@ -202,6 +257,11 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Completion of Undo movement
+    /// </summary>
+    /// <param name="undoData"></param>
+    /// <param name="requestId"></param>
     private void OnUndoMoveComplete(UndoData undoData, string requestId)
     {
         DebugLogger.Log(DebugLogCategory.UndoLogic,
@@ -209,6 +269,11 @@ public abstract class Character : MonoBehaviour
         CompleteUndoRequest(requestId);
     }
 
+    /// <summary>
+    /// Completin of Undo rotate
+    /// </summary>
+    /// <param name="undoData"></param>
+    /// <param name="requestId"></param>
     private void OnUndoRotationComplete(UndoData undoData, string requestId)
     {
         DebugLogger.Log(DebugLogCategory.UndoLogic,
@@ -216,6 +281,10 @@ public abstract class Character : MonoBehaviour
         CompleteUndoRequest(requestId);
     }
 
+    /// <summary>
+    /// Undo reqest is completed
+    /// </summary>
+    /// <param name="requestId"></param>
     private void CompleteUndoRequest(string requestId)
     {
         undoEvents?.Raise(new UndoEventPayload
@@ -226,46 +295,10 @@ public abstract class Character : MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.UndoLogic, $"Undo request {requestId} completed", this);
     }
+
     #endregion
 
-    #region Methods
-    /// <summary>
-    /// Init Character in the grid
-    /// </summary>
-    /// <param name="tileType">type of tile in the grid </param>
-    /// <param name="characterType">character type</param>
-    /// <param name="gridPosition">position in the grid </param>
-    /// <param name="facingDirection">facing direction of the character</param>
-    public virtual void Init(TileType tileType, CharacterType characterType, Vector2Int gridPosition, Direction facingDirection = Direction.Down)
-    {
-        //Set initial values
-        this.tileType = tileType;
-        this.characterType = characterType;
-        this.gridPosition = gridPosition;
-        this.facingDirection = facingDirection;
-
-        //set configs
-        moveDuration = gameplayConfig.characterMoveTime;
-        rotationDuration = gameplayConfig.characterRotateTime;
-     
-        smoothMover = GetComponent<SmoothMover>();
-        if (smoothMover == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.CharacterMovement, $"SmoothMover component missing on {gameObject.name}", this);
-            return;
-        }
-        smoothRotate = GetComponent<SmoothRotate>();
-        if (smoothRotate == null)
-        {
-            DebugLogger.LogError(DebugLogCategory.Rotation, $"SmoothRotate component missing on {gameObject.name}", this);
-            return;
-        }
-        smoothRotate.Rotate(gridPosition, facingDirection, facingDirection, 0f,
-            onStart: null, onComplete: null);
-
-        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Character initialized - GridPos: {gridPosition}, WorldPos: {transform.position}", this);
-  
-    }  
+    #region Move Methods
 
     /// <summary>
     /// Move of a character over a distance in set direction
@@ -279,9 +312,9 @@ public abstract class Character : MonoBehaviour
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(gridPosition, direction, distance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float effectiveDuration = duration * distance;
+        float moveDuration = duration * distance;
 
-        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Move() preparing - gridPos={gridPosition}, transform.localPos={transform.localPosition}, currentPos={currentPosition}, targetPos={targetPosition}, effectiveDur={effectiveDuration}", this);
+        DebugLogger.Log(DebugLogCategory.CharacterMovement, $"Move() preparing - gridPos={gridPosition}, transform.localPos={transform.localPosition}, currentPos={currentPosition}, targetPos={targetPosition}, effectiveDur={moveDuration}", this);
 
           // fill character moved payload for events - calling events in children classes
           payload = new CharacterEventPayload
@@ -302,7 +335,7 @@ public abstract class Character : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.CharacterMovement, $"MoveStarted  for {GetType().Name}", this);
 
         // execute smooth movement
-        smoothMover.Move(currentPosition, targetPosition, effectiveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
+        smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
 
     /// <summary>
@@ -336,7 +369,7 @@ public abstract class Character : MonoBehaviour
     }
     #endregion
 
-    #region Rotate
+    #region Rotate methods
     protected virtual void OnRotateStart()
     {
         //Default: nothing
@@ -347,7 +380,7 @@ public abstract class Character : MonoBehaviour
         //Default: nothing
     }
 
-    #endregion
+   
     /// <summary>
     /// rotation of object to the direction
     /// </summary>
@@ -358,4 +391,5 @@ public abstract class Character : MonoBehaviour
     {
         //Default: nothing
     }
+    #endregion
 }
