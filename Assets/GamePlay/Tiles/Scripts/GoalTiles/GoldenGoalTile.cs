@@ -73,7 +73,7 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
                 // splash water to move nuts around
-                this.SplashWater(payload.SpeedMultiplier, gameplayConfig.splashSpeedFactor);
+                this.SplashWater(gameplayConfig.splashSpeedFactor);
 
                 // debug log
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating splash at {payload.CurrentPosition}", this);

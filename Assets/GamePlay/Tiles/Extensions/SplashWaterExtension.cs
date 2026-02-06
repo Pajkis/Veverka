@@ -11,7 +11,7 @@ public static class SplashWaterExtension
     /// </summary>
     /// <param name="speedMultiplier">Current gameplay speed multiplier</param>
     /// <param name="splashSpeedFactor">Speed factor for splash pushed nuts (e.g., 0.5 = half speed)</param>
-    public static void SplashWater(this INutInteractive splasher, float speedMultiplier, float splashSpeedFactor)
+    public static void SplashWater(this INutInteractive splasher, float splashSpeedFactor)
     {
         int directionCount = Enum.GetNames(typeof(Direction)).Length;
 
@@ -53,8 +53,7 @@ public static class SplashWaterExtension
                     PreviousPosition = NutQueryPosition,
                     CurrentPosition = PushQueryPosition,
                     Direction = (Direction)i,
-                    Distance = 1,
-                    SpeedMultiplier = speedMultiplier,
+                    Distance = 1,                   
                     IsSplash = true,
                     SplashSpeedFactor = splashSpeedFactor,
                 });
