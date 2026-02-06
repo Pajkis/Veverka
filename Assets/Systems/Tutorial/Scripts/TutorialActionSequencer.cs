@@ -19,6 +19,9 @@ public class TutorialActionSequencer : MonoBehaviour
     [SerializeField] private UndoController undoController;
     [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
 
+    [Header("Runtime Turn State")]
+    [SerializeField] private TurnState tutorialTurnState;
+
     // Runtime loaded sequence data
     private TutorialSequenceData sequenceData;
 
@@ -107,6 +110,16 @@ public class TutorialActionSequencer : MonoBehaviour
         isAutoplay = tutorialSettingsConfig.AutoplayEnable;
         textSpeedIndex = tutorialSettingsConfig.TextSpeedIndex;
         animSpeedIndex = tutorialSettingsConfig.AnimSpeedIndex;
+
+        // Initialize TurnState with saved speed from settings
+        if (tutorialTurnState != null && tutorialSettingsConfig != null)
+        {
+            float savedSpeed = (float)tutorialSettingsConfig.AnimSpeedIndex;
+            tutorialTurnState.CurrentSpeedMultiplier = savedSpeed;
+
+            DebugLogger.Log(DebugLogCategory.Tutorial,
+                $"TutorialTurnState initialized with saved speed: {savedSpeed}", this);
+        }
 
         currentActionIndex = 0;
         isSkipRequested = false;
@@ -225,6 +238,16 @@ public class TutorialActionSequencer : MonoBehaviour
     {
         animSpeedIndex = speed;
         tutorialSettingsConfig.TutorialSetAnimSpeed(speed);
+
+        // Update TurnState SO
+        if (tutorialTurnState != null)
+        {
+            tutorialTurnState.CurrentSpeedMultiplier = (float)speed;
+
+            DebugLogger.Log(DebugLogCategory.Tutorial,
+                $"TutorialTurnState updated: speedMultiplier = {(float)speed}", this);
+        }
+
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Animation speed: {speed}", this);
     }
 
@@ -309,8 +332,7 @@ public class TutorialActionSequencer : MonoBehaviour
         float tutorialAnimSpeed = (float)animSpeedIndex;
         tutorialDirectionEvent.Raise(new DirectionPayload
         {
-            direction = direction,
-            SpeedMultiplier = tutorialAnimSpeed
+            direction = direction,          
         });
 
         // Wait for TurnCompleted event from TurnControl
