@@ -115,8 +115,9 @@ MonoBehaviour:
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   audioEvents: {fileID: 11400000, guid: fd3b5a74c5d3453181b1f24a4c857833, type: 2}
   gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
+  turnState: {fileID: 11400000, guid: d53e4678240c81747a3549c3254a733f, type: 2}
   moveDistance: 1
-  moveDuration: 0.15
+  baseMoveDuration: 0.15
   nutEvents: {fileID: 11400000, guid: 8d0b5d3e31304a6495ab801d42b710b0, type: 2}
   undoEvents: {fileID: 11400000, guid: 8c461a7f8da005f40a3e1079e727c730, type: 2}
 --- !u!114 &5913596332726524919
