@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for scene navigation (scene transitions and overlay openings).
 /// </summary>
-[CreateAssetMenu(menuName = "Events/SceneNavigationEvents")]
+[CreateAssetMenu(menuName = "Systems/Events/SceneNavigation")]
 public class SceneNavigationEvents : GameEventSO<SceneNavigationEventPayload>
 {
     /// <summary>

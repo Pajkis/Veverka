@@ -22,7 +22,7 @@ public class TileSymbolMapping
 /// Configuration for tile parsing from CSV symbols to tile types.
 /// Centralizes all tile symbol mappings in one place.
 /// </summary>
-[CreateAssetMenu(fileName = "TileParsingConfig", menuName = "Configs/TileParsingConfig")]
+[CreateAssetMenu(fileName = "TileParsingConfig", menuName = "Gameplay/Config/TileParsing")]
 public class TileParsingConfig : ScriptableObject
 {
     [Header("Tile Symbol Mappings")]

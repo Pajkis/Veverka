@@ -4,7 +4,7 @@ using UnityEngine;
 /// Level initialization data
 /// Contains data needed to initialize and setup a level (goals, grid, camera)
 /// </summary>
-[CreateAssetMenu(menuName = "Data/LevelInitData")]
+[CreateAssetMenu(menuName = "Level/Config/InitData")]
 public class LevelInitData : ScriptableObject
 {
     [Header("Level Game Data")]

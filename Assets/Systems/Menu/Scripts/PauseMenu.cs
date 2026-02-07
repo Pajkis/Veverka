@@ -15,11 +15,9 @@ public class PauseMenu : MonoBehaviour
 
     #region methods
 
-    // Start is called before the first frame update
     void Start()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu opened - pausing game time", this);
-        Time.timeScale = 0; //  *not necessary in logic games, where time does not matter*
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu opened", this);
     }
 
     /// <summary>
@@ -27,8 +25,7 @@ public class PauseMenu : MonoBehaviour
     /// </summary>
     public void HandleResumeButtonOnClickEvent()
     {
-        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Resume button clicked - resuming game and destroying pause menu", this);
-        Time.timeScale = 1;
+        DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Resume button clicked", this);
         Destroy(gameObject);
     }
 
@@ -38,14 +35,12 @@ public class PauseMenu : MonoBehaviour
     public void HandleRestartButtonOnClickEvent()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Restart button clicked - reloading current level", this);
-        Time.timeScale = 1;
         levelSelection.CurrentAction = LevelAction.Load;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
             Scene = SceneType.LevelTransition
         });
-       // Destroy(gameObject);
     }
 
     /// <summary>
@@ -67,15 +62,12 @@ public class PauseMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "PauseMenu: Quit button clicked - unloading level and returning to level select", this);
-        Time.timeScale = 1;
         levelSelection.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload
         {
             EventType = SceneNavigationEventType.GoToScene,
             Scene = SceneType.LevelTransition
         });
-
-      //  Destroy(gameObject);
     }
     #endregion
 }

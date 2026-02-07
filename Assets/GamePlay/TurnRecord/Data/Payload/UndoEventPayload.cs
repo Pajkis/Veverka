@@ -13,5 +13,5 @@ public struct UndoEventPayload
 {
     public UndoEventType EventType;
     public UndoData UndoData;
-    public string RequestId; // For tracking completion
+    public string RequestId; // For tracking completion   
 }

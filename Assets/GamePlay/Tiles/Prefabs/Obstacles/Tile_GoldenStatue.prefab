@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7975176183127047260}
   - component: {fileID: 8117419081658208629}
   - component: {fileID: -6152133024212242838}
+  - component: {fileID: 6683960492448321574}
   m_Layer: 0
   m_Name: Tile_GoldenStatue
   m_TagString: Untagged
@@ -101,3 +102,46 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dd8bede218310ee459012eed2b30bf3c, type: 3}
   - {fileID: 21300000, guid: c55152019c7cddc47b8d90dcd6659fc8, type: 3}
   - {fileID: 21300000, guid: 2eab9c516d0122749a8abfa518c5bdc7, type: 3}
+--- !u!114 &6683960492448321574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3663485978142913648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0b9db6a7a1779c4f9461f289d996147, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  configAsset: {fileID: 11400000, guid: 349d3b1d19fcf214da93f26d171470fb, type: 2}
+  useCustomSettings: 0
+  enableFadeIn: 0
+  fadeInDuration: 0.3
+  fadeInCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  initialAlpha: 0
+  targetAlpha: 1
+  customRuntimeEffects: []

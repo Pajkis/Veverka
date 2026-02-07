@@ -61,7 +61,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
                 // splash water to move nuts around
-                this.SplashWater();
+                this.SplashWater(gameplayConfig.splashSpeedFactor);
 
                 // fill obstacle payload - stone nut related actions
                 obstaclePayload.ObstacleRemove = true;
@@ -81,7 +81,7 @@ public class WaterHoleTile : ObstacleTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
                 // splash water to move nuts around
-                this.SplashWater();
+                this.SplashWater(gameplayConfig.splashSpeedFactor);
 
                 // fill obstacle payload - water nut related actions
                 obstaclePayload.ObstacleRemove = false;

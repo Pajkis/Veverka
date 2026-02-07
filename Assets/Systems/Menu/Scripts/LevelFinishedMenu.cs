@@ -36,9 +36,6 @@ public class LevelFinishedMenu : MonoBehaviour
             DebugLogger.Log(DebugLogCategory.SceneManager, "More levels available - showing Next Level button", this);
             buttonNextLevel.SetActive(true);
         }
-
-        DebugLogger.Log(DebugLogCategory.SceneManager, "Pausing game time for level finished menu", this);
-        Time.timeScale = 0;
     }
 
     /// <summary>
@@ -47,7 +44,6 @@ public class LevelFinishedMenu : MonoBehaviour
     public void HandleNextLevelButtonOnClickEvent()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, $"LevelFinishedMenu: Next Level button clicked - advancing to level {levelSelection.CurrentLevelIndex + 1}", this);
-        Time.timeScale = 1;
 
         //Set next level
         levelSelection.CurrentLevelIndex++;
@@ -66,7 +62,6 @@ public class LevelFinishedMenu : MonoBehaviour
     public void HandleQuitButtonOnClickEvent()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "LevelFinishedMenu: Quit button clicked - returning to level select", this);
-        Time.timeScale = 1;
 
         levelSelection.CurrentAction = LevelAction.Unload;
         sceneNavigationEvent.Raise(new SceneNavigationEventPayload

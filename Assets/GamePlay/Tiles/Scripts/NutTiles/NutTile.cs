@@ -7,9 +7,9 @@ public abstract class NutTile : TileObject
 {
     #region Fields
     [SerializeField] protected int moveDistance = 1;
-    [SerializeField] protected float moveDuration = 0.15f;
-    protected float animationSpeed;
-
+    [SerializeField] protected float baseMoveDuration = 0.15f;
+   
+  //  protected float speedMultiplier = 1f;
     protected NutEventPayload payload = new();
     protected SmoothMover smoothMover;
     protected NutType nutType;
@@ -26,12 +26,6 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnEnable()
     {
-        settingEvents.AddListener(OnSettingEvent);
-        settingEvents.Raise(new SettingEventPayload
-        {
-            EventType = SettingsEventType.DataRequest,
-            Setting = GameSettingsEnum.AnimationSpeed
-        });
         nutEvents.AddListener(OnNutEvent);
         undoEvents?.AddListener(OnUndoEvent);
     }
@@ -40,24 +34,10 @@ public abstract class NutTile : TileObject
     /// </summary>
     protected void OnDisable()
     {
-        settingEvents.RemoveListener(OnSettingEvent);
         nutEvents.RemoveListener(OnNutEvent);
         undoEvents?.RemoveListener(OnUndoEvent);
     }
-
-    /// <summary>
-    /// get animation speed from settings
-    /// </summary>
-    /// <param name="payload"></param>
-    private void OnSettingEvent(SettingEventPayload payload)
-    {
-        if (payload.EventType == SettingsEventType.DataBroadcast &&
-            payload.Setting == GameSettingsEnum.AnimationSpeed)
-        {
-            animationSpeed = payload.Value;
-        }
-    }
-
+    
     /// <summary>
     /// Handle undo events for this nut
     /// </summary>
@@ -75,30 +55,33 @@ public abstract class NutTile : TileObject
         DebugLogger.Log(DebugLogCategory.UndoLogic,
             $"Processing undo request {payload.RequestId} for nut move", this);
 
-        ExecuteUndoMove(payload.UndoData, payload.RequestId);
+        ExecuteUndoMove(payload);
     }
 
-    private void ExecuteUndoMove(UndoData undoData, string requestId)
+    private void ExecuteUndoMove(UndoEventPayload payload)
     {
         if (smoothMover.IsMoving)
         {
             DebugLogger.LogWarning(DebugLogCategory.UndoLogic, "Nut already moving, skipping undo", this);
-            CompleteUndoRequest(requestId);
+            CompleteUndoRequest(payload.RequestId);
             return;
         }
 
-        Vector3 fromWorld = GridUtils.GridToWorld(undoData.CurrentPosition);
-        Vector3 toWorld = GridUtils.GridToWorld(undoData.PreviousPosition);
+        Vector3 fromWorld = GridUtils.GridToWorld(payload.UndoData.CurrentPosition);
+        Vector3 toWorld = GridUtils.GridToWorld(payload.UndoData.PreviousPosition);
 
-        smoothMover.Move(fromWorld, toWorld, undoData.Duration,
+        // Calculate move duration
+        float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
+
+        smoothMover.Move(fromWorld, toWorld, moveDuration,
             onStart: null,
-            onComplete: () => OnUndoMoveComplete(undoData, requestId));
+            onComplete: () => OnUndoMoveComplete(payload.UndoData, payload.RequestId));
 
         // Update nut events for grid system
         nutEvents.Raise(new NutEventPayload
         {
             EventType = NutEventType.NutRemoved,
-            CurrentPosition = undoData.CurrentPosition
+            CurrentPosition = payload.UndoData.CurrentPosition
         });
 
         nutEvents.Raise(new NutEventPayload
@@ -106,13 +89,13 @@ public abstract class NutTile : TileObject
             EventType = NutEventType.NutSet,
             NutType = this.nutType,
             NutTile = this,
-            CurrentPosition = undoData.PreviousPosition
+            CurrentPosition = payload.UndoData.PreviousPosition
         });
 
-        GridPosition = undoData.PreviousPosition;
+        GridPosition = payload.UndoData.PreviousPosition;
 
         DebugLogger.Log(DebugLogCategory.UndoLogic,
-            $"Started undo nut move from {undoData.CurrentPosition} to {undoData.PreviousPosition}", this);
+            $"Started undo nut move from {payload.UndoData.CurrentPosition} to {payload.UndoData.PreviousPosition} with duration {moveDuration}", this);
     }
 
     private void OnUndoMoveComplete(UndoData undoData, string requestId)
@@ -152,7 +135,7 @@ public abstract class NutTile : TileObject
         }
 
         // set configs
-        moveDuration = gameplayConfig.nutMoveTime;
+        baseMoveDuration = gameplayConfig.nutMoveTime;
 
         // base initialization
         base.Init(tileType, gridPosition);
@@ -181,14 +164,17 @@ public abstract class NutTile : TileObject
             DebugLogger.Log(DebugLogCategory.NutMovement, $"Position mismatch - GridPosition: {GridPosition} != PayloadPrevious: {payload.PreviousPosition}", this);
             return;
         }
-
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Position match - calling Move()", this);
-        // check if nut can be pushed
-       // payload.CanBePushed = CanBePushed(payload.Direction);
-      //  if (payload.CanBePushed)
-      //  {
-            Move(payload.Direction, payload.Distance, payload.Duration);
-      //  }
+
+        // Calculate effective speed multiplier based on splash effect
+        float moveDuration = baseMoveDuration / turnState.CurrentSpeedMultiplier;
+        if (payload.IsSplash)
+        {
+            moveDuration /= payload.SplashSpeedFactor;
+            DebugLogger.Log(DebugLogCategory.NutMovement, $"Splash push - applying factor {payload.SplashSpeedFactor},move duration {moveDuration}", this);
+        }
+
+        Move(payload.Direction, payload.Distance, moveDuration);
      }
 
     /// <summary>
@@ -230,8 +216,7 @@ public abstract class NutTile : TileObject
         Vector3 currentPosition = transform.localPosition;
         Vector2Int targetPosVec2Int = GridUtils.GetPositionInDir(GridPosition, direction, moveDistance);
         Vector3 targetPosition = GridUtils.GridToWorld(targetPosVec2Int);
-        float moveDuration = (duration * distance) / animationSpeed;
-
+        
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Move CALC - From: {GridPosition} To: {targetPosVec2Int}", this);
 
         // prepare movement payload for events and turn records
@@ -241,13 +226,12 @@ public abstract class NutTile : TileObject
             NutTile = this,
             CurrentPosition = targetPosVec2Int,
             PreviousPosition = previousPosition,
-            Duration = moveDuration,
-        };
+         };
 
         DebugLogger.Log(DebugLogCategory.NutMovement, $"Move PAYLOAD - Current: {payload.CurrentPosition}, Previous: {payload.PreviousPosition}", this);
 
         // execute smooth movement
-        smoothMover.Move(currentPosition, targetPosition, moveDuration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
+        smoothMover.Move(currentPosition, targetPosition, duration, OnMoveStart, () => OnMoveComplete(targetPosVec2Int));
     }
      
     /// <summary>
@@ -293,6 +277,7 @@ public abstract class NutTile : TileObject
                 PreviousPosition = GridPosition,
                 NutType = this.nutType,
                 NutTile = this,
+                SpeedMultiplier = payload.SpeedMultiplier,
             });
 
             // Then send NutInGoal event for GoalTile/ObstacleTile to process
@@ -303,6 +288,7 @@ public abstract class NutTile : TileObject
                 PreviousPosition = GridPosition,
                 NutType = this.nutType,
                 NutTile = this,
+                SpeedMultiplier = payload.SpeedMultiplier,
             });
             Destroy(gameObject);
         }

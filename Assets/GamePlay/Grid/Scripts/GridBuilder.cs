@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,19 @@ using UnityEngine;
 /// </summary>
 public class GridBuilder : MonoBehaviour
 {
+    #region Mode
+    [Header("Mode")]
+    [Tooltip("Enable for tutorial overlay - skips surroundings and goal counting")]
+    [SerializeField] private bool isTutorial = false;
+    #endregion
+
     #region References
     [Header("Core References")]
     [SerializeField] private GridData gridData;
     [SerializeField] private Transform gridRoot;
     [SerializeField] private LevelSelection levelSelection;
     [SerializeField] private LevelInitData levelInitData;
+    [SerializeField] private GameplayConfig gameplayConfig;
     #endregion
 
     #region Events
@@ -65,14 +73,14 @@ public class GridBuilder : MonoBehaviour
     #region Unity Lifecycle
     private void OnEnable()
     {
-        levelSelectEvent.AddListener(OnLevelSelected);
-        gridEvents.AddListener(OnGridEvent);
+        levelSelectEvent?.AddListener(OnLevelSelected);
+        gridEvents?.AddListener(OnGridEvent);
     }
 
     private void OnDisable()
     {
-        levelSelectEvent.RemoveListener(OnLevelSelected);
-        gridEvents.RemoveListener(OnGridEvent);
+        levelSelectEvent?.RemoveListener(OnLevelSelected);
+        gridEvents?.RemoveListener(OnGridEvent);
     }
     #endregion
 
@@ -112,16 +120,25 @@ public class GridBuilder : MonoBehaviour
                 resetRequested = false
             });
 
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelSelection.CurrentLevelIndex}", this);
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Grid reset complete - Starting level {levelSelection?.CurrentLevelIndex}", this);
             return;
         }
     }
     #endregion
 
+    #region Properties
+    /// <summary>
+    /// Gets the grid root transform.
+    /// </summary>
+    public Transform GridRoot => gridRoot;
+    #endregion
+
     #region Public Methods
     /// <summary>
-    /// Build a new level from grid data
+    /// Build a new level from grid data.
+    /// Spawn animation is handled automatically by GameObjectAnimator on each prefab.
     /// </summary>
+    /// <param name="grid">The grid data to build from</param>
     public void BuildLevel(TileType[,] grid)
     {
         // Get grid size
@@ -151,29 +168,108 @@ public class GridBuilder : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.GridSystem, "Starting level build from grid data", this);
         BuildLevelFromGrid();
 
-        // Add surrounding obstacles where grid does not fill the screen
-        DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
-        BuildSurroundings();
-
-        // Initialize level init data
-        levelInitData.gridSize = gridData.GridSize;
-        int goalCount = 0;
-        for (int x = 0; x < width; x++)
+        // Add surrounding obstacles where grid does not fill the screen (gameplay only)
+        if (!isTutorial)
         {
-            for (int y = 0; y < height; y++)
+            DebugLogger.Log(DebugLogCategory.GridSystem, "Building surrounding obstacles for screen fill", this);
+            BuildSurroundings();
+        }
+
+        // Initialize level init data (if assigned)
+        if (levelInitData != null)
+        {
+            levelInitData.gridSize = gridData.GridSize;
+            levelInitData.gridOrigin = transform;
+
+            // Count goals (gameplay only)
+            if (!isTutorial)
             {
-                Vector2Int pos = new(x, y);
-                if (gridData.GetTileType(pos) == TileType.Goal) // && gridData.GetGoalType(pos) == GoalType.BasicGoal)
+                int goalCount = 0;
+                for (int x = 0; x < width; x++)
                 {
-                    goalCount++;
+                    for (int y = 0; y < height; y++)
+                    {
+                        Vector2Int pos = new(x, y);
+                        if (gridData.GetTileType(pos) == TileType.Goal)
+                        {
+                            goalCount++;
+                        }
+                    }
                 }
+                levelInitData.StartGoalsCount = goalCount;
             }
         }
-        levelInitData.StartGoalsCount = goalCount;
-        levelInitData.gridOrigin = transform;
 
         // Raise event to notify build completion
-        gridEvents.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
+        gridEvents?.Raise(new GridEventPayload { EventType = GridEventType.BuildGrid, BuildDone = true });
+    }
+
+    /// <summary>
+    /// Finds the character (Veverka) in the grid.
+    /// Used by tutorial for scripted movement.
+    /// </summary>
+    public CharVeverka FindCharacter()
+    {
+        if (gridRoot == null) return null;
+
+        CharVeverka character = gridRoot.GetComponentInChildren<CharVeverka>();
+
+        if (character != null)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, $"Found character at position {character.GridPosition}", this);
+        }
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, "Character (Veverka) not found in grid!", this);
+        }
+
+        return character;
+    }
+
+    /// <summary>
+    /// Fade out all grid objects before resetting (for tutorial restart).
+    /// </summary>
+    public IEnumerator FadeOutGrid()
+    {
+        if (gridRoot == null)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.GridSystem, "GridRoot is null, skipping fade out", this);
+            ResetLevel();
+            yield break;
+        }
+
+        // Get all SpawnAnimator components in grid
+        SpawnAnimator[] animators = gridRoot.GetComponentsInChildren<SpawnAnimator>();
+
+        if (animators.Length == 0)
+        {
+            DebugLogger.Log(DebugLogCategory.GridSystem, "No animators found, skipping fade", this);
+            ResetLevel();
+            yield break;
+        }
+
+        // Get fade duration from config (use default if config not assigned)
+        float fadeDuration = gameplayConfig != null ? gameplayConfig.tileFadeOutDuration : 0.5f;
+
+        DebugLogger.Log(DebugLogCategory.GridSystem,
+            $"Fading out {animators.Length} objects with duration {fadeDuration}s", this);
+
+        // Start fade out for all animators
+        foreach (var animator in animators)
+        {
+            if (animator != null && animator.gameObject.activeInHierarchy)
+            {
+                StartCoroutine(animator.FadeOut(fadeDuration, AnimationCurve.EaseInOut(0, 0, 1, 1)));
+            }
+        }
+
+        // Wait for fade to complete
+        yield return new WaitForSeconds(fadeDuration);
+
+        // Reset level after fade
+        ResetLevel();
+
+        DebugLogger.Log(DebugLogCategory.GridSystem, "Grid fade out complete", this);
     }
 
     /// <summary>
@@ -181,27 +277,8 @@ public class GridBuilder : MonoBehaviour
     /// </summary>
     public void ResetLevel()
     {
-        // Destroy old grid except pooled backgrounds
-        foreach (Transform child in gridRoot.transform)
-        {
-            // Pool of surrounding obstacles
-            if (surroundingObstacles.Contains(child.gameObject))
-            {
-                child.gameObject.SetActive(false);
-                continue;
-            }
-
-            // Pool of in-game backgrounds
-            if (!backgroundPool.Contains(child.gameObject))
-            {
-                Destroy(child.gameObject);
-            }
-        }
-
-        foreach (var background in backgroundPool)
-        {
-            background.SetActive(false);
-        }
+        // Use GridSpawner helper to clear non-pooled objects
+        GridSpawner.ClearNonPooledObjects(gridRoot, backgroundPool, surroundingObstacles);
 
         // Clear GridData
         gridData.ClearGrids();
@@ -220,208 +297,55 @@ public class GridBuilder : MonoBehaviour
     #endregion
 
     #region Private Build Methods
-    /// <summary>
-    /// Ensures that the background pool contains at least the specified number of objects.
-    /// </summary>
-    private void EnsureBackgroundPool(int requiredCount)
-    {
-        int currentCount = backgroundPool.Count;
-        if (requiredCount > currentCount)
-        {
-            DebugLogger.Log(DebugLogCategory.GridSystem, $"Expanding background pool from {currentCount} to {requiredCount} objects", this);
-        }
-
-        for (int i = backgroundPool.Count; i < requiredCount; i++)
-        {
-            var background = Instantiate(backgroundPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-            background.SetActive(false);
-            backgroundPool.Add(background);
-        }
-
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Background pool ready with {backgroundPool.Count} objects", this);
-    }
 
     /// <summary>
-    /// Build a level from grid data
+    /// Build a level from grid data using GridSpawner helper.
+    /// Spawn animation is handled automatically by GameObjectAnimator on each prefab.
     /// </summary>
     private void BuildLevelFromGrid()
     {
-        Vector2Int gridSize = gridData.GridSize;
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Building level from grid - Processing {gridSize.x * gridSize.y} tiles", this);
-        EnsureBackgroundPool(gridSize.x * gridSize.y);
-
-        int bgIndex = 0;
-
-        // For cycle over grid width
-        for (int x = 0; x < gridSize.x; x++)
+        // Create spawn configuration
+        var config = new GridSpawner.SpawnConfig
         {
-            // For cycle over grid height
-            for (int y = 0; y < gridSize.y; y++)
-            {
-                // Prepare tile from the grid
-                Vector2Int tilePos = new(x, y);
-                Vector3 worldTilePos = GridUtils.GridToWorld(tilePos);
-                TileType tileType = gridData.GetTileType(tilePos);
+            // Road prefabs
+            emptyPrefab = this.emptyPrefab,
+            roadPrefab = this.roadPrefab,
+            stoneRoadPrefab = this.stoneRoadPrefab,
+            stoneFilledHolePrefab = this.stoneFilledHolePrefab,
+            roadGoldenGoalScoredPrefab = this.roadGoldenGoalScoredPrefab,
 
-                var background = backgroundPool[bgIndex++];
-                background.transform.SetParent(gridRoot, false);
-                background.transform.localPosition = worldTilePos;
-                background.SetActive(true);
+            // Character prefab
+            veverkaPrefab = this.veverkaPrefab,
 
-                // Insert specific tiles
-                switch (tileType)
-                {
-                    case TileType.Obstacle:
-                        ObstacleType obstacleType = gridData.GetObstacleType(tilePos);
-                        if (obstacleType == ObstacleType.Hole)
-                        {
-                            HoleTile holeTile = Instantiate(holePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<HoleTile>();
-                            holeTile.transform.SetParent(gridRoot, false);
-                            holeTile.transform.localPosition = worldTilePos;
-                            holeTile.Init(tileType, tilePos, ObstacleType.Hole);
-                        }
-                        else if (obstacleType == ObstacleType.WaterHole)
-                        {
-                            WaterHoleTile waterHoleTile = Instantiate(waterHolePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterHoleTile>();
-                            waterHoleTile.transform.SetParent(gridRoot, false);
-                            waterHoleTile.transform.localPosition = worldTilePos;
-                            waterHoleTile.Init(tileType, tilePos, ObstacleType.WaterHole);
-                        }
-                        else if (obstacleType == ObstacleType.StoneWall)
-                        {
-                            GameObject tile = Instantiate(wallStonePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            tile.transform.SetParent(gridRoot, false);
-                            tile.transform.localPosition = worldTilePos;
-                        }
-                        else if (obstacleType == ObstacleType.BasicWall)
-                        {
-                            GameObject tile = Instantiate(wallPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            tile.transform.SetParent(gridRoot, false);
-                            tile.transform.localPosition = worldTilePos;
-                        }
-                        else if (obstacleType == ObstacleType.GoldenStatue)
-                        {
-                            GameObject tile = Instantiate(goldenStatuePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            tile.transform.SetParent(gridRoot, false);
-                            tile.transform.localPosition = worldTilePos;
-                        }                        
-                        gridData.SetTileType(tilePos, TileType.Obstacle);
-                        break;
+            // Nut prefabs
+            nutPrefab = this.nutPrefab,
+            nutStonePrefab = this.nutStonePrefab,
+            nutWaterPrefab = this.nutWaterPrefab,
+            nutGoldenPrefab = this.nutGoldenPrefab,
 
-                    case TileType.Veverka:
-                        gridData.SetTileType(tilePos, TileType.Road);
-                        gridData.SetRoadType(tilePos, RoadType.Empty);
+            // Obstacle prefabs
+            wallPrefab = this.wallPrefab,
+            wallStonePrefab = this.wallStonePrefab,
+            holePrefab = this.holePrefab,
+            waterHolePrefab = this.waterHolePrefab,
+            goldenStatuePrefab = this.goldenStatuePrefab,
 
-                        // Generate veverka
-                        CharVeverka veverka = Instantiate(veverkaPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<CharVeverka>();
-                        veverka.transform.SetParent(gridRoot, false);
-                        veverka.transform.localPosition = worldTilePos;
-                        veverka.Init(tileType, CharacterType.BasicVeverka, tilePos);
+            // Goal prefabs
+            goalPrefab = this.goalPrefab,
+            goldenGoalPrefab = this.goldenGoalPrefab,
 
-                        // Center grid according to veverka
-                        levelInitData.gridCenterStartTarget = veverka.transform;
-                        DebugLogger.Log(DebugLogCategory.Gameplay, $"Player character (Veverka) placed at {tilePos} and set as camera target", this);
-                        break;
+            // Other prefabs
+            backgroundPrefab = this.backgroundPrefab,
 
-                    case TileType.Nut:
-                        NutType nutType = gridData.GetNutType(tilePos);
-                        if (nutType == NutType.StoneNut)
-                        {
-                            StoneNutTile stoneNutTile = Instantiate(nutStonePrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<StoneNutTile>();
-                            stoneNutTile.transform.SetParent(gridRoot, false);
-                            stoneNutTile.transform.localPosition = worldTilePos;
-                            stoneNutTile.Init(tileType, tilePos, NutType.StoneNut);
-                        }
-                        else if (nutType == NutType.BasicNut)
-                        {
-                            BasicNutTile nutTile = Instantiate(nutPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<BasicNutTile>();
-                            nutTile.transform.SetParent(gridRoot, false);
-                            nutTile.transform.localPosition = worldTilePos;
-                            nutTile.Init(tileType, tilePos, NutType.BasicNut);
-                        }
-                        else if (nutType == NutType.WaterNut)
-                        {
-                            WaterNutTile waterNutTile = Instantiate(nutWaterPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<WaterNutTile>();
-                            waterNutTile.transform.SetParent(gridRoot, false);
-                            waterNutTile.transform.localPosition = worldTilePos;
-                            waterNutTile.Init(tileType, tilePos, NutType.WaterNut);
-                        }
-                        else if (nutType == NutType.GoldenNut)
-                        {
-                            GoldenNutTile goldenNutTile = Instantiate(nutGoldenPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoldenNutTile>();
-                            goldenNutTile.transform.SetParent(gridRoot, false);
-                            goldenNutTile.transform.localPosition = worldTilePos;
-                            goldenNutTile.Init(tileType, tilePos, NutType.GoldenNut);
-                        }
-                        break;
+            // Context
+            gridRoot = this.gridRoot,
+            levelInitData = this.levelInitData,
+            backgroundPool = this.backgroundPool,
+            surroundingObstacles = this.surroundingObstacles
+        };
 
-                    case TileType.Goal:
-                        GoalType goalType = gridData.GetGoalType(tilePos);
-                        if (goalType == GoalType.BasicGoal)
-                        {
-                            GoalTile goalTile = Instantiate(goalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoalTile>();
-                            goalTile.transform.SetParent(gridRoot, false);
-                            goalTile.transform.localPosition = worldTilePos;
-                            goalTile.Init(tileType, tilePos, GoalType.BasicGoal);
-                        }
-                        else if (goalType == GoalType.GoldenGoal)
-                        {
-                            GoldenGoalTile goldenGoalTile = Instantiate(goldenGoalPrefab, Vector3.zero, Quaternion.identity, gridRoot).GetComponent<GoldenGoalTile>();
-                            goldenGoalTile.transform.SetParent(gridRoot, false);
-                            goldenGoalTile.transform.localPosition = worldTilePos;
-                            goldenGoalTile.Init(tileType, tilePos, GoalType.GoldenGoal);
-                        }
-                        break;
-
-                    case TileType.Road:
-                        RoadType roadType = gridData.GetRoadType(tilePos);
-                        if (roadType == RoadType.Empty)
-                        {
-                            // Empty road - just background, no prefab needed
-                            gridData.SetTileType(tilePos, TileType.Road);
-                        }
-                        else if (roadType == RoadType.StoneFilledHole)
-                        {
-                            GameObject roadTile = Instantiate(stoneFilledHolePrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            roadTile.transform.SetParent(gridRoot, false);
-                            roadTile.transform.localPosition = worldTilePos;
-                            gridData.SetTileType(tilePos, TileType.Road);
-                        }
-                        else if (roadType == RoadType.StoneRoad)
-                        {
-                            GameObject roadTile = Instantiate(stoneRoadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            roadTile.transform.SetParent(gridRoot, false);
-                            roadTile.transform.localPosition = worldTilePos;
-                            gridData.SetTileType(tilePos, TileType.Road);
-                        }
-                        else if (roadType == RoadType.BasicRoad) // BasicRoad
-                        {
-                            GameObject roadTile = Instantiate(roadPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            roadTile.transform.SetParent(gridRoot, false);
-                            roadTile.transform.localPosition = worldTilePos;
-                            gridData.SetTileType(tilePos, TileType.Road);
-                        }
-                        else if (roadType == RoadType.RoadGoldenGoalScored)
-                        {
-                            GameObject roadTile = Instantiate(roadGoldenGoalScoredPrefab, Vector3.zero, Quaternion.identity, gridRoot);
-                            roadTile.transform.SetParent(gridRoot, false);
-                            roadTile.transform.localPosition = worldTilePos;
-                            gridData.SetTileType(tilePos, TileType.Road);
-                        }
-                        break;
-
-                    default: 
-                        break;
-                }
-            }
-        }
-
-        for (int i = bgIndex; i < backgroundPool.Count; i++)
-        {
-            backgroundPool[i].SetActive(false);
-        }
-
-        DebugLogger.Log(DebugLogCategory.GridSystem, $"Level build complete - {bgIndex} tiles processed, {backgroundPool.Count - bgIndex} background objects deactivated", this);
+        // Use shared helper to spawn grid
+        GridSpawner.SpawnGrid(gridData, config);
     }
 
     /// <summary>

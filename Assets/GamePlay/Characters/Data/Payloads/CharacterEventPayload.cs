@@ -14,6 +14,7 @@ public struct CharacterEventPayload
     public Direction CurrentDirection;
     public Direction PreviousDirection;
     public float Duration;
+    public float SpeedMultiplier;
 
     [Header("UI Effects")]
     public BubbleMessageEventPayload BubbleMessage;

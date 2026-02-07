@@ -18,6 +18,7 @@ public abstract class TileObject : MonoBehaviour
 
     #region Configs
     [SerializeField] protected GameplayConfig gameplayConfig;
+    [SerializeField] protected TurnState turnState;
     #endregion
 
     #region propeties

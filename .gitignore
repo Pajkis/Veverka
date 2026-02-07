@@ -69,3 +69,8 @@ sysinfo.txt
 crashlytics-build.properties
 
 Assets/Debug/Data/DebugLogConfig.asset
+
+nul
+
+Assets/Debug/Data/DebugLogConfig.asset.meta
+.claude/settings.local.json

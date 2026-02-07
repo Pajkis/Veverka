@@ -98,7 +98,7 @@ public class GameSettings: MonoBehaviour
             }
         }
 
-        //get init values for PlayerPrefab
+        //get init values for PlayerPrefs
         DebugLogger.Log(DebugLogCategory.Settings, "Loading or initializing default settings from config", this);
         gameSettings =  GameSettingsUtils.LoadOrInitializeDefaults(config);
 
@@ -119,6 +119,27 @@ public class GameSettings: MonoBehaviour
 
         DebugLogger.Log(DebugLogCategory.Settings, "InitGameSettings completed successfully", this);
     }
+    #endregion
+
+    #region public properties
+
+    /// <summary>
+    /// Gets the animation speed as a multiplier for gameplay.
+    /// </summary>
+    /// <returns>Animation speed multiplier (1.0x, 2.0x, 3.0x)</returns>
+    public float AnimationSpeedMultiplier
+    {
+        get
+        {
+            if (!gameSettings.TryGetValue(GameSettingsEnum.AnimationSpeed, out int value))
+            {
+                DebugLogger.LogWarning(DebugLogCategory.Settings, "AnimationSpeed not found in gameSettings, returning default 1.0x", this);
+                return 1.0f;
+            }
+            return (float)value;
+        }
+    }
+
     #endregion
 
     #region event handlers

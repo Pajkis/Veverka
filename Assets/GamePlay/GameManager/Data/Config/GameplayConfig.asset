@@ -16,7 +16,9 @@ MonoBehaviour:
   characterRotateTime: 0.15
   nutMoveTime: 0.15
   tileAnimationTime: 0.15
-  splashPushTime: 0.25
+  tileFadeInDuration: 0.5
+  tileFadeOutDuration: 0.5
+  splashSpeedFactor: 0.25
   maxUndoSteps: 10
   undoStepTime: 0.15
   inputDebounceTime: 0.1

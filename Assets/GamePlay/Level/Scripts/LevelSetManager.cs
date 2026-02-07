@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Manager for handling all level sets
 /// </summary>
-[CreateAssetMenu(menuName = "Data/LevelSetManager")]
+[CreateAssetMenu(menuName = "Level/Config/Manager")]
 public class LevelSetManager : ScriptableObject
 {
     [Header("Available Level Sets")]

@@ -12,6 +12,7 @@ public class CameraFollow : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private CharacterEvents characterEvents;
+    [SerializeField] private TutorialEvents tutorialEvents;
 
     #region fields
     [Header("Follow Settings")]
@@ -33,6 +34,8 @@ public class CameraFollow : MonoBehaviour
     private bool hasReceivedCharacterData = false;
 
     private CameraMode mode;
+    private bool isTutorialActive = false;
+    private Vector3 preTutorialPosition;
 
     #endregion
 
@@ -62,6 +65,15 @@ public class CameraFollow : MonoBehaviour
         {
             characterEvents.AddListener(OnCharacterEvent);
         }
+        if (tutorialEvents != null)
+        {
+            Debug.Log($"[CAMERA] OnEnable - subscribing to TutorialEvents");
+            tutorialEvents.AddListener(OnTutorialEvent);
+        }
+        else
+        {
+            Debug.LogWarning("[CAMERA] OnEnable - tutorialEvents is NULL!");
+        }
     }
 
     /// <summary>
@@ -72,6 +84,10 @@ public class CameraFollow : MonoBehaviour
         if (characterEvents != null)
         {
             characterEvents.RemoveListener(OnCharacterEvent);
+        }
+        if (tutorialEvents != null)
+        {
+            tutorialEvents.RemoveListener(OnTutorialEvent);
         }
     }
 
@@ -219,6 +235,77 @@ public class CameraFollow : MonoBehaviour
     }
 
     /// <summary>
+    /// Handles tutorial events to switch camera position
+    /// </summary>
+    /// <param name="payload"></param>
+    private void OnTutorialEvent(TutorialEventPayload payload)
+    {
+        Debug.Log($"[CAMERA] OnTutorialEvent: {payload.EventType}");
+
+        switch (payload.EventType)
+        {
+            case TutorialEventType.LoadTutorial:
+                EnterTutorialMode();
+                break;
+            case TutorialEventType.ClearTutorial:
+            case TutorialEventType.ReplayTutorial:
+                Debug.Log($"[CAMERA] Calling ExitTutorialMode - current pos: {transform.position}");
+                ExitTutorialMode();
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Enter tutorial mode - set camera to tutorial position
+    /// </summary>
+    private void EnterTutorialMode()
+    {
+        if (displayConfig == null) return;
+
+        var profile = displayConfig.ResolveProfile();
+        if (profile == null) return;
+
+        // STORE current position before moving to tutorial
+        preTutorialPosition = transform.position;
+
+        Vector3 tutorialPos = profile.tutorialCameraPosition;
+        transform.position = tutorialPos;
+        isTutorialActive = true;
+
+        DebugLogger.Log(DebugLogCategory.Display,
+            $"Camera entering tutorial mode - Saved position: {preTutorialPosition}, Moving to: {tutorialPos}", this);
+    }
+
+    /// <summary>
+    /// Exit tutorial mode - camera returns to normal position
+    /// </summary>
+    private void ExitTutorialMode()
+    {
+        Debug.Log($"[CAMERA] ExitTutorialMode - mode={mode}, isTutorialActive={isTutorialActive}");
+        isTutorialActive = false;
+
+        if (displayConfig == null)
+        {
+            Debug.LogWarning("[CAMERA] ExitTutorialMode - displayConfig is null!");
+            return;
+        }
+
+        var profile = displayConfig.ResolveProfile();
+        if (profile == null)
+        {
+            Debug.LogWarning("[CAMERA] ExitTutorialMode - profile is null!");
+            return;
+        }
+
+        // RESTORE to pre-tutorial position (works for both Static and Follow modes)
+        Debug.Log($"[CAMERA] Restoring to pre-tutorial position: {preTutorialPosition}");
+        transform.position = preTutorialPosition;
+
+        DebugLogger.Log(DebugLogCategory.Display,
+            $"Camera exiting tutorial - Restored to: {preTutorialPosition}", this);
+    }
+
+    /// <summary>
     /// Handles character events to position camera on character spawn
     /// </summary>
     /// <param name="payload"></param>
@@ -242,9 +329,12 @@ public class CameraFollow : MonoBehaviour
     /// </summary>
     private void LateUpdate()
     {
+        // Don't update camera position during tutorial
+        if (isTutorialActive) return;
+
         if (mode == CameraMode.StaticCenter) return;
         if (!initialized || target == null) return;
-            
+
         Vector3 desired = target.position + FollowOffset;
         Vector3 clamped = ClampToBounds(desired);
         transform.position = Vector3.Lerp(transform.position, clamped, smoothMoveTime);

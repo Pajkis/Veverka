@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// ScriptableObject event system for popout image events
 /// </summary>
-[CreateAssetMenu(menuName = "Events/PopoutImageEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/PopoutImage")]
 public class PopoutImageEvents : GameEventSO<PopoutImageEventPayload>
 {
     // Inherits all functionality from GameEventSO<T>

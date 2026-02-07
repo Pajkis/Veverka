@@ -37,6 +37,7 @@ public class TurnControl : MonoBehaviour
     [SerializeField] public NutEvents nutEvents;
     [SerializeField] public GoalEvents goalEvents;
     [SerializeField] public ObstacleEvents obstacleEvents;
+    [SerializeField] private TurnControlEvents turnControlEvents;
     
     [Header("Debug")]
     [SerializeField] private DebugLogConfig debugConfig;
@@ -96,6 +97,13 @@ public class TurnControl : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.TurnControl, "Locking input and starting timeout...", this);
         LockInput();
         StartWaitingForCharacterTrigger();
+
+        // Raise TurnStarted event
+        turnControlEvents?.Raise(new TurnControlEventPayload
+        {
+            EventType = TurnControlEventType.TurnStarted
+        });
+
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input locked - waiting for character action trigger", this);
     }
 
@@ -121,6 +129,12 @@ public class TurnControl : MonoBehaviour
             timeoutCoroutine = null;
         }
 
+        // Raise TurnCompleted event
+        turnControlEvents?.Raise(new TurnControlEventPayload
+        {
+            EventType = TurnControlEventType.TurnCompleted
+        });
+
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked - turn complete", this);
         DebugLogger.Log(DebugLogCategory.Gameplay, "Turn completed - player can input next action", this);
     }
@@ -145,6 +159,12 @@ public class TurnControl : MonoBehaviour
         waitingForCharacterTrigger = false;
 
         // No need to stop timeout coroutine as it's not started during undo
+
+        // Raise TurnCompleted event
+        turnControlEvents?.Raise(new TurnControlEventPayload
+        {
+            EventType = TurnControlEventType.TurnCompleted
+        });
 
         DebugLogger.Log(DebugLogCategory.TurnControl, "Input unlocked after undo operation", this);
     }

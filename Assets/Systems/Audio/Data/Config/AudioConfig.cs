@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Aaudio configuration settings for the game.
 /// </summary>
-[CreateAssetMenu(fileName = "AudioConfig", menuName = "Configs/AudioConfig")]
+[CreateAssetMenu(fileName = "AudioConfig", menuName = "Systems/Config/Audio")]
 public class AudioConfig : ScriptableObject
 {
     // volume adjustmenst are used to adjust the volume of different audio channels

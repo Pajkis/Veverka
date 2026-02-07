@@ -184,9 +184,29 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 712305981}
+    - target: {fileID: 2147990562547500478, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3280947181731340139, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Name
       value: LoadBackground
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002769258790031974, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_TagString
+      value: Background
+      objectReference: {fileID: 0}
+    - target: {fileID: 4332659567091276454, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4383802402332945273, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_SizeDelta.x
@@ -195,6 +215,14 @@ PrefabInstance:
     - target: {fileID: 4383802402332945273, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_SizeDelta.y
       value: 220
+      objectReference: {fileID: 0}
+    - target: {fileID: 5520438522807857516, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5520438522807857516, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5572173992726777165, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
       propertyPath: m_Pivot.x
@@ -276,6 +304,54 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5666636000126670787, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5666636000126670787, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 5778131427791905279, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6088144202556724926, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6263611869288926679, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6317326650466487317, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6317326650466487317, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 6497645951314825614, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6540514765824370151, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279881660334394702, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279881660334394702, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 8450853939590679842, guid: 5603fe1f154c3fb49ac07d3cd2996f07, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -310,10 +386,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5644e9e42caf14044ad6d7b16a31de3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isTutorial: 0
   gridData: {fileID: 878312289}
   gridRoot: {fileID: 438281642}
   levelSelection: {fileID: 11400000, guid: 9d05985cbb43a63468aaede41e0a2a79, type: 2}
   levelInitData: {fileID: 11400000, guid: ea37cadc23184384fbeec0ce51e35441, type: 2}
+  gameplayConfig: {fileID: 11400000, guid: ce0c5cba7b07aaa468050809feca151e, type: 2}
   gridEvents: {fileID: 11400000, guid: a87b0e2c0ca4476f9beecc12d0fe1c36, type: 2}
   levelSelectEvent: {fileID: 11400000, guid: 380319199ecd54a4b95a317eacd2557a, type: 2}
   emptyPrefab: {fileID: 2927861946428358931, guid: 8668ce3dd992d8742bb585facbdc8ede, type: 3}
@@ -321,7 +399,7 @@ MonoBehaviour:
   stoneRoadPrefab: {fileID: 7956215929776309704, guid: cfdd64b144f77404082e0908ab28d67d, type: 3}
   stoneFilledHolePrefab: {fileID: 2330171183859072926, guid: 32f39bcf3c3a65f4b8239c126e2a015c, type: 3}
   roadGoldenGoalScoredPrefab: {fileID: 0}
-  veverkaPrefab: {fileID: 5527226075235502776, guid: 1d00144e92efa4a4389622787770d905, type: 3}
+  veverkaPrefab: {fileID: 5527226075235502776, guid: 77ef064342b140841a96a3152db9c22b, type: 3}
   nutPrefab: {fileID: 5049554270686572608, guid: 5d3e9c19ecf8d7643ad06260eda3e003, type: 3}
   nutStonePrefab: {fileID: 5049554270686572608, guid: c60604568fea7f546a78dabba619099a, type: 3}
   nutWaterPrefab: {fileID: 5049554270686572608, guid: 6ecba3ec68f43ea439dececdfc7ac805, type: 3}
@@ -401,6 +479,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cursorImage: {fileID: 265896549}
   hotspot: {x: 0, y: 0}
+  cursorSize: {x: 80, y: 80, z: 0}
 --- !u!114 &265896551
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -529,10 +608,11 @@ MonoBehaviour:
   pauseMenuPrefab: {fileID: 3636506746201861303, guid: 0bee78c77c6e4144191013752c86f62a, type: 3}
   levelFinishedMenuPrefab: {fileID: 2626405333016797077, guid: ce00f5013661a8e47a54789320a27448, type: 3}
   settingsMenuPrefab: {fileID: 3636506746201861303, guid: 790556a0848b1204da261a48dbb1740c, type: 3}
-  gameHelpPrefab: {fileID: 3636506746201861303, guid: 655444d8ad4284745942da51129eccf8, type: 3}
+  gameHelpPrefab: {fileID: 6074556739069430682, guid: 9b1797c762190704db0a1ce58fe0a6e2, type: 3}
   creditsPrefab: {fileID: 3636506746201861303, guid: 171486bcfd41e67459628f5294fe9350, type: 3}
   notificationPrefab: {fileID: 9187378460226002792, guid: 8d5eed3dc9354264dbf6fc98cd1ee5fd, type: 3}
   levelValidationPrefab: {fileID: 907536609874866753, guid: 1c7877f0b30a8564faf71f8b095ed9d8, type: 3}
+  TutorialPrefab: {fileID: 5042579920311926798, guid: 25325ef1114694f4c8363f774bf9ab91, type: 3}
 --- !u!1 &438281641
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,7 +746,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1315,6 +1395,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f312b40a3f6e054597c157b304d55a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overlayType: 0
 --- !u!225 &1651925651
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -1443,12 +1524,12 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 712305982}
+  - {fileID: 745832935}
+  - {fileID: 78011111}
   - {fileID: 862168025}
   - {fileID: 1108175488}
   - {fileID: 1539389805}
   - {fileID: 1640321004}
-  - {fileID: 745832935}
-  - {fileID: 78011111}
   - {fileID: 1805298381}
   - {fileID: 716192307}
   - {fileID: 1498983319}

@@ -5,7 +5,7 @@
 /// </summary>
 /// <remarks>This class is a ScriptableObject that holds an array of display configuration profiles. It provides
 /// functionality to resolve the appropriate profile based on the current runtime platform.</remarks>
-[CreateAssetMenu(menuName = "Configs/DisplayConfig")]
+[CreateAssetMenu(menuName = "Systems/Config/Display")]
 public class DisplayConfig : ScriptableObject
 {
     public DisplayConfigPars[] profiles;

@@ -12,7 +12,7 @@ public class SceneFlowManager : MonoBehaviour
     void Awake()
     {
         DebugLogger.Log(DebugLogCategory.SceneManager, "SceneFlowManager initialized - persisting across scene loads", this);
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(gameObject); 
     }
 
     private void OnEnable()
@@ -104,15 +104,17 @@ public class SceneFlowManager : MonoBehaviour
         DebugLogger.Log(DebugLogCategory.SceneManager, $"Instantiating overlay {overlay} from prefab: {prefab.name}", this);
         GameObject instance = Object.Instantiate(prefab);
 
-        // Add or get OverlayAnimationController for smooth animations
+        // Get OverlayAnimationController (should already exist in prefab)
         OverlayAnimationController animController = instance.GetComponent<OverlayAnimationController>();
-        if (animController == null)
+        if (animController != null)
         {
-            animController = instance.AddComponent<OverlayAnimationController>();
-            DebugLogger.Log(DebugLogCategory.SceneManager, $"Added OverlayAnimationController to {overlay}", this);
+            // Set overlay type so controller knows which settings to use
+            animController.SetOverlayType(overlay);
         }
-
-        // Set overlay type so controller knows which settings to use
-        animController.SetOverlayType(overlay);
+        else
+        {
+            DebugLogger.LogWarning(DebugLogCategory.SceneManager,
+                $"OverlayAnimationController not found on {overlay} prefab - animations won't work", this);
+        }
     }
 }

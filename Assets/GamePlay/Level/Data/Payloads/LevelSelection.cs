@@ -4,7 +4,7 @@ using UnityEngine;
 /// Level selection and navigation data
 /// Handles which level set and level is currently selected, and what action to perform
 /// </summary>
-[CreateAssetMenu(menuName = "Data/LevelSelection")]
+[CreateAssetMenu(menuName = "Level/Config/Selection")]
 public class LevelSelection : ScriptableObject
 {
     [Header("Level Selection")]

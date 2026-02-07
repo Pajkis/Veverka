@@ -9,7 +9,9 @@ public static class SplashWaterExtension
     /// <summary>
     /// Creates water splash effect around the tile, pushing basic nuts away
     /// </summary>
-    public static void SplashWater(this INutInteractive splasher)
+    /// <param name="speedMultiplier">Current gameplay speed multiplier</param>
+    /// <param name="splashSpeedFactor">Speed factor for splash pushed nuts (e.g., 0.5 = half speed)</param>
+    public static void SplashWater(this INutInteractive splasher, float splashSpeedFactor)
     {
         int directionCount = Enum.GetNames(typeof(Direction)).Length;
 
@@ -44,15 +46,16 @@ public static class SplashWaterExtension
 
                 if (!queryPayload.IsPushable) continue;
 
-                // Raise event to push the nut away from the splash
+                // Raise event to push the nut away from the splash with splash effect
                 splasher.NutEvents.Raise(new NutEventPayload
                 {
                     EventType = NutEventType.NutPush,
                     PreviousPosition = NutQueryPosition,
                     CurrentPosition = PushQueryPosition,
                     Direction = (Direction)i,
-                    Distance = 1,
-                    Duration = 0.5f,
+                    Distance = 1,                   
+                    IsSplash = true,
+                    SplashSpeedFactor = splashSpeedFactor,
                 });
             }
         }
