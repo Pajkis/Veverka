@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -297,19 +298,20 @@ public class TutorialActionSequencer : MonoBehaviour
     {
         switch (action.ActionType)
         {
-            case TutorialActionType.Animation:
-                yield return ExecuteAnimation(action.AnimationDirection);
+            case TutorialActionType.MovementSequence:
+                yield return ExecuteMovementSequence(action.MovementSteps);
                 break;
 
-            case TutorialActionType.Message:
-                float duration = action.MessageDisplayTime > 0
-                    ? action.MessageDisplayTime
-                    : GetDefaultMessageTime();
-                yield return ExecuteMessage(action.MessageText, duration);
+            case TutorialActionType.MessageSequence:
+                yield return ExecuteMessageSequence(action.MessageSteps);
                 break;
 
-            case TutorialActionType.Undo:
-                yield return ExecuteUndo();
+            case TutorialActionType.UndoSequence:
+                yield return ExecuteUndoSequence(action.UndoCount);
+                break;
+
+            case TutorialActionType.ImageSequence:
+                yield return ExecuteImageAction(action.ImageAction);
                 break;
         }
     }
@@ -405,6 +407,99 @@ public class TutorialActionSequencer : MonoBehaviour
         float animMultiplier = (float)animSpeedIndex;
         float actionDelay = GetActionDelay() / animMultiplier;
         yield return new WaitForSeconds(actionDelay);
+    }
+
+    private IEnumerator ExecuteMovementSequence(List<MovementStep> steps)
+    {
+        if (steps == null || steps.Count == 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "MovementSequence has no steps", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"MovementSequence: {steps.Count} steps", this);
+
+        foreach (var step in steps)
+        {
+            // Execute direction action repeatCount times
+            for (int i = 0; i < step.RepeatCount; i++)
+            {
+                yield return ExecuteAnimation(step.Direction);
+            }
+        }
+    }
+
+    private IEnumerator ExecuteMessageSequence(List<MessageStep> steps)
+    {
+        if (steps == null || steps.Count == 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "MessageSequence has no steps", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"MessageSequence: {steps.Count} messages", this);
+
+        foreach (var step in steps)
+        {
+            float duration = step.DisplayTime > 0
+                ? step.DisplayTime
+                : GetDefaultMessageTime();
+            yield return ExecuteMessage(step.MessageText, duration);
+        }
+    }
+
+    private IEnumerator ExecuteUndoSequence(int count)
+    {
+        if (count <= 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "UndoSequence has invalid count", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"UndoSequence: {count} undos", this);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (!undoController.CanUndo())
+            {
+                DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                    $"Undo stopped at {i + 1}/{count} - no more history", this);
+                yield break;
+            }
+
+            yield return ExecuteUndo();
+        }
+    }
+
+    private IEnumerator ExecuteImageAction(ImageStep imageStep)
+    {
+        if (imageStep.Image == null)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "ImageAction has no sprite assigned", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"ImageAction: {imageStep.ActionType}", this);
+
+        // TODO: Implement image display logic
+        // - Show/hide/replace image in tutorial overlay
+        // - Handle ExecuteWithMessage flag
+        // - Apply display duration
+        // - Respect text speed multiplier for timings
+
+        // Placeholder for future implementation
+        float duration = imageStep.DisplayTime > 0
+            ? imageStep.DisplayTime
+            : GetDefaultMessageTime();
+        yield return new WaitForSeconds(duration);
     }
 
     private IEnumerator ExecuteMessage(string text, float duration)

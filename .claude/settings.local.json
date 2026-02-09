@@ -5,7 +5,15 @@
       "Bash(dir:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(findstr:*)",
+      "Bash(del \"Assets\\\\Gameplay\\\\TurnControl\\\\Scripts\\\\Class_ArrowButtonHandler.md\")",
+      "Bash(powershell -Command:*)"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\PjPajkis\\Documents\\Obsidian Vault\\Veverka - GetNuts\\Assets\\Gameplay\\Direction\\Scripts",
+      "C:\\Users\\PjPajkis\\Documents\\Obsidian Vault\\Veverka - GetNuts\\Assets\\Systems\\Audio\\Scripts",
+      "C:\\Users\\PjPajkis\\Documents\\Obsidian Vault\\Veverka - GetNuts\\Assets\\Systems\\Settings\\Enums"
     ]
   }
 }

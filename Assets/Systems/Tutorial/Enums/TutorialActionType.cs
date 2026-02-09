@@ -1,10 +1,11 @@
 /// <summary>
-/// Types of actions in tutorial sequence.
+/// Types of tutorial actions (all sequence-based).
+/// Each type supports multiple operations in a single action element.
 /// </summary>
 public enum TutorialActionType
 {
-    Animation, // Direction input to move/rotate character.
-    Message,  // Display text message in overlay UI.
-    Undo,  // trigger undo action during tutorial.
-    ActionImage, // Show action image in overlay UI.
+    MovementSequence,  // Execute multiple movements in sequence
+    MessageSequence,   // Display multiple messages in sequence
+    UndoSequence,      // Execute multiple undos
+    ImageSequence,     // Show/hide/replace images (single for now, extendable to list)
 }

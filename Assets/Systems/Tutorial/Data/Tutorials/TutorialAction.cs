@@ -1,40 +1,25 @@
-using UnityEditor.XR;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Specifies the type of action to perform on an image, such as showing, closing, or replacing it.
-/// </summary>
-/// <remarks>Use this enumeration to indicate the intended image operation in APIs that support multiple image
-/// actions.</remarks>
-public enum ActionImageType
-{
-   Show,
-   Close,
-   Replace,
-}
-
-/// <summary>
 /// Single action in a tutorial sequence.
+/// All action types are sequence-based, supporting multiple operations per element.
 /// </summary>
 [System.Serializable]
 public struct TutorialAction
 {
     public TutorialActionType ActionType;
 
-    [Header("Animation")]
-    [Tooltip("Direction of Tutorial character animation")]
-    public Direction AnimationDirection;
+    [Tooltip("Movement sequence steps - list of directions and repeat counts")]
+    public List<MovementStep> MovementSteps;
 
-    [Header("Message")]
-    [TextArea(2, 6)]
-    [Tooltip("Text message to display in tutorial overlay")]
-    public string MessageText;
-    public float MessageDisplayTime;
-    
-    [Header("Action Image")]
-    [Tooltip("Image to display in tutorial overlay")]
-    public Sprite ActionImage;
-    public bool ExecuteWithMessage;
-    public ActionImageType ImageActionType;
-    public float ActionImageDisplayTime;
+    [Tooltip("Message sequence steps - list of messages with display times")]
+    public List<MessageStep> MessageSteps;
+
+    [Tooltip("Number of undos to perform in sequence")]
+    [Min(1)]
+    public int UndoCount;
+
+    [Tooltip("Image action (single for now, designed for future list support)")]
+    public ImageStep ImageAction;
 }
