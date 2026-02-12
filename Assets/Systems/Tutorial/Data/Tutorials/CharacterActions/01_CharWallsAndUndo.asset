@@ -11,239 +11,136 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 982535986ffddd54693d6376c3f54039, type: 3}
   m_Name: 01_CharWallsAndUndo
-  m_EditorClassIdentifier: 
-  tutorialId: 0
+  m_EditorClassIdentifier:
+  tutorialId: 1
   titleText: Walls and Undo
   actions:
   - ActionType: 1
-    AnimationDirection: 1
-    MessageText: So you know how to move the squirell and score a goal! Good, but
-      it is not always gonna be so easy.
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 1
-    AnimationDirection: 0
-    MessageText: Squirell can push the nuts in front of itself. In open field you
-      can easily push the nut where you want.
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 1
-    AnimationDirection: 3
-    MessageText: 'But what about walls?  You can''t move through them and you can"t
-      push nuts through them also! '
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: So you know how to move the squirell and score a goal! Good, but
+        it is not always gonna be so easy.
+      DisplayTime: 3
+    - MessageText: Squirell can push the nuts in front of itself. In open field you
+        can easily push the nut where you want.
+      DisplayTime: 3
+    - MessageText: 'But what about walls? You can''t move through them and you can''t
+        push nuts through them also! '
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 1
-    AnimationDirection: 1
-    MessageText: See? No way you can push it through a tree wall. No matter how small
-      you are, you have no chance!
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 1
-    AnimationDirection: 3
-    MessageText: To get the nut to the goal you have to push it around the wall.
-      Lets move the nut up cause it is  closer way to the goal.
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: See? No way you can push it through a tree wall. No matter how
+        small you are, you have no chance!
+      DisplayTime: 3
+    - MessageText: To get the nut to the goal you have to push it around the wall.
+        Lets move the nut up cause it is closer way to the goal.
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 0
-    AnimationDirection: 2
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 2
-    MessageText: 
-    MessageDisplayTime: 0
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps:
+    - Direction: 2
+      RepeatCount: 2
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 2
-    AnimationDirection: 1
-    MessageText: Undo
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps: []
+    MessageSteps: []
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 0
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 0
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 0
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 0
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 3
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 3
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 0
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 0
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 4
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 1
-    AnimationDirection: 1
-    MessageText: Oh no! I can't move the nut from the wall! This nut can be moved
-      only along the wall.
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 1
-    AnimationDirection: 1
-    MessageText: 'Let"s try something, move it a little bit. '
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: Oh no! I can't move the nut from the wall! This nut can be moved
+        only along the wall.
+      DisplayTime: 3
+    - MessageText: 'Let''s try something, move it a little bit. '
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 0
-    AnimationDirection: 1
-    MessageText: 
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 1
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
   - ActionType: 1
-    AnimationDirection: 1
-    MessageText: And now I am totally screwed! If the but ends in corner, then there
-      is no way how to move it out of there. Be carefull about that!
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 1
-    AnimationDirection: 1
-    MessageText: Undo
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  - ActionType: 0
-    AnimationDirection: 1
-    MessageText: Undo
-    MessageDisplayTime: 3
-    ActionImage: {fileID: 0}
-    ExecuteWithMessage: 0
-    ImageActionType: 0
-    ActionImageDisplayTime: 0
-  autoplayEnabled: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: And now I am totally screwed! If the nut ends in corner, then
+        there is no way how to move it out of there. Be careful about that!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 2
+    MovementSteps: []
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0

@@ -13,8 +13,4 @@ public class TutorialSequenceData : ScriptableObject
 
     [Header("Action Sequence")]
     public List<TutorialAction> actions;
-
-    [Header("Playback")]
-    [Tooltip("Start in autoplay mode")]
-    public bool autoplayEnabled = true;
 }

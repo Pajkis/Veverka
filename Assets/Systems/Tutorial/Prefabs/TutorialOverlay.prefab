@@ -2483,6 +2483,14 @@ PrefabInstance:
       value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 6683900298273784888, guid: e6915fe8c714c7f469ede0a04d901281, type: 3}
+      propertyPath: m_overflowMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683900298273784888, guid: e6915fe8c714c7f469ede0a04d901281, type: 3}
+      propertyPath: m_horizontalMapping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6683900298273784888, guid: e6915fe8c714c7f469ede0a04d901281, type: 3}
       propertyPath: m_enableWordWrapping
       value: 1
       objectReference: {fileID: 0}

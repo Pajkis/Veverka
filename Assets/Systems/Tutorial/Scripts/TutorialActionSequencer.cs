@@ -530,8 +530,8 @@ public class TutorialActionSequencer : MonoBehaviour
             // Manual mode: message is faded in, activate Next button
             currentMessageFadedIn = true;
 
-            // Wait for manual skip
-            yield return new WaitUntil(() => isSkipRequested);
+            // Wait for manual skip OR autoplay toggle
+            yield return new WaitUntil(() => isSkipRequested || isAutoplay);
 
             currentMessageFadedIn = false;
         }

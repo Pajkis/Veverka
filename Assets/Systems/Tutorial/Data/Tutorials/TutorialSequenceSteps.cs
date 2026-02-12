@@ -44,10 +44,10 @@ public struct ImageStep
     [Tooltip("Action to perform with the image")]
     public ActionImageType ActionType;
 
+    [Tooltip("Rotation of the image (Up = 0°, Right = 90°, Down = 180°, Left = 270°)")]
+    public Direction ImageRotation;
+
     [Tooltip("Display duration (0 = use default)")]
     [Min(0)]
     public float DisplayTime;
-
-    [Tooltip("Execute this image action simultaneously with a message")]
-    public bool ExecuteWithMessage;
 }

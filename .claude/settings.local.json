@@ -8,7 +8,16 @@
       "Bash(git reset:*)",
       "Bash(findstr:*)",
       "Bash(del \"Assets\\\\Gameplay\\\\TurnControl\\\\Scripts\\\\Class_ArrowButtonHandler.md\")",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(python:*)",
+      "Bash(del \"c:\\\\01_Projects\\\\Unity\\\\01_MyGames\\\\VeverkaRep\\\\fix_chars.py\")",
+      "Bash(test:*)",
+      "Bash(git rev-list:*)",
+      "Bash(for hash in 11062a472476f3386f82e75fa91680bc32045d0c 2a4741e99f2c9bd39195d7ccb93edade8622e9ed 75b7103ea60f869a0befce761496702a4847b820)",
+      "Bash(do echo \"=== $hash ===\")",
+      "Bash(done)",
+      "Bash(find:*)",
+      "Bash(git ls-tree:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\PjPajkis\\Documents\\Obsidian Vault\\Veverka - GetNuts\\Assets\\Gameplay\\Direction\\Scripts",
