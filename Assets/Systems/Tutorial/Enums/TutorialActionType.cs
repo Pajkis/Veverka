@@ -8,4 +8,5 @@ public enum TutorialActionType
     MessageSequence,   // Display multiple messages in sequence
     UndoSequence,      // Execute multiple undos
     ImageSequence,     // Show/hide/replace images (single for now, extendable to list)
+    ResetSequence,     // Reset level to initial state mid-sequence
 }

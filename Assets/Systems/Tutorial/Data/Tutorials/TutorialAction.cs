@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Single action in a tutorial sequence.
+/// Single action in a tutorial sequence
 /// All action types are sequence-based, supporting multiple operations per element.
 /// </summary>
 [System.Serializable]

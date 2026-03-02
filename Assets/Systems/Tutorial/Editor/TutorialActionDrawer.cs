@@ -42,6 +42,10 @@ public class TutorialActionDrawer : PropertyDrawer
             case TutorialActionType.ImageSequence:
                 DrawProperty(ref currentPosition, property.FindPropertyRelative("ImageAction"));
                 break;
+
+            case TutorialActionType.ResetSequence:
+                // No additional fields - reset has no parameters
+                break;
         }
 
         EditorGUI.EndProperty();
@@ -85,6 +89,10 @@ public class TutorialActionDrawer : PropertyDrawer
 
             case TutorialActionType.ImageSequence:
                 relevantProp = property.FindPropertyRelative("ImageAction");
+                break;
+
+            case TutorialActionType.ResetSequence:
+                // No additional fields - reset has no parameters
                 break;
         }
 

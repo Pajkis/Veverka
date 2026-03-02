@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 6130469669413128325}
   - component: {fileID: 6719926521053140387}
   m_Layer: 0
-  m_Name: Image_TutorialSymbol
+  m_Name: Image_Tutorial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -674,7 +674,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ff468d54c727c0d408ad6e3e95d7f1ac, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2ffbc2c239b5891499e905840f43bce4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -905,6 +905,7 @@ MonoBehaviour:
   gridBuilder: {fileID: 7222104215661270542}
   tutorialDirectionEvent: {fileID: 11400000, guid: 3a331465deef70b4393b1ff65925b34c, type: 2}
   messageText: {fileID: 2435007253834644109}
+  tutorialImage: {fileID: 6719926521053140387}
   tutorialSetManager: {fileID: 11400000, guid: 2101e3eec3088c6418cc76551bb03a73, type: 2}
   tutorialSelection: {fileID: 11400000, guid: f20c8d3dd3635fb40bc68cd71e3537f7, type: 2}
   tutorialTurnControlEvents: {fileID: 11400000, guid: e71ed2134e2386d4e81352550706b2c2, type: 2}
@@ -927,6 +928,7 @@ MonoBehaviour:
   tutorialEvents: {fileID: 11400000, guid: 2959b41f8635d8b4a9d610882758c18c, type: 2}
   actionSequencer: {fileID: 6792220225984136034}
   gridRoot: {fileID: 6819587065254481410}
+  tutorialImage: {fileID: 6719926521053140387}
 --- !u!1 &5042579920311926798
 GameObject:
   m_ObjectHideFlags: 0
@@ -1293,6 +1295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00c7c25b4742fb4cbe74e30cea21078, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialLoader: {fileID: 4478150438314494464}
   tutorialActionSequencer: {fileID: 6792220225984136034}
   tutorialSettingsConfig: {fileID: 11400000, guid: 0a0bedd47f438ad49bb81564380547a5, type: 2}
   autoplayToggleButton: {fileID: 1331344301998244700}
@@ -1792,10 +1795,38 @@ PrefabInstance:
       propertyPath: m_SpriteState.m_HighlightedSprite
       value: 
       objectReference: {fileID: -1090329403, guid: 113e6a80c066b7f409656009946771ef, type: 3}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 4478150438314494464}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Restart
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: TutorialLoader, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2657830102737990622, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4508605405800831478, guid: d40cbc89ce9e29b44b4ae704d8804811, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -1050948603, guid: 113e6a80c066b7f409656009946771ef, type: 3}
+      objectReference: {fileID: 838888815, guid: 34762e688194226468cb33c740b1f051, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

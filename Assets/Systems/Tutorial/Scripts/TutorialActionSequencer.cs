@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
@@ -14,6 +15,7 @@ public class TutorialActionSequencer : MonoBehaviour
     [SerializeField] private GridBuilder gridBuilder;
     [SerializeField] private DirectionEvent tutorialDirectionEvent;
     [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] private Image tutorialImage;
     [SerializeField] private TutorialSetManager tutorialSetManager;
     [SerializeField] private TutorialSelectData tutorialSelection;
     [SerializeField] private TurnControlEvents tutorialTurnControlEvents;
@@ -146,9 +148,9 @@ public class TutorialActionSequencer : MonoBehaviour
     }
 
     /// <summary>
-    /// Skip all remaining actions.
+    /// Resets the sequencer - stops current playback and clears state.
     /// </summary>
-    public void SkipAll()
+    public void ResetSequencer()
     {
         if (playbackCoroutine != null)
         {
@@ -312,6 +314,10 @@ public class TutorialActionSequencer : MonoBehaviour
 
             case TutorialActionType.ImageSequence:
                 yield return ExecuteImageAction(action.ImageAction);
+                break;
+
+            case TutorialActionType.ResetSequence:
+                yield return ExecuteResetSequence();
                 break;
         }
     }
@@ -479,27 +485,95 @@ public class TutorialActionSequencer : MonoBehaviour
 
     private IEnumerator ExecuteImageAction(ImageStep imageStep)
     {
-        if (imageStep.Image == null)
+        if (tutorialImage == null)
         {
-            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
-                "ImageAction has no sprite assigned", this);
+            DebugLogger.LogError(DebugLogCategory.Tutorial,
+                "TutorialImage is not assigned in TutorialActionSequencer!", this);
             yield break;
         }
 
         DebugLogger.Log(DebugLogCategory.Tutorial,
             $"ImageAction: {imageStep.ActionType}", this);
 
-        // TODO: Implement image display logic
-        // - Show/hide/replace image in tutorial overlay
-        // - Handle ExecuteWithMessage flag
-        // - Apply display duration
-        // - Respect text speed multiplier for timings
+        switch (imageStep.ActionType)
+        {
+            case ActionImageType.Show:
+                if (imageStep.Image == null)
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                        "ImageAction Show: no sprite assigned", this);
+                    yield break;
+                }
+                tutorialImage.sprite = imageStep.Image;
+                tutorialImage.transform.localEulerAngles = new Vector3(0f, 0f, DirectionToZRotation(imageStep.ImageRotation));
+                tutorialImage.gameObject.SetActive(true);
 
-        // Placeholder for future implementation
-        float duration = imageStep.DisplayTime > 0
-            ? imageStep.DisplayTime
-            : GetDefaultMessageTime();
-        yield return new WaitForSeconds(duration);
+                if (imageStep.DisplayTime > 0f)
+                {
+                    yield return new WaitForSeconds(imageStep.DisplayTime);
+                }
+                break;
+
+            case ActionImageType.Close:
+                tutorialImage.gameObject.SetActive(false);
+                break;
+
+            case ActionImageType.Replace:
+                if (imageStep.Image == null)
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                        "ImageAction Replace: no sprite assigned", this);
+                    yield break;
+                }
+                tutorialImage.sprite = imageStep.Image;
+                tutorialImage.transform.localEulerAngles = new Vector3(0f, 0f, DirectionToZRotation(imageStep.ImageRotation));
+                break;
+        }
+    }
+
+    private float DirectionToZRotation(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.Up    => 0f,
+            Direction.Right => 90f,
+            Direction.Down  => 180f,
+            Direction.Left  => 270f,
+            _               => 0f
+        };
+    }
+
+    private IEnumerator ExecuteResetSequence()
+    {
+        DebugLogger.Log(DebugLogCategory.Tutorial, "ResetSequence: Resetting tutorial level", this);
+
+        // Hide any active message
+        HideMessage();
+
+        // Clear undo history
+        undoController?.ClearHistory();
+
+        // Fade out + reset (FadeOutGrid internally calls ResetLevel)
+        yield return StartCoroutine(gridBuilder.FadeOutGrid());
+
+        // Rebuild level - same pattern as ReplayCoroutine
+        TutorialSetType setType = tutorialSelection.TutorialSetType;
+        int tutorialIndex = tutorialSelection.TutorialIndex;
+        TextAsset csvData = tutorialSetManager.GetTutorialCsv(setType, tutorialIndex);
+
+        if (csvData != null)
+        {
+            TileType[,] grid = TileParser.LoadGridFromTextAsset(csvData);
+            if (grid != null)
+            {
+                gridBuilder.BuildLevel(grid);
+            }
+        }
+
+        // Wait a frame for build to complete
+        yield return null;
+
+        DebugLogger.Log(DebugLogCategory.Tutorial, "ResetSequence: Reset complete, continuing sequence", this);
     }
 
     private IEnumerator ExecuteMessage(string text, float duration)
