@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 982535986ffddd54693d6376c3f54039, type: 3}
-  m_Name: 01_CharWallsAndUndo
-  m_EditorClassIdentifier:
+  m_Name: 01ca_WallsAndTactics
+  m_EditorClassIdentifier: 
   tutorialId: 1
-  titleText: Walls and Undo
+  titleText: Walls and basic tactics
   actions:
   - ActionType: 1
     MovementSteps: []
@@ -70,15 +70,6 @@ MonoBehaviour:
       ActionType: 0
       ImageRotation: 0
       DisplayTime: 0
-  - ActionType: 2
-    MovementSteps: []
-    MessageSteps: []
-    UndoCount: 1
-    ImageAction:
-      Image: {fileID: 0}
-      ActionType: 0
-      ImageRotation: 0
-      DisplayTime: 0
   - ActionType: 0
     MovementSteps:
     - Direction: 1
@@ -126,8 +117,11 @@ MonoBehaviour:
   - ActionType: 1
     MovementSteps: []
     MessageSteps:
-    - MessageText: And now I am totally screwed! If the nut ends in corner, then
-        there is no way how to move it out of there. Be careful about that!
+    - MessageText: 'And now I am totally screwed! There is no way how to move the
+        nut from the corner! '
+      DisplayTime: 4
+    - MessageText: If you stuck kike this, you can always reset the level and start
+        over!
       DisplayTime: 3
     UndoCount: 0
     ImageAction:
@@ -135,8 +129,92 @@ MonoBehaviour:
       ActionType: 0
       ImageRotation: 0
       DisplayTime: 0
-  - ActionType: 2
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: -1050948603, guid: 113e6a80c066b7f409656009946771ef, type: 3}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 2
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: Here we are back again, let's start over. This time try to use
+        different road with more space.
+      DisplayTime: 4
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 4
     MovementSteps: []
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
     MessageSteps: []
     UndoCount: 2
     ImageAction:
