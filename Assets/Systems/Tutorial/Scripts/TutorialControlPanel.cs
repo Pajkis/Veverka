@@ -9,6 +9,7 @@ using TMPro;
 public class TutorialControlPanel : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private TutorialLoader tutorialLoader;
     [SerializeField] private TutorialActionSequencer tutorialActionSequencer;
     [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
 
@@ -83,13 +84,18 @@ public class TutorialControlPanel : MonoBehaviour
     }
 
     /// <summary>
-    /// Restart tutorial from beginning with fade transition.
+    /// Restart tutorial from beginning.
     /// </summary>
     private void OnRestartClicked()
     {
-        if (tutorialActionSequencer != null)
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"OnRestartClicked: tutorialLoader={tutorialLoader != null}", this);
+        if (tutorialLoader != null)
         {
-            tutorialActionSequencer.Replay();
+            tutorialLoader.Restart();
+        }
+        else
+        {
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialLoader not assigned in TutorialControlPanel!", this);
         }
     }
 

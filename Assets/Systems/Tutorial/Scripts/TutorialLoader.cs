@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Tutorial overlay controller - raises events to communicate with persistent TutorialManager.
@@ -11,6 +13,9 @@ public class TutorialLoader : MonoBehaviour
     [SerializeField] private TutorialEvents tutorialEvents;
     [SerializeField] private TutorialActionSequencer actionSequencer;
     [SerializeField] private Transform gridRoot;
+
+    [Header("Image")]
+    [SerializeField] private Image tutorialImage;
 
     // Cached reference to animation controller
     private OverlayAnimationController animController;
@@ -32,6 +37,40 @@ public class TutorialLoader : MonoBehaviour
     private void Start()
     {
         LoadCurrentTutorial();
+    }
+
+    /// <summary>
+    /// Restart tutorial from beginning. Called by TutorialControlPanel.
+    /// </summary>
+    public void Restart()
+    {
+        StartCoroutine(RestartCoroutine());
+    }
+
+    private IEnumerator RestartCoroutine()
+    {
+        // Stop current sequence
+        actionSequencer?.ResetSequencer();
+
+        // Reset tutorial image
+        if (tutorialImage != null)
+        {
+            tutorialImage.sprite = null;
+            tutorialImage.gameObject.SetActive(false);
+        }
+
+        // Reset and rebuild grid via TutorialManager (ResetLevel + BuildLevel)
+        tutorialEvents.Raise(new TutorialEventPayload
+        {
+            EventType = TutorialEventType.ReplayTutorial,
+            SetType = tutorialSelection.TutorialSetType,
+            TutorialIndex = tutorialSelection.TutorialIndex
+        });
+
+        // Start action sequence after grid delay
+        StartActionSequence();
+
+        yield return null;
     }
 
     /// <summary>
@@ -65,6 +104,13 @@ public class TutorialLoader : MonoBehaviour
             SetType = setType,
             TutorialIndex = tutorialIndex
         });
+
+        // Reset tutorial image to empty state
+        if (tutorialImage != null)
+        {
+            tutorialImage.sprite = null;
+            tutorialImage.gameObject.SetActive(false);
+        }
 
         // Start action sequence after grid delay
         StartActionSequence();
