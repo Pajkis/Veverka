@@ -12,6 +12,7 @@ public class TutorialSettingsConfig : ScriptableObject
     [SerializeField] private bool autoplayEnable = true;
     [SerializeField] private TutorialAnimSpeedType animSpeedIndex = TutorialAnimSpeedType.Normal;
     [SerializeField] private TutorialAnimSpeedType textSpeedIndex = TutorialAnimSpeedType.Normal;
+    [SerializeField] private bool soundEnabled = true;
 
     #endregion
 
@@ -19,6 +20,7 @@ public class TutorialSettingsConfig : ScriptableObject
     public bool AutoplayEnable => autoplayEnable;
     public TutorialAnimSpeedType AnimSpeedIndex => animSpeedIndex;
     public TutorialAnimSpeedType TextSpeedIndex => textSpeedIndex;
+    public bool SoundEnabled => soundEnabled;
     #endregion
 
     #region Methods
@@ -45,6 +47,9 @@ public class TutorialSettingsConfig : ScriptableObject
                     break;
                 case TutorialSettingsType.Tutorial_TextSpeed:
                     textSpeedIndex = (TutorialAnimSpeedType)PlayerPrefs.GetInt(PlayerPrefKey, (int)textSpeedIndex);
+                    break;
+                case TutorialSettingsType.Tutorial_Sound:
+                    soundEnabled = PlayerPrefs.GetInt(PlayerPrefKey, soundEnabled ? 1 : 0) == 1;
                     break;
             }
         }
@@ -89,6 +94,12 @@ public class TutorialSettingsConfig : ScriptableObject
     {
         textSpeedIndex = value;
         TutorialSaveToPlayerPrefs(TutorialSettingsType.Tutorial_TextSpeed, (int)value);
+    }
+
+    public void TutorialSetSoundEnabled(bool value)
+    {
+        soundEnabled = value;
+        TutorialSaveToPlayerPrefs(TutorialSettingsType.Tutorial_Sound, value ? 1 : 0);
     }
 
     #endregion

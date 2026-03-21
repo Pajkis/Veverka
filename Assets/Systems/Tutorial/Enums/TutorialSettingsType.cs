@@ -9,7 +9,8 @@ public enum TutorialSettingsType
 {
     Tutorial_Autoplay,
     Tutorial_TextSpeed,
-    Tutorial_AnimSpeed
+    Tutorial_AnimSpeed,
+    Tutorial_Sound
 }
 
 /// <summary>

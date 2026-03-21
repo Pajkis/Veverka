@@ -19,11 +19,13 @@ public class TutorialControlPanel : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private Button textSpeedButton;
     [SerializeField] private Button animSpeedButton;
+    [SerializeField] private Button soundButton;
 
     [Header("Display Labels")]
     [SerializeField] private TextMeshProUGUI modeDisplayText;
     [SerializeField] private TextMeshProUGUI textSpeedLabel;
     [SerializeField] private TextMeshProUGUI animSpeedLabel;
+    [SerializeField] private TextMeshProUGUI soundLabel;
 
     private void Awake()
     {
@@ -42,6 +44,9 @@ public class TutorialControlPanel : MonoBehaviour
 
         if (animSpeedButton != null)
             animSpeedButton.onClick.AddListener(OnAnimSpeedClicked);
+
+        if (soundButton != null)
+            soundButton.onClick.AddListener(OnSoundToggleClicked);
     }
 
     private void OnEnable()
@@ -114,6 +119,19 @@ public class TutorialControlPanel : MonoBehaviour
     }
 
     /// <summary>
+    /// Toggle tutorial sound effects on/off.
+    /// </summary>
+    private void OnSoundToggleClicked()
+    {
+        if (tutorialSettingsConfig != null)
+        {
+            tutorialSettingsConfig.TutorialSetSoundEnabled(!tutorialSettingsConfig.SoundEnabled);
+            tutorialLoader?.ApplySoundSetting();
+            RefreshUI();
+        }
+    }
+
+    /// <summary>
     /// Cycle animation speed: Normal → Fast → VeryFast → Normal.
     /// </summary>
     private void OnAnimSpeedClicked()
@@ -153,6 +171,12 @@ public class TutorialControlPanel : MonoBehaviour
         {
             TutorialAnimSpeedType animSpeed = tutorialSettingsConfig.AnimSpeedIndex;
             animSpeedLabel.text = $"{SpeedToString(animSpeed)}";
+        }
+
+        // Update sound label
+        if (soundLabel != null)
+        {
+            soundLabel.text = tutorialSettingsConfig.SoundEnabled ? "ON" : "OFF";
         }
     }
 

@@ -17,6 +17,10 @@ public class TutorialLoader : MonoBehaviour
     [Header("Image")]
     [SerializeField] private Image tutorialImage;
 
+    [Header("Audio")]
+    [SerializeField] private AudioEvents audioEvents;
+    [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
+
     // Cached reference to animation controller
     private OverlayAnimationController animController;
 
@@ -40,6 +44,28 @@ public class TutorialLoader : MonoBehaviour
     }
 
     /// <summary>
+    /// Apply current sound setting to AudioManager.
+    /// </summary>
+    public void ApplySoundSetting()
+    {
+        if (audioEvents == null || tutorialSettingsConfig == null) return;
+        audioEvents.Raise(new AudioEventPayload
+        {
+            EventType = AudioEventType.MuteSfx,
+            Muted = !tutorialSettingsConfig.SoundEnabled
+        });
+    }
+
+    private void OnDestroy()
+    {
+        audioEvents?.Raise(new AudioEventPayload
+        {
+            EventType = AudioEventType.MuteSfx,
+            Muted = false
+        });
+    }
+
+    /// <summary>
     /// Restart tutorial from beginning. Called by TutorialControlPanel.
     /// </summary>
     public void Restart()
@@ -58,6 +84,9 @@ public class TutorialLoader : MonoBehaviour
             tutorialImage.sprite = null;
             tutorialImage.gameObject.SetActive(false);
         }
+
+        // Apply sound setting
+        ApplySoundSetting();
 
         // Reset and rebuild grid via TutorialManager (ResetLevel + BuildLevel)
         tutorialEvents.Raise(new TutorialEventPayload
@@ -111,6 +140,9 @@ public class TutorialLoader : MonoBehaviour
             tutorialImage.sprite = null;
             tutorialImage.gameObject.SetActive(false);
         }
+
+        // Apply sound setting
+        ApplySoundSetting();
 
         // Start action sequence after grid delay
         StartActionSequence();
