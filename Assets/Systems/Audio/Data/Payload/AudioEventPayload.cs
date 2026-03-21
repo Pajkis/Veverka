@@ -7,8 +7,9 @@ using UnityEngine;
 public struct AudioEventPayload
 {
     [Header("Basic audio parameters")]
-    public AudioEventType EventType;  
-    public MusicType Music; 
-    public SfxType Sfx;   
-    public UiType Ui;  
+    public AudioEventType EventType;
+    public MusicType Music;
+    public SfxType Sfx;
+    public UiType Ui;
+    public bool Muted;
 }
