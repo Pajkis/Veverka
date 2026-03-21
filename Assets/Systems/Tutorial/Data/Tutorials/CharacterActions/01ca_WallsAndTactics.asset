@@ -152,7 +152,7 @@ MonoBehaviour:
     MessageSteps: []
     UndoCount: 2
     ImageAction:
-      Image: {fileID: -1050948603, guid: 113e6a80c066b7f409656009946771ef, type: 3}
+      Image: {fileID: 838888815, guid: 34762e688194226468cb33c740b1f051, type: 3}
       ActionType: 0
       ImageRotation: 0
       DisplayTime: 2

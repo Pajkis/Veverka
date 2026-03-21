@@ -61,7 +61,7 @@ MonoBehaviour:
       DisplayTime: 3
     UndoCount: 0
     ImageAction:
-      Image: {fileID: 691593561, guid: 898102d73163ae740b52e23a35c838b3, type: 3}
+      Image: {fileID: -1457575578, guid: 64f3c4ff63e86a943a202440ecf8c50a, type: 3}
       ActionType: 0
       ImageRotation: 0
       DisplayTime: 0
@@ -121,9 +121,9 @@ MonoBehaviour:
       DisplayTime: 0
     UndoCount: 0
     ImageAction:
-      Image: {fileID: 691593561, guid: 898102d73163ae740b52e23a35c838b3, type: 3}
+      Image: {fileID: -1457575578, guid: 64f3c4ff63e86a943a202440ecf8c50a, type: 3}
       ActionType: 2
-      ImageRotation: 0
+      ImageRotation: 3
       DisplayTime: 0
   - ActionType: 0
     MovementSteps:
