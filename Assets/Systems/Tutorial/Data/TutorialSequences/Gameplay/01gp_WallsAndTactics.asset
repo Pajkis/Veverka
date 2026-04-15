@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 982535986ffddd54693d6376c3f54039, type: 3}
-  m_Name: 01ca_WallsAndTactics
+  m_Name: 01gp_WallsAndTactics
   m_EditorClassIdentifier: 
   tutorialId: 1
   titleText: Walls and basic tactics
