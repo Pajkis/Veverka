@@ -92,7 +92,7 @@ public class DisplayConfigPars
     [Tooltip("Tutorial screen tile size")]
     public Vector2Int tutorialScreenTileSize = new(9, 7);
     [Tooltip("Camera position when tutorial is active")]
-    public Vector3 tutorialCameraPosition = new(4.65f, 2.95f, -10f);
+    public Vector3 tutorialCameraPosition = new(4.9f, 2.95f, -10f);
     [Tooltip("Delay before showing tutorial grid (for overlay fade-in sync)")]
     public float tutorialGridShowDelay = 0.5f;
 

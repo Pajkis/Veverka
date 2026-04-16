@@ -40,7 +40,7 @@ MonoBehaviour:
     cursorHotspot: {x: 40, y: -40}
     cursorImageSize: {x: 80, y: 80, z: 0}
     tutorialScreenTileSize: {x: 9, y: 7}
-    tutorialCameraPosition: {x: 4.65, y: 2.95, z: -10}
+    tutorialCameraPosition: {x: 4.9, y: 2.95, z: -10}
     tutorialGridShowDelay: 0.5
     tutorialDefaultMessageTime: 2
     tutorialActionDelay: 0.3
@@ -74,7 +74,7 @@ MonoBehaviour:
     cursorHotspot: {x: 40, y: -40}
     cursorImageSize: {x: 80, y: 80, z: 0}
     tutorialScreenTileSize: {x: 9, y: 7}
-    tutorialCameraPosition: {x: 4.65, y: 2.95, z: -10}
+    tutorialCameraPosition: {x: 4.9, y: 2.95, z: -10}
     tutorialGridShowDelay: 0.5
     tutorialDefaultMessageTime: 2
     tutorialActionDelay: 0.3
