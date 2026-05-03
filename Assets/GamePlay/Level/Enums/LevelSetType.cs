@@ -4,8 +4,9 @@
 public enum LevelSetType
 {
     Basic = 0,
-    Stone = 1,
-    Water = 2,
-    Fire = 3,
-    User = 666,
+    Gold = 1,
+    Stone = 2,
+    Water = 3,
+    Fire = 4,
+    User = 100,
 }

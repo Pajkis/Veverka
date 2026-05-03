@@ -19,18 +19,18 @@ MonoBehaviour:
     MovementSteps: []
     MessageSteps:
     - MessageText: Hello stranger!  You are a squirell and this is your playground...
-      DisplayTime: 3
+      DisplayTime: 4
     - MessageText: To survive you have collect nuts and get them to your nests!  
         If  you get nuts to all your homes, you win!
-      DisplayTime: 3
+      DisplayTime: 5
     - MessageText: But you will not enjoy your deserved dinner to enjoy your deserved 
         victory. Instead, you will  be teleported to new wooden prison and start 
         over! Well, life is not fair!
-      DisplayTime: 3
-    - MessageText: But first, let me explain how to control this tiny nutty beast!       
+      DisplayTime: 7
+    - MessageText: But first, let me explain how to control this tiny nutty beast!
         Mostly you will use arrows. You can use your keyboard or click buttons on 
         the  screen. Lets try to press button up!
-      DisplayTime: 3
+      DisplayTime: 7
     UndoCount: 0
     ImageAction:
       Image: {fileID: 0}
@@ -102,7 +102,7 @@ MonoBehaviour:
     MessageSteps:
     - MessageText: Did you see? If you press arrow in new direction once, the squirell       
         just turns in that direction. Lets try again to the left!
-      DisplayTime: 3
+      DisplayTime: 5
     UndoCount: 0
     ImageAction:
       Image: {fileID: 691593561, guid: 898102d73163ae740b52e23a35c838b3, type: 3}
@@ -148,7 +148,7 @@ MonoBehaviour:
     MessageSteps:
     - MessageText: And now you turned to left! Lets see what happens if you press 
         "left"   one more time!
-      DisplayTime: 3
+      DisplayTime: 5
     UndoCount: 0
     ImageAction:
       Image: {fileID: 691593561, guid: 898102d73163ae740b52e23a35c838b3, type: 3}
@@ -178,7 +178,7 @@ MonoBehaviour:
     MessageSteps:
     - MessageText: What?! No turning now? You moved! That is so confusing! Well, 
         get  used to it! If you press arrow matching your direction, you move!
-      DisplayTime: 3
+      DisplayTime: 5
     - MessageText: ' Lets do it again, this time to the right!'
       DisplayTime: 3
     UndoCount: 0
@@ -212,12 +212,122 @@ MonoBehaviour:
     - Direction: 1
       RepeatCount: 2
     MessageSteps:
-    - MessageText: Did you get it?! So, let's continue. How to move nuts? You need
-        to push them by moving squirell on nuts position. Let me show you!
-      DisplayTime: 0
+    - MessageText: 'Easy, Right! So, let''s continue. '
+      DisplayTime: 3
+    - MessageText: How to move nuts? You need to push them by moving squirell on
+        nuts position. Let me show you!
+      DisplayTime: 5
     UndoCount: 0
     ImageAction:
       Image: {fileID: 691593561, guid: 898102d73163ae740b52e23a35c838b3, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: 'Easy, Right! So, let''s continue. '
+      DisplayTime: 3
+    - MessageText: How to move nuts? You need to push them by moving squirell on
+        nuts position. Let me show you!
+      DisplayTime: 5
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: 'Easy, Right! So, let''s continue. '
+      DisplayTime: 3
+    - MessageText: How to move nuts? You need to push them by moving squirell on
+        nuts position. Let me show you!
+      DisplayTime: 5
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: If the space behind the nut is empty, then you can push it, otherwise
+        you need to try to push in another direction.
+      DisplayTime: 5
+    - MessageText: So let's push the nut in the goal!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: If the space behind the nut is empty, then you can push it, otherwise
+        you need to try to push in another direction.
+      DisplayTime: 5
+    - MessageText: So let's push the nut in the goal!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Well done! You scored your first goal! Once you score all goles
+        you win the level!
+      DisplayTime: 5
+    - MessageText: Good luck and don't Get nuts!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
       ActionType: 2
       ImageRotation: 0
       DisplayTime: 0
