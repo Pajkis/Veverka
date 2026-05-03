@@ -118,7 +118,7 @@ MonoBehaviour:
     - Direction: 2
       RepeatCount: 3
     MessageSteps:
-    - MessageText: '"Oh no, I missed!" This is the perfect time for undo'
+    - MessageText: '"Oh no, I missed!" This is the perfect time for "Undo"!'
       DisplayTime: 4
     UndoCount: 0
     ImageAction:

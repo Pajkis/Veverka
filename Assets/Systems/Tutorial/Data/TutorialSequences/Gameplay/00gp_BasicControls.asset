@@ -212,7 +212,7 @@ MonoBehaviour:
     - Direction: 1
       RepeatCount: 2
     MessageSteps:
-    - MessageText: Did you get it?! So, let's continue. How to move nuts? You need       
+    - MessageText: Did you get it?! So, let's continue. How to move nuts? You need
         to push them by moving squirell on nuts position. Let me show you!
       DisplayTime: 0
     UndoCount: 0
