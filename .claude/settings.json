@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/01_Projects/Unity/01_MyGames/VeverkaResources/**)"
+    ]
+  }
+}

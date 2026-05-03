@@ -118,7 +118,7 @@ public class TutorialManager : MonoBehaviour
     private void ReplayTutorial(TutorialSetType setType, int tutorialIndex)
     {
         DebugLogger.Log(DebugLogCategory.Tutorial, "Replaying tutorial", this);
-        ClearTutorial();
+        gridBuilder.ResetLevel();
         LoadTutorial(setType, tutorialIndex);
     }
 }

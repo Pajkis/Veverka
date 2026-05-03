@@ -1,5 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 /// <summary>
@@ -13,6 +15,7 @@ public class TutorialActionSequencer : MonoBehaviour
     [SerializeField] private GridBuilder gridBuilder;
     [SerializeField] private DirectionEvent tutorialDirectionEvent;
     [SerializeField] private TextMeshProUGUI messageText;
+    [SerializeField] private Image tutorialImage;
     [SerializeField] private TutorialSetManager tutorialSetManager;
     [SerializeField] private TutorialSelectData tutorialSelection;
     [SerializeField] private TurnControlEvents tutorialTurnControlEvents;
@@ -145,9 +148,9 @@ public class TutorialActionSequencer : MonoBehaviour
     }
 
     /// <summary>
-    /// Skip all remaining actions.
+    /// Resets the sequencer - stops current playback and clears state.
     /// </summary>
-    public void SkipAll()
+    public void ResetSequencer()
     {
         if (playbackCoroutine != null)
         {
@@ -297,19 +300,24 @@ public class TutorialActionSequencer : MonoBehaviour
     {
         switch (action.ActionType)
         {
-            case TutorialActionType.Animation:
-                yield return ExecuteAnimation(action.AnimationDirection);
+            case TutorialActionType.MovementSequence:
+                yield return ExecuteMovementSequence(action.MovementSteps);
                 break;
 
-            case TutorialActionType.Message:
-                float duration = action.MessageDisplayTime > 0
-                    ? action.MessageDisplayTime
-                    : GetDefaultMessageTime();
-                yield return ExecuteMessage(action.MessageText, duration);
+            case TutorialActionType.MessageSequence:
+                yield return ExecuteMessageSequence(action.MessageSteps);
                 break;
 
-            case TutorialActionType.Undo:
-                yield return ExecuteUndo();
+            case TutorialActionType.UndoSequence:
+                yield return ExecuteUndoSequence(action.UndoCount);
+                break;
+
+            case TutorialActionType.ImageSequence:
+                yield return ExecuteImageAction(action.ImageAction);
+                break;
+
+            case TutorialActionType.ResetSequence:
+                yield return ExecuteResetSequence();
                 break;
         }
     }
@@ -407,6 +415,167 @@ public class TutorialActionSequencer : MonoBehaviour
         yield return new WaitForSeconds(actionDelay);
     }
 
+    private IEnumerator ExecuteMovementSequence(List<MovementStep> steps)
+    {
+        if (steps == null || steps.Count == 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "MovementSequence has no steps", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"MovementSequence: {steps.Count} steps", this);
+
+        foreach (var step in steps)
+        {
+            // Execute direction action repeatCount times
+            for (int i = 0; i < step.RepeatCount; i++)
+            {
+                yield return ExecuteAnimation(step.Direction);
+            }
+        }
+    }
+
+    private IEnumerator ExecuteMessageSequence(List<MessageStep> steps)
+    {
+        if (steps == null || steps.Count == 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "MessageSequence has no steps", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"MessageSequence: {steps.Count} messages", this);
+
+        foreach (var step in steps)
+        {
+            float duration = step.DisplayTime > 0
+                ? step.DisplayTime
+                : GetDefaultMessageTime();
+            yield return ExecuteMessage(step.MessageText, duration);
+        }
+    }
+
+    private IEnumerator ExecuteUndoSequence(int count)
+    {
+        if (count <= 0)
+        {
+            DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                "UndoSequence has invalid count", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"UndoSequence: {count} undos", this);
+
+        for (int i = 0; i < count; i++)
+        {
+            if (!undoController.CanUndo())
+            {
+                DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                    $"Undo stopped at {i + 1}/{count} - no more history", this);
+                yield break;
+            }
+
+            yield return ExecuteUndo();
+        }
+    }
+
+    private IEnumerator ExecuteImageAction(ImageStep imageStep)
+    {
+        if (tutorialImage == null)
+        {
+            DebugLogger.LogError(DebugLogCategory.Tutorial,
+                "TutorialImage is not assigned in TutorialActionSequencer!", this);
+            yield break;
+        }
+
+        DebugLogger.Log(DebugLogCategory.Tutorial,
+            $"ImageAction: {imageStep.ActionType}", this);
+
+        switch (imageStep.ActionType)
+        {
+            case ActionImageType.Show:
+                if (imageStep.Image == null)
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                        "ImageAction Show: no sprite assigned", this);
+                    yield break;
+                }
+                tutorialImage.sprite = imageStep.Image;
+                tutorialImage.transform.localEulerAngles = new Vector3(0f, 0f, DirectionToZRotation(imageStep.ImageRotation));
+                tutorialImage.gameObject.SetActive(true);
+
+                if (imageStep.DisplayTime > 0f)
+                {
+                    yield return new WaitForSeconds(imageStep.DisplayTime);
+                }
+                break;
+
+            case ActionImageType.Close:
+                tutorialImage.gameObject.SetActive(false);
+                break;
+
+            case ActionImageType.Replace:
+                if (imageStep.Image == null)
+                {
+                    DebugLogger.LogWarning(DebugLogCategory.Tutorial,
+                        "ImageAction Replace: no sprite assigned", this);
+                    yield break;
+                }
+                tutorialImage.sprite = imageStep.Image;
+                tutorialImage.transform.localEulerAngles = new Vector3(0f, 0f, DirectionToZRotation(imageStep.ImageRotation));
+                break;
+        }
+    }
+
+    private float DirectionToZRotation(Direction direction)
+    {
+        return direction switch
+        {
+            Direction.Up    => 0f,
+            Direction.Right => 90f,
+            Direction.Down  => 180f,
+            Direction.Left  => 270f,
+            _               => 0f
+        };
+    }
+
+    private IEnumerator ExecuteResetSequence()
+    {
+        DebugLogger.Log(DebugLogCategory.Tutorial, "ResetSequence: Resetting tutorial level", this);
+
+        // Hide any active message
+        HideMessage();
+
+        // Clear undo history
+        undoController?.ClearHistory();
+
+        // Fade out + reset (FadeOutGrid internally calls ResetLevel)
+        yield return StartCoroutine(gridBuilder.FadeOutGrid());
+
+        // Rebuild level - same pattern as ReplayCoroutine
+        TutorialSetType setType = tutorialSelection.TutorialSetType;
+        int tutorialIndex = tutorialSelection.TutorialIndex;
+        TextAsset csvData = tutorialSetManager.GetTutorialCsv(setType, tutorialIndex);
+
+        if (csvData != null)
+        {
+            TileType[,] grid = TileParser.LoadGridFromTextAsset(csvData);
+            if (grid != null)
+            {
+                gridBuilder.BuildLevel(grid);
+            }
+        }
+
+        // Wait a frame for build to complete
+        yield return null;
+
+        DebugLogger.Log(DebugLogCategory.Tutorial, "ResetSequence: Reset complete, continuing sequence", this);
+    }
+
     private IEnumerator ExecuteMessage(string text, float duration)
     {
         DebugLogger.Log(DebugLogCategory.Tutorial, $"Message action: {text}", this);
@@ -435,8 +604,8 @@ public class TutorialActionSequencer : MonoBehaviour
             // Manual mode: message is faded in, activate Next button
             currentMessageFadedIn = true;
 
-            // Wait for manual skip
-            yield return new WaitUntil(() => isSkipRequested);
+            // Wait for manual skip OR autoplay toggle
+            yield return new WaitUntil(() => isSkipRequested || isAutoplay);
 
             currentMessageFadedIn = false;
         }

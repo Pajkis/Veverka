@@ -1,0 +1,320 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982535986ffddd54693d6376c3f54039, type: 3}
+  m_Name: 02gp_Undo
+  m_EditorClassIdentifier: 
+  tutorialId: 2
+  titleText: Undo
+  actions:
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: 'Hello again! This game can be full of trials and errors. One
+        small mistake and your hard effort goes to nut. '
+      DisplayTime: 4
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: 'Hello again! This game can be full of trials and errors. One
+        small mistake and you can start over from beginning. '
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 838888815, guid: 34762e688194226468cb33c740b1f051, type: 3}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: Of course you can always restart the level and start over.
+      DisplayTime: 4
+    - MessageText: 'But still, make a wrong move right before the end and not cracking
+        the nut might get you nuts! '
+      DisplayTime: 5
+    - MessageText: For that case you can use "Undo"!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 838888815, guid: 34762e688194226468cb33c740b1f051, type: 3}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: Of course you can always restart the level and start over.
+      DisplayTime: 3
+    - MessageText: 'But still, make a wrong move right before the end and not cracking
+        the nut might get you nuts! '
+      DisplayTime: 3
+    - MessageText: For that case you can use "Undo"!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: '"Undo" can revert your turn and you can go back in time by one
+        step. let me show you!'
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: '"Undo" can revert your turn and you can go back in time by one
+        step. let me show you!'
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 3
+    - Direction: 2
+      RepeatCount: 4
+    MessageSteps:
+    - MessageText: '"Undo" can revert your turn and you can go back in time by one
+        step. let me show you!'
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: '"Oh no, I missed!" This is the perfect time for "Undo"!'
+      DisplayTime: 4
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: '"Oh no, I missed!" This is the perfect time for undo'
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 2
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: '"Oh no, I missed!" This is the perfect time for undo'
+      DisplayTime: 3
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: Now you can start again without restarting the level! As you can
+        see, you can freely move nuts around and they return with you!
+      DisplayTime: 7
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Now you can start again without restarting the level! As you can
+        see, you can freely move nuts around and they return with you!
+      DisplayTime: 7
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: You scored, Good job! And new lets crack the other nut!
+      DisplayTime: 4
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Oh no! Missed again! But don't worry, let's Undo again!
+      DisplayTime: 4
+    UndoCount: 8
+    ImageAction:
+      Image: {fileID: 21300000, guid: 14416b94180a09d489aad3bf8b13a987, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: You scored, Good job! And new lets crack the other nut!
+      DisplayTime: 4
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Oh no! Missed again! But don't worry, let's Undo again!
+      DisplayTime: 4
+    UndoCount: 1
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Oh no! Missed again! But don't worry, let's Undo again!
+      DisplayTime: 4
+    UndoCount: 8
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 2
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: Oh no! Missed again! But don't worry, let's Undo again!
+      DisplayTime: 4
+    UndoCount: 6
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps:
+    - MessageText: What happened?! I cannot Undo anymore!
+      DisplayTime: 4
+    - MessageText: You can use Undo anytime, move nuts around and return them back
+        with Undo.
+      DisplayTime: 5
+    - MessageText: But you cannot revert scored  goals or any other interaction.
+        So you can return back only up to last scored goal!
+      DisplayTime: 7
+    - MessageText: Keep that in mind and play levels wisely so you can get most of 
+        Undo!
+      DisplayTime: 10
+    UndoCount: 8
+    ImageAction:
+      Image: {fileID: 865779484, guid: e04eef72912b88747a5240dfb0913296, type: 3}
+      ActionType: 2
+      ImageRotation: 0
+      DisplayTime: 0

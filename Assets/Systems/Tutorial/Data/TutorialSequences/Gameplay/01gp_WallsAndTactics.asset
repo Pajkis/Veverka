@@ -1,0 +1,224 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982535986ffddd54693d6376c3f54039, type: 3}
+  m_Name: 01gp_WallsAndTactics
+  m_EditorClassIdentifier: 
+  tutorialId: 1
+  titleText: Walls and basic tactics
+  actions:
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: So you know how to move the squirell and score a goal! Good, but
+        it is not always gonna be so easy.
+      DisplayTime: 3
+    - MessageText: Squirell can push the nuts in front of itself. In open field you
+        can easily push the nut where you want.
+      DisplayTime: 3
+    - MessageText: 'But what about walls? You can''t move through them and you can''t
+        push nuts through them also! '
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: See? No way you can push it through a tree wall. No matter how
+        small you are, you have no chance!
+      DisplayTime: 3
+    - MessageText: To get the nut to the goal you have to push it around the wall.
+        Lets move the nut up cause it is closer way to the goal.
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 2
+      RepeatCount: 2
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 4
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: Oh no! I can't move the nut from the wall! This nut can be moved
+        only along the wall.
+      DisplayTime: 3
+    - MessageText: 'Let''s try something, move it a little bit. '
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 1
+      RepeatCount: 1
+    MessageSteps: []
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 1
+    MovementSteps: []
+    MessageSteps:
+    - MessageText: 'And now I am totally screwed! There is no way how to move the
+        nut from the corner! '
+      DisplayTime: 4
+    - MessageText: If you stuck kike this, you can always reset the level and start
+        over!
+      DisplayTime: 3
+    UndoCount: 0
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 3
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 838888815, guid: 34762e688194226468cb33c740b1f051, type: 3}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 2
+  - ActionType: 1
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
+    MessageSteps:
+    - MessageText: Here we are back again, let's start over. This time try to use
+        different road with more space.
+      DisplayTime: 4
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 4
+    MovementSteps: []
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0
+  - ActionType: 0
+    MovementSteps:
+    - Direction: 0
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 3
+    - Direction: 3
+      RepeatCount: 2
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 5
+    - Direction: 2
+      RepeatCount: 2
+    - Direction: 1
+      RepeatCount: 2
+    - Direction: 0
+      RepeatCount: 3
+    MessageSteps: []
+    UndoCount: 2
+    ImageAction:
+      Image: {fileID: 0}
+      ActionType: 0
+      ImageRotation: 0
+      DisplayTime: 0

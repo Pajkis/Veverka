@@ -9,6 +9,7 @@ using TMPro;
 public class TutorialControlPanel : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] private TutorialLoader tutorialLoader;
     [SerializeField] private TutorialActionSequencer tutorialActionSequencer;
     [SerializeField] private TutorialSettingsConfig tutorialSettingsConfig;
 
@@ -18,11 +19,13 @@ public class TutorialControlPanel : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private Button textSpeedButton;
     [SerializeField] private Button animSpeedButton;
+    [SerializeField] private Button soundButton;
 
     [Header("Display Labels")]
     [SerializeField] private TextMeshProUGUI modeDisplayText;
     [SerializeField] private TextMeshProUGUI textSpeedLabel;
     [SerializeField] private TextMeshProUGUI animSpeedLabel;
+    [SerializeField] private TextMeshProUGUI soundLabel;
 
     private void Awake()
     {
@@ -41,6 +44,9 @@ public class TutorialControlPanel : MonoBehaviour
 
         if (animSpeedButton != null)
             animSpeedButton.onClick.AddListener(OnAnimSpeedClicked);
+
+        if (soundButton != null)
+            soundButton.onClick.AddListener(OnSoundToggleClicked);
     }
 
     private void OnEnable()
@@ -83,13 +89,18 @@ public class TutorialControlPanel : MonoBehaviour
     }
 
     /// <summary>
-    /// Restart tutorial from beginning with fade transition.
+    /// Restart tutorial from beginning.
     /// </summary>
     private void OnRestartClicked()
     {
-        if (tutorialActionSequencer != null)
+        DebugLogger.Log(DebugLogCategory.Tutorial, $"OnRestartClicked: tutorialLoader={tutorialLoader != null}", this);
+        if (tutorialLoader != null)
         {
-            tutorialActionSequencer.Replay();
+            tutorialLoader.Restart();
+        }
+        else
+        {
+            DebugLogger.LogError(DebugLogCategory.Tutorial, "TutorialLoader not assigned in TutorialControlPanel!", this);
         }
     }
 
@@ -103,6 +114,19 @@ public class TutorialControlPanel : MonoBehaviour
             TutorialAnimSpeedType currentSpeed = tutorialActionSequencer.GetCurrentTextSpeed();
             TutorialAnimSpeedType newSpeed = CycleSpeed(currentSpeed);
             tutorialActionSequencer.SetTextSpeed(newSpeed);
+            RefreshUI();
+        }
+    }
+
+    /// <summary>
+    /// Toggle tutorial sound effects on/off.
+    /// </summary>
+    private void OnSoundToggleClicked()
+    {
+        if (tutorialSettingsConfig != null)
+        {
+            tutorialSettingsConfig.TutorialSetSoundEnabled(!tutorialSettingsConfig.SoundEnabled);
+            tutorialLoader?.ApplySoundSetting();
             RefreshUI();
         }
     }
@@ -147,6 +171,12 @@ public class TutorialControlPanel : MonoBehaviour
         {
             TutorialAnimSpeedType animSpeed = tutorialSettingsConfig.AnimSpeedIndex;
             animSpeedLabel.text = $"{SpeedToString(animSpeed)}";
+        }
+
+        // Update sound label
+        if (soundLabel != null)
+        {
+            soundLabel.text = tutorialSettingsConfig.SoundEnabled ? "ON" : "OFF";
         }
     }
 

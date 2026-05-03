@@ -6,7 +6,7 @@
 /// distinct tutorial set types that may affect content or behavior in the application.</remarks>
 public enum TutorialSetType
 {
-    CharacterAction = 0,
+    Gameplay = 0,
     Basic = 1,
     Golden = 2,
     Stone = 3,
