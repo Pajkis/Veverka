@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 699974beb0b17ab41acd362be5b8c88a, type: 3}
   m_Name: 666_UserSet
   m_EditorClassIdentifier: 
-  setType: 666
+  setType: 100
   setDisplayName: User
   levelCsvFiles: []

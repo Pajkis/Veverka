@@ -1,18 +1,18 @@
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// goal tile abstract class
+/// Golden goal score resolve logic by nut type
+/// Golden nut - score
+/// Other nut - trigger nut specific effect, no score
 /// </summary>
 public class GoldenGoalTile : GoalTile, INutInteractive
 {
+    // Inut Interactive interface
     #region INutInteractive
     public Vector2Int GridPos => base.GridPosition;
     public NutEvents NutEvents => nutEvents;
     public GridEvents GridEvents => gridEvents;
     #endregion
-
-
 
     #region methods
     /// <summary>
@@ -33,17 +33,17 @@ public class GoldenGoalTile : GoalTile, INutInteractive
             GoalType = this.goalType,
             EventType = GoalEventsType.GoalResolve,
             Position = payload.CurrentPosition,
-            ScoreValue = 1,
+            ScoreValue = 0,
             GoalRemove = true,
             CreateReplacement = false,
-            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime),
+            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime),
             PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal
         switch (payload.NutType)
         {
-            case NutType.BasicNut: // basic nut falls into the goal, just remove the goal
+            case NutType.BasicNut: // basic nut falls into the goal, No score, just remove goal
 
                 // Play goal reached sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
@@ -52,7 +52,7 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove nut only at {payload.CurrentPosition}", this);
                 break;
 
-            case NutType.StoneNut: // Build wall if stone nut reached the goal
+            case NutType.StoneNut: // Build wall if stone nut reached the goal. No score
 
                 // Play build sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
@@ -67,7 +67,7 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove nut only at {payload.CurrentPosition}", this);
                 break;
 
-            case NutType.WaterNut: // water nut falls into the goal, create splash effect and splash around
+            case NutType.WaterNut: // water nut falls into the goal, No score, create splash effect and splash around
 
                 // Play build sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
@@ -80,7 +80,7 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove nut only and splash {payload.CurrentPosition}", this);
                 break;
 
-            case NutType.GoldenNut: // golden nut falls into the goal, open the way
+            case NutType.GoldenNut: // golden nut falls into the goal, open the way, score
 
                 // Play special goal reached sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
@@ -96,6 +96,10 @@ public class GoldenGoalTile : GoalTile, INutInteractive
                 goalPayload.PopoutImage.StartDelay = popoutStartDelay;
                 goalPayload.PopoutImage.Scale = popoutScale;
                 goalPayload.PopoutImage.TintColor = popoutTintColor;
+
+                //golden goal resolve
+                goalPayload.ScoreValue = 1;
+                goalPayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime);
 
                 // debug log
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} -> remove both {payload.CurrentPosition}", this);
