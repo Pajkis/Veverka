@@ -5910,7 +5910,7 @@ MonoBehaviour:
   - content: {fileID: 1609078112}
     button: {fileID: 889984309}
     tabValue: 1
-    isAvailable: 0
+    isAvailable: 1
   - content: {fileID: 1692535331}
     button: {fileID: 117378635}
     tabValue: 2
