@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all obstacle-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/ObstacleEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Obstacle")]
 public class ObstacleEvents : GameEventSO<ObstacleEventPayload>
 {
     /// <summary>

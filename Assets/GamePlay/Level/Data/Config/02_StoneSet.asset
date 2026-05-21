@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89be30227db6543468522f453d568292, type: 3}
+  m_Name: 02_StoneSet
+  m_EditorClassIdentifier: 
+  setType: 2
+  setDisplayName: Stone
+  levelCsvFiles:
+  - {fileID: 4900000, guid: 3f7a470eda4ff7e40bc616fa69ba06f1, type: 3}
+  - {fileID: 4900000, guid: b85c78d87a256d441a9ae98bd15ed84d, type: 3}
+  - {fileID: 4900000, guid: ed839a5e52350f04ca878d414cf3a843, type: 3}
+  - {fileID: 4900000, guid: 3c481a3fa9e92314a8a3e2db43d001ef, type: 3}
+  - {fileID: 4900000, guid: 5849b4e739859da40a71e7f274e82ac5, type: 3}
+  - {fileID: 4900000, guid: 31a0523b9a1a5f44399834effc3e7a79, type: 3}
+  - {fileID: 4900000, guid: b6d89b2b458358143b3cd2d94cda7cd1, type: 3}
+  - {fileID: 4900000, guid: 9ade0be3db6a48c40a235540b8336c16, type: 3}
+  - {fileID: 4900000, guid: 6c7f0f9cc7e029749a772002c1840c6a, type: 3}
+  - {fileID: 4900000, guid: d0204a91e72dd064e9741f13d31e981a, type: 3}

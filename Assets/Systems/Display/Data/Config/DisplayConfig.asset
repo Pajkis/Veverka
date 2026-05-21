@@ -24,6 +24,29 @@ MonoBehaviour:
     vSyncCount: 1
     applySafeArea: 0
     autoApplyOnSceneLoaded: 1
+    cameraFollowTime: 0.2
+    cameraFollowOffset: {x: 2.6666, y: 0, z: -10}
+    screenToPlayOffset: {x: 2.1666, y: -0.5, z: -10}
+    evenTilesOffset: 0.5
+    tileSize: 1
+    maxStaticScreenSize: {x: 15, y: 11}
+    leftColumnButtonX: 585
+    middleColumnButtonX: 720
+    rightColumnButtonX: 855
+    topRowButtonY: -155
+    middleRowButtonY: -290
+    bottomRowButtonY: -425
+    androidMiddleRowButtonY: -225
+    cursorHotspot: {x: 40, y: -40}
+    cursorImageSize: {x: 80, y: 80, z: 0}
+    tutorialScreenTileSize: {x: 9, y: 7}
+    tutorialCameraPosition: {x: 4.9, y: 2.95, z: -10}
+    tutorialGridShowDelay: 0.5
+    tutorialDefaultMessageTime: 2
+    tutorialActionDelay: 0.3
+    tutorialMessageFadeIn: 0.2
+    tutorialMessageFadeOut: 0.2
+    tutorialSequenceStartBuffer: 0.2
   - platform: 4
     referenceResolution: {x: 1920, y: 1080}
     uiMatchWidthOrHeight: 1
@@ -35,3 +58,26 @@ MonoBehaviour:
     vSyncCount: 1
     applySafeArea: 0
     autoApplyOnSceneLoaded: 1
+    cameraFollowTime: 0.2
+    cameraFollowOffset: {x: 2.6666, y: 0, z: -10}
+    screenToPlayOffset: {x: 2.1666, y: -0.5, z: -10}
+    evenTilesOffset: 0.5
+    tileSize: 1
+    maxStaticScreenSize: {x: 15, y: 11}
+    leftColumnButtonX: 585
+    middleColumnButtonX: 720
+    rightColumnButtonX: 855
+    topRowButtonY: -155
+    middleRowButtonY: -290
+    bottomRowButtonY: -425
+    androidMiddleRowButtonY: -225
+    cursorHotspot: {x: 40, y: -40}
+    cursorImageSize: {x: 80, y: 80, z: 0}
+    tutorialScreenTileSize: {x: 9, y: 7}
+    tutorialCameraPosition: {x: 4.9, y: 2.95, z: -10}
+    tutorialGridShowDelay: 0.5
+    tutorialDefaultMessageTime: 2
+    tutorialActionDelay: 0.3
+    tutorialMessageFadeIn: 0.2
+    tutorialMessageFadeOut: 0.2
+    tutorialSequenceStartBuffer: 0.2

@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Scriptable object storing default values for game settings.
 /// </summary>
-[CreateAssetMenu(fileName = "GameSettingsConfig", menuName = "Configs/GameSettingsConfig")]
+[CreateAssetMenu(fileName = "GameSettingsConfig", menuName = "Systems/Config/GameSettings")]
 public class GameSettingsConfig : ScriptableObject
 {
     [Header("Player Settings")]

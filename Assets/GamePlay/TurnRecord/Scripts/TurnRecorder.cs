@@ -177,7 +177,7 @@ public class TurnRecorder : MonoBehaviour
                 break;
 
             case NutEventType.NutMoved:
-                var moveData = UndoData.CreateNutMove(payload.NutTile, payload.CurrentPosition, payload.PreviousPosition, payload.Duration);
+                var moveData = UndoData.CreateNutMove(payload.NutTile, payload.CurrentPosition, payload.PreviousPosition, payload.SpeedMultiplier);
                 AddUndoData(moveData);
 
                 var completedSourceId = $"Nut-{payload.PreviousPosition.x}x{payload.PreviousPosition.y}";

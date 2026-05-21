@@ -33,8 +33,8 @@ public class BasicGoalTile : GoalTile, INutInteractive
             ScoreValue = 1,
             GoalRemove = true,
             CreateReplacement = false,
-            GoalMessage = BubbleMessageType.Yatta,
-            GoalMessageTime = gameplayConfig.goalBubbleTime,
+            BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Yatta, gameplayConfig.goalBubbleTime),
+            PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal
@@ -45,8 +45,20 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 // Play goal reached sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition}", this);
-                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove {payload.CurrentPosition}", this);
+                 // Configure popout image sub-payload - SPECIFY IMAGE TYPE
+                goalPayload.PopoutImage = PopoutImageEventPayload.CreateForSubPayload(
+                    PopoutImageType.BasicGoal,
+                    gameplayConfig
+                );
+
+                // Apply custom settings from inspector (per-tile overrides)
+                goalPayload.PopoutImage.PositionOffset = popoutPositionOffset;
+                goalPayload.PopoutImage.StartDelay = popoutStartDelay;
+                goalPayload.PopoutImage.Scale = popoutScale;
+                goalPayload.PopoutImage.TintColor = popoutTintColor;
+
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} -> remove goal at {payload.CurrentPosition}", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} -> remove goal at  {payload.CurrentPosition}", this);
                 break;
                   
             case NutType.StoneNut: // Build wall if stone nut reached the goal
@@ -55,14 +67,13 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.Build });
 
                 // fill goal payload - stone nut related actions
-                goalPayload.CreateReplacement = true;
-                goalPayload.InstantiateTile = true;
+                goalPayload.CreateReplacement = true;            
                 goalPayload.ReplacementType = TileType.Obstacle;
                 goalPayload.ReplacementObstacleType = ObstacleType.StoneWall;
 
                 // debug log
-                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating wall at {payload.CurrentPosition}", this);
-                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} -> replacement with stone wall at {payload.CurrentPosition}", this);
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition} -> remove goal and build wall", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} at {payload.CurrentPosition} -> replacement with stone wall", this);
                 break;
 
             case NutType.WaterNut: // water nut falls into the goal, create splash effect and splash around
@@ -71,11 +82,21 @@ public class BasicGoalTile : GoalTile, INutInteractive
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterSplash });
 
                 // splash water to move nuts around
-                this.SplashWater();
+                this.SplashWater(gameplayConfig.splashSpeedFactor);
 
-                // debug log
-                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} - creating splash at {payload.CurrentPosition}", this);
-                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} -> remove and splash {payload.CurrentPosition}", this);
+                // debug logger
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition} -> remove goal and splash", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in basic {this.goalType} at {payload.CurrentPosition} -> remove goal and splash", this);
+                break;
+            
+            case NutType.GoldenNut: // golden nut falls into the goal, make the goal golden statue
+                
+                // Play goal reached sound effect
+                audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
+                
+                // debug logger
+                DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} reached {this.goalType} at {payload.CurrentPosition} -> Remove goal and Create golden statue", this);
+                DebugLogger.Log(DebugLogCategory.EventSystem, $"Goal Event: {payload.NutType} in {this.goalType} at {payload.CurrentPosition} -> Remove goal and Create golden statue", this);
                 break;
 
             default:

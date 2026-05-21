@@ -130,6 +130,10 @@ public class AudioManager : MonoBehaviour
             case AudioEventType.PlayUi:
                 PlayUi(payload.Ui);
                 break;
+            case AudioEventType.MuteSfx:
+                if (effectsSource != null)
+                    effectsSource.volume = payload.Muted ? 0f : effectVolume;
+                break;
         }
     }
 

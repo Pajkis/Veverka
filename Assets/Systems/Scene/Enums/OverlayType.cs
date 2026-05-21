@@ -10,5 +10,6 @@ public enum OverlayType
     Credits,
     Notification,
     LevelValidationError,    
+    Tutorial
 }
 

@@ -13,8 +13,8 @@
 *.log
 
 # private folders
-/[Nn]ame/
 /[Dd]ocs/
+/[Tt]emplate/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
@@ -67,3 +67,10 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
+
+Assets/Debug/Data/DebugLogConfig.asset
+
+nul
+
+Assets/Debug/Data/DebugLogConfig.asset.meta
+.claude/settings.local.json

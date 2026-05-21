@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// Represents the configuration parameters for display settings, including platform mapping, UI scaling, aspect ratio,
 /// orientation, performance, safe area handling, camera settings, grid settings, and UI layout positions.
@@ -15,12 +16,12 @@ public class DisplayConfigPars
     public DevicePlatformType platform = DevicePlatformType.Auto;
 
     [Header("UI scaling")]
-    public Vector2Int referenceResolution = new Vector2Int(1920, 1080);
+    public Vector2Int referenceResolution = new(1920, 1080);
     [Range(0f, 1f)] public float uiMatchWidthOrHeight = 1f; // 0=width, 1 = height, 0.5 = both equally
 
     [Header("Aspect & Bars")]
     public bool useLetterboxing = true;
-    public Vector2 targetAspect = new Vector2(16, 9); // 16:9 aspect ratio
+    public Vector2 targetAspect = new(16, 9); // 16:9 aspect ratio
 
     [Header("Orientation")]
     public bool forceOrientation = true;
@@ -39,25 +40,29 @@ public class DisplayConfigPars
     [Tooltip("re-apply after new screen is loaded")]
     public bool autoApplyOnSceneLoaded = true;
 
-    // === GAME CAMERA SETTINGS ===
+    // GAME CAMERA SETTINGS
     [Header("Camera Settings")]
     [Tooltip("Camera smooth follow time")]
     public float cameraFollowTime = 0.2f;
     [Tooltip("Camera follow offset when character moves")]
-    public Vector3 cameraFollowOffset = new Vector3(2.6666f, 0, -10f);
+    public Vector3 cameraFollowOffset = new(2.6666f, 0, -10f);
     [Tooltip("Screen offset for dual-screen layout")]
-    public Vector3 screenToPlayOffset = new Vector3(2.1666f, -0.5f, -10f);
+    public Vector3 screenToPlayOffset = new(2.1666f, -0.5f, -10f);
     [Tooltip("Offset for even tile count grids")]
     public float evenTilesOffset = 0.5f;
 
-    // === GRID & TILE SETTINGS ===
+    // CANVAS SETTINGS
+    [Header("Canvas Settings")]
+   
+
+    // GRID & TILE SETTINGS
     [Header("Grid Settings")]
     [Tooltip("Size of each tile in world units")]
     public float tileSize = 1f;
     [Tooltip("Max grid size before camera becomes static")]
-    public Vector2Int maxStaticScreenSize = new Vector2Int(15, 11);
+    public Vector2Int maxStaticScreenSize = new(15, 11);
 
-    // === UI LAYOUT POSITIONS ===
+    // GAME UI LAYOUT POSITIONS
     [Header("UI Layout - Button Columns")]
     [Tooltip("Left column button X position for this platform")]
     public float leftColumnButtonX = 585f;
@@ -78,5 +83,28 @@ public class DisplayConfigPars
 
     [Header("Cursor Settings")]
     [Tooltip("Custom cursor hotspot offset")]
-    public Vector2 cursorHotspot = new Vector2(50f, -50f);
+    public Vector2 cursorHotspot = new(40f, -40f);
+    [Tooltip("Custom cursor image size (width, height, depth)")]
+    public Vector3 cursorImageSize = new(80f, 80f, 0f);
+
+    // TUTORIAL UI  SETTINGS
+    [Header("Tutorial Settings")]
+    [Tooltip("Tutorial screen tile size")]
+    public Vector2Int tutorialScreenTileSize = new(9, 7);
+    [Tooltip("Camera position when tutorial is active")]
+    public Vector3 tutorialCameraPosition = new(4.9f, 2.95f, -10f);
+    [Tooltip("Delay before showing tutorial grid (for overlay fade-in sync)")]
+    public float tutorialGridShowDelay = 0.5f;
+
+    [Header("Tutorial Action Settings")]
+    [Tooltip("Default message display time")]
+    public float tutorialDefaultMessageTime = 2f;
+    [Tooltip("Delay between actions")]
+    public float tutorialActionDelay = 0.3f;
+    [Tooltip("Message fade in duration")]
+    public float tutorialMessageFadeIn = 0.2f;
+    [Tooltip("Message fade out duration")]
+    public float tutorialMessageFadeOut = 0.2f;
+    [Tooltip("Extra delay after grid spawn before starting sequence")]
+    public float tutorialSequenceStartBuffer = 0.2f;
 }

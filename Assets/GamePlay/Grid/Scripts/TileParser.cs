@@ -83,6 +83,10 @@ public static class TileParser
                 result.TileType = TileType.Obstacle;
                 result.ObstacleType = ObstacleType.StoneWall;
                 break;
+            case "WG":
+                result.TileType = TileType.Obstacle;
+                result.ObstacleType = ObstacleType.GoldenStatue;
+                break;
             case "V":
                 result.TileType = TileType.Veverka;
                 break;
@@ -98,9 +102,17 @@ public static class TileParser
                 result.TileType = TileType.Nut;
                 result.NutType = NutType.WaterNut;
                 break;
+            case "NG":
+                result.TileType = TileType.Nut;
+                result.NutType = NutType.GoldenNut;
+                break;
             case "G":
                 result.TileType = TileType.Goal;
                 result.GoalType = GoalType.BasicGoal;
+                break;            
+            case "GG":
+                result.TileType = TileType.Goal;
+                result.GoalType = GoalType.GoldenGoal;
                 break;
             case "H":
                 result.TileType = TileType.Obstacle;
@@ -117,6 +129,10 @@ public static class TileParser
             case "RS":
                 result.TileType = TileType.Road;
                 result.RoadType = RoadType.StoneRoad;
+                break;
+            case "RG":
+                result.TileType = TileType.Road;
+                result.RoadType = RoadType.RoadGoldenGoalScored;
                 break;
             case "HS":
                 result.TileType = TileType.Road;

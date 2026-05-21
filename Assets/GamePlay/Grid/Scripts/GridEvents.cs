@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all grid-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/GridEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Grid")]
 public class GridEvents : GameEventSO<GridEventPayload>
 {
     /// <summary>

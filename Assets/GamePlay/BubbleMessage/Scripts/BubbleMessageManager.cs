@@ -67,10 +67,10 @@ public class BubbleMessageManager : MonoBehaviour
         else if (payload.EventType == CharacterEventType.DataResponse)
         {
             characterPosition = payload.CurrentPosition;
-            if (payload.CharacterBubbleMessage == BubbleMessageType.NoMessage) return;
+            if (payload.BubbleMessage == null || !payload.BubbleMessage.ShouldShow) return;
 
             Vector2Int bubblePos = characterPosition + new Vector2Int(0, 1);
-            CreateBubble(bubblePos, payload.CharacterBubbleMessage, payload.CharacterBubbleMessageTime);
+            CreateBubble(bubblePos, payload.BubbleMessage.MessageType, payload.BubbleMessage.DisplayTime);
         }
     }
 
@@ -81,6 +81,7 @@ public class BubbleMessageManager : MonoBehaviour
     private void OnGoalEvent(GoalEventPayload payload)
     {
         if (payload.EventType != GoalEventsType.GoalResolve) return;
+        if (payload.BubbleMessage == null || !payload.BubbleMessage.ShouldShow) return;
 
         // Show only first message per turn (shared flag with obstacles)
         if (hasShownMessageThisTurn) return;
@@ -89,7 +90,7 @@ public class BubbleMessageManager : MonoBehaviour
         // Calculate bubble position behind character relative to goal
         Vector2Int bubbleOffset = CalculateBubbleOffset(payload.Position, characterPosition);
         Vector2Int bubblePos = characterPosition + bubbleOffset;
-        CreateBubble(bubblePos, payload.GoalMessage, payload.GoalMessageTime);
+        CreateBubble(bubblePos, payload.BubbleMessage.MessageType, payload.BubbleMessage.DisplayTime);
     }
 
     /// <summary>
@@ -99,6 +100,7 @@ public class BubbleMessageManager : MonoBehaviour
     private void OnObstacleEvent(ObstacleEventPayload payload)
     {
         if (payload.EventType != ObstacleEventsType.ObstacleResolve) return;
+        if (payload.BubbleMessage == null || !payload.BubbleMessage.ShouldShow) return;
 
         // Show only first message per turn (shared flag with goals)
         if (hasShownMessageThisTurn) return;
@@ -107,7 +109,7 @@ public class BubbleMessageManager : MonoBehaviour
         // Calculate bubble position behind character relative to obstacle
         Vector2Int bubbleOffset = CalculateBubbleOffset(payload.Position, characterPosition);
         Vector2Int bubblePos = characterPosition + bubbleOffset;
-        CreateBubble(bubblePos, payload.ObstacleMessage, payload.ObstacleMessageTime);
+        CreateBubble(bubblePos, payload.BubbleMessage.MessageType, payload.BubbleMessage.DisplayTime);
     }
 
 

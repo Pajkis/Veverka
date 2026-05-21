@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Events/UndoEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Undo")]
 public class UndoEvents : GameEventSO<UndoEventPayload>
 {
     public void RaiseForEventType(UndoEventPayload payload, UndoEventType eventType)

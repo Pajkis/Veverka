@@ -9,6 +9,7 @@ public enum GameSettingsEnum
     EffectVolume,
     MenuVolume,
     LayoutStyle,    
+    SkipTutorials,
 }
 
 /// <summary>

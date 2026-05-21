@@ -18,5 +18,5 @@ public interface INutInteractive
     /// <summary>
     /// Gets the collection of events associated with the grid.
     /// </summary>
-    GridEvents GridEvents { get; }
+    GridEvents GridEvents { get; }      
  }

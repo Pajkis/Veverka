@@ -17,10 +17,10 @@ public struct UndoData
     public Vector2Int PreviousPosition;
     public Direction CurrentDirection;
     public Direction PreviousDirection;
-    public float Duration;
+    public float SpeedMultiplier;
     public string ObjectId; // For identifying which object to undo
 
-    public static UndoData CreateCharacterMove(Character character, Vector2Int current, Vector2Int previous, Direction direction, float duration = 0.15f)
+    public static UndoData CreateCharacterMove(Character character, Vector2Int current, Vector2Int previous, Direction direction, float speedMultiplier = 1.0f)
     {
         return new UndoData
         {
@@ -29,12 +29,12 @@ public struct UndoData
             PreviousPosition = previous,
             CurrentDirection = direction,
             PreviousDirection = direction,
-            Duration = duration,
+            SpeedMultiplier = speedMultiplier,
             ObjectId = $"Character-{character.GetInstanceID()}"
         };
     }
 
-    public static UndoData CreateCharacterRotation(Character character, Vector2Int position, Direction current, Direction previous, float duration = 0.15f)
+    public static UndoData CreateCharacterRotation(Character character, Vector2Int position, Direction current, Direction previous, float speedMultiplier = 1.0f)
     {
         return new UndoData
         {
@@ -43,19 +43,19 @@ public struct UndoData
             PreviousPosition = position,
             CurrentDirection = current,
             PreviousDirection = previous,
-            Duration = duration,
+            SpeedMultiplier = speedMultiplier,
             ObjectId = $"Character-{character.GetInstanceID()}"
         };
     }
 
-    public static UndoData CreateNutMove(NutTile nut, Vector2Int current, Vector2Int previous, float duration)
+    public static UndoData CreateNutMove(NutTile nut, Vector2Int current, Vector2Int previous, float speedMultiplier)
     {
         return new UndoData
         {
             ActionType = UndoActionType.NutMove,
             CurrentPosition = current,
             PreviousPosition = previous,
-            Duration = duration,
+            SpeedMultiplier = speedMultiplier,
             ObjectId = $"Nut-{nut.GetInstanceID()}"
         };
     }

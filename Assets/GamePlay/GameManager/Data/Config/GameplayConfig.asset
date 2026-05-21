@@ -12,6 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a92901c49eaed54ea05aeb410c74264, type: 3}
   m_Name: GameplayConfig
   m_EditorClassIdentifier: 
+  characterMoveTime: 0.15
+  characterRotateTime: 0.15
+  nutMoveTime: 0.15
+  tileAnimationTime: 0.15
+  tileFadeInDuration: 0.5
+  tileFadeOutDuration: 0.5
+  splashSpeedFactor: 0.25
   maxUndoSteps: 10
-  moveTime: 0.2
+  undoStepTime: 0.15
+  inputDebounceTime: 0.1
+  characterTriggerTimeout: 0.5
+  characterBubbleTime: 2
+  goalBubbleTime: 1
   reduceGoalCount: 1
+  popoutImageDefaultDirection: 0
+  popoutImageDefaultDistance: 1
+  popoutImageDefaultDuration: 1
+  popoutImageDefaultFadeStartTime: 0.5

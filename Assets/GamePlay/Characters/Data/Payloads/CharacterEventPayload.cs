@@ -14,10 +14,11 @@ public struct CharacterEventPayload
     public Direction CurrentDirection;
     public Direction PreviousDirection;
     public float Duration;
+    public float SpeedMultiplier;
 
-    // bubble message data
-    public BubbleMessageType CharacterBubbleMessage;
-    public float CharacterBubbleMessageTime;
+    [Header("UI Effects")]
+    public BubbleMessageEventPayload BubbleMessage;
+    public PopoutImageEventPayload PopoutImage;
 
     // data request and response flags
     [Header("Request/response system")]

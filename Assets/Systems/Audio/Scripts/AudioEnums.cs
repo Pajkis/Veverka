@@ -57,6 +57,7 @@ public enum AudioEventType
     Init,
     PlayMusic,
     PlaySfx,
-    PlayUi
+    PlayUi,
+    MuteSfx
 }
 

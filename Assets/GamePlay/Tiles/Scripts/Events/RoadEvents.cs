@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all road-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/RoadEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Road")]
 public class RoadEvents : GameEventSO<RoadEventPayload>
 {
     /// <summary>

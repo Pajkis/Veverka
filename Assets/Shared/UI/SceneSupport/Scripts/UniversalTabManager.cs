@@ -62,8 +62,9 @@ public class UniversalTabManager : MonoBehaviour
 
     private int currentTabIndex = -1;
 
-    // Store original sprites for each button
+    // Store original sprites and sprite states for each button
     private Sprite[] originalSprites;
+    private SpriteState[] originalSpriteStates;
 
     // Identifier for debug logs
     private string TabManagerId => $"TabManager[{gameObject.name}]";
@@ -85,8 +86,9 @@ public class UniversalTabManager : MonoBehaviour
     /// </summary>
     private void InitializeTabs()
     {
-        // Store original sprites
+        // Store original sprites and sprite states
         originalSprites = new Sprite[tabs.Length];
+        originalSpriteStates = new SpriteState[tabs.Length];
 
         for (int i = 0; i < tabs.Length; i++)
         {
@@ -96,12 +98,13 @@ public class UniversalTabManager : MonoBehaviour
             {
                 tabs[i].button.onClick.AddListener(() => ShowTab(tabIndex));
 
-                // Store original sprite (Source Image)
+                // Store original sprite (Source Image) and sprite state
                 var buttonImage = tabs[i].button.GetComponent<Image>();
                 if (buttonImage != null)
                 {
                     originalSprites[i] = buttonImage.sprite;
                 }
+                originalSpriteStates[i] = tabs[i].button.spriteState;
             }
 
             // Always deactivate other tabs initially
@@ -265,66 +268,42 @@ public class UniversalTabManager : MonoBehaviour
     {
         for (int i = 0; i < tabs.Length; i++)
         {
-            if (tabs[i].button != null)
+            if (tabs[i].button == null) continue;
+
+            var buttonImage = tabs[i].button.GetComponent<Image>();
+            if (buttonImage == null || originalSprites == null || i >= originalSprites.Length) continue;
+
+            // Always read from stored originals — never from current button state (may be stale)
+            var storedState = originalSpriteStates[i];
+            bool isActive = (i == currentTabIndex);
+            bool isAvailable = tabs[i].isAvailable;
+
+            if (!isAvailable)
             {
-                var buttonImage = tabs[i].button.GetComponent<Image>();
-                if (buttonImage != null && originalSprites != null && i < originalSprites.Length)
-                {
-                    var spriteState = tabs[i].button.spriteState;
-
-                    // Set the main sprite based on state
-                    if (!tabs[i].isAvailable)
-                    {
-                        // Use unavailableSprite override or disabled sprite from button
-                        if (unavailableSprite != null)
-                        {
-                            buttonImage.sprite = unavailableSprite;
-                        }
-                        else if (spriteState.disabledSprite != null)
-                        {
-                            buttonImage.sprite = spriteState.disabledSprite;
-                        }
-                        else
-                        {
-                            buttonImage.sprite = originalSprites[i];
-                        }
-                    }
-                    else if (i == currentTabIndex)
-                    {
-                        // Active tab uses selected sprite state
-                        Sprite activeSprite = GetSpriteFromState(spriteState, activeTabSpriteType);
-                        if (activeSprite != null)
-                        {
-                            buttonImage.sprite = activeSprite;
-                        }
-                        else
-                        {
-                            // Fallback to original if selected sprite not set
-                            buttonImage.sprite = originalSprites[i];
-                        }
-                    }
-                    else
-                    {
-                        // Inactive tab uses original Source Image sprite
-                        buttonImage.sprite = originalSprites[i];
-                    }
-
-                    // Handle sprite state for interactions
-                    if (i == currentTabIndex)
-                    {
-                        // Active tab keeps its sprite swap interactions
-                        tabs[i].button.spriteState = spriteState;
-                    }
-                    else if (!allowHoverOnInactive)
-                    {
-                        // Inactive tabs have no sprite swap interactions
-                        var emptyState = new SpriteState();
-                        tabs[i].button.spriteState = emptyState;
-                    }
-                }
-
-                // Set interactability
-                tabs[i].button.interactable = tabs[i].isAvailable && (i != currentTabIndex);
+                // Unavailable: show disabled sprite, non-interactable
+                SpriteState disabledState = storedState;
+                if (unavailableSprite != null)
+                    disabledState.disabledSprite = unavailableSprite;
+                tabs[i].button.spriteState = disabledState;
+                tabs[i].button.interactable = false;
+            }
+            else if (isActive)
+            {
+                // Active tab: set activeSprite as disabledSprite so Unity applies it on interactable=false
+                Sprite activeSprite = GetSpriteFromState(storedState, activeTabSpriteType);
+                SpriteState activeState = storedState;
+                activeState.disabledSprite = activeSprite != null ? activeSprite : originalSprites[i];
+                tabs[i].button.spriteState = activeState;
+                tabs[i].button.interactable = false;
+            }
+            else
+            {
+                // Inactive available tab: restore original state, interactable — hover works normally
+                SpriteState inactiveState = allowHoverOnInactive ? storedState : new SpriteState();
+                tabs[i].button.spriteState = inactiveState;
+                tabs[i].button.interactable = true;
+                // Restore source image sprite in case it was overridden
+                buttonImage.sprite = originalSprites[i];
             }
         }
     }

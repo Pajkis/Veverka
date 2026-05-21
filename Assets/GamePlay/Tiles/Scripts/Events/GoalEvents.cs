@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Unified ScriptableObject event system for all goal-related events.
 /// </summary>
-[CreateAssetMenu(menuName = "Events/GoalEvents")]
+[CreateAssetMenu(menuName = "Gameplay/Events/Goal")]
 public class GoalEvents : GameEventSO<GoalEventPayload>
 {
     /// <summary>

@@ -9,6 +9,21 @@ public abstract class GoalTile : TileObject
     protected GoalType goalType;
     protected bool shouldRemoveGoal = false;
 
+    #region Popout Configuration
+    [Header("Popout Animation Settings")]
+    [Tooltip("Offset from grid position (in world units)")]
+    [SerializeField] protected Vector2 popoutPositionOffset = Vector2.zero;
+
+    [Tooltip("Delay before popout animation starts (in seconds)")]
+    [SerializeField] protected float popoutStartDelay = 0f;
+
+    [Tooltip("Scale multiplier for the popout image")]
+    [SerializeField] protected float popoutScale = 1.0f;
+
+    [Tooltip("Tint color for the popout image")]
+    [SerializeField] protected Color popoutTintColor = Color.white;
+    #endregion
+
     #region events
     [SerializeField] protected NutEvents nutEvents;
     [SerializeField] protected GoalEvents goalEvents;

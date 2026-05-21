@@ -24,20 +24,22 @@ public class HoleTile : ObstacleTile
             Position = payload.CurrentPosition,
             ObstacleRemove = false,
             CreateReplacement = false,
-            ObstacleMessageTime = gameplayConfig.goalBubbleTime,
+            BubbleMessage = BubbleMessageEventPayload.None,
+            PopoutImage = PopoutImageEventPayload.None,
         });
 
         // handle nut type specific actions to resolve the goal
         switch (payload.NutType)
         {
             case NutType.BasicNut:  // basic nut falls into the hole with no effect
+            case NutType.GoldenNut:  // golden nut falls into the hole with no effect
 
                 // Play sound effect
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.GoalReached });
 
-                //fill obstacle payload - basic nut related actions
+                //fill obstacle payload
                 obstaclePayload.ObstacleRemove = false;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Ooops;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Ooops, gameplayConfig.goalBubbleTime);
 
                 DebugLogger.Log(DebugLogCategory.TileInteraction, $"{payload.NutType} fell into {this.obstacleType} at {payload.CurrentPosition} - showing Ooops message", this);
                 DebugLogger.Log(DebugLogCategory.EventSystem, $"Obstacle Event: {payload.NutType} in {this.obstacleType} -> Nothing happens (Ooops) at {payload.CurrentPosition}", this);
@@ -49,7 +51,7 @@ public class HoleTile : ObstacleTile
 
                 // fill obstacle payload - road related actions
                 obstaclePayload.ObstacleRemove = true;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Road;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Road, gameplayConfig.goalBubbleTime);
                 obstaclePayload.CreateReplacement = true;
                 obstaclePayload.ReplacementType = TileType.Road;
                 obstaclePayload.ReplacementRoadType = RoadType.StoneFilledHole;
@@ -64,7 +66,7 @@ public class HoleTile : ObstacleTile
                 audioEvents.Raise(new AudioEventPayload { EventType = AudioEventType.PlaySfx, Sfx = SfxType.WaterFill });
 
                 obstaclePayload.ObstacleRemove = true;
-                obstaclePayload.ObstacleMessage = BubbleMessageType.Lake;
+                obstaclePayload.BubbleMessage = BubbleMessageEventPayload.Create(BubbleMessageType.Lake, gameplayConfig.goalBubbleTime);
                 obstaclePayload.CreateReplacement = true;
                 obstaclePayload.ReplacementType = TileType.Obstacle;
                 obstaclePayload.ReplacementObstacleType = ObstacleType.WaterHole;
