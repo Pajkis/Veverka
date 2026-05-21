@@ -3153,7 +3153,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 223000105937905944, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_text
-      value: Gold (TBD)
+      value: Gold
       objectReference: {fileID: 0}
     - target: {fileID: 223000105937905944, guid: 81f6c3d48d34b294db0cdc893c87bc91, type: 3}
       propertyPath: m_fontSize
