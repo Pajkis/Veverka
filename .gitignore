@@ -13,8 +13,8 @@
 *.log
 
 # private folders
-/[Nn]ame/
 /[Dd]ocs/
+/[Tt]emplate/
 
 # Never ignore Asset meta data
 !/[Aa]ssets/**/*.meta
